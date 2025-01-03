@@ -1,0 +1,99 @@
+{
+  "buttons": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "confirm": "Confirmar",
+    "submit": "Enviar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "messages": {
+    "loading": "Cargando...",
+    "success": "¡Éxito!",
+    "error": "Ocurrió un error. Por favor, inténtalo de nuevo.",
+    "noResults": "No se encontraron resultados.",
+    "welcome": "Bienvenido",
+    "goodbye": "Adiós",
+    "unauthorized": "No autorizado",
+    "forbidden": "Prohibido",
+    "notFound": "No encontrado",
+    "noData": "No hay datos disponibles",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar esto?"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "dashboard": "Tablero",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "notifications": "Notificaciones",
+    "logout": "Cerrar sesión",
+    "login": "Iniciar sesión",
+    "signup": "Registrarse"
+  },
+  "errors": {
+    "serverError": "Error del servidor",
+    "networkError": "Error de red",
+    "timeout": "Tiempo de espera agotado",
+    "pageNotFound": "Página no encontrada",
+    "formInvalid": "Por favor, corrige los errores del formulario.",
+    "somethingWentWrong": "Algo salió mal. Por favor, inténtalo de nuevo."
+  },
+  "dates": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "tomorrow": "Mañana",
+    "daysOfWeek": {
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    },
+    "months": {
+      "january": "Enero",
+      "february": "Febrero",
+      "march": "Marzo",
+      "april": "Abril",
+      "may": "Mayo",
+      "june": "Junio",
+      "july": "Julio",
+      "august": "Agosto",
+      "september": "Septiembre",
+      "october": "Octubre",
+      "november": "Noviembre",
+      "december": "Diciembre"
+    }
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "showing": "Mostrando",
+    "of": "de",
+    "to": "a",
+    "items": "elementos"
+  },
+  "statuses": {
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "pending": "Pendiente",
+    "completed": "Completado",
+    "failed": "Fallido",
+    "inProgress": "En progreso"
+  },
+  "user": {
+    "username": "Nombre de usuario",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "role": "Rol",
+    "admin": "Administrador",
+    "user": "Usuario",
+    "guest": "Invitado"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "404": {
+    "title": "Seite nicht gefunden",
+    "message": "Die von Ihnen gesuchte Seite wurde nicht gefunden."
+  },
+  "500": {
+    "title": "Serverfehler",
+    "message": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
+  },
+  "networkError": {
+    "title": "Netzwerkfehler",
+    "message": "Es konnte keine Verbindung zum Server hergestellt werden. Bitte überprüfen Sie Ihre Internetverbindung."
+  },
+  "validationError": {
+    "title": "Validierungsfehler",
+    "message": "Einige Eingaben sind ungültig. Bitte überprüfen Sie die markierten Felder und versuchen Sie es erneut."
+  },
+  "authenticationError": {
+    "title": "Authentifizierungsfehler",
+    "message": "Sie sind nicht berechtigt, auf diese Ressource zuzugreifen. Bitte melden Sie sich erneut an."
+  },
+  "authorizationError": {
+    "title": "Berechtigungsfehler",
+    "message": "Sie haben nicht die erforderlichen Berechtigungen, um diese Aktion auszuführen."
+  },
+  "timeoutError": {
+    "title": "Zeitüberschreitung",
+    "message": "Die Anfrage hat zu lange gedauert. Bitte versuchen Sie es später erneut."
+  },
+  "formSubmissionError": {
+    "title": "Formularübermittlungsfehler",
+    "message": "Beim Senden des Formulars ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+  },
+  "resourceNotFound": {
+    "title": "Ressource nicht gefunden",
+    "message": "Die angeforderte Ressource wurde nicht gefunden."
+  },
+  "passwordMismatch": {
+    "title": "Passwort stimmt nicht überein",
+    "message": "Die eingegebenen Passwörter stimmen nicht überein. Bitte überprüfen Sie sie."
+  },
+  "accountLocked": {
+    "title": "Konto gesperrt",
+    "message": "Ihr Konto wurde gesperrt. Bitte wenden Sie sich an den Support, um Hilfe zu erhalten."
+  },
+  "accountNotActivated": {
+    "title": "Konto nicht aktiviert",
+    "message": "Ihr Konto wurde noch nicht aktiviert. Bitte überprüfen Sie Ihre E-Mails für den Aktivierungslink."
+  }
+}

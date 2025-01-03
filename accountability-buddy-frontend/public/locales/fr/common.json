@@ -1,0 +1,94 @@
+{
+  "navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "contact": "Contact",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "signup": "Inscription",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "dashboard": "Tableau de bord",
+    "admin": "Administration",
+    "groups": "Groupes",
+    "help": "Aide",
+    "support": "Assistance"
+  },
+  "actions": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "submit": "Soumettre",
+    "reset": "Réinitialiser",
+    "update": "Mettre à jour",
+    "back": "Retour",
+    "continue": "Continuer",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "confirm": "Confirmer"
+  },
+  "messages": {
+    "loading": "Chargement...",
+    "noData": "Aucune donnée disponible",
+    "success": "Opération réussie",
+    "error": "Une erreur s'est produite. Veuillez réessayer.",
+    "welcome": "Bienvenue, {{username}}",
+    "goodbye": "À bientôt!",
+    "unauthorized": "Vous n'êtes pas autorisé à accéder à cette page.",
+    "forbidden": "Accès refusé.",
+    "notFound": "Page non trouvée.",
+    "serverError": "Erreur serveur. Veuillez réessayer plus tard."
+  },
+  "forms": {
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "username": "Nom d'utilisateur",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "confirmPassword": "Confirmer le mot de passe",
+    "rememberMe": "Se souvenir de moi",
+    "forgotPassword": "Mot de passe oublié?",
+    "submit": "Envoyer"
+  },
+  "notifications": {
+    "newMessage": "Nouveau message",
+    "newNotification": "Nouvelle notification",
+    "markAsRead": "Marquer comme lu",
+    "seeAll": "Voir tout"
+  },
+  "date": {
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "tomorrow": "Demain",
+    "daysOfWeek": {
+      "monday": "Lundi",
+      "tuesday": "Mardi",
+      "wednesday": "Mercredi",
+      "thursday": "Jeudi",
+      "friday": "Vendredi",
+      "saturday": "Samedi",
+      "sunday": "Dimanche"
+    },
+    "months": {
+      "january": "Janvier",
+      "february": "Février",
+      "march": "Mars",
+      "april": "Avril",
+      "may": "Mai",
+      "june": "Juin",
+      "july": "Juillet",
+      "august": "Août",
+      "september": "Septembre",
+      "october": "Octobre",
+      "november": "Novembre",
+      "december": "Décembre"
+    }
+  },
+  "footer": {
+    "termsOfService": "Conditions d'utilisation",
+    "privacyPolicy": "Politique de confidentialité",
+    "copyright": "Tous droits réservés"
+  }
+}

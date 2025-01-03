@@ -1,0 +1,22 @@
+{
+  "requiredField": "このフィールドは必須です。",
+  "invalidEmail": "有効なメールアドレスを入力してください。",
+  "passwordTooShort": "パスワードは最低6文字でなければなりません。",
+  "passwordMismatch": "パスワードが一致しません。",
+  "userNotFound": "指定されたユーザーが見つかりません。",
+  "incorrectPassword": "パスワードが正しくありません。",
+  "emailAlreadyInUse": "このメールアドレスは既に使用されています。",
+  "accountLocked": "アカウントがロックされています。管理者に連絡してください。",
+  "sessionExpired": "セッションの有効期限が切れました。再度ログインしてください。",
+  "accessDenied": "アクセスが拒否されました。認証が必要です。",
+  "networkError": "ネットワークエラーが発生しました。後でもう一度お試しください。",
+  "serverError": "サーバーエラーが発生しました。後でもう一度お試しください。",
+  "tooManyRequests": "リクエストが多すぎます。後でもう一度お試しください。",
+  "validationFailed": "バリデーションに失敗しました。入力内容を確認してください。",
+  "fileTooLarge": "ファイルが大きすぎます。小さいファイルを選択してください。",
+  "unsupportedFileType": "サポートされていないファイル形式です。",
+  "subscriptionRequired": "このコンテンツを表示するにはサブスクリプションが必要です。",
+  "actionNotAllowed": "このアクションは許可されていません。",
+  "resourceNotFound": "リソースが見つかりません。",
+  "emailNotVerified": "メールアドレスが確認されていません。確認リンクをチェックしてください。"
+}

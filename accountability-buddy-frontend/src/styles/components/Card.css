@@ -1,0 +1,59 @@
+/* src/styles/components/Card.css */
+
+/* Card container styles */
+.card {
+    background-color: white; /* Background color for the card */
+    border: 1px solid #ddd; /* Light grey border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 16px; /* Inner padding */
+    margin: 16px 0; /* Space between cards */
+    transition: box-shadow 0.3s ease; /* Smooth transition for shadow on hover */
+  }
+  
+  /* Card hover effect */
+  .card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+  }
+  
+  /* Card title styles */
+  .card-title {
+    font-size: 1.5rem; /* Title font size */
+    margin-bottom: 8px; /* Space below title */
+    color: var(--primary-color); /* Use primary color for title */
+  }
+  
+  /* Card content styles */
+  .card-content {
+    font-size: 1rem; /* Content font size */
+    color: #333; /* Darker text for readability */
+    line-height: 1.5; /* Spacing between lines */
+  }
+  
+  /* Card footer styles */
+  .card-footer {
+    display: flex; /* Flexbox for footer alignment */
+    justify-content: space-between; /* Space between footer items */
+    margin-top: 12px; /* Space above footer */
+  }
+  
+  /* Button inside the card */
+  .card-footer .button {
+    background-color: var(--primary-color); /* Button color */
+    color: white; /* Button text color */
+    padding: 8px 12px; /* Padding for button */
+    border-radius: 5px; /* Rounded corners for button */
+    cursor: pointer; /* Pointer cursor on hover */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .card {
+      padding: 12px; /* Less padding on smaller screens */
+    }
+    
+    .card-title {
+      font-size: 1.25rem; /* Smaller title font size */
+    }
+  }
+  

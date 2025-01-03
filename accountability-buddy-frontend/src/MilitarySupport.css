@@ -1,0 +1,46 @@
+.military-support-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.disclaimer {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid red;
+    background-color: #ffe6e6;
+    color: red;
+}
+
+.resources ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.resources ul li {
+    margin: 5px 0;
+}
+
+.chat-box {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.chat-box .messages {
+    height: 200px;
+    overflow-y: scroll;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+.chat-box input {
+    width: 80%;
+    padding: 5px;
+}
+
+.chat-box button {
+    width: 18%;
+    padding: 5px;
+}

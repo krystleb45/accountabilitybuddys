@@ -1,0 +1,11 @@
+# https://www.robotstxt.org/robotstxt.html
+
+# Directives for all user agents
+User-agent: *
+Disallow: /private/      # Disallow crawling of the private directory
+Disallow: /admin/        # Disallow crawling of the admin directory
+Disallow: /profile/      # Disallow crawling of the profile directory
+Allow: /public/          # Allow crawling of the public directory
+
+# Sitemap URL
+Sitemap: https://www.example.com/sitemap.xml

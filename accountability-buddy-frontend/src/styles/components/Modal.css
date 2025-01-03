@@ -1,0 +1,70 @@
+/* src/styles/components/Modal.css */
+
+/* Modal overlay styles */
+.modal-overlay {
+    position: fixed; /* Position overlay to cover the entire viewport */
+    top: 0;
+    left: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 1000; /* High z-index to sit above other content */
+  }
+  
+  /* Modal container styles */
+  .modal {
+    position: fixed; /* Position modal */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Offset by half its size */
+    background-color: white; /* Modal background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    width: 90%; /* Default width */
+    max-width: 600px; /* Max width for larger screens */
+    padding: 20px; /* Inner padding */
+    z-index: 1001; /* Higher z-index than overlay */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth opening and closing */
+  }
+  
+  /* Modal title styles */
+  .modal-title {
+    font-size: 1.5rem; /* Title font size */
+    margin-bottom: 10px; /* Space below title */
+  }
+  
+  /* Modal content styles */
+  .modal-content {
+    font-size: 1rem; /* Content font size */
+    line-height: 1.5; /* Line spacing */
+    color: #333; /* Text color */
+  }
+  
+  /* Modal footer styles */
+  .modal-footer {
+    display: flex; /* Flexbox for footer alignment */
+    justify-content: flex-end; /* Align items to the right */
+    margin-top: 20px; /* Space above footer */
+  }
+  
+  /* Button styles in the modal */
+  .modal-footer .button {
+    background-color: var(--primary-color); /* Button color */
+    color: white; /* Button text color */
+    padding: 8px 12px; /* Button padding */
+    border-radius: 5px; /* Rounded corners for button */
+    cursor: pointer; /* Pointer cursor */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  }
+  
+  .modal-footer .button:hover {
+    background-color: var(--secondary-color); /* Change color on hover */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .modal {
+      width: 95%; /* Wider modal on smaller screens */
+    }
+  }
+  

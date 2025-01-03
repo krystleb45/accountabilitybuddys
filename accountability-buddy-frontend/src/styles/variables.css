@@ -1,0 +1,42 @@
+/* src/styles/variables.css */
+
+/* Color Variables */
+:root {
+    --primary-color: #1976d2; /* Main brand color */
+    --secondary-color: #90caf9; /* Lighter shade for secondary elements */
+    --accent-color: #ff4081; /* Accent color for highlights */
+    --text-color: #333333; /* Default text color */
+    --background-color: #ffffff; /* Default background color */
+    --error-color: #f44336; /* Color for error messages */
+    --warning-color: #ff9800; /* Color for warnings */
+    --success-color: #4caf50; /* Color for success messages */
+  }
+  
+  /* Font Size Variables */
+  :root {
+    --font-size-base: 16px; /* Base font size */
+    --font-size-small: 14px; /* Small font size */
+    --font-size-large: 20px; /* Large font size */
+  }
+  
+  /* Spacing Variables */
+  :root {
+    --spacing-small: 4px; /* Small spacing */
+    --spacing-medium: 8px; /* Medium spacing */
+    --spacing-large: 16px; /* Large spacing */
+  }
+  
+  /* Border Radius Variables */
+  :root {
+    --border-radius-small: 4px; /* Small border radius */
+    --border-radius-medium: 8px; /* Medium border radius */
+    --border-radius-large: 16px; /* Large border radius */
+  }
+  
+  /* Box Shadow Variables */
+  :root {
+    --box-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1); /* Light shadow */
+    --box-shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.2); /* Medium shadow */
+    --box-shadow-heavy: 0 4px 8px rgba(0, 0, 0, 0.3); /* Heavy shadow */
+  }
+  

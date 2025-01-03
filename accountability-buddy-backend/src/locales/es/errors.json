@@ -1,0 +1,62 @@
+{
+  "404": {
+    "title": "Página No Encontrada",
+    "message": "La página que buscas no se pudo encontrar."
+  },
+  "500": {
+    "title": "Error del Servidor",
+    "message": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde."
+  },
+  "networkError": {
+    "title": "Error de Red",
+    "message": "No se pudo conectar al servidor. Verifica tu conexión a Internet."
+  },
+  "validationError": {
+    "title": "Error de Validación",
+    "message": "Algunos campos no son válidos. Revisa los campos marcados y vuelve a intentarlo."
+  },
+  "authenticationError": {
+    "title": "Error de Autenticación",
+    "message": "No tienes autorización para acceder a este recurso. Por favor, inicia sesión nuevamente."
+  },
+  "authorizationError": {
+    "title": "Error de Autorización",
+    "message": "No tienes los permisos necesarios para realizar esta acción."
+  },
+  "timeoutError": {
+    "title": "Error de Tiempo de Espera",
+    "message": "La solicitud tardó demasiado en procesarse. Por favor, inténtalo de nuevo más tarde."
+  },
+  "formSubmissionError": {
+    "title": "Error en el Envío del Formulario",
+    "message": "Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo."
+  },
+  "resourceNotFound": {
+    "title": "Recurso No Encontrado",
+    "message": "El recurso solicitado no se pudo encontrar."
+  },
+  "passwordMismatch": {
+    "title": "Las Contraseñas No Coinciden",
+    "message": "Las contraseñas ingresadas no coinciden. Por favor, revisa y vuelve a intentarlo."
+  },
+  "accountLocked": {
+    "title": "Cuenta Bloqueada",
+    "message": "Tu cuenta ha sido bloqueada. Por favor, contacta al soporte para recibir ayuda."
+  },
+  "accountNotActivated": {
+    "title": "Cuenta No Activada",
+    "message": "Tu cuenta aún no ha sido activada. Revisa tu correo electrónico para activar tu cuenta."
+  },
+  "invalidCredentials": {
+    "title": "Credenciales Inválidas",
+    "message": "El correo electrónico o la contraseña son incorrectos. Por favor, inténtalo de nuevo."
+  },
+  "subscriptionExpired": {
+    "title": "Suscripción Expirada",
+    "message": "Tu suscripción ha expirado. Por favor, renueva para continuar usando el servicio."
+  },
+  "paymentFailed": {
+    "title": "Error de Pago",
+    "message": "El pago no se pudo procesar. Intenta con un método diferente."
+  }
+}

@@ -1,0 +1,80 @@
+/* src/styles/global.css */
+
+/* CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+  }
+  
+  /* Body styles */
+  body {
+    font-family: 'Arial', sans-serif; /* Base font family */
+    line-height: 1.6; /* Line height for better readability */
+    background-color: #ffffff; /* Default background color */
+    color: #333333; /* Default text color */
+    padding: 0 15px; /* Horizontal padding */
+  }
+  
+  /* Links */
+  a {
+    text-decoration: none; /* Remove underline from links */
+    color: var(--primary-color); /* Use CSS variable for primary color */
+  }
+  
+  a:hover {
+    text-decoration: underline; /* Underline on hover for better indication */
+  }
+  
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 15px; /* Space below headings */
+    color: var(--primary-color); /* Use primary color for headings */
+  }
+  
+  /* Buttons */
+  .button {
+    display: inline-block; /* Allow padding and margin to work properly */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Padding for buttons */
+    cursor: pointer; /* Pointer cursor for buttons */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effects */
+  }
+  
+  /* Utility classes */
+  .hidden {
+    display: none; /* Utility class to hide elements */
+  }
+  
+  .text-center {
+    text-align: center; /* Center text */
+  }
+  
+  .mt-1 {
+    margin-top: 0.25rem; /* Small top margin */
+  }
+  
+  .mt-2 {
+    margin-top: 0.5rem; /* Medium top margin */
+  }
+  
+  .mb-1 {
+    margin-bottom: 0.25rem; /* Small bottom margin */
+  }
+  
+  .mb-2 {
+    margin-bottom: 0.5rem; /* Medium bottom margin */
+  }
+  
+  /* Responsive typography */
+  @media (max-width: 768px) {
+    body {
+      font-size: 14px; /* Adjust font size for smaller screens */
+    }
+  
+    h1 {
+      font-size: 1.5rem; /* Smaller heading size */
+    }
+  }
+  

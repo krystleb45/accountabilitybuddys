@@ -1,0 +1,66 @@
+/* src/styles/dark.css */
+
+/* General body styles for dark mode */
+body {
+    background-color: #121212; /* Dark background */
+    color: #e0e0e0; /* Light text color for contrast */
+  }
+  
+  /* Link styles */
+  a {
+    color: #bb86fc; /* Light purple color for links */
+  }
+  
+  a:hover {
+    color: #3700b3; /* Darker purple on hover */
+  }
+  
+  /* Button styles */
+  .button {
+    background-color: #1f1f1f; /* Dark button background */
+    color: #e0e0e0; /* Light text color */
+    border: 1px solid #bb86fc; /* Light purple border */
+  }
+  
+  .button:hover {
+    background-color: #bb86fc; /* Change to light purple on hover */
+    color: #121212; /* Dark text on hover */
+  }
+  
+  /* Card styles */
+  .card {
+    background-color: #1e1e1e; /* Dark card background */
+    border: 1px solid #333; /* Slightly lighter border */
+    color: #e0e0e0; /* Light text color */
+  }
+  
+  /* Modal styles */
+  .modal {
+    background-color: #1e1e1e; /* Dark modal background */
+    color: #e0e0e0; /* Light text color */
+  }
+  
+  /* Input fields */
+  input, textarea {
+    background-color: #333; /* Dark input background */
+    color: #e0e0e0; /* Light text color */
+    border: 1px solid #555; /* Lighter border */
+  }
+  
+  input::placeholder, textarea::placeholder {
+    color: #aaa; /* Placeholder text color */
+  }
+  
+  /* Footer styles */
+  footer {
+    background-color: #1f1f1f; /* Dark footer background */
+    color: #e0e0e0; /* Light text color */
+  }
+  
+  /* Media queries for responsiveness (if necessary) */
+  @media (max-width: 768px) {
+    body {
+      font-size: 14px; /* Adjust font size for smaller screens */
+    }
+  }
+  

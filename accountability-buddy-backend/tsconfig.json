@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "lib": ["ESNext", "DOM"],
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "resolveJsonModule": true,
+    "typeRoots": ["./types", "./node_modules/@types"], // Include custom and external types
+    "types": ["node", "express"], // Explicitly include types for Node.js and Express
+    "allowJs": false, // Strictly enforce TypeScript-only files
+    "declaration": true, // Generate declaration files for type-checking
+    "declarationMap": true, // Map declarations for easier debugging
+    "sourceMap": true, // Enable source maps for debugging
+    "strictPropertyInitialization": true, // Ensure class properties are initialized properly
+    "noUnusedLocals": true, // Warn for unused local variables
+    "noUnusedParameters": true, // Warn for unused parameters
+    "noImplicitReturns": true, // Ensure functions return values consistently
+    "noFallthroughCasesInSwitch": true // Prevent fallthrough cases in switch statements
+  },
+  "include": [
+    "src/**/*", // Include all source files
+    "types/**/*.d.ts", // Include custom types folder
+    "@types/**/*.d.ts" // Include types from @types directory
+  ],
+  "exclude": [
+    "node_modules", // Exclude node_modules for performance
+    "dist", // Exclude compiled output folder
+    "**/*.test.ts", // Exclude test files
+    "**/*.spec.ts" // Exclude spec files
+  ]
+}

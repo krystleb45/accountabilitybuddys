@@ -1,0 +1,58 @@
+{
+  "navigation": {
+    "home": "ホーム",
+    "dashboard": "ダッシュボード",
+    "profile": "プロフィール",
+    "settings": "設定",
+    "logout": "ログアウト",
+    "login": "ログイン",
+    "signup": "サインアップ",
+    "about": "情報",
+    "contact": "お問い合わせ"
+  },
+  "buttons": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "update": "更新",
+    "submit": "送信",
+    "viewMore": "もっと見る",
+    "back": "戻る"
+  },
+  "messages": {
+    "loading": "読み込み中...",
+    "success": "成功",
+    "error": "エラー",
+    "confirm": "確認",
+    "noData": "表示するデータがありません",
+    "welcome": "ようこそ, {{username}}!",
+    "goodbye": "またお会いしましょう!"
+  },
+  "errors": {
+    "404": "ページが見つかりません",
+    "500": "サーバーエラーが発生しました",
+    "networkError": "ネットワークエラーが発生しました。後でもう一度お試しください。",
+    "formError": "送信中にエラーが発生しました。もう一度お試しください。",
+    "unauthorized": "アクセスが拒否されました。認証が必要です。"
+  },
+  "dates": {
+    "today": "今日",
+    "yesterday": "昨日",
+    "tomorrow": "明日",
+    "last7Days": "過去7日間",
+    "thisMonth": "今月",
+    "lastMonth": "先月",
+    "customRange": "カスタム範囲"
+  },
+  "notifications": {
+    "newMessage": "新しいメッセージがあります",
+    "updateAvailable": "アップデートが利用可能です",
+    "subscriptionReminder": "サブスクリプションの期限が近づいています"
+  },
+  "placeholders": {
+    "search": "検索...",
+    "enterText": "テキストを入力してください...",
+    "selectOption": "オプションを選択してください"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "username": "testuser",
+  "email": "testuser@example.com",
+  "password": "password123",
+  "invalidUsername": "invaliduser",
+  "invalidEmail": "invalid@example.com",
+  "invalidPassword": "wrongpassword",
+  "friendUsername": "frienduser",
+  "profilePic": "profile-pic.jpg",
+  "analyticsStartDate": "2024-01-01",
+  "analyticsEndDate": "2024-12-31"
+}

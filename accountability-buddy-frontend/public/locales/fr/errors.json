@@ -1,0 +1,50 @@
+{
+  "generic": {
+    "serverError": "Une erreur de serveur s'est produite. Veuillez réessayer.",
+    "networkError": "Erreur réseau. Veuillez vérifier votre connexion Internet.",
+    "timeout": "Le délai de la requête a expiré.",
+    "unknownError": "Une erreur inconnue s'est produite. Veuillez réessayer.",
+    "forbidden": "Vous n'avez pas la permission d'accéder à cette page.",
+    "unauthorized": "Vous n'êtes pas autorisé à effectuer cette action.",
+    "notFound": "Ressource non trouvée.",
+    "validationFailed": "La validation des données a échoué."
+  },
+  "auth": {
+    "invalidCredentials": "Email ou mot de passe incorrect.",
+    "accountLocked": "Votre compte a été verrouillé. Veuillez contacter le support.",
+    "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
+    "tokenInvalid": "Le jeton d'authentification n'est pas valide.",
+    "loginRequired": "Vous devez être connecté pour accéder à cette page.",
+    "registrationFailed": "Échec de l'inscription. Veuillez réessayer.",
+    "passwordMismatch": "Les mots de passe ne correspondent pas.",
+    "emailAlreadyInUse": "Cet email est déjà utilisé."
+  },
+  "form": {
+    "requiredField": "Ce champ est obligatoire.",
+    "invalidEmail": "L'adresse email n'est pas valide.",
+    "passwordTooShort": "Le mot de passe doit comporter au moins 6 caractères.",
+    "passwordTooWeak": "Le mot de passe est trop faible.",
+    "invalidDate": "La date n'est pas valide.",
+    "invalidNumber": "Le numéro n'est pas valide.",
+    "invalidUrl": "L'URL n'est pas valide."
+  },
+  "payment": {
+    "paymentFailed": "Le paiement a échoué. Veuillez réessayer.",
+    "cardDeclined": "Votre carte a été refusée.",
+    "insufficientFunds": "Fonds insuffisants.",
+    "subscriptionError": "Erreur lors du traitement de l'abonnement. Veuillez réessayer.",
+    "invalidPaymentDetails": "Les détails de paiement ne sont pas valides."
+  },
+  "upload": {
+    "fileTooLarge": "Le fichier est trop volumineux. La taille maximale autorisée est de {{maxSize}} Mo.",
+    "invalidFileType": "Type de fichier non autorisé. Seuls les types {{allowedTypes}} sont acceptés.",
+    "uploadFailed": "Échec du téléchargement du fichier. Veuillez réessayer."
+  },
+  "pagination": {
+    "pageOutOfBounds": "La page demandée est hors des limites."
+  },
+  "database": {
+    "connectionError": "Impossible de se connecter à la base de données.",
+    "queryError": "Erreur lors de l'exécution de la requête dans la base de données."
+  }
+}
