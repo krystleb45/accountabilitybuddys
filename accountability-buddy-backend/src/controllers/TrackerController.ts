@@ -1,108 +1,118 @@
 import { Request, Response, NextFunction } from "express";
+import Tracker from "../models/Tracker"; // Database model for tracker
+import catchAsync from "../utils/catchAsync";
+import sendResponse from "../utils/sendResponse";
+
+
+// Extend Express Request to include 'user'
+interface CustomRequest extends Request {
+  user?: { id: string }; // Assuming the user object has an 'id' property
+}
 
 /**
  * @desc Fetch all trackers
  * @route GET /api/trackers
- * @access Public
+ * @access Private
  */
-export const getAllTrackers = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
-    // Simulated fetch logic; replace with actual database operations
-    const trackers = [
-      { id: 1, name: "Tracker 1", progress: 50 },
-      { id: 2, name: "Tracker 2", progress: 75 },
-    ];
+export const getAllTrackers = catchAsync(
+  async (req: CustomRequest, res: Response, _next: NextFunction): Promise<void> => {
+    const userId = req.user?.id;
 
-    res.status(200).json({ success: true, data: trackers });
-  } catch (error) {
-    next(error);
+    if (!userId) {
+      sendResponse(res, 401, false, "User not authenticated");
+      return;
+    }
+
+    const trackers = await Tracker.find({ user: userId }).sort({ createdAt: -1 });
+
+    sendResponse(res, 200, true, "Trackers fetched successfully", trackers);
   }
-};
+);
 
 /**
  * @desc Create a new tracker
  * @route POST /api/trackers
- * @access Public
+ * @access Private
  */
-export const createTracker = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
+export const createTracker = catchAsync(
+  async (req: CustomRequest, res: Response, _next: NextFunction): Promise<void> => {
+    const userId = req.user?.id;
     const { name } = req.body;
 
-    if (!name) {
-      res.status(400).json({ success: false, message: "Tracker name is required" });
+    if (!userId) {
+      sendResponse(res, 401, false, "User not authenticated");
       return;
     }
 
-    // Simulated creation logic; replace with actual database operations
-    const newTracker = { id: Date.now(), name, progress: 0 };
+    if (!name) {
+      sendResponse(res, 400, false, "Tracker name is required");
+      return;
+    }
 
-    res.status(201).json({ success: true, data: newTracker });
-  } catch (error) {
-    next(error);
+    const newTracker = await Tracker.create({ user: userId, name, progress: 0 });
+
+    sendResponse(res, 201, true, "Tracker created successfully", newTracker);
   }
-};
+);
 
 /**
  * @desc Update a tracker
  * @route PUT /api/trackers/:id
- * @access Public
+ * @access Private
  */
-export const updateTracker = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
+export const updateTracker = catchAsync(
+  async (req: CustomRequest, res: Response, _next: NextFunction): Promise<void> => {
+    const userId = req.user?.id;
     const { id } = req.params;
     const { progress } = req.body;
 
-    if (progress === undefined || typeof progress !== "number") {
-      res
-        .status(400)
-        .json({ success: false, message: "Progress must be a number" });
+    if (!userId) {
+      sendResponse(res, 401, false, "User not authenticated");
       return;
     }
 
-    // Simulated update logic; replace with actual database operations
-    const updatedTracker = { id, progress };
+    if (progress === undefined || typeof progress !== "number") {
+      sendResponse(res, 400, false, "Progress must be a number");
+      return;
+    }
 
-    res.status(200).json({ success: true, data: updatedTracker });
-  } catch (error) {
-    next(error);
+    const updatedTracker = await Tracker.findOneAndUpdate(
+      { _id: id, user: userId },
+      { progress },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedTracker) {
+      sendResponse(res, 404, false, "Tracker not found");
+      return;
+    }
+
+    sendResponse(res, 200, true, "Tracker updated successfully", updatedTracker);
   }
-};
+);
 
 /**
  * @desc Delete a tracker
  * @route DELETE /api/trackers/:id
- * @access Public
+ * @access Private
  */
-export const deleteTracker = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
+export const deleteTracker = catchAsync(
+  async (req: CustomRequest, res: Response, _next: NextFunction): Promise<void> => {
+    const userId = req.user?.id;
     const { id } = req.params;
 
-    if (!id) {
-      res.status(400).json({ success: false, message: "Tracker ID is required" });
+    if (!userId) {
+      sendResponse(res, 401, false, "User not authenticated");
       return;
     }
 
-    // Simulated deletion logic; replace with actual database operations
-    res
-      .status(200)
-      .json({ success: true, message: `Tracker ${id} deleted successfully` });
-  } catch (error) {
-    next(error);
+    const deletedTracker = await Tracker.findOneAndDelete({ _id: id, user: userId });
+
+    if (!deletedTracker) {
+      sendResponse(res, 404, false, "Tracker not found");
+      return;
+    }
+
+    sendResponse(res, 200, true, "Tracker deleted successfully");
   }
-};
+);

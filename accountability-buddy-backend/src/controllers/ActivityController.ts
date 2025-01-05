@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import UserActivity from "../models/UserActivity";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -27,9 +27,11 @@ const sanitizeInput = (input: any): any => {
  * @access  Private
  */
 export const logActivity = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
-    const { activityType, details }: { activityType: string; details: string } =
-      sanitizeInput(req.body);
+  async (
+    req: CustomRequest<{}, any, { activityType: string; details: string }>,
+    res: Response
+  ): Promise<void> => {
+    const { activityType, details } = sanitizeInput(req.body);
     const userId = req.user?.id;
 
     // Validate inputs
@@ -60,7 +62,10 @@ export const logActivity = catchAsync(
  * @access  Private
  */
 export const getUserActivities = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: CustomRequest,
+    res: Response
+  ): Promise<void> => {
     const userId = req.user?.id;
 
     if (!userId) {

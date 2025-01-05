@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from "express-serve-static-core";
+import { Request, Response, NextFunction } from "express";
 import logger from "../utils/winstonLogger";
 
 // Define the extended error interface
 interface CustomError extends Error {
-  statusCode: number; // HTTP status code
-  isOperational: boolean; // True for predictable, operational errors
+  statusCode?: number; // HTTP status code
+  isOperational?: boolean; // True for predictable, operational errors
   details?: unknown; // Additional details about the error
 }
 
@@ -25,15 +25,15 @@ export const createError = (
 // Middleware to handle errors
 export const errorHandler = (
   err: CustomError,
-  req: Request,
+  _req: Request,
   res: Response,
-  _next: NextFunction, // Renamed 'next' to '_next' to comply with ESLint rules
+  next: NextFunction, // Ensure proper typing for Express error middleware
 ): void => {
   // Log the error
   logger.error(
     `Error: ${err.message}, Status: ${err.statusCode || 500}, Details: ${
       err.details || "N/A"
-    }`,
+    }`
   );
 
   // Prepare the response
@@ -45,4 +45,7 @@ export const errorHandler = (
   };
 
   res.status(statusCode).json(response);
+
+  // Explicitly call 'next' for compatibility with Express
+  next();
 };

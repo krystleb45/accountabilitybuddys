@@ -21,7 +21,7 @@ const csrfProtection = csrf({
  */
 const csrfErrorHandler = (
   err: { code?: string; message?: string },
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ): void => {

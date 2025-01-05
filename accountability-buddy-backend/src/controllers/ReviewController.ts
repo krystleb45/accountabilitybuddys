@@ -1,9 +1,8 @@
-import { Request, Response, NextFunction } from "express";
-import User from "../models/User"; 
-import Review from "../models/Review"; // assuming you have a Review model
+import { Response } from "express";
+import User from "../models/User";
+import Review from "../models/Review"; // Assuming Review model exists
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
-
 
 /**
  * @desc Submit a review
@@ -11,13 +10,12 @@ import sendResponse from "../utils/sendResponse";
  * @access Private
  */
 export const submitReview = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
-    if (!req.user) {
-      sendResponse(res, 401, false, "User not authenticated");
-      return;
-    }
-
+  async (
+    req: CustomRequest<{}, any, { userId: string; rating: number; content: string }>,
+    res: Response
+  ): Promise<void> => {
     const { userId, rating, content } = req.body;
+    const reviewerId = req.user?.id;
 
     // Validate rating
     if (rating < 1 || rating > 5) {
@@ -31,19 +29,22 @@ export const submitReview = catchAsync(
       return;
     }
 
+    // Validate user existence
     const user = await User.findById(userId);
     if (!user) {
       sendResponse(res, 404, false, "User not found");
       return;
     }
 
-    if (userId === req.user.id) {
+    // Prevent self-reviews
+    if (userId === reviewerId) {
       sendResponse(res, 400, false, "You cannot review yourself");
       return;
     }
 
+    // Check for existing review
     const existingReview = await Review.findOne({
-      reviewer: req.user.id,
+      reviewer: reviewerId,
       reviewee: userId,
     });
     if (existingReview) {
@@ -51,8 +52,9 @@ export const submitReview = catchAsync(
       return;
     }
 
+    // Create new review
     const newReview = await Review.create({
-      reviewer: req.user.id,
+      reviewer: reviewerId,
       reviewee: userId,
       rating,
       content,
@@ -67,19 +69,27 @@ export const submitReview = catchAsync(
 /**
  * @desc Get reviews for a user
  * @route GET /api/reviews/:userId
- * @access Public or Private (depending on your logic)
+ * @access Public
  */
 export const getUserReviews = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest<{ userId: string }>,
+    res: Response
+  ): Promise<void> => {
     const { userId } = req.params;
 
+    // Validate user existence
     const user = await User.findById(userId);
     if (!user) {
       sendResponse(res, 404, false, "User not found");
       return;
     }
 
-    const reviews = await Review.find({ reviewee: userId }).populate("reviewer", "username");
+    // Fetch reviews for the user
+    const reviews = await Review.find({ reviewee: userId }).populate(
+      "reviewer",
+      "username profilePicture"
+    );
 
     sendResponse(res, 200, true, "User reviews fetched successfully", { reviews });
   }
@@ -91,18 +101,19 @@ export const getUserReviews = catchAsync(
  * @access Private
  */
 export const deleteReview = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
-    if (!req.user) {
-      sendResponse(res, 401, false, "User not authenticated");
-      return;
-    }
-
+  async (
+    req: CustomRequest<{ reviewId: string }>,
+    res: Response
+  ): Promise<void> => {
     const { reviewId } = req.params;
+    const reviewerId = req.user?.id;
 
+    // Find and delete the review
     const review = await Review.findOneAndDelete({
       _id: reviewId,
-      reviewer: req.user.id, // ensures user can only delete their own reviews
+      reviewer: reviewerId,
     });
+
     if (!review) {
       sendResponse(res, 404, false, "Review not found or access denied");
       return;

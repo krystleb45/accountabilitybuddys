@@ -1,16 +1,16 @@
-import { Request, Response, NextFunction } from "express"; // Fixed import
+import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import sanitize from "mongo-sanitize";
 import User from "../models/User";
 import logger from "../utils/winstonLogger";
 
-// Extend Request for authenticated users
+// Define and export AuthenticatedRequest directly
 export interface AuthenticatedRequest extends Request {
-  user?: {
+  user: {
     id: string;
-    email: string; // Added email field to match global type
-    role: "user" | "admin" | "moderator";
-    isAdmin?: boolean;
+    email: string;
+    role: "user" | "admin" | "moderator"; // Role must be specified
+    isAdmin?: boolean; // Optional field
   };
 }
 
@@ -19,22 +19,25 @@ export interface AuthenticatedRequest extends Request {
  * Validates JWT and attaches user details to the request object.
  */
 const authMiddleware = async (
-  req: AuthenticatedRequest,
+  req: AuthenticatedRequest, // Now uses exported type
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
+    // Retrieve Authorization header
     const authHeader = req.headers.authorization;
 
+    // Check if Authorization header exists and follows Bearer format
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       logger.warn("Authorization header missing or malformed");
       res.status(401).json({
         success: false,
         message: "Authorization denied. No valid token provided.",
       });
-      return; // <-- Exit function after response
+      return; // Exit early
     }
 
+    // Extract and sanitize the token
     const token = sanitize(authHeader.split(" ")[1]);
     if (!token) {
       logger.warn("Token extraction failed from authorization header");
@@ -42,23 +45,26 @@ const authMiddleware = async (
         success: false,
         message: "Authorization denied. Invalid token.",
       });
-      return; // <-- Exit function after response
+      return; // Exit early
     }
 
+    // Verify and decode the JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET || "default_secret") as {
       id: string;
       role: "user" | "admin" | "moderator";
     };
 
+    // Validate decoded token structure
     if (!decoded?.id || !decoded?.role) {
       logger.warn("Token verification failed: missing required fields");
       res.status(401).json({
         success: false,
         message: "Authorization denied. Invalid token payload.",
       });
-      return; // <-- Exit function after response
+      return; // Exit early
     }
 
+    // Find the user in the database
     const user = await User.findById(decoded.id).select("id email role");
     if (!user) {
       logger.warn("User not found for provided token");
@@ -66,9 +72,10 @@ const authMiddleware = async (
         success: false,
         message: "Authorization denied. User does not exist.",
       });
-      return; // <-- Exit function after response
+      return; // Exit early
     }
 
+    // Attach user details to the request object
     req.user = {
       id: user.id,
       email: user.email,
@@ -76,26 +83,26 @@ const authMiddleware = async (
       isAdmin: user.role === "admin",
     };
 
-    // Move to the next middleware
+    // Proceed to the next middleware
     next();
   } catch (error) {
+    // Handle specific JWT errors
     if (error instanceof jwt.JsonWebTokenError) {
       logger.warn(`JWT error: ${error.message}`);
       res.status(401).json({
         success: false,
         message: "Authorization denied. Invalid token.",
       });
-      return; // <-- Exit function after response
+      return; // Exit early
     }
 
+    // Handle general errors
     logger.error("Authentication error:", error);
     res.status(500).json({
       success: false,
       message: "Internal server error during authentication.",
     });
-    return; // <-- Exit function after response
   }
 };
-
 
 export default authMiddleware;

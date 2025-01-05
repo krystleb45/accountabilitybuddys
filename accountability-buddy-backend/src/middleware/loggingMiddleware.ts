@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express-serve-static-core";
+import { Request, Response, NextFunction } from "express";
 import logger from "../utils/winstonLogger";
 
 /**
@@ -12,12 +12,16 @@ const loggingMiddleware = (req: Request, res: Response, next: NextFunction): voi
   // Log incoming request
   try {
     logger.info(`[REQUEST] ${method} ${url}`, {
-      headers,
-      body: Object.keys(body).length ? body : undefined, // Log body only if present
+      headers: {
+        host: headers.host,
+        userAgent: headers["user-agent"],
+        contentType: headers["content-type"],
+      },
+      body: body && Object.keys(body).length ? body : undefined, // Log body only if present
       ip: req.ip,
     });
   } catch (error) {
-    logger.error(`[LOGGING] Failed to log request: ${error.message}`);
+    logger.error(`[LOGGING] Failed to log request: ${(error as Error).message}`);
   }
 
   // Log response details on finish
@@ -31,7 +35,7 @@ const loggingMiddleware = (req: Request, res: Response, next: NextFunction): voi
         ip: req.ip,
       });
     } catch (error) {
-      logger.error(`[LOGGING] Failed to log response: ${error.message}`);
+      logger.error(`[LOGGING] Failed to log response: ${(error as Error).message}`);
     }
   });
 

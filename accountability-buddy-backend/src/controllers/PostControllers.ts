@@ -1,159 +1,144 @@
-import { Request, Response, NextFunction } from "express";
-import { Post } from "../models/Post";
-import User from "../models/User";
-import sanitize from "mongo-sanitize";
+import { Response } from "express";
+import Notification from "../models/Notification"; // Ensure this matches your model export
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
+import sanitize from "mongo-sanitize";
 
 /**
- * @desc Create a new post
- * @route POST /api/posts
+ * @desc Create a new notification
+ * @route POST /api/notifications
  * @access Private
  */
-export const createPost = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
-    const content = sanitize(req.body.content);
-    const userId = req.user?.id;
+export const createNotification = catchAsync(
+  async (req: CustomRequest, res: Response): Promise<void> => {
+    const {
+      userId,
+      message,
+      type,
+    }: { userId: string; message: string; type?: string } = sanitize(req.body);
 
-    if (!content || content.trim() === "") {
-      sendResponse(res, 400, false, "Post content cannot be empty");
+    if (!userId || !message) {
+      sendResponse(res, 400, false, "User ID and message are required");
       return;
     }
 
-    if (content.length > 500) {
-      sendResponse(res, 400, false, "Post content exceeds the 500-character limit");
-      return;
-    }
+    const newNotification = await Notification.create({
+      user: userId,
+      message,
+      type,
+    });
 
-    const newPost = new Post({ user: userId, content });
-    await newPost.save();
-    await newPost.populate("user", "username profilePicture");
-
-    sendResponse(res, 201, true, "Post created successfully", {
-      post: newPost,
+    sendResponse(res, 201, true, "Notification created successfully", {
+      notification: newNotification,
     });
   }
 );
 
 /**
- * @desc Get the user's feed
- * @route GET /api/posts/feed
+ * @desc Get user notifications with pagination
+ * @route GET /api/notifications
  * @access Private
  */
-export const getFeed = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+export const getUserNotifications = catchAsync(
+  async (req: CustomRequest, res: Response): Promise<void> => {
+    const userId = req.user?.id;
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 10;
-    const userId = req.user?.id;
 
-    const user = await User.findById(userId)
-      .select("friends")
-      .populate("friends", "_id");
-
-    if (!user || !user.friends || user.friends.length === 0) {
-      sendResponse(res, 200, true, "No friends found", { posts: [] });
-      return;
-    }
-
-    const posts = await Post.find({ user: { $in: user.friends } })
-      .populate("user", "username profilePicture")
+    const notifications = await Notification.find({ user: userId })
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit);
 
-    const totalPosts = await Post.countDocuments({ user: { $in: user.friends } });
+    const totalNotifications = await Notification.countDocuments({ user: userId });
 
-    sendResponse(res, 200, true, "Feed fetched successfully", {
-      posts,
+    sendResponse(res, 200, true, "User notifications fetched successfully", {
+      notifications,
       pagination: {
-        totalPosts,
+        total: totalNotifications,
         currentPage: page,
-        totalPages: Math.ceil(totalPosts / limit),
+        totalPages: Math.ceil(totalNotifications / limit),
       },
     });
   }
 );
 
 /**
- * @desc Get a single post by ID
- * @route GET /api/posts/:postId
+ * @desc Mark a notification as read
+ * @route PATCH /api/notifications/:notificationId/read
  * @access Private
  */
-export const getPostById = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
-    const { postId } = req.params;
+export const markAsRead = catchAsync(
+  async (req: CustomRequest, res: Response): Promise<void> => {
+    const { notificationId } = req.params;
 
-    const post = await Post.findById(postId).populate(
-      "user",
-      "username profilePicture"
+    const updatedNotification = await Notification.findByIdAndUpdate(
+      notificationId,
+      { read: true },
+      { new: true }
     );
 
-    if (!post) {
-      sendResponse(res, 404, false, "Post not found");
+    if (!updatedNotification) {
+      sendResponse(res, 404, false, "Notification not found");
       return;
     }
 
-    sendResponse(res, 200, true, "Post fetched successfully", { post });
+    sendResponse(res, 200, true, "Notification marked as read", {
+      notification: updatedNotification,
+    });
   }
 );
 
 /**
- * @desc Update a post
- * @route PUT /api/posts/:postId
+ * @desc Mark all user notifications as read
+ * @route PATCH /api/notifications/read-all
  * @access Private
  */
-export const updatePost = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
-    const { postId } = req.params;
-    const updatedContent = sanitize(req.body.content);
+export const markAllAsRead = catchAsync(
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const userId = req.user?.id;
 
-    if (!updatedContent || updatedContent.trim() === "") {
-      sendResponse(res, 400, false, "Updated content cannot be empty");
-      return;
-    }
+    const result = await Notification.updateMany({ user: userId, read: false }, { read: true });
 
-    if (updatedContent.length > 500) {
-      sendResponse(
-        res,
-        400,
-        false,
-        "Updated content exceeds the 500-character limit"
-      );
-      return;
-    }
-
-    const post = await Post.findOneAndUpdate(
-      { _id: postId, user: userId },
-      { content: updatedContent },
-      { new: true }
-    ).populate("user", "username profilePicture");
-
-    if (!post) {
-      sendResponse(res, 404, false, "Post not found or unauthorized action");
-      return;
-    }
-
-    sendResponse(res, 200, true, "Post updated successfully", { post });
+    sendResponse(res, 200, true, "All notifications marked as read", {
+      modifiedCount: result.modifiedCount,
+    });
   }
 );
 
 /**
- * @desc Delete a post
- * @route DELETE /api/posts/:postId
+ * @desc Delete a notification
+ * @route DELETE /api/notifications/:notificationId
  * @access Private
  */
-export const deletePost = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
-    const { postId } = req.params;
-    const userId = req.user?.id;
+export const deleteNotification = catchAsync(
+  async (req: CustomRequest, res: Response): Promise<void> => {
+    const { notificationId } = req.params;
 
-    const post = await Post.findOneAndDelete({ _id: postId, user: userId });
-    if (!post) {
-      sendResponse(res, 404, false, "Post not found or unauthorized action");
+    const deletedNotification = await Notification.findByIdAndDelete(notificationId);
+
+    if (!deletedNotification) {
+      sendResponse(res, 404, false, "Notification not found");
       return;
     }
 
-    sendResponse(res, 200, true, "Post deleted successfully");
+    sendResponse(res, 200, true, "Notification deleted successfully");
+  }
+);
+
+/**
+ * @desc Delete all user notifications
+ * @route DELETE /api/notifications
+ * @access Private
+ */
+export const deleteAllNotifications = catchAsync(
+  async (req: CustomRequest, res: Response): Promise<void> => {
+    const userId = req.user?.id;
+
+    const result = await Notification.deleteMany({ user: userId });
+
+    sendResponse(res, 200, true, "All notifications deleted successfully", {
+      deletedCount: result.deletedCount,
+    });
   }
 );

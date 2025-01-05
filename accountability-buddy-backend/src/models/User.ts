@@ -15,6 +15,7 @@ export interface UserSettings {
     email?: boolean;
     sms?: boolean;
     push?: boolean;
+    enableNotifications?: boolean; // Added enableNotifications
   };
   privacy?: {
     profileVisibility?: "public" | "friends" | "private";
@@ -38,6 +39,7 @@ export interface IUser extends Document {
   friends: Types.ObjectId[];
   friendRequests: Types.ObjectId[];
   points?: number;
+  enableNotifications?: boolean; // Added enableNotifications
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   subscriptions?: Types.ObjectId[];
@@ -64,6 +66,7 @@ const UserSchema: Schema<IUser> = new Schema(
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     points: { type: Number, default: 0 },
+    enableNotifications: { type: Boolean, default: true }, // Added enableNotifications
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
     subscriptions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subscription" }],
@@ -72,6 +75,7 @@ const UserSchema: Schema<IUser> = new Schema(
         email: { type: Boolean, default: true },
         sms: { type: Boolean, default: false },
         push: { type: Boolean, default: true },
+        enableNotifications: { type: Boolean, default: true }, // Added to settings
       },
       privacy: {
         profileVisibility: {

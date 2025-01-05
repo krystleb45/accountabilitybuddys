@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { PrivateMessage } from "../models/PrivateMessage";
 import User from "../models/User"; // Ensure User is properly exported
 import catchAsync from "../utils/catchAsync";
@@ -15,7 +15,7 @@ const sanitizeInput = (input: string): string => {
  * @route POST /api/messages
  * @access Private
  */
-export const sendMessage = catchAsync(async (req: Request, res: Response) => {
+export const sendMessage = catchAsync(async (req: CustomRequest, res: Response) => {
   const { receiverId, message }: { receiverId: string; message: string } = req.body;
   const senderId = req.user?.id;
 
@@ -55,7 +55,7 @@ export const sendMessage = catchAsync(async (req: Request, res: Response) => {
  * @access Private
  */
 export const getMessagesWithUser = catchAsync(
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const { userId } = req.params;
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 20;
@@ -99,7 +99,7 @@ export const getMessagesWithUser = catchAsync(
  * @route DELETE /api/messages/:messageId
  * @access Private
  */
-export const deleteMessage = catchAsync(async (req: Request, res: Response) => {
+export const deleteMessage = catchAsync(async (req: CustomRequest, res: Response) => {
   const { messageId } = req.params;
   const userId = req.user?.id;
 
@@ -126,7 +126,7 @@ export const deleteMessage = catchAsync(async (req: Request, res: Response) => {
  * @access Private
  */
 export const markMessagesAsRead = catchAsync(
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const { userId } = req.params;
     const currentUserId = req.user?.id;
 

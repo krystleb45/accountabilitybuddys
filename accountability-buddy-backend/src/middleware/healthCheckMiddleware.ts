@@ -6,7 +6,7 @@ import os from "os";
  * Health Check Middleware
  * Provides a detailed health check for the application, including system stats and database status.
  */
-const healthCheckMiddleware = async (req: Request, res: Response): Promise<void> => {
+const healthCheckMiddleware = async (_req: Request, res: Response): Promise<void> => {
   try {
     // System-level health checks
     const systemHealth = {

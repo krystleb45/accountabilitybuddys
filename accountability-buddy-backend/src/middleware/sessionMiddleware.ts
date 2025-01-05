@@ -1,7 +1,7 @@
 import session, { SessionOptions } from "express-session";
 import connectRedis from "connect-redis";
 import { createClient } from "redis";
-import { Request, Response, NextFunction } from "express-serve-static-core";
+import { Request, Response, NextFunction } from "express";
 import logger from "../utils/winstonLogger";
 
 // Create Redis client
@@ -10,20 +10,26 @@ const redisClient = createClient({
   password: process.env.REDIS_PASSWORD,
 });
 
-redisClient.on("error", (err) => logger.error(`Redis client error: ${err.message}`));
-redisClient.on("connect", () => logger.info("Connected to Redis server"));
+// Redis client error handling
+redisClient.on("error", (err: Error) =>
+  logger.error(`Redis client error: ${err.message}`)
+);
+redisClient.on("connect", () =>
+  logger.info("Connected to Redis server")
+);
 
+// Ensure Redis client connects before use
 (async (): Promise<void> => {
   try {
-    await redisClient.connect(); // Ensure the client connects before use
+    await redisClient.connect();
   } catch (error) {
-    const errMessage = error instanceof Error ? error.message : "Unknown error";
-    logger.error(`Failed to connect to Redis: ${errMessage}`);
-    process.exit(1); // Exit if Redis connection fails
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    logger.error(`Failed to connect to Redis: ${errorMessage}`);
+    process.exit(1); // Exit process if Redis connection fails
   }
 })();
 
-// Initialize Redis store
+// Initialize Redis store for sessions
 const RedisStore = connectRedis(session);
 
 const sessionStore = new RedisStore({
@@ -36,17 +42,22 @@ const SESSION_SECRET = process.env.SESSION_SECRET || "defaultsecret";
 const sessionMiddleware = session({
   store: sessionStore,
   secret: SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
+  resave: false, // Do not save session if unmodified
+  saveUninitialized: false, // Do not save empty sessions
   cookie: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    httpOnly: true, // Prevent client-side JavaScript from accessing cookies
+    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days expiration
+    sameSite: "lax", // Protect against CSRF attacks
   },
 } as SessionOptions);
 
-// Middleware wrapper to handle session
-const enhancedSessionMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+// Middleware wrapper to handle session errors gracefully
+const enhancedSessionMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   sessionMiddleware(req, res, (err?: any) => {
     if (err instanceof Error) {
       logger.error(`Session middleware error: ${err.message}`);

@@ -6,7 +6,7 @@ import { Request, Response, NextFunction } from "express";
  * @access Public
  */
 export const getAllTasks = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {

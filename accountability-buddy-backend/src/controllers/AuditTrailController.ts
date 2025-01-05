@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import AuditTrail from "../models/AuditTrail"; // Ensure this model is defined and implemented correctly
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -9,9 +9,13 @@ import sanitize from "mongo-sanitize";
  * Log an entry into the audit trail
  */
 export const logAuditTrail = catchAsync(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest<{}, any, { action: string; details?: string }>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const { action, details }: { action: string; details?: string } = sanitize(req.body);
+      const { action, details } = sanitize(req.body);
 
       if (!action || typeof action !== "string") {
         next(createError("Invalid or missing 'action' parameter", 400));
@@ -39,7 +43,10 @@ export const logAuditTrail = catchAsync(
  * Fetch all audit trail entries
  */
 export const getAuditTrails = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    _req: CustomRequest,
+    res: Response
+  ): Promise<void> => {
     const trails = await AuditTrail.find().sort({ createdAt: -1 });
 
     if (!trails || trails.length === 0) {

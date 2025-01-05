@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response } from "express";
 import Notification from "../models/Notification"; // Adjusted import
 import User from "../models/User";
 import catchAsync from "../utils/catchAsync";
@@ -19,7 +19,7 @@ const sanitizeInput = (input: any): any => {
 
 // Send a notification
 export const sendNotification = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const { receiverId, message } = sanitizeInput(req.body);
     const senderId = req.user?.id;
 
@@ -54,7 +54,7 @@ export const sendNotification = catchAsync(
 
 // Get notifications for the user
 export const getNotifications = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const userId = req.user?.id;
     const limit = parseInt(req.query.limit as string, 10) || 10;
     const page = parseInt(req.query.page as string, 10) || 1;
@@ -79,7 +79,7 @@ export const getNotifications = catchAsync(
 
 // Mark notifications as read
 export const markNotificationsAsRead = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const userId = req.user?.id;
     const { notificationIds } = req.body;
 
@@ -96,7 +96,7 @@ export const markNotificationsAsRead = catchAsync(
 
 // Delete a notification
 export const deleteNotification = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const { notificationId } = req.params;
 
     const notification = await Notification.findById(notificationId);

@@ -27,7 +27,7 @@ const cacheControl = (options: CacheControlOptions = {}) => {
     public: isPublic = false,
   } = options;
 
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return (_req: Request, res: Response, next: NextFunction): void => {
     const cacheHeader: string[] = [];
 
     // Apply "no-store" directive if specified

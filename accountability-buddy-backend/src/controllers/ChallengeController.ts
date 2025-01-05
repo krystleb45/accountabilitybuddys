@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import Challenge from "../models/Challenge";
 import catchAsync from "../utils/catchAsync";
@@ -9,7 +9,11 @@ import sanitize from "mongo-sanitize";
  * Create a new challenge
  */
 export const createChallenge = catchAsync(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const {
         title,
@@ -70,7 +74,10 @@ export const createChallenge = catchAsync(
  * Get all public challenges
  */
 export const getPublicChallenges = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    _req: CustomRequest,
+    res: Response
+  ): Promise<void> => {
     const challenges = await Challenge.find({ visibility: "public" })
       .populate("creator", "username profilePicture")
       .sort({ createdAt: -1 });
@@ -94,7 +101,10 @@ export const getPublicChallenges = catchAsync(
  * Join a challenge
  */
 export const joinChallenge = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: CustomRequest,
+    res: Response
+  ): Promise<void> => {
     const { challengeId } = sanitize(req.body);
     const userId = req.user?.id;
 
@@ -143,7 +153,10 @@ export const joinChallenge = catchAsync(
  * Leave a challenge
  */
 export const leaveChallenge = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: CustomRequest,
+    res: Response
+  ): Promise<void> => {
     const { challengeId } = sanitize(req.body);
     const userId = req.user?.id;
 
@@ -184,40 +197,5 @@ export const leaveChallenge = catchAsync(
     sendResponse(res, 200, true, "Left challenge successfully", {
       challenge,
     });
-  }
-);
-
-/**
- * Fetch user's joined challenges
- */
-export const getUserChallenges = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
-    const userId = req.user?.id;
-
-    if (!userId) {
-      sendResponse(res, 400, false, "User ID is required");
-      return;
-    }
-
-    const userObjectId = new mongoose.Types.ObjectId(userId);
-
-    const challenges = await Challenge.find({
-      "participants.user": userObjectId,
-    })
-      .populate("creator", "username profilePicture")
-      .sort({ createdAt: -1 });
-
-    if (!challenges.length) {
-      sendResponse(res, 404, false, "No challenges found for this user");
-      return;
-    }
-
-    sendResponse(
-      res,
-      200,
-      true,
-      "User challenges fetched successfully",
-      { challenges }
-    );
   }
 );

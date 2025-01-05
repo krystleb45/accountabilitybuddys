@@ -1,4 +1,4 @@
-import express, { Response, NextFunction } from "express";
+import express, { Router, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 import logger from "../utils/winstonLogger";
 import {
@@ -9,7 +9,8 @@ import {
 import authMiddleware, { AuthenticatedRequest } from "../middleware/authMiddleware";
 import { roleBasedAccessControl } from "../middleware/roleBasedAccessControl";
 
-const router = express.Router();
+// Explicitly define the router type
+const router: Router = express.Router();
 
 // Middleware to ensure only admins can access these routes
 const isAdmin = roleBasedAccessControl(["admin"]);
@@ -18,14 +19,22 @@ const isAdmin = roleBasedAccessControl(["admin"]);
  * Utility function to handle route errors consistently
  */
 const handleRouteErrors = (
-  handler: (req: AuthenticatedRequest, res: Response, next: NextFunction) => Promise<void>
+  handler: (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>
 ) => {
-  return async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  return async (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       await handler(req, res, next);
     } catch (error) {
       logger.error(`Error occurred: ${(error as Error).message}`);
-      next(error);
+      res.status(500).json({ success: false, message: "Internal server error" });
     }
   };
 };
@@ -37,11 +46,11 @@ const handleRouteErrors = (
  */
 router.get(
   "/users",
-  authMiddleware,
-  isAdmin,
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
-    const users = await getAllUsers(req, res, next);
-    res.json({ success: true, data: users });
+  authMiddleware, // Ensure JWT auth is validated
+  isAdmin, // Role-based access control
+  handleRouteErrors(async (req: AuthenticatedRequest, res: Response) => {
+    const users = await getAllUsers(req, res); // Pass validated request
+    res.status(200).json({ success: true, data: users });
   })
 );
 
@@ -53,12 +62,13 @@ router.get(
 router.patch(
   "/users/role",
   [
-    authMiddleware,
-    isAdmin,
+    authMiddleware, // Validate JWT
+    isAdmin, // Ensure only admins can proceed
     check("userId", "User ID is required and must be valid").notEmpty().isMongoId(),
     check("role", "Role is required").notEmpty().isString(),
   ],
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  handleRouteErrors(async (req: AuthenticatedRequest, res: Response) => {
+    // Validate the request body
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       logger.warn(`Validation failed: ${JSON.stringify(errors.array())}`);
@@ -66,8 +76,9 @@ router.patch(
       return;
     }
 
-    const result = await updateUserRole(req, res, next);
-    res.json({ success: true, data: result });
+    // Update user role
+    const result = await updateUserRole(req, res);
+    res.status(200).json({ success: true, data: result });
   })
 );
 
@@ -79,11 +90,13 @@ router.patch(
 router.delete(
   "/users/:userId",
   [authMiddleware, isAdmin],
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
-    await deleteUserAccount(req, res, next);
+  handleRouteErrors(async (req: AuthenticatedRequest, res: Response) => {
+    // Delete user account
+    await deleteUserAccount(req, res);
 
+    // Log and respond
     logger.info(`User account deleted. UserID: ${req.params.userId}`);
-    res.json({ success: true, msg: "User account deleted successfully" });
+    res.status(200).json({ success: true, msg: "User account deleted successfully" });
   })
 );
 

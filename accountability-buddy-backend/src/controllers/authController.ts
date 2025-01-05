@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../models/User";
@@ -29,7 +29,7 @@ const generateTokens = (userId: string): { accessToken: string; refreshToken: st
  * @route   POST /api/auth/register
  * @access  Public
  */
-export const register = catchAsync(async (req: Request, res: Response) => {
+export const register = catchAsync(async (req: CustomRequest, res: Response) => {
   const {
     email,
     password,
@@ -71,7 +71,7 @@ export const register = catchAsync(async (req: Request, res: Response) => {
  * @route   POST /api/auth/login
  * @access  Public
  */
-export const login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const login = catchAsync(async (req: CustomRequest, res: Response, next: NextFunction) => {
   const { email, password }: { email: string; password: string } = req.body;
 
   // Validate required fields
@@ -100,14 +100,13 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
   });
 });
 
-
 /**
  * @desc    Refresh authentication tokens
  * @route   POST /api/auth/refresh-token
  * @access  Public
  */
 export const refreshToken = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req: CustomRequest, res: Response, _next: NextFunction) => {
     const { refreshToken: token } = req.body;
 
     // Validate refresh token
@@ -149,7 +148,7 @@ export const refreshToken = catchAsync(
  * @route   POST /api/auth/logout
  * @access  Private
  */
-export const logout = catchAsync(async (_req: Request, res: Response) => {
+export const logout = catchAsync(async (_req: CustomRequest, res: Response) => {
   // Note: Token invalidation logic should be added if using persistent sessions
   sendResponse(res, 200, true, "User logged out successfully");
 });
@@ -160,7 +159,7 @@ export const logout = catchAsync(async (_req: Request, res: Response) => {
  * @access  Private
  */
 export const getCurrentUser = catchAsync(
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const user = await User.findById(req.user?.id).select("-password");
 
     if (!user) {

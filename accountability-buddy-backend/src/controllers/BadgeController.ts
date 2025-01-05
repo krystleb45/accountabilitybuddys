@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import Badge, { IBadge, BadgeLevel } from "../models/Badge";
-import RewardController from "../controllers/RewardController";
+import { awardPoints } from "../controllers/RewardController";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import logger from "../utils/winstonLogger";
@@ -23,14 +23,12 @@ const getNextBadgeLevel = (currentLevel: BadgeLevel): BadgeLevel => {
  * @access  Private
  */
 export const awardBadge = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction) => {
-    const {
-      userId,
-      badgeType,
-      level = "Bronze",
-    }: { userId: string; badgeType: string; level?: BadgeLevel } = sanitize(
-      req.body
-    );
+  async (
+    req: CustomRequest<{}, any, { userId: string; badgeType: string; level?: BadgeLevel }>,
+    res: Response,
+    _next: NextFunction
+  ) => {
+    const { userId, badgeType, level = "Bronze" } = sanitize(req.body);
 
     if (!userId || !badgeType) {
       sendResponse(res, 400, false, "User ID and badge type are required");
@@ -73,7 +71,8 @@ export const awardBadge = catchAsync(
 
     // Award points to the user for earning the badge
     const points = Badge.awardPointsForBadge(badgeType as IBadge["badgeType"]);
-    await RewardController.awardPoints(userId, points);
+    await awardPoints(userId, points);
+
 
     logger.info(
       `New badge awarded to user: ${userId} with type: ${badgeType} at level: ${level}`
@@ -90,7 +89,11 @@ export const awardBadge = catchAsync(
  * @access  Private
  */
 export const updateBadgeProgress = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (
+    req: CustomRequest,
+    res: Response,
+    _next: NextFunction
+  ) => {
     const { badgeType, increment }: { badgeType: string; increment: number } = sanitize(req.body);
     const userId = req.user?.id;
 
@@ -113,46 +116,16 @@ export const updateBadgeProgress = catchAsync(
 );
 
 /**
- * @desc    Upgrade badge level for a user
- * @route   POST /api/badges/upgrade
- * @access  Private
- */
-export const upgradeBadgeLevel = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction) => {
-    const { badgeType }: { badgeType: string } = sanitize(req.body);
-    const userId = req.user?.id;
-
-    if (!userId || !badgeType) {
-      sendResponse(res, 400, false, "User ID and badge type are required.");
-      return;
-    }
-
-    const badge = await Badge.findOne({ user: userId, badgeType });
-    if (!badge) {
-      sendResponse(res, 404, false, "Badge not found.");
-      return;
-    }
-
-    const newLevel = getNextBadgeLevel(badge.level as BadgeLevel);
-    if (newLevel === badge.level) {
-      sendResponse(res, 400, false, "Badge is already at the highest level.");
-      return;
-    }
-
-    badge.level = newLevel;
-    await badge.save();
-
-    sendResponse(res, 200, true, "Badge level upgraded successfully.", { badge });
-  }
-);
-
-/**
  * @desc    Remove expired badges
  * @route   DELETE /api/badges/expired/remove
  * @access  Private (Admin only)
  */
 export const removeExpiredBadges = catchAsync(
-  async (_req: Request, res: Response, _next: NextFunction) => {
+  async (
+    _req: CustomRequest,
+    res: Response,
+    _next: NextFunction
+  ) => {
     const expiredBadges = await Badge.deleteMany({ expiresAt: { $lt: new Date() } });
 
     sendResponse(res, 200, true, "Expired badges removed successfully.", {
@@ -166,7 +139,7 @@ export const removeExpiredBadges = catchAsync(
  * @route   GET /api/badges
  * @access  Private
  */
-export const getUserBadges = catchAsync(async (req: Request, res: Response) => {
+export const getUserBadges = catchAsync(async (req: CustomRequest, res: Response) => {
   const userId = req.user?.id;
 
   if (!userId) {
@@ -177,24 +150,5 @@ export const getUserBadges = catchAsync(async (req: Request, res: Response) => {
   const badges = await Badge.find({ user: userId });
   sendResponse(res, 200, true, "User badges fetched successfully", {
     badges,
-  });
-});
-
-/**
- * @desc    Fetch showcased badges for a user
- * @route   GET /api/badges/showcase
- * @access  Private
- */
-export const getUserBadgeShowcase = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user?.id;
-
-  if (!userId) {
-    sendResponse(res, 400, false, "User ID is required");
-    return;
-  }
-
-  const showcasedBadges = await Badge.find({ user: userId, showcased: true });
-  sendResponse(res, 200, true, "Showcased badges fetched successfully", {
-    showcasedBadges,
   });
 });

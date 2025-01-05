@@ -75,7 +75,7 @@ export const unsubscribeNewsletter = async (
 
 // Get all subscribers (Admin only)
 export const getSubscribers = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {

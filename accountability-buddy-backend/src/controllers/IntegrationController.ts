@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { Integration } from "../models/Integration";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import sanitize from "mongo-sanitize";
-import logger from "../utils/winstonLogger"; // Use centralized logging
+import logger from "../utils/winstonLogger";
+import { createError } from "../middleware/errorHandler";
 
 /**
  * @desc Create a new integration
@@ -11,13 +12,15 @@ import logger from "../utils/winstonLogger"; // Use centralized logging
  * @access Private
  */
 export const createIntegration = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: CustomRequest<{}, any, { type: string; settings: object }>,
+    res: Response
+  ): Promise<void> => {
     const { type, settings } = sanitize(req.body);
     const userId = req.user?.id;
 
     if (!type || !settings) {
-      sendResponse(res, 400, false, "Integration type and settings are required");
-      return;
+      throw createError("Integration type and settings are required", 400);
     }
 
     const newIntegration = new Integration({
@@ -31,7 +34,7 @@ export const createIntegration = catchAsync(
     sendResponse(res, 201, true, "Integration created successfully", {
       integration: newIntegration,
     });
-  },
+  }
 );
 
 /**
@@ -40,7 +43,7 @@ export const createIntegration = catchAsync(
  * @access Private
  */
 export const getUserIntegrations = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const userId = req.user?.id;
 
     const integrations = await Integration.find({ user: userId });
@@ -48,7 +51,7 @@ export const getUserIntegrations = catchAsync(
     sendResponse(res, 200, true, "Integrations fetched successfully", {
       integrations,
     });
-  },
+  }
 );
 
 /**
@@ -57,7 +60,10 @@ export const getUserIntegrations = catchAsync(
  * @access Private
  */
 export const getIntegrationById = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: CustomRequest<{ integrationId: string }>,
+    res: Response
+  ): Promise<void> => {
     const { integrationId } = sanitize(req.params);
     const userId = req.user?.id;
 
@@ -74,7 +80,7 @@ export const getIntegrationById = catchAsync(
     sendResponse(res, 200, true, "Integration fetched successfully", {
       integration,
     });
-  },
+  }
 );
 
 /**
@@ -83,7 +89,10 @@ export const getIntegrationById = catchAsync(
  * @access Private
  */
 export const updateIntegration = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: CustomRequest<{ integrationId: string }, any, { settings: object }>,
+    res: Response
+  ): Promise<void> => {
     const { integrationId } = sanitize(req.params);
     const updates = sanitize(req.body);
     const userId = req.user?.id;
@@ -103,7 +112,7 @@ export const updateIntegration = catchAsync(
     sendResponse(res, 200, true, "Integration updated successfully", {
       integration,
     });
-  },
+  }
 );
 
 /**
@@ -112,7 +121,10 @@ export const updateIntegration = catchAsync(
  * @access Private
  */
 export const deleteIntegration = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: CustomRequest<{ integrationId: string }>,
+    res: Response
+  ): Promise<void> => {
     const { integrationId } = sanitize(req.params);
     const userId = req.user?.id;
 
@@ -127,7 +139,7 @@ export const deleteIntegration = catchAsync(
     }
 
     sendResponse(res, 200, true, "Integration deleted successfully");
-  },
+  }
 );
 
 /**
@@ -136,7 +148,10 @@ export const deleteIntegration = catchAsync(
  * @access Private
  */
 export const testIntegration = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: CustomRequest<{ integrationId: string }>,
+    res: Response
+  ): Promise<void> => {
     const { integrationId } = sanitize(req.params);
     const userId = req.user?.id;
 
@@ -164,5 +179,5 @@ export const testIntegration = catchAsync(
       logger.error("Integration error:", { error });
       sendResponse(res, 500, false, "An unknown error occurred");
     }
-  },
+  }
 );

@@ -1,17 +1,20 @@
-import { Request, Response, NextFunction } from "express-serve-static-core";
-import { AuthenticatedRequest } from "../middleware/authMiddleware"; // Assuming AuthenticatedRequest is defined elsewhere
+import { Request, Response, NextFunction, RequestHandler } from "express";
+import { AuthenticatedRequest } from "../middleware/authMiddleware"; // Ensure this is correctly imported
 import logger from "../utils/winstonLogger";
 
 /**
- * Middleware for Role-Based Access Control
- * @param allowedRoles - Array of allowed roles
+ * Middleware for Role-Based Access Control (RBAC)
+ * @param allowedRoles - Array of roles authorized to access the route.
+ * @returns RequestHandler middleware
  */
-export const roleBasedAccessControl = (allowedRoles: string[]) => {
+export const roleBasedAccessControl = (allowedRoles: string[]): RequestHandler => {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {
-      const userRole = (req as AuthenticatedRequest).user?.role;
+      // Assert the request as AuthenticatedRequest
+      const authReq = req as AuthenticatedRequest;
 
-      if (!userRole) {
+      // Validate the user's role
+      if (!authReq.user || !authReq.user.role) {
         logger.warn("Access Denied: No role assigned to the user.");
         res.status(403).json({
           success: false,
@@ -20,18 +23,21 @@ export const roleBasedAccessControl = (allowedRoles: string[]) => {
         return;
       }
 
-      if (!allowedRoles.includes(userRole)) {
-        logger.warn(`Access Denied: Role '${userRole}' is not authorized.`);
+      // Check if the user's role is authorized
+      if (!allowedRoles.includes(authReq.user.role)) {
+        logger.warn(`Access Denied: Role '${authReq.user.role}' is not authorized.`);
         res.status(403).json({
           success: false,
-          message: `Access Denied: Role '${userRole}' is not authorized.`,
+          message: `Access Denied: Role '${authReq.user.role}' is not authorized.`,
         });
         return;
       }
 
+      // Proceed to the next middleware if authorized
       next();
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      // Handle unexpected errors
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(`RBAC Middleware Error: ${errorMessage}`);
       res.status(500).json({
         success: false,

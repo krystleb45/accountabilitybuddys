@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
+import { Response } from "express";
 import FeedPost, { IFeedPost } from "../models/FeedPost";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -11,7 +11,10 @@ import logger from "../utils/winstonLogger";
  * @access  Private
  */
 export const createPost = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest<{}, any, { content: string }>,
+    res: Response
+  ): Promise<void> => {
     const { content } = req.body;
     const userId = req.user?.id;
 
@@ -42,7 +45,10 @@ export const createPost = catchAsync(
  * @access  Private
  */
 export const addLike = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest<{ postId: string }>,
+    res: Response
+  ): Promise<void> => {
     const { postId } = req.params;
     const userId = req.user?.id;
 
@@ -77,7 +83,10 @@ export const addLike = catchAsync(
  * @access  Private
  */
 export const addComment = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest<{ postId: string }, any, { text: string }>,
+    res: Response
+  ): Promise<void> => {
     const { postId } = req.params;
     const { text } = req.body;
     const userId = req.user?.id;
@@ -116,7 +125,10 @@ export const addComment = catchAsync(
  * @access  Private
  */
 export const removeComment = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest<{ postId: string; commentId: string }>,
+    res: Response
+  ): Promise<void> => {
     const { postId, commentId } = req.params;
     const userId = req.user?.id;
 

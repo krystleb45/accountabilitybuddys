@@ -43,9 +43,11 @@ export const getSubscriptionStatus = async () => {
 };
 
 // Upgrade subscription
-export const upgradeSubscription = async (planId) => {
-  return axiosRetry(() => apiClient.post('/upgrade', { planId }));
-};
+export const upgradeSubscription = catchAsync(
+  async (req, res) => {
+    // ...
+  }
+);
 
 // Downgrade subscription
 export const downgradeSubscription = async (planId) => {
@@ -56,6 +58,8 @@ export const downgradeSubscription = async (planId) => {
 export const cancelSubscription = async () => {
   return axiosRetry(() => apiClient.post('/cancel'));
 };
+
+
 
 export default {
   getSubscriptionStatus,

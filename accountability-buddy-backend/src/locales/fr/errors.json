@@ -58,5 +58,73 @@
   "paymentFailed": {
     "title": "Échec du Paiement",
     "message": "Le paiement n'a pas pu être traité. Veuillez essayer un autre mode de paiement."
+  },
+  "quotaExceeded": {
+    "title": "Quota Dépassé",
+    "message": "Vous avez dépassé votre quota autorisé. Veuillez mettre à niveau votre plan ou contacter le support."
+  },
+  "fileUploadError": {
+    "title": "Erreur de Téléversement",
+    "message": "Une erreur s'est produite lors du téléversement du fichier. Veuillez réessayer."
+  },
+  "fileSizeExceeded": {
+    "title": "Taille de Fichier Dépassée",
+    "message": "Le fichier dépasse la taille maximale autorisée. Veuillez téléverser un fichier plus petit."
+  },
+  "invalidFileType": {
+    "title": "Type de Fichier Invalide",
+    "message": "Le type de fichier sélectionné n'est pas pris en charge. Veuillez téléverser un format valide."
+  },
+  "databaseError": {
+    "title": "Erreur de Base de Données",
+    "message": "Une erreur s'est produite lors de la connexion à la base de données. Veuillez réessayer plus tard."
+  },
+  "emailNotRegistered": {
+    "title": "E-mail Non Enregistré",
+    "message": "Cette adresse e-mail n'est pas enregistrée."
+  },
+  "invalidToken": {
+    "title": "Jeton Invalide",
+    "message": "Le jeton fourni est invalide ou a expiré. Veuillez demander un nouveau jeton."
+  },
+  "sessionExpired": {
+    "title": "Session Expirée",
+    "message": "Votre session a expiré. Veuillez vous reconnecter."
+  },
+  "serviceUnavailable": {
+    "title": "Service Indisponible",
+    "message": "Le service est temporairement indisponible. Veuillez réessayer plus tard."
+  },
+  "maintenanceMode": {
+    "title": "Mode Maintenance",
+    "message": "Le service est actuellement en maintenance. Veuillez réessayer plus tard."
+  },
+  "emailNotSent": {
+    "title": "E-mail Non Envoyé",
+    "message": "Impossible d'envoyer l'e-mail. Veuillez vérifier votre connexion et réessayer."
+  },
+  "invalidInput": {
+    "title": "Entrée Invalide",
+    "message": "L'entrée fournie n'est pas valide. Veuillez corriger les erreurs et réessayer."
+  },
+  "termsNotAccepted": {
+    "title": "Conditions Non Acceptées",
+    "message": "Vous devez accepter les termes et conditions pour continuer."
+  },
+  "actionFailed": {
+    "title": "Action Échouée",
+    "message": "Une erreur s'est produite lors du traitement de votre demande. Veuillez réessayer."
+  },
+  "connectionLost": {
+    "title": "Connexion Perdue",
+    "message": "La connexion a été perdue. Tentative de reconnexion..."
+  },
+  "reconnectionFailed": {
+    "title": "Reconnexion Échouée",
+    "message": "Impossible de se reconnecter. Veuillez actualiser la page ou vérifier votre connexion."
+  },
+  "unexpectedError": {
+    "title": "Erreur Inattendue",
+    "message": "Une erreur inattendue s'est produite. Veuillez actualiser la page ou réessayer plus tard."
   }
 }

@@ -1,26 +1,29 @@
 import Stripe from "stripe";
-import { Request, Response } from "express";
+import { Response } from "express";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import LoggingService from "../services/LoggingService";
 
-// Placeholder functions with underscore for unused parameters
-async function handleSubscriptionCompleted(_session: Stripe.Checkout.Session): Promise<void> {
-  // Implement your subscription completed logic
+// Initialize Stripe with the correct API version
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: "2024-12-18.acacia",
+});
+
+
+// Placeholder functions for webhook handling
+async function handleSubscriptionCompleted(
+  _session: Stripe.Checkout.Session
+): Promise<void> {
+  // Implement subscription completed logic here
 }
 
 async function handlePaymentSucceeded(_invoice: Stripe.Invoice): Promise<void> {
-  // Implement your payment succeeded logic
+  // Implement payment succeeded logic here
 }
 
 async function handlePaymentFailed(_invoice: Stripe.Invoice): Promise<void> {
-  // Implement your payment failed logic
+  // Implement payment failed logic here
 }
-
-// Initialize Stripe with a supported API version
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2024-06-20",
-});
 
 /**
  * @desc Create a Stripe subscription session
@@ -28,7 +31,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
  * @access Private
  */
 export const createSubscriptionSession = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const { planId, successUrl, cancelUrl } = req.body;
     const userId = req.user?.id;
 
@@ -65,19 +68,21 @@ export const createSubscriptionSession = catchAsync(
  * @access Public
  */
 export const handleStripeWebhook = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const sig = req.headers["stripe-signature"] as string;
 
     try {
       const event = stripe.webhooks.constructEvent(
-        (req as any).rawBody as Buffer,
+        req.rawBody as Buffer,
         sig,
         process.env.STRIPE_WEBHOOK_SECRET!
       );
 
       switch (event.type) {
       case "checkout.session.completed":
-        await handleSubscriptionCompleted(event.data.object as Stripe.Checkout.Session);
+        await handleSubscriptionCompleted(
+            event.data.object as Stripe.Checkout.Session
+        );
         break;
       case "invoice.payment_succeeded":
         await handlePaymentSucceeded(event.data.object as Stripe.Invoice);

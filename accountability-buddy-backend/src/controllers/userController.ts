@@ -21,10 +21,14 @@ declare global {
 
 // Upgrade Subscription
 export const upgradeSubscription = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
-    const userId = req.user?.id; 
-    const { planId } = sanitizeInput(req.body) as { planId: string }; // Fixed unknown type error
+  async (
+    req: Request<{}, {}, { planId: string }>, // Explicit request type with generics
+    res: Response
+  ): Promise<void> => {
+    const userId: string = req.user?.id || ""; // Ensures a fallback for userId
+    const { planId } = sanitizeInput(req.body) as { planId: string }; // Sanitize input
 
+    // Validate input
     if (!userId || !planId) {
       sendResponse(res, 400, false, "User ID and Plan ID are required");
       return;
@@ -36,6 +40,7 @@ export const upgradeSubscription = catchAsync(
       return;
     }
 
+    // Fetch user subscription
     const userSubscription = await Subscription.findOne({ user: userId });
     if (!userSubscription) {
       sendResponse(res, 404, false, "Subscription not found");
@@ -43,11 +48,13 @@ export const upgradeSubscription = catchAsync(
     }
 
     try {
+      // Update subscription in Stripe
       const updatedSubscription = await stripe.subscriptions.update(
         userSubscription.id,
         { items: [{ price: planId }] }
       );
 
+      // Map status to a custom format
       const allowedStatuses = [
         "trial", "active", "inactive", "expired", 
         "past_due", "canceled", "incomplete", 
@@ -59,10 +66,12 @@ export const upgradeSubscription = catchAsync(
         throw new Error("Invalid status from Stripe");
       }
 
+      // Update subscription details
       userSubscription.status = mappedStatus as typeof allowedStatuses[number]; // Fixed type assignment
       userSubscription.plan = planId as "free-trial" | "basic" | "standard" | "premium"; // Fixed type assignment
       await userSubscription.save();
 
+      // Send success response
       sendResponse(res, 200, true, "Subscription upgraded successfully", {
         subscription: userSubscription,
       });

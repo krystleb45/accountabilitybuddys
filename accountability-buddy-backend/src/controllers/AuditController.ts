@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import AuditLog from "../models/AuditLog"; // Ensure this model is defined and implemented correctly
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -9,9 +9,13 @@ import sanitize from "mongo-sanitize";
  * Log an event into the audit log
  */
 export const logAuditEvent = catchAsync(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest<{}, any, { action: string; details?: string }>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const { action, details }: { action: string; details?: string } = sanitize(req.body);
+      const { action, details } = sanitize(req.body);
 
       // Validate input
       if (!action || typeof action !== "string") {
@@ -41,7 +45,10 @@ export const logAuditEvent = catchAsync(
  * Fetch all audit logs
  */
 export const getAuditLogs = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    _req: CustomRequest,
+    res: Response
+  ): Promise<void> => {
     const auditLogs = await AuditLog.find().sort({ createdAt: -1 });
 
     if (!auditLogs || auditLogs.length === 0) {
@@ -59,7 +66,11 @@ export const getAuditLogs = catchAsync(
  * Fetch audit logs by user
  */
 export const getAuditLogsByUser = catchAsync(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest<{ userId: string }>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { userId } = req.params;
 

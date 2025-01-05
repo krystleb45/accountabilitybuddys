@@ -10,7 +10,7 @@ import { AuthenticatedRequest } from "../middleware/authMiddleware"; // Updated 
  */
 export const checkAdminAccess = (
   req: AuthenticatedRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ): void => {
   try {

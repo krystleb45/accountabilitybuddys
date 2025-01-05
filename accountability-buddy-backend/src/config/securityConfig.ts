@@ -37,7 +37,7 @@ const configureRateLimiter = (): ReturnType<typeof rateLimit> => {
   return rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: maxRequests,
-    handler: (req, res) => {
+    handler: (_req, res) => {
       res.status(429).json({
         status: 429,
         error: "Too many requests, please try again later.",
@@ -83,7 +83,7 @@ export const applySecurityMiddlewares = (app: Application): void => {
   app.use(express.urlencoded({ extended: true, limit: payloadLimit }));
 
   // Middleware to handle security-related errors
-  app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
+  app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     logger.error(`Security middleware error: ${err.message}`);
     res.status(500).json({
       success: false,

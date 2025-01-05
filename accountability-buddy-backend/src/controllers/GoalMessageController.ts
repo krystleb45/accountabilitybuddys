@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import mongoose from "mongoose";
 import { GoalMessage } from "../models/GoalMessage";
 import Goal from "../models/Goal";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
+import { createError } from "../middleware/errorHandler";
 
 /**
  * @desc Create a new goal message
@@ -11,15 +12,17 @@ import sendResponse from "../utils/sendResponse";
  * @access Private
  */
 export const createGoalMessage = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: CustomRequest<{ goalId: string }, any, { message: string }>,
+    res: Response
+  ): Promise<void> => {
     const { goalId } = req.params;
     const { message } = req.body;
     const userId = req.user?.id;
 
     // Validate input
     if (!goalId || !message || message.trim() === "") {
-      sendResponse(res, 400, false, "Goal ID and message are required");
-      return;
+      throw createError("Goal ID and message are required", 400);
     }
 
     // Check if goal exists and belongs to the user
@@ -36,7 +39,7 @@ export const createGoalMessage = catchAsync(
     sendResponse(res, 201, true, "Goal message created successfully", {
       message: newMessage,
     });
-  },
+  }
 );
 
 /**
@@ -45,7 +48,10 @@ export const createGoalMessage = catchAsync(
  * @access Private
  */
 export const getGoalMessages = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: CustomRequest<{ goalId: string }> ,
+    res: Response
+  ): Promise<void> => {
     const { goalId } = req.params;
     const userId = req.user?.id;
 
@@ -64,7 +70,7 @@ export const getGoalMessages = catchAsync(
     sendResponse(res, 200, true, "Goal messages fetched successfully", {
       messages,
     });
-  },
+  }
 );
 
 /**
@@ -73,14 +79,16 @@ export const getGoalMessages = catchAsync(
  * @access Private
  */
 export const deleteGoalMessage = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: CustomRequest<{ messageId: string }> ,
+    res: Response
+  ): Promise<void> => {
     const { messageId } = req.params;
     const userId = req.user?.id;
 
     // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(messageId)) {
-      sendResponse(res, 400, false, "Invalid message ID format");
-      return;
+      throw createError("Invalid message ID format", 400);
     }
 
     // Find the message and ensure it belongs to the user
@@ -94,7 +102,7 @@ export const deleteGoalMessage = catchAsync(
     await message.deleteOne();
 
     sendResponse(res, 200, true, "Goal message deleted successfully");
-  },
+  }
 );
 
 /**
@@ -103,21 +111,22 @@ export const deleteGoalMessage = catchAsync(
  * @access Private
  */
 export const updateGoalMessage = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: CustomRequest<{ messageId: string }, any, { message: string }>,
+    res: Response
+  ): Promise<void> => {
     const { messageId } = req.params;
     const { message } = req.body;
     const userId = req.user?.id;
 
     // Validate input
     if (!message || message.trim() === "") {
-      sendResponse(res, 400, false, "Message content cannot be empty");
-      return;
+      throw createError("Message content cannot be empty", 400);
     }
 
     // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(messageId)) {
-      sendResponse(res, 400, false, "Invalid message ID format");
-      return;
+      throw createError("Invalid message ID format", 400);
     }
 
     // Find the message and ensure it belongs to the user
@@ -137,5 +146,5 @@ export const updateGoalMessage = catchAsync(
     sendResponse(res, 200, true, "Goal message updated successfully", {
       message: existingMessage,
     });
-  },
+  }
 );

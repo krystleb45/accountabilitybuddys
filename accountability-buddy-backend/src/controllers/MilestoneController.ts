@@ -8,7 +8,7 @@ import Milestone from "../models/Milestone"; // Ensure a corresponding Milestone
  * @access Public
  */
 export const getAllMilestones = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {

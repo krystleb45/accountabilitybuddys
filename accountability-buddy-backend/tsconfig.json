@@ -11,27 +11,45 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "resolveJsonModule": true,
-    "typeRoots": ["./types", "./node_modules/@types"], // Include custom and external types
-    "types": ["node", "express"], // Explicitly include types for Node.js and Express
-    "allowJs": false, // Strictly enforce TypeScript-only files
-    "declaration": true, // Generate declaration files for type-checking
-    "declarationMap": true, // Map declarations for easier debugging
-    "sourceMap": true, // Enable source maps for debugging
-    "strictPropertyInitialization": true, // Ensure class properties are initialized properly
-    "noUnusedLocals": true, // Warn for unused local variables
-    "noUnusedParameters": true, // Warn for unused parameters
-    "noImplicitReturns": true, // Ensure functions return values consistently
-    "noFallthroughCasesInSwitch": true // Prevent fallthrough cases in switch statements
+
+    // Updated type roots for better resolution
+    "typeRoots": [
+      "./node_modules/@types", // Default global types
+      "./@types", // Global custom types outside src
+      "./src/types" // Project-specific types inside src
+    ],
+
+    // Explicitly include types
+    "types": ["node", "express"],
+
+    // Additional options for better debugging and enforcement
+    "allowJs": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strictPropertyInitialization": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "isolatedModules": true, // Ensure each file is treated as a separate module
+
+    // Compatibility options
+    "allowSyntheticDefaultImports": true,
+    "incremental": true // Enable incremental builds
   },
   "include": [
     "src/**/*", // Include all source files
-    "types/**/*.d.ts", // Include custom types folder
-    "@types/**/*.d.ts" // Include types from @types directory
+    "types/**/*.d.ts", // Include custom types folder inside src
+    "@types/**/*.d.ts" // Include types from @types directory outside src
   ],
   "exclude": [
     "node_modules", // Exclude node_modules for performance
     "dist", // Exclude compiled output folder
     "**/*.test.ts", // Exclude test files
-    "**/*.spec.ts" // Exclude spec files
+    "**/*.spec.ts", // Exclude spec files
+    ".vscode", // Exclude editor-specific files
+    ".env", // Exclude environment variable files
+    "coverage" // Exclude coverage output folder
   ]
 }

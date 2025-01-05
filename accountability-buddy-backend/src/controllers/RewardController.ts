@@ -1,136 +1,133 @@
-import { Request, Response, NextFunction } from "express";
+import { Response } from "express";
 import User from "../models/User";
+import Review from "../models/Review";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
-import logger from "../utils/winstonLogger";
 
 /**
  * @desc Award points to a user
  * @param userId - ID of the user
- * @param points - Points to award
+ * @param points - Number of points to award
  */
-export const awardPoints = async (
-  userId: string,
-  points: number,
-): Promise<string> => {
-  if (!userId || points <= 0) {
-    throw new Error("Invalid user ID or points");
-  }
-
+export const awardPoints = async (userId: string, points: number): Promise<void> => {
   const user = await User.findById(userId);
   if (!user) {
-    logger.warn(`User not found for awarding points. UserID: ${userId}`);
-    throw new Error(`User with ID ${userId} not found`);
+    throw new Error("User not found");
   }
-
   user.points = (user.points || 0) + points;
   await user.save();
-
-  logger.info(`Awarded ${points} points to user: ${userId}`);
-  return `Awarded ${points} points to user: ${userId}`;
 };
 
 /**
- * @desc Deduct points from a user
- * @param userId - ID of the user
- * @param points - Points to deduct
- */
-export const deductPoints = async (
-  userId: string,
-  points: number,
-): Promise<string> => {
-  if (!userId || points <= 0) {
-    throw new Error("Invalid user ID or points");
-  }
-
-  const user = await User.findById(userId);
-  if (!user) {
-    logger.warn(`User not found for deducting points. UserID: ${userId}`);
-    throw new Error(`User with ID ${userId} not found`);
-  }
-
-  if ((user.points || 0) < points) {
-    throw new Error(`User with ID ${userId} does not have enough points`);
-  }
-
-  user.points = (user.points || 0) - points;
-  await user.save();
-
-  logger.info(`Deducted ${points} points from user: ${userId}`);
-  return `Deducted ${points} points from user: ${userId}`;
-};
-
-/**
- * @desc Get user's current reward points
- * @route GET /api/rewards/:userId
+ * @desc Submit a review
+ * @route POST /api/reviews
  * @access Private
  */
-export const getUserPoints = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
-    const { userId } = req.params;
+export const submitReview = catchAsync(
+  async (
+    req: CustomRequest<{}, any, { userId: string; rating: number; content: string }>,
+    res: Response
+  ): Promise<void> => {
+    const { userId, rating, content } = req.body;
+    const reviewerId = req.user?.id;
+
+    if (rating < 1 || rating > 5) {
+      sendResponse(res, 400, false, "Rating must be between 1 and 5");
+      return;
+    }
+
+    if (!content || content.trim() === "") {
+      sendResponse(res, 400, false, "Review content cannot be empty");
+      return;
+    }
 
     const user = await User.findById(userId);
     if (!user) {
-      logger.warn(`User not found while fetching points. UserID: ${userId}`);
       sendResponse(res, 404, false, "User not found");
       return;
     }
 
-    sendResponse(res, 200, true, "User points fetched successfully", {
-      points: user.points || 0,
+    if (userId === reviewerId) {
+      sendResponse(res, 400, false, "You cannot review yourself");
+      return;
+    }
+
+    const existingReview = await Review.findOne({
+      reviewer: reviewerId,
+      reviewee: userId,
+    });
+    if (existingReview) {
+      sendResponse(res, 400, false, "You have already submitted a review for this user");
+      return;
+    }
+
+    const newReview = await Review.create({
+      reviewer: reviewerId,
+      reviewee: userId,
+      rating,
+      content,
+    });
+
+    sendResponse(res, 201, true, "Review submitted successfully", {
+      review: newReview,
     });
   }
 );
 
 /**
- * @desc Transfer points between users
- * @param senderId - Sender's ID
- * @param receiverId - Receiver's ID
- * @param points - Points to transfer
+ * @desc Get reviews for a user
+ * @route GET /api/reviews/:userId
+ * @access Public
  */
-export const transferPoints = async (
-  senderId: string,
-  receiverId: string,
-  points: number,
-): Promise<string> => {
-  if (!senderId || !receiverId || points <= 0) {
-    throw new Error("Invalid sender, receiver, or points");
-  }
+export const getUserReviews = catchAsync(
+  async (
+    req: CustomRequest<{ userId: string }>,
+    res: Response
+  ): Promise<void> => {
+    const { userId } = req.params;
 
-  const sender = await User.findById(senderId);
-  const receiver = await User.findById(receiverId);
+    const user = await User.findById(userId);
+    if (!user) {
+      sendResponse(res, 404, false, "User not found");
+      return;
+    }
 
-  if (!sender) {
-    logger.warn(`Sender not found for point transfer. SenderID: ${senderId}`);
-    throw new Error(`Sender with ID ${senderId} not found`);
-  }
-
-  if (!receiver) {
-    logger.warn(
-      `Receiver not found for point transfer. ReceiverID: ${receiverId}`,
+    const reviews = await Review.find({ reviewee: userId }).populate(
+      "reviewer",
+      "username profilePicture"
     );
-    throw new Error(`Receiver with ID ${receiverId} not found`);
+
+    sendResponse(res, 200, true, "User reviews fetched successfully", { reviews });
   }
+);
 
-  if ((sender.points || 0) < points) {
-    throw new Error(`Sender with ID ${senderId} does not have enough points`);
+/**
+ * @desc Delete a review
+ * @route DELETE /api/reviews/:reviewId
+ * @access Private
+ */
+export const deleteReview = catchAsync(
+  async (
+    req: CustomRequest<{ reviewId: string }>,
+    res: Response
+  ): Promise<void> => {
+    const { reviewId } = req.params;
+    const reviewerId = req.user?.id;
+
+    const review = await Review.findOneAndDelete({
+      _id: reviewId,
+      reviewer: reviewerId,
+    });
+
+    if (!review) {
+      sendResponse(res, 404, false, "Review not found or access denied");
+      return;
+    }
+
+    sendResponse(res, 200, true, "Review deleted successfully");
   }
+);
 
-  sender.points = (sender.points || 0) - points;
-  receiver.points = (receiver.points || 0) + points;
-
-  await sender.save();
-  await receiver.save();
-
-  logger.info(
-    `Transferred ${points} points from user: ${senderId} to user: ${receiverId}`
-  );
-  return `Transferred ${points} points from user: ${senderId} to user: ${receiverId}`;
-};
-
-export default {
-  awardPoints,
-  deductPoints,
-  getUserPoints,
-  transferPoints,
-};
+/**
+ * NOTE: Group export REMOVED to prevent duplication errors.
+ */

@@ -1,94 +1,117 @@
-// routes/achievement.ts
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware";
 import * as AchievementController from "../controllers/AchievementController";
+import { AuthenticatedRequest } from "../types/AuthenticatedRequest"; // Correct import for AuthenticatedRequest
 
-const router = express.Router();
+// Explicitly define the router type
+const router: Router = express.Router();
 
-// Updated rate limiter with more realistic limits
+// Configure rate limiter for request throttling
 const rateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Allows 100 requests per window
-  message: "Too many requests. Please try again later.",
+  max: 100, // Max 100 requests per window
+  message: {
+    success: false,
+    message: "Too many requests. Please try again later.",
+  },
 });
 
+// Middleware for validating required fields in the request body
 const validateBody =
   (fields: string[]) =>
     (req: Request, res: Response, next: NextFunction): void => {
       const missingFields = fields.filter((field) => !req.body[field]);
+
       if (missingFields.length > 0) {
         res.status(400).json({
-          status: "fail",
+          success: false,
           message: `Missing required fields: ${missingFields.join(", ")}`,
         });
-        return; // Explicitly exit the function here
+        return;
       }
 
-      next(); // Explicitly return from the function after calling next()
+      next();
     };
 
-// Route to get all achievements
+/**
+ * @desc Get all achievements for a user
+ * @route GET /api/achievements
+ * @access Private
+ */
 router.get(
   "/",
-  authMiddleware,
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  authMiddleware, // Use authMiddleware to validate authentication
+  async (
+    req: Request, // Start with generic Request
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      // Retrieve userId from req.user
-      const userId = req.user?.id;
+      // Explicitly assert the type as AuthenticatedRequest
+      const authReq = req as AuthenticatedRequest;
+
+      const userId = authReq.user?.id; // Safe access after type assertion
 
       if (!userId) {
         res.status(400).json({
           success: false,
           message: "User ID is required.",
         });
-        return; // Explicit return to ensure function ends here
+        return;
       }
 
-      // Call controller method
+      // Fetch achievements
       const achievements = await AchievementController.getAllAchievements(userId);
 
-      // Send response and explicitly end the function
-      res.status(200).json({ success: true, data: achievements });
-      return; // Explicit return to resolve the async function
+      res.status(200).json({
+        success: true,
+        data: achievements,
+      });
     } catch (error) {
-      next(error); // Pass errors to Express error handler
+      next(error); // Delegate errors to middleware
     }
   }
 );
 
-
-
-
-// Route to add a new achievement
+/**
+ * @desc Add a new achievement
+ * @route POST /api/achievements/add
+ * @access Private
+ */
 router.post(
   "/add",
   authMiddleware,
   rateLimiter,
-  validateBody(["title", "description"]), // Validate required fields
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  validateBody(["title", "description"]),
+  async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      // Extract and validate userId
-      const userId = req.user?.id;
+      const authReq = req as AuthenticatedRequest; // Explicit type assertion
+      const userId = authReq.user?.id;
+
       if (!userId) {
         res.status(400).json({
           success: false,
           message: "User ID is required.",
         });
-        return; // Stop execution if userId is missing
+        return;
       }
 
       const achievementData = req.body;
 
-      // Call the controller method with valid userId
       const newAchievement = await AchievementController.addAchievement(
-        userId, // Now guaranteed to be a string
+        userId,
         achievementData
       );
 
       res.status(201).json({
+        success: true,
         message: "Achievement added successfully.",
-        newAchievement,
+        data: newAchievement,
       });
     } catch (error) {
       next(error);
@@ -96,27 +119,30 @@ router.post(
   }
 );
 
-
-// Route to delete an achievement
+/**
+ * @desc Delete an achievement by ID
+ * @route DELETE /api/achievements/delete
+ * @access Private
+ */
 router.delete(
   "/delete",
   authMiddleware,
-  validateBody(["achievementId"]), // Validate required field
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  validateBody(["achievementId"]),
+  async (
+    req: Request, // Keep it as Express default Request type
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      // Extract achievementId from the request body
+      // Explicitly cast req to AuthenticatedRequest
+      //const authReq = req as AuthenticatedRequest;
+
+      //const userId = authReq.user?.id; // Safe access after type assertion
+
+      // Extract required fields
       const { achievementId } = req.body;
 
-      // Validate that achievementId is provided
-      if (!achievementId) {
-        res.status(400).json({
-          success: false,
-          message: "Achievement ID is required.",
-        });
-        return;
-      }
-
-      // Call the controller method with achievementId
+      // Perform deletion
       const result = await AchievementController.deleteAchievement(achievementId);
 
       if (!result) {
@@ -128,14 +154,16 @@ router.delete(
       }
 
       res.status(200).json({
-        message: "Achievement deleted successfully.",
         success: true,
+        message: "Achievement deleted successfully.",
       });
     } catch (error) {
-      next(error); // Pass errors to the error handler
+      next(error); // Pass error to middleware for handling
     }
   }
 );
 
 
+
+// Export the router
 export default router;

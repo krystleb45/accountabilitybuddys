@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import { createError } from "../middleware/errorHandler";
@@ -7,7 +7,11 @@ import { createError } from "../middleware/errorHandler";
  * Fetch user-specific analytics
  */
 export const getUserAnalytics = catchAsync(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const userId = req.user?.id;
 
@@ -28,14 +32,17 @@ export const getUserAnalytics = catchAsync(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 /**
  * Fetch global analytics
  */
 export const getGlobalAnalytics = catchAsync(
-  async (_req: Request, res: Response): Promise<void> => {
+  async (
+    _req: CustomRequest,
+    res: Response
+  ): Promise<void> => {
     // Placeholder logic for global analytics (replace with actual implementation)
     const analytics = {
       totalUsers: 500,
@@ -46,20 +53,24 @@ export const getGlobalAnalytics = catchAsync(
     sendResponse(res, 200, true, "Global analytics fetched successfully", {
       analytics,
     });
-  },
+  }
 );
 
 /**
  * Fetch custom analytics based on query
  */
 export const getCustomAnalytics = catchAsync(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { type } = req.query;
 
       if (!type || typeof type !== "string") {
         return next(
-          createError("Invalid or missing query parameter 'type'", 400),
+          createError("Invalid or missing query parameter 'type'", 400)
         );
       }
 
@@ -73,5 +84,5 @@ export const getCustomAnalytics = catchAsync(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );

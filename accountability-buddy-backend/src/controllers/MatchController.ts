@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import mongoose from "mongoose";
 import { Match } from "../models/Match";
 import User from "../models/User";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
-import mongoose from "mongoose";
 import logger from "../utils/winstonLogger";
 
 /**
@@ -11,7 +11,7 @@ import logger from "../utils/winstonLogger";
  * @route POST /api/matches
  * @access Private
  */
-export const createMatch = catchAsync(async (req: Request, res: Response) => {
+export const createMatch = catchAsync(async (req: CustomRequest, res: Response) => {
   const { user1, user2, status } = req.body;
 
   if (!user1 || !user2) {
@@ -54,7 +54,7 @@ export const createMatch = catchAsync(async (req: Request, res: Response) => {
  * @route GET /api/matches
  * @access Private
  */
-export const getUserMatches = catchAsync(async (req: Request, res: Response) => {
+export const getUserMatches = catchAsync(async (req: CustomRequest, res: Response) => {
   const userId = req.user?.id;
   const limit = Math.max(parseInt(req.query.limit as string) || 10, 1);
   const page = Math.max(parseInt(req.query.page as string) || 1, 1);
@@ -87,7 +87,7 @@ export const getUserMatches = catchAsync(async (req: Request, res: Response) => 
  * @route GET /api/matches/:matchId
  * @access Private
  */
-export const getMatchById = catchAsync(async (req: Request, res: Response) => {
+export const getMatchById = catchAsync(async (req: CustomRequest, res: Response) => {
   const { matchId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(matchId)) {
@@ -113,7 +113,7 @@ export const getMatchById = catchAsync(async (req: Request, res: Response) => {
  * @access Private
  */
 export const updateMatchStatus = catchAsync(
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const { matchId } = req.params;
     const { status }: { status: string } = req.body;
 
@@ -151,7 +151,7 @@ export const updateMatchStatus = catchAsync(
  * @route DELETE /api/matches/:matchId
  * @access Private
  */
-export const deleteMatch = catchAsync(async (req: Request, res: Response) => {
+export const deleteMatch = catchAsync(async (req: CustomRequest, res: Response) => {
   const { matchId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(matchId)) {

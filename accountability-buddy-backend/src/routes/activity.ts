@@ -1,25 +1,31 @@
-import express, { Request, Response, NextFunction, RequestHandler } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check } from "express-validator";
 import rateLimit from "express-rate-limit";
 import Activity from "../models/Activity";
 import authMiddleware from "../middleware/authMiddleware";
 import validationMiddleware from "../middleware/validationMiddleware";
+import { AuthenticatedRequest } from "../types/AuthenticatedRequest";
 
-const router = express.Router();
+const router: Router = express.Router();
 
-// Role-Based Access Control
+// Role-Based Access Control Middleware
 const roleBasedAccessControl = (
   allowedRoles: Array<"user" | "admin" | "moderator">
-): RequestHandler => {
+) => {
   return (req: Request, res: Response, next: NextFunction): void => {
-    // Ensure that req.user is defined and has a role if using global augmentation
-    if (!req.user || !req.user.role) {
+    const authReq = req as AuthenticatedRequest;
+
+    // Check if user and role exist
+    if (!authReq.user || !authReq.user.role) {
       res.status(401).json({ success: false, message: "Unauthorized access" });
       return;
     }
 
-    if (!allowedRoles.includes(req.user.role)) {
-      res.status(403).json({ success: false, message: "Access forbidden for this role" });
+    // Check if user's role is allowed
+    if (!allowedRoles.includes(authReq.user.role)) {
+      res
+        .status(403)
+        .json({ success: false, message: "Access forbidden for this role" });
       return;
     }
 
@@ -27,11 +33,14 @@ const roleBasedAccessControl = (
   };
 };
 
-// Rate limiter
+// Rate limiter middleware
 const rateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  message: "Too many requests. Please try again later.",
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Allow 10 requests per window
+  message: {
+    success: false,
+    message: "Too many requests. Please try again later.",
+  },
 });
 
 // GET /api/activity
@@ -40,61 +49,81 @@ router.get(
   authMiddleware,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      if (!req.user) {
+      const authReq = req as AuthenticatedRequest;
+
+      // Ensure user is authenticated
+      if (!authReq.user) {
         res.status(401).json({ success: false, msg: "Unauthorized access" });
         return;
       }
 
-      const activities = await Activity.find({ user: req.user.id }).sort({ createdAt: -1 });
-      res.json({ success: true, data: activities });
+      // Fetch activities for the authenticated user
+      const activities = await Activity.find({ user: authReq.user.id }).sort({
+        createdAt: -1,
+      });
+
+      res.status(200).json({ success: true, data: activities });
     } catch (error) {
       next(error);
     }
   }
 );
 
-// GET /api/activity/all
+// GET /api/activity/all - Admin Access Only
 router.get(
   "/all",
   [authMiddleware, roleBasedAccessControl(["admin"])],
   async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      // Fetch all activities
       const activities = await Activity.find().sort({ createdAt: -1 });
-      res.json({ success: true, data: activities });
+
+      res.status(200).json({ success: true, data: activities });
     } catch (error) {
       next(error);
     }
   }
 );
 
-// POST /api/activity/log
+// POST /api/activity/log - Log User Activity
 router.post(
   "/log",
   [
     authMiddleware,
     rateLimiter,
     validationMiddleware([
-      check("activityType").notEmpty().withMessage("Activity type is required."),
-      check("details").optional().isString().withMessage("Details must be a string."),
+      check("activityType")
+        .notEmpty()
+        .withMessage("Activity type is required."),
+      check("details")
+        .optional()
+        .isString()
+        .withMessage("Details must be a string."),
     ]),
   ],
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      if (!req.user) {
+      const authReq = req as AuthenticatedRequest;
+
+      // Ensure user is authenticated
+      if (!authReq.user) {
         res.status(401).json({ success: false, msg: "Unauthorized access" });
         return;
       }
 
+      // Extract activity data
       const { activityType, details } = req.body;
 
+      // Create and save new activity
       const newActivity = new Activity({
-        user: req.user.id,
+        user: authReq.user.id,
         activityType,
         details,
         createdAt: new Date(),
       });
 
       await newActivity.save();
+
       res.status(201).json({ success: true, data: newActivity });
     } catch (error) {
       next(error);

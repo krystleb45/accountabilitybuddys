@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import Goal from "../models/Goal";
 import AccountabilityPartnership from "../models/AccountabilityPartnership";
 import catchAsync from "../utils/catchAsync";
@@ -11,13 +11,13 @@ import logger from "../utils/winstonLogger"; // Centralized logger
  * @access Private
  */
 export const getProgressDashboard = catchAsync(
-  async (req: Request, res: Response): Promise<void> => {
-    if (!req.user) {
+  async (req: CustomRequest, res: Response): Promise<void> => {
+    const userId = req.user?.id;
+
+    if (!userId) {
       sendResponse(res, 401, false, "User not authenticated");
       return;
     }
-
-    const userId = req.user.id;
 
     try {
       // Fetch goals for the user with completion status and milestones
@@ -48,7 +48,7 @@ export const getProgressDashboard = catchAsync(
         progressData,
       );
     } catch (error) {
-      logger.error("Error fetching progress dashboard:", { error });
+      logger.error("Error fetching progress dashboard:", error);
       sendResponse(res, 500, false, "Failed to fetch progress dashboard");
     }
   },

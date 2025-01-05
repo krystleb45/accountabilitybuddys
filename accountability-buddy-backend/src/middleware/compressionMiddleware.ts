@@ -1,13 +1,20 @@
 import compression from "compression";
-import { Request, Response} from "express";
+import { Request, Response, NextFunction } from "express";
 
 /**
  * Middleware for request compression using gzip and Brotli.
+ * Compresses responses based on content type and size threshold.
  */
-const compressionMiddleware = compression({
+
+// Explicitly define the middleware function type
+const compressionMiddleware: (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => void = compression({
   // Filter responses to compress based on Content-Type
   filter: (req: Request, _res: Response): boolean => {
-    const contentType = req.headers["content-type"] || ""; // Fixed 'headers' error by enforcing Express's Request type
+    const contentType = req.headers["content-type"] || "";
 
     // Compress text, JSON, CSS, JavaScript, and HTML content
     const compressibleTypes = [
@@ -19,11 +26,16 @@ const compressionMiddleware = compression({
     ];
 
     return compressibleTypes.some((type) =>
-      contentType.toString().includes(type),
+      contentType.toLowerCase().includes(type),
     );
   },
 
-  threshold: 1024, // Compress responses larger than 1 KB
+  // Compress responses larger than 1 KB
+  threshold: 1024,
+
+  // Use Brotli compression if supported, otherwise fallback to Gzip
+  brotli: true, // Brotli support can be toggled here
+  gzip: true,   // Ensure gzip is always enabled as a fallback
 });
 
 export default compressionMiddleware;

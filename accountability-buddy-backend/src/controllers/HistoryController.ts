@@ -5,7 +5,7 @@ import History from "../models/History"; // Ensure you have a History model
  * Get all history records
  */
 export const getAllHistory = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {

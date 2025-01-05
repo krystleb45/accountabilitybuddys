@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response } from "express";
 import Notification from "../models/Notification"; // Ensure this matches your model export
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -10,7 +10,7 @@ import sanitize from "mongo-sanitize";
  * @access Private
  */
 export const createNotification = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const {
       userId,
       message,
@@ -28,7 +28,6 @@ export const createNotification = catchAsync(
       type,
     });
 
-    // Just call sendResponse, don't return it
     sendResponse(res, 201, true, "Notification created successfully", {
       notification: newNotification,
     });
@@ -41,7 +40,7 @@ export const createNotification = catchAsync(
  * @access Private
  */
 export const getUserNotifications = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const userId = req.user?.id;
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 10;
@@ -70,7 +69,7 @@ export const getUserNotifications = catchAsync(
  * @access Private
  */
 export const markAsRead = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const { notificationId } = req.params;
 
     const updatedNotification = await Notification.findByIdAndUpdate(
@@ -96,7 +95,7 @@ export const markAsRead = catchAsync(
  * @access Private
  */
 export const markAllAsRead = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const userId = req.user?.id;
 
     const result = await Notification.updateMany({ user: userId, read: false }, { read: true });
@@ -113,7 +112,7 @@ export const markAllAsRead = catchAsync(
  * @access Private
  */
 export const deleteNotification = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const { notificationId } = req.params;
 
     const deletedNotification = await Notification.findByIdAndDelete(notificationId);
@@ -133,7 +132,7 @@ export const deleteNotification = catchAsync(
  * @access Private
  */
 export const deleteAllNotifications = catchAsync(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (req: CustomRequest, res: Response): Promise<void> => {
     const userId = req.user?.id;
 
     const result = await Notification.deleteMany({ user: userId });
