@@ -1,10 +1,11 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import Notification from "../models/Notification"; // Adjusted import
 import User from "../models/User";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import logger from "../utils/winstonLogger";
 
+// Sanitize input utility
 const sanitizeInput = (input: any): any => {
   if (typeof input === "string") {
     return input.replace(/\$|\./g, "");
@@ -17,9 +18,16 @@ const sanitizeInput = (input: any): any => {
   return input;
 };
 
-// Send a notification
+/**
+ * @desc Send a notification
+ * @route POST /api/notifications
+ * @access Private
+ */
 export const sendNotification = catchAsync(
-  async (req: CustomRequest, res: Response): Promise<void> => {
+  async (
+    req: Request<{}, {}, { receiverId: string; message: string }>, // Explicit body type
+    res: Response
+  ): Promise<void> => {
     const { receiverId, message } = sanitizeInput(req.body);
     const senderId = req.user?.id;
 
@@ -52,12 +60,19 @@ export const sendNotification = catchAsync(
   }
 );
 
-// Get notifications for the user
+/**
+ * @desc Get notifications for the user
+ * @route GET /api/notifications
+ * @access Private
+ */
 export const getNotifications = catchAsync(
-  async (req: CustomRequest, res: Response): Promise<void> => {
+  async (
+    req: Request<{}, {}, {}, { limit?: string; page?: string }>, // Explicit query parameters
+    res: Response
+  ): Promise<void> => {
     const userId = req.user?.id;
-    const limit = parseInt(req.query.limit as string, 10) || 10;
-    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit || "10", 10);
+    const page = parseInt(req.query.page || "1", 10);
 
     const notifications = await Notification.find({ receiver: userId })
       .sort({ createdAt: -1 })
@@ -77,9 +92,16 @@ export const getNotifications = catchAsync(
   }
 );
 
-// Mark notifications as read
+/**
+ * @desc Mark notifications as read
+ * @route PATCH /api/notifications/read
+ * @access Private
+ */
 export const markNotificationsAsRead = catchAsync(
-  async (req: CustomRequest, res: Response): Promise<void> => {
+  async (
+    req: Request<{}, {}, { notificationIds: string[] }>, // Explicit body type
+    res: Response
+  ): Promise<void> => {
     const userId = req.user?.id;
     const { notificationIds } = req.body;
 
@@ -94,9 +116,16 @@ export const markNotificationsAsRead = catchAsync(
   }
 );
 
-// Delete a notification
+/**
+ * @desc Delete a notification
+ * @route DELETE /api/notifications/:notificationId
+ * @access Private
+ */
 export const deleteNotification = catchAsync(
-  async (req: CustomRequest, res: Response): Promise<void> => {
+  async (
+    req: Request<{ notificationId: string }>, // Explicit route parameters
+    res: Response
+  ): Promise<void> => {
     const { notificationId } = req.params;
 
     const notification = await Notification.findById(notificationId);

@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import mongoose from "mongoose";
 import CollaborationGoal from "../models/CollaborationGoal";
 import catchAsync from "../utils/catchAsync";
@@ -11,7 +11,7 @@ import sanitize from "mongo-sanitize";
  * @access  Private
  */
 export const createCollaborationGoal = catchAsync(
-  async (req: CustomRequest<{}, any, { title: string; description: string; participants: string[] }>, res: Response) => {
+  async (req: Request<{}, any, { title: string; description: string; participants: string[] }>, res: Response) => {
     const { title, description, participants } = sanitize(req.body);
     const userId = req.user?.id;
 
@@ -46,7 +46,7 @@ export const createCollaborationGoal = catchAsync(
  * @access  Private
  */
 export const getUserCollaborationGoals = catchAsync(
-  async (req: CustomRequest, res: Response) => {
+  async (req: Request<{}, {}, {}, {}>, res: Response) => {
     const userId = req.user?.id;
 
     if (!userId) {
@@ -75,7 +75,7 @@ export const getUserCollaborationGoals = catchAsync(
  * @access  Private
  */
 export const deleteCollaborationGoal = catchAsync(
-  async (req: CustomRequest<{ goalId: string }>, res: Response) => {
+  async (req: Request<{ goalId: string }>, res: Response) => {
     const { goalId } = req.params;
     const userId = req.user?.id;
 
@@ -107,7 +107,7 @@ export const deleteCollaborationGoal = catchAsync(
  * @access  Private
  */
 export const addParticipant = catchAsync(
-  async (req: CustomRequest<{}, any, { goalId: string; participantId: string }>, res: Response) => {
+  async (req: Request<{}, any, { goalId: string; participantId: string }>, res: Response) => {
     const { goalId, participantId } = sanitize(req.body);
     const userId = req.user?.id;
 

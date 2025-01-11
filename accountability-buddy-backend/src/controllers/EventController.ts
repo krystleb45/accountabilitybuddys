@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Response } from "express";
+import { Request, Response } from "express";
 import Event, { IEvent } from "../models/Event"; // Import IEvent with participants
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -12,7 +12,7 @@ import logger from "../utils/winstonLogger";
  */
 export const joinEvent = catchAsync(
   async (
-    req: CustomRequest<{ eventId: string }>,
+    req: Request<{ eventId: string }>,
     res: Response
   ): Promise<void> => {
     const { eventId } = req.params;
@@ -59,7 +59,7 @@ export const joinEvent = catchAsync(
  */
 export const leaveEvent = catchAsync(
   async (
-    req: CustomRequest<{ eventId: string }>,
+    req: Request<{ eventId: string }>,
     res: Response
   ): Promise<void> => {
     const { eventId } = req.params;

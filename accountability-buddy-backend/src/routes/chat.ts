@@ -1,11 +1,11 @@
-import express, { Response, NextFunction } from "express";
+import express, { Response, NextFunction, Router } from "express";
 import { check, validationResult } from "express-validator";
 import rateLimit from "express-rate-limit";
 import * as chatController from "../controllers/chatController";
 import authMiddleware, { AuthenticatedRequest } from "../middleware/authMiddleware";
 import checkSubscription from "../middleware/checkSubscription";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Rate limiter to prevent abuse in chat functionality
 const chatLimiter = rateLimit({

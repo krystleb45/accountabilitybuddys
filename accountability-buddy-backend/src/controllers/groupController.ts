@@ -1,6 +1,6 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import mongoose from "mongoose";
-import { Group } from "../models/Group";
+import Group from "../models/Group";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import { createError } from "../middleware/errorHandler";
@@ -12,7 +12,7 @@ import { createError } from "../middleware/errorHandler";
  */
 export const createGroup = catchAsync(
   async (
-    req: CustomRequest<{}, any, { name: string; members: string[] }>,
+    req: Request<{}, any, { name: string; members: string[] }>,
     res: Response
   ): Promise<void> => {
     const { name, members } = req.body;
@@ -22,7 +22,6 @@ export const createGroup = catchAsync(
       throw createError("Group name is required", 400);
     }
 
-    // Ensure unique members, including the creator
     const uniqueMembers = [...new Set([userId, ...members])].map(
       (id) => new mongoose.Types.ObjectId(String(id))
     );
@@ -44,7 +43,10 @@ export const createGroup = catchAsync(
  * @access Private
  */
 export const getUserGroups = catchAsync(
-  async (req: CustomRequest, res: Response): Promise<void> => {
+  async (
+    req: Request<{}, {}, {}, {}>, // Use explicit types
+    res: Response
+  ): Promise<void> => {
     const userId = req.user?.id;
 
     const groups = await Group.find({
@@ -57,6 +59,78 @@ export const getUserGroups = catchAsync(
   }
 );
 
+
+/**
+ * @desc Join a group
+ * @route POST /api/groups/join
+ * @access Private
+ */
+export const joinGroup = catchAsync(
+  async (
+    req: Request<{}, any, { groupId: string }>,
+    res: Response
+  ): Promise<void> => {
+    const { groupId } = req.body;
+    const userId = req.user?.id;
+
+    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+      throw createError("Invalid group ID format", 400);
+    }
+
+    const group = await Group.findById(groupId);
+    if (!group) {
+      sendResponse(res, 404, false, "Group not found");
+      return;
+    }
+
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+
+    if (group.members.some((id) => id.equals(userObjectId))) {
+      sendResponse(res, 400, false, "You are already a member of this group");
+      return;
+    }
+
+    group.members.push(userObjectId);
+    await group.save();
+
+    sendResponse(res, 200, true, "Joined the group successfully", { group });
+  }
+);
+
+/**
+ * @desc Leave a group
+ * @route POST /api/groups/leave
+ * @access Private
+ */
+export const leaveGroup = catchAsync(
+  async (
+    req: Request<{}, any, { groupId: string }>,
+    res: Response
+  ): Promise<void> => {
+    const { groupId } = req.body;
+    const userId = req.user?.id;
+
+    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+      throw createError("Invalid group ID format", 400);
+    }
+
+    const group = await Group.findById(groupId);
+    if (!group) {
+      sendResponse(res, 404, false, "Group not found");
+      return;
+    }
+
+    // Remove the user from the group members
+    group.members = group.members.filter(
+      (member) => !member.equals(new mongoose.Types.ObjectId(userId))
+    );
+
+    await group.save();
+
+    sendResponse(res, 200, true, "Left the group successfully", { group });
+  }
+);
+
 /**
  * @desc Get a specific group by ID
  * @route GET /api/groups/:groupId
@@ -64,7 +138,7 @@ export const getUserGroups = catchAsync(
  */
 export const getGroupById = catchAsync(
   async (
-    req: CustomRequest<{ groupId: string }>,
+    req: Request<{ groupId: string }>,
     res: Response
   ): Promise<void> => {
     const { groupId } = req.params;
@@ -87,54 +161,13 @@ export const getGroupById = catchAsync(
 );
 
 /**
- * @desc Update a group
- * @route PUT /api/groups/:groupId
- * @access Private
- */
-export const updateGroup = catchAsync(
-  async (
-    req: CustomRequest<{ groupId: string }, any, { name?: string; members?: string[] }>,
-    res: Response
-  ): Promise<void> => {
-    const { groupId } = req.params;
-    const { name, members } = req.body;
-    const userId = req.user?.id;
-
-    if (!mongoose.Types.ObjectId.isValid(groupId)) {
-      throw createError("Invalid group ID format", 400);
-    }
-
-    const group = await Group.findById(new mongoose.Types.ObjectId(groupId));
-    if (!group) {
-      sendResponse(res, 404, false, "Group not found");
-      return;
-    }
-    if (!group.createdBy.equals(new mongoose.Types.ObjectId(userId))) {
-      sendResponse(res, 403, false, "You are not authorized to update this group");
-      return;
-    }
-
-    if (name) group.name = name;
-    if (members) {
-      const uniqueMembers = [...new Set(members)].map(
-        (id) => new mongoose.Types.ObjectId(String(id))
-      );
-      group.members = uniqueMembers;
-    }
-
-    await group.save();
-    sendResponse(res, 200, true, "Group updated successfully", { group });
-  }
-);
-
-/**
  * @desc Delete a group
  * @route DELETE /api/groups/:groupId
  * @access Private
  */
 export const deleteGroup = catchAsync(
   async (
-    req: CustomRequest<{ groupId: string }>,
+    req: Request<{ groupId: string }>,
     res: Response
   ): Promise<void> => {
     const { groupId } = req.params;
@@ -156,45 +189,5 @@ export const deleteGroup = catchAsync(
 
     await group.deleteOne();
     sendResponse(res, 200, true, "Group deleted successfully");
-  }
-);
-
-/**
- * @desc Add a member to a group
- * @route POST /api/groups/add-member
- * @access Private
- */
-export const addGroupMember = catchAsync(
-  async (
-    req: CustomRequest<{}, any, { groupId: string; memberId: string }>,
-    res: Response
-  ): Promise<void> => {
-    const { groupId, memberId } = req.body;
-    const userId = req.user?.id;
-
-    if (
-      !mongoose.Types.ObjectId.isValid(groupId) ||
-      !mongoose.Types.ObjectId.isValid(memberId)
-    ) {
-      throw createError("Invalid group or member ID format", 400);
-    }
-
-    const group = await Group.findById(new mongoose.Types.ObjectId(groupId));
-    if (!group) {
-      sendResponse(res, 404, false, "Group not found");
-      return;
-    }
-    if (!group.members.some((id) => id.equals(new mongoose.Types.ObjectId(userId)))) {
-      sendResponse(res, 403, false, "You are not authorized to add members to this group");
-      return;
-    }
-
-    const memberObjectId = new mongoose.Types.ObjectId(memberId);
-    if (!group.members.some((id) => id.equals(memberObjectId))) {
-      group.members.push(memberObjectId);
-      await group.save();
-    }
-
-    sendResponse(res, 200, true, "Member added successfully", { group });
   }
 );

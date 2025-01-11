@@ -2,20 +2,13 @@ import mongoose, { Schema, Document, Types, Model, CallbackError } from "mongoos
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
-// Payload type for the user
-export interface UserPayload {
-  id: string;
-  role: "user" | "admin" | "moderator";
-  isAdmin?: boolean;
-}
-
-// Settings interface
+// User Settings Interface
 export interface UserSettings {
   notifications?: {
     email?: boolean;
     sms?: boolean;
     push?: boolean;
-    enableNotifications?: boolean; // Added enableNotifications
+    enableNotifications?: boolean;
   };
   privacy?: {
     profileVisibility?: "public" | "friends" | "private";
@@ -23,7 +16,7 @@ export interface UserSettings {
   };
 }
 
-// User interface
+// User Interface
 export interface IUser extends Document {
   _id: Types.ObjectId;
   firstName?: string;
@@ -33,24 +26,24 @@ export interface IUser extends Document {
   password: string;
   role: "user" | "admin" | "moderator";
   isVerified: boolean;
-  isLocked?: boolean; // Lock status
-  active: boolean; // Active status
+  isLocked?: boolean;
+  active: boolean;
   profilePicture?: string;
   friends: Types.ObjectId[];
   friendRequests: Types.ObjectId[];
   points?: number;
-  enableNotifications?: boolean; // Added enableNotifications
+  rewards: Types.ObjectId[]; // Rewards stored as ObjectId[]
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   subscriptions?: Types.ObjectId[];
   settings?: UserSettings;
-  twoFactorSecret?: string; // Added for 2FA functionality
+  twoFactorSecret?: string;
 
   comparePassword(candidatePassword: string): Promise<boolean>;
   generateResetToken(): string;
 }
 
-// Define the schema
+// Define User Schema
 const UserSchema: Schema<IUser> = new Schema(
   {
     firstName: { type: String },
@@ -60,13 +53,13 @@ const UserSchema: Schema<IUser> = new Schema(
     password: { type: String, required: true, minlength: 8 },
     role: { type: String, enum: ["user", "admin", "moderator"], default: "user" },
     isVerified: { type: Boolean, default: false },
-    isLocked: { type: Boolean, default: false }, // Lock status
-    active: { type: Boolean, default: true }, // Active status
+    isLocked: { type: Boolean, default: false },
+    active: { type: Boolean, default: true },
     profilePicture: { type: String },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     points: { type: Number, default: 0 },
-    enableNotifications: { type: Boolean, default: true }, // Added enableNotifications
+    rewards: [{ type: mongoose.Schema.Types.ObjectId, ref: "Reward" }], // ObjectId[] for rewards
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
     subscriptions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subscription" }],
@@ -75,7 +68,7 @@ const UserSchema: Schema<IUser> = new Schema(
         email: { type: Boolean, default: true },
         sms: { type: Boolean, default: false },
         push: { type: Boolean, default: true },
-        enableNotifications: { type: Boolean, default: true }, // Added to settings
+        enableNotifications: { type: Boolean, default: true },
       },
       privacy: {
         profileVisibility: {
@@ -86,15 +79,14 @@ const UserSchema: Schema<IUser> = new Schema(
         searchVisibility: { type: Boolean, default: true },
       },
     },
-    twoFactorSecret: { type: String }, // Added for 2FA functionality
+    twoFactorSecret: { type: String },
   },
   { timestamps: true }
 );
 
-// Pre-save hook to hash passwords
+// Password hashing
 UserSchema.pre<IUser>("save", async function (next) {
   if (!this.isModified("password")) return next();
-
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
@@ -104,24 +96,21 @@ UserSchema.pre<IUser>("save", async function (next) {
   }
 });
 
-// Method to compare passwords
+// Compare Password
 UserSchema.methods.comparePassword = async function (
   candidatePassword: string
 ): Promise<boolean> {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Method to generate a reset token
+// Generate Reset Token
 UserSchema.methods.generateResetToken = function (): string {
   const resetToken = crypto.randomBytes(20).toString("hex");
-  this.resetPasswordToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
-  this.resetPasswordExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+  this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+  this.resetPasswordExpires = new Date(Date.now() + 10 * 60 * 1000);
   return resetToken;
 };
 
-// Export the model
+// Export User Model
 const User: Model<IUser> = mongoose.model<IUser>("User", UserSchema);
 export default User;

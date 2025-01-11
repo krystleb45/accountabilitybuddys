@@ -1,7 +1,7 @@
-import express, { Router, Response, NextFunction, RequestHandler } from "express";
+import express, { Router, Response, NextFunction, Request, RequestHandler } from "express";
 import { check, validationResult } from "express-validator";
 import rateLimit from "express-rate-limit";
-import authMiddleware, { AuthenticatedRequest } from "../middleware/authMiddleware";
+import authMiddleware from "../middleware/authMiddleware";
 import { roleBasedAccessControl } from "../middleware/roleBasedAccessControl";
 import logger from "../utils/winstonLogger";
 import * as AdminController from "../controllers/AdminController";
@@ -12,8 +12,6 @@ const router: Router = express.Router();
 
 // Middleware to check admin role
 const isAdmin: RequestHandler = roleBasedAccessControl(["admin"]);
-
-
 
 // Rate limiter to prevent abuse
 const rateLimiter = rateLimit({
@@ -28,20 +26,14 @@ const rateLimiter = rateLimit({
 /**
  * Unified Error Handler for Routes
  */
-const handleRouteErrors = (
-  handler: (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ) => Promise<void>
-): RequestHandler => {
-  return (req, res, next) => {
-    handler(req as AuthenticatedRequest, res, next).catch((error) => {
-      logger.error(`Error occurred: ${(error as Error).message}`);
-      res.status(500).json({ success: false, message: "Internal server error" });
-    });
-  };
-};
+const handleRouteErrors =
+  (handler: (req: Request, res: Response, next: NextFunction) => Promise<void>): RequestHandler =>
+    (req, res, next) => {
+      handler(req, res, next).catch((error) => {
+        logger.error(`Error occurred: ${(error as Error).message}`);
+        res.status(500).json({ success: false, message: "Internal server error" });
+      });
+    };
 
 /**
  * @route GET /api/admin/analytics/users
@@ -50,12 +42,11 @@ const handleRouteErrors = (
  */
 router.get(
   "/users",
-  authMiddleware as unknown as RequestHandler,
+  authMiddleware,
   isAdmin,
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const analytics = await AdminController.getUserAnalytics(req as AuthenticatedRequest, res, next);
-    res.status(200).json({ success: true, data: analytics });
-  }) as unknown as RequestHandler // <-- Ensure compatibility with Express types
+  handleRouteErrors(async (req: Request, res: Response, next: NextFunction) => {
+    await AdminController.getUserAnalytics(req, res, next);
+  })
 );
 
 /**
@@ -65,12 +56,11 @@ router.get(
  */
 router.get(
   "/goals",
-  authMiddleware as unknown as RequestHandler,
+  authMiddleware,
   isAdmin,
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const analytics = await AnalyticsController.getGlobalAnalytics(req as AuthenticatedRequest, res, next);
-    res.status(200).json({ success: true, data: analytics });
-  }) as unknown as RequestHandler
+  handleRouteErrors(async (req: Request, res: Response, next: NextFunction) => {
+    await AnalyticsController.getGlobalAnalytics(req, res, next);
+  })
 );
 
 /**
@@ -80,12 +70,11 @@ router.get(
  */
 router.get(
   "/posts",
-  authMiddleware as unknown as RequestHandler,
+  authMiddleware,
   isAdmin,
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const analytics = await AnalyticsController.getGlobalAnalytics(req as AuthenticatedRequest, res, next);
-    res.status(200).json({ success: true, data: analytics });
-  }) as unknown as RequestHandler
+  handleRouteErrors(async (req: Request, res: Response, next: NextFunction) => {
+    await AnalyticsController.getGlobalAnalytics(req, res, next);
+  })
 );
 
 /**
@@ -95,12 +84,11 @@ router.get(
  */
 router.get(
   "/financial",
-  authMiddleware as unknown as RequestHandler,
+  authMiddleware,
   isAdmin,
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const analytics = await AdminController.getFinancialAnalytics(req as AuthenticatedRequest, res, next);
-    res.status(200).json({ success: true, data: analytics });
-  }) as unknown as RequestHandler
+  handleRouteErrors(async (req: Request, res: Response, next: NextFunction) => {
+    await AdminController.getFinancialAnalytics(req, res, next);
+  })
 );
 
 /**
@@ -111,26 +99,14 @@ router.get(
 router.post(
   "/custom",
   [
-    authMiddleware as unknown as RequestHandler,
+    authMiddleware,
     isAdmin,
     rateLimiter,
-    check("startDate")
-      .notEmpty()
-      .withMessage("Start date is required")
-      .isISO8601()
-      .withMessage("Invalid date format"),
-    check("endDate")
-      .notEmpty()
-      .withMessage("End date is required")
-      .isISO8601()
-      .withMessage("Invalid date format"),
-    check("metric")
-      .notEmpty()
-      .withMessage("Metric is required")
-      .isString()
-      .withMessage("Metric must be a string"),
+    check("startDate").notEmpty().withMessage("Start date is required").isISO8601().withMessage("Invalid date format"),
+    check("endDate").notEmpty().withMessage("End date is required").isISO8601().withMessage("Invalid date format"),
+    check("metric").notEmpty().withMessage("Metric is required").isString().withMessage("Metric must be a string"),
   ],
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response) => {
+  handleRouteErrors(async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).json({ success: false, errors: errors.array() });
@@ -138,13 +114,9 @@ router.post(
     }
 
     const { startDate, endDate, metric } = req.body;
-    const analytics = await AnalyticsController.getCustomAnalytics(
-      startDate,
-      endDate,
-      metric
-    );
+    const analytics = await AnalyticsController.getCustomAnalytics(startDate, endDate, metric);
     res.status(200).json({ success: true, data: analytics });
-  }) as unknown as RequestHandler
+  })
 );
 
 export default router;

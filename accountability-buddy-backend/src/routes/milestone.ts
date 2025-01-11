@@ -1,10 +1,11 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import rateLimit from "express-rate-limit";
-import authMiddleware from "../middleware/authMiddleware"; // Corrected middleware import path
-import * as MilestoneController from "../controllers/MilestoneController"; // Corrected controller import path
-import logger from "../utils/winstonLogger"; // Added logger utility
+import authMiddleware from "../middleware/authMiddleware"; // Middleware path
+import * as MilestoneController from "../controllers/MilestoneController"; // Controller path
+import logger from "../utils/winstonLogger"; // Logger utility
+import { check, validationResult } from "express-validator";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Rate limiter to prevent abuse of milestone-related endpoints.
@@ -16,6 +17,22 @@ const rateLimiter = rateLimit({
 });
 
 /**
+ * Middleware to handle validation errors.
+ */
+const handleValidationErrors = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({ success: false, errors: errors.array() });
+    return;
+  }
+  next();
+};
+
+/**
  * @route   GET /milestones
  * @desc    Get user milestones
  * @access  Private
@@ -23,18 +40,23 @@ const rateLimiter = rateLimit({
 router.get(
   "/",
   authMiddleware,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = req.user?.id;
-      const milestones = await MilestoneController.getUserMilestones(userId);
-      res.status(200).json({ success: true, milestones });
+      const userId = (req as any).user?.id; // Ensure `req.user` is typed properly
+
+      if (!userId) {
+        res.status(401).json({ success: false, msg: "Unauthorized" });
+        return;
+      }
+
+      await MilestoneController.getUserMilestones(req, res, next); // Pass req, res, next
     } catch (error) {
-      logger.error("Error fetching milestones", {
-        error: error,
-        userId: req.user?.id,
+      logger.error(`Error fetching milestones: ${(error as Error).message}`, {
+        error,
+        userId: (req as any).user?.id,
         ip: req.ip,
       });
-      next(error); // Pass error to global error handler
+      next(error);
     }
   }
 );
@@ -48,19 +70,29 @@ router.post(
   "/add",
   authMiddleware,
   rateLimiter,
-  async (req: Request, res: Response, next: NextFunction) => {
+  [
+    check("title", "Title is required").notEmpty(),
+    check("description", "Description must not exceed 500 characters").optional().isLength({ max: 500 }),
+    check("dueDate", "Invalid date format").optional().isISO8601(),
+  ],
+  handleValidationErrors,
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = req.user?.id;
-      const milestoneData = req.body;
-      const newMilestone = await MilestoneController.addMilestone(userId, milestoneData);
-      res.status(201).json({ success: true, message: "Milestone added successfully.", newMilestone });
+      const userId = (req as any).user?.id;
+
+      if (!userId) {
+        res.status(401).json({ success: false, msg: "Unauthorized" });
+        return;
+      }
+
+      MilestoneController.addMilestone(req, res, next); // Pass req, res, next
     } catch (error) {
-      logger.error("Error adding milestone", {
-        error: error,
-        userId: req.user?.id,
+      logger.error(`Error adding milestone: ${(error as Error).message}`, {
+        error,
+        userId: (req as any).user?.id,
         ip: req.ip,
       });
-      next(error); // Pass error to global error handler
+      next(error);
     }
   }
 );
@@ -73,20 +105,31 @@ router.post(
 router.put(
   "/update",
   authMiddleware,
-  async (req: Request, res: Response, next: NextFunction) => {
+  [
+    check("milestoneId", "Milestone ID is required").notEmpty().isMongoId(),
+    check("title", "Title must not be empty").optional().notEmpty(),
+    check("description", "Description must not exceed 500 characters").optional().isLength({ max: 500 }),
+    check("dueDate", "Invalid date format").optional().isISO8601(),
+  ],
+  handleValidationErrors,
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = req.user?.id;
-      const { milestoneId, updates } = req.body;
-      const updatedMilestone = await MilestoneController.updateMilestone(userId, milestoneId, updates);
-      res.status(200).json({ success: true, message: "Milestone updated successfully.", updatedMilestone });
+      const userId = (req as any).user?.id;
+
+      if (!userId) {
+        res.status(401).json({ success: false, msg: "Unauthorized" });
+        return;
+      }
+
+      await MilestoneController.updateMilestone(req, res, next); // Pass req, res, next
     } catch (error) {
-      logger.error("Error updating milestone", {
-        error: error,
-        userId: req.user?.id,
+      logger.error(`Error updating milestone: ${(error as Error).message}`, {
+        error,
+        userId: (req as any).user?.id,
         milestoneId: req.body.milestoneId,
         ip: req.ip,
       });
-      next(error); // Pass error to global error handler
+      next(error);
     }
   }
 );
@@ -99,20 +142,28 @@ router.put(
 router.delete(
   "/delete",
   authMiddleware,
-  async (req: Request, res: Response, next: NextFunction) => {
+  [
+    check("milestoneId", "Milestone ID is required").notEmpty().isMongoId(),
+  ],
+  handleValidationErrors,
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = req.user?.id;
-      const { milestoneId } = req.body;
-      const result = await MilestoneController.deleteMilestone(userId, milestoneId);
-      res.status(200).json({ success: true, message: "Milestone deleted successfully.", result });
+      const userId = (req as any).user?.id;
+
+      if (!userId) {
+        res.status(401).json({ success: false, msg: "Unauthorized" });
+        return;
+      }
+
+      await MilestoneController.deleteMilestone(req, res, next); // Pass req, res, next
     } catch (error) {
-      logger.error("Error deleting milestone", {
-        error: error,
-        userId: req.user?.id,
+      logger.error(`Error deleting milestone: ${(error as Error).message}`, {
+        error,
+        userId: (req as any).user?.id,
         milestoneId: req.body.milestoneId,
         ip: req.ip,
       });
-      next(error); // Pass error to global error handler
+      next(error);
     }
   }
 );

@@ -6,11 +6,11 @@ import logger from "../utils/winstonLogger";
 
 // Define and export AuthenticatedRequest directly
 export interface AuthenticatedRequest extends Request {
-  user: {
+  user?: { // Make user optional
     id: string;
-    email: string;
-    role: "user" | "admin" | "moderator"; // Role must be specified
-    isAdmin?: boolean; // Optional field
+    email?: string; // Make email optional
+    role: "user" | "admin" | "moderator";
+    isAdmin?: boolean;
   };
 }
 
@@ -19,7 +19,7 @@ export interface AuthenticatedRequest extends Request {
  * Validates JWT and attaches user details to the request object.
  */
 const authMiddleware = async (
-  req: AuthenticatedRequest, // Now uses exported type
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -49,7 +49,10 @@ const authMiddleware = async (
     }
 
     // Verify and decode the JWT
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "default_secret") as {
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "default_secret"
+    ) as {
       id: string;
       role: "user" | "admin" | "moderator";
     };

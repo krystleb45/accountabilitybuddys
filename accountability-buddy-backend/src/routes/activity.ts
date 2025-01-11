@@ -4,7 +4,7 @@ import rateLimit from "express-rate-limit";
 import Activity from "../models/Activity";
 import authMiddleware from "../middleware/authMiddleware";
 import validationMiddleware from "../middleware/validationMiddleware";
-import { AuthenticatedRequest } from "../types/AuthenticatedRequest";
+
 
 const router: Router = express.Router();
 
@@ -13,7 +13,7 @@ const roleBasedAccessControl = (
   allowedRoles: Array<"user" | "admin" | "moderator">
 ) => {
   return (req: Request, res: Response, next: NextFunction): void => {
-    const authReq = req as AuthenticatedRequest;
+    const authReq = req as Request;
 
     // Check if user and role exist
     if (!authReq.user || !authReq.user.role) {
@@ -49,7 +49,7 @@ router.get(
   authMiddleware,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const authReq = req as AuthenticatedRequest;
+      const authReq = req as Request;
 
       // Ensure user is authenticated
       if (!authReq.user) {
@@ -103,7 +103,7 @@ router.post(
   ],
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const authReq = req as AuthenticatedRequest;
+      const authReq = req as Request;
 
       // Ensure user is authenticated
       if (!authReq.user) {

@@ -1,4 +1,4 @@
-import { Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import AuditLog from "../models/AuditLog"; // Ensure this model is defined and implemented correctly
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -10,7 +10,7 @@ import sanitize from "mongo-sanitize";
  */
 export const logAuditEvent = catchAsync(
   async (
-    req: CustomRequest<{}, any, { action: string; details?: string }>,
+    req: Request<{}, {}, { action: string; details?: string }>, // Explicit generic types
     res: Response,
     next: NextFunction
   ): Promise<void> => {
@@ -27,7 +27,7 @@ export const logAuditEvent = catchAsync(
       const newAuditLog = new AuditLog({
         action,
         details: details || "No details provided",
-        user: req.user?.id,
+        user: req.user?.id, // Uses globally-augmented 'req.user'
       });
 
       await newAuditLog.save();
@@ -46,7 +46,7 @@ export const logAuditEvent = catchAsync(
  */
 export const getAuditLogs = catchAsync(
   async (
-    _req: CustomRequest,
+    _req: Request<{}, {}, {}, {}>, // Explicit generic types
     res: Response
   ): Promise<void> => {
     const auditLogs = await AuditLog.find().sort({ createdAt: -1 });
@@ -67,7 +67,7 @@ export const getAuditLogs = catchAsync(
  */
 export const getAuditLogsByUser = catchAsync(
   async (
-    req: CustomRequest<{ userId: string }>,
+    req: Request<{ userId: string }, {}, {}, {}>, // Explicit generic types
     res: Response,
     next: NextFunction
   ): Promise<void> => {

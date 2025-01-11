@@ -1,18 +1,23 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 import authMiddleware from "../middleware/authMiddleware"; // Corrected middleware import path
 import * as ProfileController from "../controllers/ProfileController"; // Corrected controller import path
 import logger from "../utils/winstonLogger"; // Import logger utility
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Middleware to handle validation errors.
  */
-const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
+const handleValidationErrors = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    res.status(400).json({ success: false, errors: errors.array() }); // Explicit return
+    return;
   }
   next();
 };
@@ -25,10 +30,18 @@ const handleValidationErrors = (req: Request, res: Response, next: NextFunction)
 router.get(
   "/",
   authMiddleware,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const profile = await ProfileController.getProfile(req.user?.id);
-      res.status(200).json({ success: true, profile });
+      const userId = req.user?.id;
+
+      if (!userId) {
+        res.status(401).json({ success: false, message: "Unauthorized" });
+        return;
+      }
+
+      // Pass the correct arguments to the controller function
+      await ProfileController.getProfile(req, res, next);
+
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(`Error fetching profile for user ${req.user?.id}: ${errorMessage}`);
@@ -36,6 +49,7 @@ router.get(
     }
   }
 );
+
 
 /**
  * @route   PUT /profile/update
@@ -50,10 +64,18 @@ router.put(
     check("email").optional().isEmail().withMessage("Email must be valid."),
   ],
   handleValidationErrors,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const updatedProfile = await ProfileController.updateProfile(req.user?.id, req.body);
-      res.status(200).json({ success: true, message: "Profile updated successfully.", updatedProfile });
+      const userId = req.user?.id;
+
+      if (!userId) {
+        res.status(401).json({ success: false, message: "Unauthorized" });
+        return;
+      }
+
+      // Call the controller with the correct arguments
+      await ProfileController.updateProfile(req, res, next);
+
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(`Error updating profile for user ${req.user?.id}: ${errorMessage}`);

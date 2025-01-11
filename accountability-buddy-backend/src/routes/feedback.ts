@@ -1,11 +1,11 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 import * as feedbackController from "../controllers/FeedbackController";
 import authMiddleware from "../middleware/authMiddleware";
 import rateLimit from "express-rate-limit";
 import logger from "../utils/winstonLogger";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Rate limiter to prevent spam in feedback submissions.
@@ -22,7 +22,8 @@ const feedbackLimiter = rateLimit({
 const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    res.status(400).json({ success: false, errors: errors.array() });
+    return; // Exit early without returning a value
   }
   next();
 };
@@ -37,19 +38,30 @@ router.post(
   authMiddleware,
   feedbackLimiter,
   [
-    check("message", "Feedback message is required").notEmpty().isLength({ max: 1000 }),
-    check("type", "Invalid feedback type").isIn(["bug", "feature-request", "other"]),
+    check("message", "Feedback message is required")
+      .notEmpty()
+      .isLength({ max: 1000 }),
+    check("type", "Invalid feedback type").isIn([
+      "bug",
+      "feature-request",
+      "other",
+    ]),
   ],
   handleValidationErrors,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await feedbackController.submitFeedback(req, res);
+      // Await the controller function to handle the async operation
+      await feedbackController.submitFeedback(req, res, next); // Add 'await'
     } catch (error) {
-      logger.error(`Error submitting feedback: ${(error as Error).message}`, { error });
-      res.status(500).json({ success: false, msg: "Server error" });
+      // Log and pass error to middleware
+      logger.error(`Error submitting feedback: ${(error as Error).message}`, {
+        error,
+      });
+      next(error); // Forward error to middleware
     }
   }
 );
+
 
 /**
  * @route   GET /feedback
@@ -59,12 +71,13 @@ router.post(
 router.get(
   "/",
   authMiddleware,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await feedbackController.getUserFeedback(req, res);
+      const feedback = feedbackController.getUserFeedback(req, res, next); // Pass 'next'
+      res.status(200).json({ success: true, data: feedback });
     } catch (error) {
       logger.error(`Error fetching feedback: ${(error as Error).message}`, { error });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(error); // Forward error to middleware
     }
   }
 );
@@ -77,19 +90,21 @@ router.get(
 router.delete(
   "/:feedbackId",
   authMiddleware,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { feedbackId } = req.params;
 
     // Validate feedback ID format
     if (!feedbackId.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(400).json({ success: false, msg: "Invalid feedback ID" });
+      res.status(400).json({ success: false, msg: "Invalid feedback ID" });
+      return; // Early exit without returning a value
     }
 
     try {
-      await feedbackController.deleteFeedback(req, res);
+      feedbackController.deleteFeedback(req, res, next); // Pass 'next'
+      res.status(200).json({ success: true, msg: "Feedback deleted successfully" });
     } catch (error) {
       logger.error(`Error deleting feedback: ${(error as Error).message}`, { error });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(error); // Forward error to middleware
     }
   }
 );

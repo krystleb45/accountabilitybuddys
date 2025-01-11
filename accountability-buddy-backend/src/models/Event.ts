@@ -24,6 +24,7 @@ export interface IEvent extends Document {
   endDate: Date;
   createdBy: Types.ObjectId;
   participants: IParticipant[];
+  progress: number; // <-- Added progress field
   recurrence?: "none" | "daily" | "weekly" | "monthly" | "yearly";
   status: "upcoming" | "ongoing" | "completed" | "canceled";
   isPublic: boolean;
@@ -118,6 +119,12 @@ const EventSchema: Schema<IEvent> = new Schema(
         sent: { type: Boolean, default: false },
       },
     ],
+    progress: {
+      type: Number,
+      default: 0, // <-- Added progress field with default 0
+      min: [0, "Progress cannot be less than 0"],
+      max: [100, "Progress cannot be more than 100"],
+    },
   },
   { timestamps: true }
 );
@@ -144,7 +151,7 @@ EventSchema.statics.addParticipant = async function (
   const event = await this.findById(eventId);
   if (!event) throw new CustomError("Event not found", 404);
 
-  const isParticipant = event.participants.some((p: IParticipant) => 
+  const isParticipant = event.participants.some((p: IParticipant) =>
     p.user.toString() === userId.toString()
   );
   if (isParticipant) throw new CustomError("User is already a participant", 400);
@@ -183,7 +190,8 @@ EventSchema.methods.addReminder = async function (
 // Instance method to get active reminders
 EventSchema.methods.getActiveReminders = function (): IReminder[] {
   return this.reminders.filter(
-    (reminder: IReminder) => !reminder.sent && reminder.scheduledTime > new Date()
+    (reminder: IReminder) =>
+      !reminder.sent && reminder.scheduledTime > new Date()
   );
 };
 
@@ -193,4 +201,5 @@ EventSchema.virtual("participantCount").get(function () {
 });
 
 // Export Event model
-export default mongoose.model<IEvent, IEventModel>("Event", EventSchema);
+const Event = mongoose.model<IEvent, IEventModel>("Event", EventSchema);
+export default Event;

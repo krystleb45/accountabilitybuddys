@@ -1,59 +1,76 @@
 import mongoose from "mongoose";
-import { Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import FeedPost, { IFeedPost } from "../models/FeedPost";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import logger from "../utils/winstonLogger";
 
+// Extended Request type for user property
+interface RequestWithUser extends Request {
+  user?: {
+    id: string;
+    email?: string;
+    role: "user" | "admin" | "moderator";
+    isAdmin?: boolean;
+  };
+}
+
 /**
- * @desc    Create a new post
+ * @desc    Create a new milestone post
  * @route   POST /api/feed
  * @access  Private
  */
 export const createPost = catchAsync(
   async (
-    req: CustomRequest<{}, any, { content: string }>,
-    res: Response
+    req: RequestWithUser,
+    res: Response,
+    _next: NextFunction
   ): Promise<void> => {
-    const { content } = req.body;
+    const { goalId, milestone, message } = req.body;
     const userId = req.user?.id;
 
     if (!userId) {
-      sendResponse(res, 400, false, "User ID is required");
+      sendResponse(res, 401, false, "Unauthorized");
       return;
     }
 
-    if (!content || typeof content !== "string" || content.trim() === "") {
-      sendResponse(res, 400, false, "Post content cannot be empty");
+    if (!message || typeof message !== "string" || message.trim() === "") {
+      sendResponse(res, 400, false, "Post message cannot be empty");
       return;
     }
 
     const newPost = await FeedPost.create({
       user: new mongoose.Types.ObjectId(userId),
-      content,
+      goal: goalId,
+      milestone,
+      message,
       likes: [],
       comments: [],
     });
-    logger.info(`Post created by user: ${userId}`);
-    sendResponse(res, 201, true, "Post created successfully", { post: newPost });
+
+    logger.info(`Milestone post created by user: ${userId}`);
+    sendResponse(res, 201, true, "Milestone shared successfully", {
+      post: newPost,
+    });
   }
 );
 
 /**
  * @desc    Add a like to a post
- * @route   POST /api/feed/:postId/like
+ * @route   POST /api/feed/:id/like
  * @access  Private
  */
 export const addLike = catchAsync(
   async (
-    req: CustomRequest<{ postId: string }>,
-    res: Response
+    req: RequestWithUser,
+    res: Response,
+    _next: NextFunction
   ): Promise<void> => {
-    const { postId } = req.params;
+    const postId = req.params.id;
     const userId = req.user?.id;
 
     if (!userId) {
-      sendResponse(res, 400, false, "User ID is required");
+      sendResponse(res, 401, false, "Unauthorized");
       return;
     }
 
@@ -72,32 +89,33 @@ export const addLike = catchAsync(
     post.likes.push(userObjectId);
     await post.save();
 
-    logger.info(`User ${userId} liked post: ${postId}`);
+    logger.info(`Post liked by user: ${userId}`);
     sendResponse(res, 200, true, "Post liked successfully", { post });
   }
 );
 
 /**
  * @desc    Add a comment to a post
- * @route   POST /api/feed/:postId/comment
+ * @route   POST /api/feed/:id/comment
  * @access  Private
  */
 export const addComment = catchAsync(
   async (
-    req: CustomRequest<{ postId: string }, any, { text: string }>,
-    res: Response
+    req: RequestWithUser,
+    res: Response,
+    _next: NextFunction
   ): Promise<void> => {
-    const { postId } = req.params;
+    const postId = req.params.id;
     const { text } = req.body;
     const userId = req.user?.id;
 
     if (!userId) {
-      sendResponse(res, 400, false, "User ID is required");
+      sendResponse(res, 401, false, "Unauthorized");
       return;
     }
 
     if (!text || typeof text !== "string" || text.trim() === "") {
-      sendResponse(res, 400, false, "Comment text cannot be empty");
+      sendResponse(res, 400, false, "Comment cannot be empty");
       return;
     }
 
@@ -114,7 +132,7 @@ export const addComment = catchAsync(
     });
     await post.save();
 
-    logger.info(`User ${userId} commented on post: ${postId}`);
+    logger.info(`Comment added by user: ${userId} to post: ${postId}`);
     sendResponse(res, 201, true, "Comment added successfully", { post });
   }
 );
@@ -126,14 +144,15 @@ export const addComment = catchAsync(
  */
 export const removeComment = catchAsync(
   async (
-    req: CustomRequest<{ postId: string; commentId: string }>,
-    res: Response
+    req: RequestWithUser,
+    res: Response,
+    _next: NextFunction
   ): Promise<void> => {
     const { postId, commentId } = req.params;
     const userId = req.user?.id;
 
     if (!userId) {
-      sendResponse(res, 400, false, "User ID is required");
+      sendResponse(res, 401, false, "Unauthorized");
       return;
     }
 
@@ -146,23 +165,117 @@ export const removeComment = catchAsync(
     const commentIndex = post.comments.findIndex(
       (comment) => comment._id.toString() === commentId
     );
+
     if (commentIndex === -1) {
       sendResponse(res, 404, false, "Comment not found");
       return;
     }
 
     const comment = post.comments[commentIndex];
-    // Ensure user is either admin or the owner of the comment
-    if (comment.user.toString() !== userId && !req.user?.isAdmin) {
-      sendResponse(res, 403, false, "You are not authorized to remove this comment");
+    const isAdmin = req.user?.isAdmin || false;
+
+    if (comment.user.toString() !== userId && post.user.toString() !== userId && !isAdmin) {
+      sendResponse(res, 403, false, "Unauthorized action");
       return;
     }
 
     post.comments.splice(commentIndex, 1);
     await post.save();
 
-    logger.info(`User ${userId} removed a comment from post: ${postId}`);
+    logger.info(`Comment removed by user: ${userId} from post: ${postId}`);
     sendResponse(res, 200, true, "Comment removed successfully", { post });
+  }
+);
+/**
+ * @desc    Get feedback submitted by the authenticated user
+ * @route   GET /api/feedback
+ * @access  Private
+ */
+export const getUserFeedback = catchAsync(
+  async (
+    req: RequestWithUser,
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      sendResponse(res, 401, false, "Unauthorized");
+      return;
+    }
+
+    // Mock fetching feedback (replace with actual DB query)
+    const feedback = [
+      { id: "1", message: "Great feature!", type: "feature-request" },
+      { id: "2", message: "Bug detected in dashboard", type: "bug" },
+    ];
+
+    logger.info(`Feedback fetched for user: ${userId}`);
+    sendResponse(res, 200, true, "Feedback retrieved successfully", { feedback });
+  }
+);
+/**
+ * @desc    Delete feedback by ID
+ * @route   DELETE /api/feedback/:feedbackId
+ * @access  Private
+ */
+export const deleteFeedback = catchAsync(
+  async (
+    req: RequestWithUser,
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    const { feedbackId } = req.params;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      sendResponse(res, 401, false, "Unauthorized");
+      return;
+    }
+
+    // Validate feedback ID format
+    if (!mongoose.Types.ObjectId.isValid(feedbackId)) {
+      sendResponse(res, 400, false, "Invalid feedback ID");
+      return;
+    }
+
+    // Mock feedback deletion (replace with actual DB query)
+    const deleted = true; // Simulate successful deletion
+    if (!deleted) {
+      sendResponse(res, 404, false, "Feedback not found");
+      return;
+    }
+
+    logger.info(`Feedback deleted by user: ${userId}, ID: ${feedbackId}`);
+    sendResponse(res, 200, true, "Feedback deleted successfully");
+  }
+);
+
+/**
+ * @desc    Submit feedback
+ * @route   POST /api/feedback
+ * @access  Private
+ */
+export const submitFeedback = catchAsync(
+  async (
+    req: RequestWithUser,
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    const { message, type } = req.body;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      sendResponse(res, 401, false, "Unauthorized");
+      return;
+    }
+
+    // Mock feedback submission
+    logger.info(`Feedback submitted by user: ${userId}`);
+    sendResponse(res, 201, true, "Feedback submitted successfully", {
+      message,
+      type,
+    });
   }
 );
 
@@ -171,4 +284,7 @@ export default {
   addLike,
   addComment,
   removeComment,
+  getUserFeedback,
+  deleteFeedback,
+  submitFeedback,
 };

@@ -1,8 +1,105 @@
-import { Response } from "express";
+// RewardsController.ts
+import { Request, Response, NextFunction } from "express";
+import  { Types } from "mongoose";
 import User from "../models/User";
+import { Reward, IReward } from "../models/Rewards";
 import Review from "../models/Review";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
+
+/**
+ * @desc Get user rewards
+ * @route GET /api/rewards
+ * @access Private
+ */
+export const getUserRewards = catchAsync(
+  async (
+    req: Request<{}, {}, {}, {}>,
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    const userId = req.user?.id;
+
+    const user = await User.findById(userId).populate<{
+      rewards: IReward[];
+    }>("rewards");
+
+    if (!user) {
+      sendResponse(res, 404, false, "User not found");
+      return;
+    }
+
+    sendResponse(res, 200, true, "User rewards fetched successfully", {
+      rewards: user.rewards ?? [],
+    });
+  }
+);
+
+/**
+ * @desc Redeem a reward
+ * @route POST /api/rewards/redeem
+ * @access Private
+ */
+export const redeemReward = catchAsync(
+  async (
+    req: Request<{}, any, { rewardId: string }>,
+    res: Response
+  ): Promise<void> => {
+    const { rewardId } = req.body;
+    const userId = req.user?.id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      sendResponse(res, 404, false, "User not found");
+      return;
+    }
+
+    const reward = await Reward.findById(rewardId);
+    if (!reward) {
+      sendResponse(res, 404, false, "Reward not found");
+      return;
+    }
+
+    const userPoints = user.points ?? 0;
+    if (userPoints < reward.points) {
+      sendResponse(res, 400, false, "Insufficient points to redeem this reward");
+      return;
+    }
+
+    user.points = userPoints - reward.points;
+    user.rewards.push(reward._id as Types.ObjectId);
+    await user.save();
+
+    sendResponse(res, 200, true, "Reward redeemed successfully", { reward });
+  }
+);
+
+/**
+ * @desc Create a new reward (Admin only)
+ * @route POST /api/rewards/create
+ * @access Private (Admin only)
+ */
+export const createReward = catchAsync(
+  async (
+    req: Request<{}, any, { title: string; description?: string; points: number }>,
+    res: Response
+  ): Promise<void> => {
+    const { title, description, points } = req.body;
+
+    if (!title || !points) {
+      sendResponse(res, 400, false, "Title and points are required");
+      return;
+    }
+
+    const newReward = await Reward.create({
+      title,
+      description,
+      points,
+    });
+
+    sendResponse(res, 201, true, "Reward created successfully", { reward: newReward });
+  }
+);
 
 /**
  * @desc Award points to a user
@@ -14,7 +111,8 @@ export const awardPoints = async (userId: string, points: number): Promise<void>
   if (!user) {
     throw new Error("User not found");
   }
-  user.points = (user.points || 0) + points;
+
+  user.points = (user.points ?? 0) + points;
   await user.save();
 };
 
@@ -25,7 +123,7 @@ export const awardPoints = async (userId: string, points: number): Promise<void>
  */
 export const submitReview = catchAsync(
   async (
-    req: CustomRequest<{}, any, { userId: string; rating: number; content: string }>,
+    req: Request<{}, any, { userId: string; rating: number; content: string }>,
     res: Response
   ): Promise<void> => {
     const { userId, rating, content } = req.body;
@@ -68,66 +166,6 @@ export const submitReview = catchAsync(
       content,
     });
 
-    sendResponse(res, 201, true, "Review submitted successfully", {
-      review: newReview,
-    });
+    sendResponse(res, 201, true, "Review submitted successfully", { review: newReview });
   }
 );
-
-/**
- * @desc Get reviews for a user
- * @route GET /api/reviews/:userId
- * @access Public
- */
-export const getUserReviews = catchAsync(
-  async (
-    req: CustomRequest<{ userId: string }>,
-    res: Response
-  ): Promise<void> => {
-    const { userId } = req.params;
-
-    const user = await User.findById(userId);
-    if (!user) {
-      sendResponse(res, 404, false, "User not found");
-      return;
-    }
-
-    const reviews = await Review.find({ reviewee: userId }).populate(
-      "reviewer",
-      "username profilePicture"
-    );
-
-    sendResponse(res, 200, true, "User reviews fetched successfully", { reviews });
-  }
-);
-
-/**
- * @desc Delete a review
- * @route DELETE /api/reviews/:reviewId
- * @access Private
- */
-export const deleteReview = catchAsync(
-  async (
-    req: CustomRequest<{ reviewId: string }>,
-    res: Response
-  ): Promise<void> => {
-    const { reviewId } = req.params;
-    const reviewerId = req.user?.id;
-
-    const review = await Review.findOneAndDelete({
-      _id: reviewId,
-      reviewer: reviewerId,
-    });
-
-    if (!review) {
-      sendResponse(res, 404, false, "Review not found or access denied");
-      return;
-    }
-
-    sendResponse(res, 200, true, "Review deleted successfully");
-  }
-);
-
-/**
- * NOTE: Group export REMOVED to prevent duplication errors.
- */

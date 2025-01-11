@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -13,6 +13,7 @@ import bodyParser from "body-parser"; // Added for Stripe rawBody
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/user";
 import newsletterRoutes from "./routes/newsletter";
+import paymentRoutes from "./routes/payment"; // Added payment routes for Stripe
 import { errorHandler } from "./middleware/errorHandler";
 import logger from "./utils/winstonLogger"; // Use Winston logger
 
@@ -23,9 +24,13 @@ dotenv.config();
 const app = express();
 
 // Middleware for raw body parsing (needed for Stripe webhooks)
-app.use(
-  "/webhook",
-  bodyParser.raw({ type: "application/json" })
+app.post(
+  "/api/payments/webhook",
+  bodyParser.raw({ type: "application/json" }), // Use raw body for Stripe
+  (req, _res, next) => {
+    (req as any).rawBody = req.body; // Explicitly set rawBody to avoid TypeScript errors
+    next();
+  }
 );
 
 // Middleware to parse JSON requests (for other routes)
@@ -50,7 +55,7 @@ app.use(
 );
 app.use(
   cors({
-    origin: process.env.ALLOWED_ORIGINS || "*",
+    origin: process.env.ALLOWED_ORIGINS || "*", // Allow cross-origin requests
     credentials: true, // Allow credentials
   })
 );
@@ -86,10 +91,16 @@ mongoose
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/newsletter", newsletterRoutes);
+app.use("/api/payments", paymentRoutes); // Added payments route
 
 // Health Check Endpoint
-app.get("/health", (req: Request, res: Response) => {
+app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({ status: "Healthy" });
+});
+
+// Handle 404 errors
+app.use((_req: Request, res: Response) => {
+  res.status(404).json({ message: "Route not found" });
 });
 
 // Error Handling Middleware

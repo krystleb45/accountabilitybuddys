@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { Response } from "express";
+import { Request, Response } from "express";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import LoggingService from "../services/LoggingService";
@@ -8,7 +8,6 @@ import LoggingService from "../services/LoggingService";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2024-12-18.acacia",
 });
-
 
 // Placeholder functions for webhook handling
 async function handleSubscriptionCompleted(
@@ -31,7 +30,14 @@ async function handlePaymentFailed(_invoice: Stripe.Invoice): Promise<void> {
  * @access Private
  */
 export const createSubscriptionSession = catchAsync(
-  async (req: CustomRequest, res: Response): Promise<void> => {
+  async (
+    req: Request<
+      {},
+      {},
+      { planId: string; successUrl: string; cancelUrl: string }
+    >, // Explicit body type
+    res: Response
+  ): Promise<void> => {
     const { planId, successUrl, cancelUrl } = req.body;
     const userId = req.user?.id;
 
@@ -68,12 +74,19 @@ export const createSubscriptionSession = catchAsync(
  * @access Public
  */
 export const handleStripeWebhook = catchAsync(
-  async (req: CustomRequest, res: Response): Promise<void> => {
+  async (
+    req: Request<{}, {}, {}, {}>, // Explicit empty generics
+    res: Response
+  ): Promise<void> => {
     const sig = req.headers["stripe-signature"] as string;
 
     try {
+      if (!req.rawBody) {
+        throw new Error("Missing raw body in request");
+      }
+
       const event = stripe.webhooks.constructEvent(
-        req.rawBody as Buffer,
+        req.rawBody, // Use rawBody populated by middleware
         sig,
         process.env.STRIPE_WEBHOOK_SECRET!
       );

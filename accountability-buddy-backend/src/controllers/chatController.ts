@@ -187,3 +187,7 @@ export const getUserGroups = catchAsync(
     sendResponse(res, 200, true, "User groups fetched successfully", { groups });
   }
 );
+
+export function sendMessage(req: AuthenticatedRequest, res: Response<any, Record<string, any>>, next: NextFunction) {
+  throw new Error("Function not implemented.");
+}

@@ -1,4 +1,4 @@
-import { Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import Badge, { IBadge, BadgeLevel } from "../models/Badge";
 import { awardPoints } from "../controllers/RewardController";
 import catchAsync from "../utils/catchAsync";
@@ -24,7 +24,7 @@ const getNextBadgeLevel = (currentLevel: BadgeLevel): BadgeLevel => {
  */
 export const awardBadge = catchAsync(
   async (
-    req: CustomRequest<{}, any, { userId: string; badgeType: string; level?: BadgeLevel }>,
+    req: Request<{}, {}, { userId: string; badgeType: string; level?: BadgeLevel }>, // Explicitly defined body types
     res: Response,
     _next: NextFunction
   ) => {
@@ -73,7 +73,6 @@ export const awardBadge = catchAsync(
     const points = Badge.awardPointsForBadge(badgeType as IBadge["badgeType"]);
     await awardPoints(userId, points);
 
-
     logger.info(
       `New badge awarded to user: ${userId} with type: ${badgeType} at level: ${level}`
     );
@@ -90,11 +89,11 @@ export const awardBadge = catchAsync(
  */
 export const updateBadgeProgress = catchAsync(
   async (
-    req: CustomRequest,
+    req: Request<{}, {}, { badgeType: string; increment: number }>, // Explicit body types
     res: Response,
     _next: NextFunction
   ) => {
-    const { badgeType, increment }: { badgeType: string; increment: number } = sanitize(req.body);
+    const { badgeType, increment } = sanitize(req.body);
     const userId = req.user?.id;
 
     if (!userId || !badgeType || !increment) {
@@ -122,7 +121,7 @@ export const updateBadgeProgress = catchAsync(
  */
 export const removeExpiredBadges = catchAsync(
   async (
-    _req: CustomRequest,
+    _req: Request<{}, {}, {}, {}>, // Explicit empty types for params, body, query, and locals
     res: Response,
     _next: NextFunction
   ) => {
@@ -139,16 +138,26 @@ export const removeExpiredBadges = catchAsync(
  * @route   GET /api/badges
  * @access  Private
  */
-export const getUserBadges = catchAsync(async (req: CustomRequest, res: Response) => {
-  const userId = req.user?.id;
+export const getUserBadges = catchAsync(
+  async (req: Request<{}, {}, {}, {}>, res: Response) => { // Explicit empty types
+    const userId = req.user?.id;
 
-  if (!userId) {
-    sendResponse(res, 400, false, "User ID is required");
-    return;
+    if (!userId) {
+      sendResponse(res, 400, false, "User ID is required");
+      return;
+    }
+
+    const badges = await Badge.find({ user: userId });
+    sendResponse(res, 200, true, "User badges fetched successfully", {
+      badges,
+    });
   }
+);
+export function getUserBadgeShowcase(req: AuthenticatedRequest, res: Response<any, Record<string, any>>, next: NextFunction) {
+  throw new Error("Function not implemented.");
+}
 
-  const badges = await Badge.find({ user: userId });
-  sendResponse(res, 200, true, "User badges fetched successfully", {
-    badges,
-  });
-});
+export function upgradeBadgeLevel(req: AuthenticatedRequest, res: Response<any, Record<string, any>>, next: NextFunction) {
+  throw new Error("Function not implemented.");
+}
+

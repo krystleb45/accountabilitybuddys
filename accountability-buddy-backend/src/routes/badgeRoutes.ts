@@ -1,12 +1,12 @@
-import express, { Response, NextFunction } from "express";
+import express, { Response, NextFunction, Router, Request } from "express";
 import { check, validationResult } from "express-validator";
 import rateLimit from "express-rate-limit";
 import * as badgeController from "../controllers/BadgeController";
-import authMiddleware, { AuthenticatedRequest } from "../middleware/authMiddleware";
+import authMiddleware from "../middleware/authMiddleware";
 import { roleBasedAccessControl } from "../middleware/roleBasedAccessControl";
 import logger from "../utils/winstonLogger";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Middleware to ensure only admins can access specific routes
 const adminMiddleware = roleBasedAccessControl(["admin"]);
@@ -37,7 +37,7 @@ const validateBadgeData = [
 
 // Custom function to validate and handle errors
 const handleValidationErrors = (
-  req: AuthenticatedRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): void => {
@@ -54,13 +54,13 @@ const handleValidationErrors = (
  */
 const handleRouteErrors = (
   handler: (
-    req: AuthenticatedRequest,
+    req: Request,
     res: Response,
     next: NextFunction
   ) => Promise<void>
 ) => {
   return async (
-    req: AuthenticatedRequest,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
@@ -82,7 +82,7 @@ router.get(
   "/badges",
   authMiddleware,
   handleRouteErrors(
-    async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       await badgeController.getUserBadges(req, res, next); // Pass all 3 arguments
     }
   )
@@ -98,7 +98,7 @@ router.get(
   "/badges/showcase",
   authMiddleware,
   handleRouteErrors(
-    async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       await badgeController.getUserBadgeShowcase(req, res, next); // Pass all 3 arguments
     }
   )
@@ -113,7 +113,7 @@ router.get(
 router.post(
   "/badges/award",
   [authMiddleware, adminMiddleware, ...validateBadgeData, handleValidationErrors],
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  handleRouteErrors(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     await badgeController.awardBadge(req, res, next);
   })
 );
@@ -127,7 +127,7 @@ router.post(
 router.post(
   "/badges/progress/update",
   [authMiddleware, ...validateBadgeData, handleValidationErrors], // Spread validation
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  handleRouteErrors(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     await badgeController.updateBadgeProgress(req, res, next); // Pass full req, res, next
   })
 );
@@ -141,7 +141,7 @@ router.post(
 router.post(
   "/badges/upgrade",
   [authMiddleware, ...validateBadgeData, handleValidationErrors], // Spread validateBadgeData
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  handleRouteErrors(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     await badgeController.upgradeBadgeLevel(req, res, next); // Pass req, res, next directly
   })
 );
@@ -156,7 +156,7 @@ router.post(
 router.delete(
   "/badges/expired/remove",
   [authMiddleware, adminMiddleware],
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  handleRouteErrors(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     await badgeController.removeExpiredBadges(req, res, next); // Pass req, res, and next
   })
 );

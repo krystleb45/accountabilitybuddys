@@ -1,9 +1,11 @@
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import xssClean from "xss-clean";
-import cors, { CorsOptionsDelegate } from "cors";
-import express, { Application, Request, Response, NextFunction } from "express";
+import * as cors from "cors"; // Fixed import for cors
+import * as express from "express";
+import { Application, Request, Response, NextFunction } from "express";
 import logger from "../utils/winstonLogger";
+
 
 // Parse Allowed Origins
 const parseAllowedOrigins = (): string[] => {
@@ -12,82 +14,67 @@ const parseAllowedOrigins = (): string[] => {
 };
 
 // CORS Configuration
-const configureCORS = (): CorsOptionsDelegate => {
+const configureCORS = (): cors.CorsOptions => {
   const allowedOrigins = parseAllowedOrigins();
 
   logger.info(`Allowed Origins: ${allowedOrigins.join(", ")}`);
 
-  return (origin, callback) => {
-    if (!origin || (typeof origin === "string" && allowedOrigins.includes(origin))) {
-      callback(null, true as any);
-    } else {
-      const errorMessage = `Origin ${origin} is not allowed by CORS policy`;
-      logger.warn(errorMessage);
-      callback(new Error(errorMessage));
-    }
+  return {
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void
+    ): void => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    optionsSuccessStatus: 200,
   };
 };
 
 // Rate Limiting Configuration
-const configureRateLimiter = (): ReturnType<typeof rateLimit> => {
+const configureRateLimiter = () => {
   const maxRequests = parseInt(process.env.RATE_LIMIT_MAX || "100", 10);
-
   logger.info(`Rate Limit Max: ${maxRequests}`);
 
   return rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: maxRequests,
-    handler: (_req, res) => {
-      res.status(429).json({
-        status: 429,
-        error: "Too many requests, please try again later.",
-      });
-    },
+    message: "Too many requests, please try again later.",
     standardHeaders: true,
     legacyHeaders: false,
   });
 };
 
-// Helmet Configuration
-const configureHelmet = (): ReturnType<typeof helmet> => {
-  const isProduction = process.env.NODE_ENV === "production";
-  return helmet({
-    contentSecurityPolicy: isProduction
-      ? {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "trusted-scripts.com"],
-          styleSrc: ["'self'", "'unsafe-inline'"],
-          imgSrc: ["'self'", "data:", "trusted-images.com"],
-        },
-      }
-      : undefined,
-    crossOriginOpenerPolicy: { policy: "same-origin" },
-    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
-  });
-};
-
-// XSS Protection
-const configureXSSProtection = (): ReturnType<typeof xssClean> => xssClean();
-
-// Security Middleware Aggregator
+// Apply Security Middleware
+// Apply Security Middleware
 export const applySecurityMiddlewares = (app: Application): void => {
-  app.use(configureHelmet());
-  app.use(cors(configureCORS()));
-  app.use(configureRateLimiter());
-  app.use(configureXSSProtection());
+  // Apply security headers
+  app.use(helmet());
 
-  // Additional middleware
+  // Configure and apply CORS middleware
+  app.use(cors(configureCORS()));
+
+  // Apply rate limiting
+  app.use(configureRateLimiter());
+
+  // Apply XSS protection
+  app.use(xssClean());
+
+  // Body parser limits to avoid payload attacks
   const payloadLimit = process.env.PAYLOAD_LIMIT || "10kb";
   app.use(express.json({ limit: payloadLimit }));
-  app.use(express.urlencoded({ extended: true, limit: payloadLimit }));
 
-  // Middleware to handle security-related errors
+  // Error handling for security middleware
   app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     logger.error(`Security middleware error: ${err.message}`);
     res.status(500).json({
       success: false,
-      error: err.message,
+      error: "Internal Server Error - Security Issue",
+      details: err.message,
     });
   });
 

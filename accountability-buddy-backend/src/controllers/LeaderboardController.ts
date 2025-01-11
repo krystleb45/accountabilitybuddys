@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 
 import { Leaderboard } from "../models/Leaderboard";
 import Goal from "../models/Goal";
@@ -14,7 +14,7 @@ import logger from "../utils/winstonLogger";
  */
 export const getLeaderboard = catchAsync(
   async (
-    req: CustomRequest<{}, any, { limit?: string; page?: string }>,
+    req: Request<{}, any, { limit?: string; page?: string }>,
     res: Response
   ): Promise<void> => {
     const limit = parseInt(req.query.limit as string, 10) || 10;
@@ -78,7 +78,7 @@ export const updateLeaderboard = async (userId: string): Promise<void> => {
  * @access Private
  */
 export const getUserLeaderboardPosition = catchAsync(
-  async (req: CustomRequest, res: Response): Promise<void> => {
+  async (req: Request<{}, {}, {}, {}>, res: Response): Promise<void> => {
     const userId = req.user?.id;
 
     const leaderboard = await Leaderboard.find()
@@ -115,7 +115,7 @@ export const getUserLeaderboardPosition = catchAsync(
  * @access Private/Admin
  */
 export const resetLeaderboard = catchAsync(
-  async (req: CustomRequest, res: Response): Promise<void> => {
+  async (req: Request<{}, {}, {}, {}>, res: Response): Promise<void> => {
     if (!req.user?.isAdmin) {
       sendResponse(res, 403, false, "Access denied");
       return;

@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { PrivateMessage } from "../models/PrivateMessage";
 import User from "../models/User"; // Ensure User is properly exported
 import catchAsync from "../utils/catchAsync";
@@ -15,39 +15,44 @@ const sanitizeInput = (input: string): string => {
  * @route POST /api/messages
  * @access Private
  */
-export const sendMessage = catchAsync(async (req: CustomRequest, res: Response) => {
-  const { receiverId, message }: { receiverId: string; message: string } = req.body;
-  const senderId = req.user?.id;
+export const sendMessage = catchAsync(
+  async (
+    req: Request<{}, {}, { receiverId: string; message: string }>, // Explicitly define body type
+    res: Response
+  ) => {
+    const { receiverId, message } = req.body;
+    const senderId = req.user?.id; // Uses globally-augmented 'req.user'
 
-  if (!receiverId) {
-    sendResponse(res, 400, false, "Receiver ID is required");
-    return;
+    if (!receiverId) {
+      sendResponse(res, 400, false, "Receiver ID is required");
+      return;
+    }
+
+    if (!message || message.trim() === "") {
+      sendResponse(res, 400, false, "Message content cannot be empty");
+      return;
+    }
+
+    const receiver = await User.findById(receiverId);
+    if (!receiver) {
+      sendResponse(res, 404, false, "Receiver not found");
+      return;
+    }
+
+    const sanitizedMessage = sanitizeInput(message);
+
+    const newMessage = await PrivateMessage.create({
+      sender: senderId,
+      receiver: receiverId,
+      content: sanitizedMessage,
+    });
+
+    logger.info(`Message sent from user ${senderId} to user ${receiverId}`);
+    sendResponse(res, 201, true, "Message sent successfully", {
+      message: newMessage,
+    });
   }
-
-  if (!message || message.trim() === "") {
-    sendResponse(res, 400, false, "Message content cannot be empty");
-    return;
-  }
-
-  const receiver = await User.findById(receiverId);
-  if (!receiver) {
-    sendResponse(res, 404, false, "Receiver not found");
-    return;
-  }
-
-  const sanitizedMessage = sanitizeInput(message);
-
-  const newMessage = await PrivateMessage.create({
-    sender: senderId,
-    receiver: receiverId,
-    content: sanitizedMessage,
-  });
-
-  logger.info(`Message sent from user ${senderId} to user ${receiverId}`);
-  sendResponse(res, 201, true, "Message sent successfully", {
-    message: newMessage,
-  });
-});
+);
 
 /**
  * @desc Get messages with a specific user (with pagination)
@@ -55,10 +60,13 @@ export const sendMessage = catchAsync(async (req: CustomRequest, res: Response) 
  * @access Private
  */
 export const getMessagesWithUser = catchAsync(
-  async (req: CustomRequest, res: Response) => {
+  async (
+    req: Request<{ userId: string }, {}, {}, { page?: string; limit?: string }>, // Explicitly define route params and query
+    res: Response
+  ) => {
     const { userId } = req.params;
-    const page = parseInt(req.query.page as string, 10) || 1;
-    const limit = parseInt(req.query.limit as string, 10) || 20;
+    const page = parseInt(req.query.page || "1", 10);
+    const limit = parseInt(req.query.limit || "20", 10);
 
     const user = await User.findById(userId);
     if (!user) {
@@ -91,7 +99,7 @@ export const getMessagesWithUser = catchAsync(
         totalPages: Math.ceil(totalMessages / limit),
       },
     });
-  },
+  }
 );
 
 /**
@@ -99,26 +107,31 @@ export const getMessagesWithUser = catchAsync(
  * @route DELETE /api/messages/:messageId
  * @access Private
  */
-export const deleteMessage = catchAsync(async (req: CustomRequest, res: Response) => {
-  const { messageId } = req.params;
-  const userId = req.user?.id;
+export const deleteMessage = catchAsync(
+  async (
+    req: Request<{ messageId: string }>, // Explicitly define route parameters
+    res: Response
+  ) => {
+    const { messageId } = req.params;
+    const userId = req.user?.id;
 
-  const message = await PrivateMessage.findById(messageId);
-  if (!message) {
-    sendResponse(res, 404, false, "Message not found");
-    return;
+    const message = await PrivateMessage.findById(messageId);
+    if (!message) {
+      sendResponse(res, 404, false, "Message not found");
+      return;
+    }
+
+    if (message.sender.toString() !== userId) {
+      sendResponse(res, 403, false, "You are not authorized to delete this message");
+      return;
+    }
+
+    await PrivateMessage.deleteOne({ _id: messageId });
+
+    logger.info(`Message with ID ${messageId} deleted by user ${userId}`);
+    sendResponse(res, 200, true, "Message deleted successfully");
   }
-
-  if (message.sender.toString() !== userId) {
-    sendResponse(res, 403, false, "You are not authorized to delete this message");
-    return;
-  }
-
-  await PrivateMessage.deleteOne({ _id: messageId });
-
-  logger.info(`Message with ID ${messageId} deleted by user ${userId}`);
-  sendResponse(res, 200, true, "Message deleted successfully");
-});
+);
 
 /**
  * @desc Mark messages as read
@@ -126,7 +139,10 @@ export const deleteMessage = catchAsync(async (req: CustomRequest, res: Response
  * @access Private
  */
 export const markMessagesAsRead = catchAsync(
-  async (req: CustomRequest, res: Response) => {
+  async (
+    req: Request<{ userId: string }>, // Explicitly define route parameters
+    res: Response
+  ) => {
     const { userId } = req.params;
     const currentUserId = req.user?.id;
 
@@ -138,5 +154,5 @@ export const markMessagesAsRead = catchAsync(
     sendResponse(res, 200, true, "Messages marked as read", {
       updatedMessages: updatedMessages.modifiedCount,
     });
-  },
+  }
 );

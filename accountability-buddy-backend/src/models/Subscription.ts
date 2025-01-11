@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface ISubscription extends Document {
+  isActive: unknown;
   user: mongoose.Types.ObjectId;
   status:
     | "trial"

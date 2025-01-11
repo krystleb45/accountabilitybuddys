@@ -1,4 +1,4 @@
-import { Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import Challenge from "../models/Challenge";
 import catchAsync from "../utils/catchAsync";
@@ -10,7 +10,15 @@ import sanitize from "mongo-sanitize";
  */
 export const createChallenge = catchAsync(
   async (
-    req: CustomRequest,
+    req: Request<{}, {}, { 
+      title: string; 
+      description: string; 
+      goal: string; 
+      endDate: string; 
+      visibility?: string; 
+      rewards?: string[]; 
+      progressTracking?: boolean; 
+    }>, // Explicitly define the body type
     res: Response,
     next: NextFunction
   ): Promise<void> => {
@@ -75,7 +83,7 @@ export const createChallenge = catchAsync(
  */
 export const getPublicChallenges = catchAsync(
   async (
-    _req: CustomRequest,
+    _req: Request<{}, {}, {}, {}>, // Explicitly define empty types for params, body, query, and locals
     res: Response
   ): Promise<void> => {
     const challenges = await Challenge.find({ visibility: "public" })
@@ -102,7 +110,7 @@ export const getPublicChallenges = catchAsync(
  */
 export const joinChallenge = catchAsync(
   async (
-    req: CustomRequest,
+    req: Request<{}, {}, { challengeId: string }>, // Explicitly define body type
     res: Response
   ): Promise<void> => {
     const { challengeId } = sanitize(req.body);
@@ -154,7 +162,7 @@ export const joinChallenge = catchAsync(
  */
 export const leaveChallenge = catchAsync(
   async (
-    req: CustomRequest,
+    req: Request<{}, {}, { challengeId: string }>, // Explicitly define body type
     res: Response
   ): Promise<void> => {
     const { challengeId } = sanitize(req.body);

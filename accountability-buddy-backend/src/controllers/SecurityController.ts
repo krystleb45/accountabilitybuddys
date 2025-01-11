@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -22,7 +22,7 @@ export const loginRateLimiter = rateLimit({
  */
 export const login = catchAsync(
   async (
-    req: CustomRequest<{}, any, { email: string; password: string }>,
+    req: Request<{}, any, { email: string; password: string }>,
     res: Response
   ): Promise<void> => {
     const { email, password } = req.body;
@@ -59,7 +59,7 @@ export const login = catchAsync(
  */
 export const requestPasswordReset = catchAsync(
   async (
-    req: CustomRequest<{}, any, { email: string }>,
+    req: Request<{}, any, { email: string }>,
     res: Response
   ): Promise<void> => {
     const { email } = req.body;
@@ -106,7 +106,7 @@ export const requestPasswordReset = catchAsync(
  */
 export const resetPassword = catchAsync(
   async (
-    req: CustomRequest<{ token: string }, any, { newPassword: string }>,
+    req: Request<{ token: string }, any, { newPassword: string }>,
     res: Response
   ): Promise<void> => {
     const { token } = req.params;
@@ -144,7 +144,7 @@ export const resetPassword = catchAsync(
  */
 export const setupTwoFactorAuth = catchAsync(
   async (
-    req: CustomRequest<{ userId: string }, any, {}>,
+    req: Request<{ userId: string }, any, {}>,
     res: Response
   ): Promise<void> => {
     const { userId } = req.params;
@@ -170,7 +170,7 @@ export const setupTwoFactorAuth = catchAsync(
  */
 export const verifyTwoFactorAuth = catchAsync(
   async (
-    req: CustomRequest<{ userId: string }, any, { token: string }>,
+    req: Request<{ userId: string }, any, { token: string }>,
     res: Response
   ): Promise<void> => {
     const { userId } = req.params;

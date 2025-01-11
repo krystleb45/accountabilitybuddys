@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { Integration } from "../models/Integration";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -13,7 +13,7 @@ import { createError } from "../middleware/errorHandler";
  */
 export const createIntegration = catchAsync(
   async (
-    req: CustomRequest<{}, any, { type: string; settings: object }>,
+    req: Request<{}, any, { type: string; settings: object }>,
     res: Response
   ): Promise<void> => {
     const { type, settings } = sanitize(req.body);
@@ -43,7 +43,7 @@ export const createIntegration = catchAsync(
  * @access Private
  */
 export const getUserIntegrations = catchAsync(
-  async (req: CustomRequest, res: Response): Promise<void> => {
+  async (req: Request<{}, {}, {}, {}>, res: Response): Promise<void> => {
     const userId = req.user?.id;
 
     const integrations = await Integration.find({ user: userId });
@@ -61,7 +61,7 @@ export const getUserIntegrations = catchAsync(
  */
 export const getIntegrationById = catchAsync(
   async (
-    req: CustomRequest<{ integrationId: string }>,
+    req: Request<{ integrationId: string }>,
     res: Response
   ): Promise<void> => {
     const { integrationId } = sanitize(req.params);
@@ -90,7 +90,7 @@ export const getIntegrationById = catchAsync(
  */
 export const updateIntegration = catchAsync(
   async (
-    req: CustomRequest<{ integrationId: string }, any, { settings: object }>,
+    req: Request<{ integrationId: string }, any, { settings: object }>,
     res: Response
   ): Promise<void> => {
     const { integrationId } = sanitize(req.params);
@@ -122,7 +122,7 @@ export const updateIntegration = catchAsync(
  */
 export const deleteIntegration = catchAsync(
   async (
-    req: CustomRequest<{ integrationId: string }>,
+    req: Request<{ integrationId: string }>,
     res: Response
   ): Promise<void> => {
     const { integrationId } = sanitize(req.params);
@@ -149,7 +149,7 @@ export const deleteIntegration = catchAsync(
  */
 export const testIntegration = catchAsync(
   async (
-    req: CustomRequest<{ integrationId: string }>,
+    req: Request<{ integrationId: string }>,
     res: Response
   ): Promise<void> => {
     const { integrationId } = sanitize(req.params);

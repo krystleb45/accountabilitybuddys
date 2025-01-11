@@ -1,11 +1,11 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check, query, validationResult } from "express-validator";
 import Gamification from "../models/Gamification"; // Corrected model import path
 import authMiddleware from "../middleware/authMiddleware"; // Corrected middleware import path
 import rateLimit from "express-rate-limit";
 import logger from "../utils/winstonLogger"; // Added logger utility
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Rate limiter to prevent excessive requests to the leaderboard
@@ -26,7 +26,8 @@ const handleValidationErrors = (
 ): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    res.status(400).json({ success: false, errors: errors.array() });
+    return; // Ensure all code paths return a value
   }
   next();
 };
@@ -51,7 +52,7 @@ router.get(
       .withMessage("Limit must be between 1 and 100"),
   ],
   handleValidationErrors,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 10;
 
@@ -75,10 +76,7 @@ router.get(
       });
     } catch (error) {
       logger.error(`Error fetching leaderboard: ${(error as Error).message}`, { error });
-      res.status(500).json({
-        success: false,
-        message: "Server error. Please try again later.",
-      });
+      next(error); // Use `next()` for error handling
     }
   }
 );
@@ -106,17 +104,18 @@ router.post(
     check("points", "Points must be a positive integer").isInt({ min: 1 }),
   ],
   handleValidationErrors,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { userId, points } = req.body;
 
     try {
       const userGamification = await Gamification.findOne({ userId });
 
       if (!userGamification) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           message: "User not found in gamification system",
         });
+        return; // Ensure code path exits here
       }
 
       // Add points and update level
@@ -128,10 +127,7 @@ router.post(
       });
     } catch (error) {
       logger.error(`Error adding points: ${(error as Error).message}`, { error });
-      res.status(500).json({
-        success: false,
-        message: "Server error. Please try again later.",
-      });
+      next(error); // Use `next()` to handle errors properly
     }
   }
 );

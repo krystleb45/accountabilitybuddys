@@ -1,13 +1,13 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 import sanitize from "mongo-sanitize";
 import rateLimit from "express-rate-limit";
-import authMiddleware from "../middleware/authMiddleware"; // Correct middleware import path
-import roleBasedAccessControl from "../middleware/roleBasedAccessControl"; // Corrected RBAC middleware import path
-import reportController from "../controllers/ReportController"; // Corrected controller import path
+import authMiddleware from "../middleware/authMiddleware"; // Middleware path
+import { roleBasedAccessControl } from "../middleware/roleBasedAccessControl"; // RBAC middleware
+import * as reportController from "../controllers/ReportController"; // Controller path
 import logger from "../utils/winstonLogger"; // Logger utility
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Rate limiter to prevent abuse of reporting functionality.
@@ -15,7 +15,10 @@ const router = express.Router();
 const reportLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1-hour window
   max: 5, // Limit to 5 reports per IP per hour
-  message: "Too many reports from this IP, please try again later.",
+  message: {
+    success: false,
+    message: "Too many reports from this IP, please try again later.",
+  },
 });
 
 /**
@@ -23,11 +26,18 @@ const reportLimiter = rateLimit({
  */
 const reportValidation = [
   check("reportedId", "Reported ID is required and must be a valid Mongo ID").notEmpty().isMongoId(),
-  check("reportType", "Report type is required and must be one of [post, comment, user]").notEmpty().isIn(["post", "comment", "user"]),
-  check("reason", "Reason for reporting is required and must not exceed 300 characters").notEmpty().isLength({ max: 300 }),
+  check("reportType", "Report type is required and must be one of [post, comment, user]")
+    .notEmpty()
+    .isIn(["post", "comment", "user"]),
+  check("reason", "Reason for reporting is required and must not exceed 300 characters")
+    .notEmpty()
+    .isLength({ max: 300 }),
 ];
 
-const sanitizeInput = (req: Request, res: Response, next: NextFunction): void => {
+/**
+ * Middleware for sanitizing input.
+ */
+const sanitizeInput = (req: Request, _res: Response, next: NextFunction): void => {
   req.body = sanitize(req.body);
   req.params = sanitize(req.params);
   next();
@@ -39,7 +49,8 @@ const sanitizeInput = (req: Request, res: Response, next: NextFunction): void =>
 const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    res.status(400).json({ success: false, errors: errors.array() });
+    return;
   }
   next();
 };
@@ -59,15 +70,25 @@ router.post(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { reportedId, reportType, reason } = req.body;
-      await reportController.createReport(req.user.id, reportedId, reportType, reason);
+
+      // Controller function
+      await reportController.createReport(
+        (req.user as { id: string }).id, // Type assertion
+        reportedId,
+        reportType,
+        reason
+      );
+      
+
       res.status(201).json({ success: true, message: "Report submitted successfully" });
-    } catch (error: unknown) {
+    } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(`Error creating report: ${errorMessage}`);
-      next(error);
+      next(error); // Pass error to middleware
     }
   }
 );
+
 
 /**
  * @route   GET /report
@@ -78,11 +99,11 @@ router.get(
   "/",
   authMiddleware,
   roleBasedAccessControl(["admin"]),
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const reports = await reportController.getAllReports();
       res.status(200).json({ success: true, reports });
-    } catch (error: unknown) {
+    } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(`Error fetching reports: ${errorMessage}`);
       next(error);
@@ -99,17 +120,18 @@ router.get(
   "/:id",
   authMiddleware,
   roleBasedAccessControl(["admin"]),
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const reportId = sanitize(req.params.id);
+      const reportId = req.params.id;
       const report = await reportController.getReportById(reportId);
 
       if (!report) {
-        return res.status(404).json({ success: false, message: "Report not found" });
+        res.status(404).json({ success: false, message: "Report not found" });
+        return;
       }
 
       res.status(200).json({ success: true, report });
-    } catch (error: unknown) {
+    } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(`Error fetching report: ${errorMessage}`);
       next(error);
@@ -126,17 +148,23 @@ router.put(
   "/:id/resolve",
   authMiddleware,
   roleBasedAccessControl(["admin"]),
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const reportId = sanitize(req.params.id);
-      const resolvedReport = await reportController.resolveReport(reportId, req.user.id);
+      const reportId = req.params.id;
+
+      const resolvedReport = await reportController.resolveReport(
+        reportId,
+        (req.user as { id: string }).id // Type assertion
+      );
+      
 
       if (!resolvedReport) {
-        return res.status(404).json({ success: false, message: "Report not found" });
+        res.status(404).json({ success: false, message: "Report not found" });
+        return;
       }
 
       res.status(200).json({ success: true, message: "Report resolved successfully" });
-    } catch (error: unknown) {
+    } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(`Error resolving report: ${errorMessage}`);
       next(error);
@@ -153,17 +181,19 @@ router.delete(
   "/:id",
   authMiddleware,
   roleBasedAccessControl(["admin"]),
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const reportId = sanitize(req.params.id);
+      const reportId = req.params.id;
+
       const deletedReport = await reportController.deleteReport(reportId);
 
       if (!deletedReport) {
-        return res.status(404).json({ success: false, message: "Report not found" });
+        res.status(404).json({ success: false, message: "Report not found" });
+        return;
       }
 
       res.status(200).json({ success: true, message: "Report deleted successfully" });
-    } catch (error: unknown) {
+    } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(`Error deleting report: ${errorMessage}`);
       next(error);

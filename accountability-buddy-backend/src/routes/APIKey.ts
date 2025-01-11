@@ -1,4 +1,4 @@
-import express, { Response, NextFunction } from "express";
+import express, { Response, NextFunction, Router } from "express";
 import { check, validationResult } from "express-validator";
 import sanitize from "mongo-sanitize";
 import APIKey from "../models/APIKey";
@@ -8,7 +8,7 @@ import logger from "../utils/winstonLogger";
 import rateLimit from "express-rate-limit";
 import mongoose from "mongoose";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Middleware to ensure only admins can manage API keys
 const isAdmin = roleBasedAccessControl(["admin"]);

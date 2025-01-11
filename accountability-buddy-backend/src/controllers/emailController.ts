@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
-import { Response } from "express";
+import { Request, Response } from "express";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import sanitize from "mongo-sanitize";
@@ -30,7 +30,7 @@ const isValidEmail = (email: string): boolean =>
  */
 export const sendEmail = catchAsync(
   async (
-    req: CustomRequest<{}, any, { to: string; subject: string; message: string }>,
+    req: Request<{}, any, { to: string; subject: string; message: string }>,
     res: Response
   ): Promise<void> => {
     try {

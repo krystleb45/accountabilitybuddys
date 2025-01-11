@@ -1,40 +1,22 @@
-import express, { Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction, Router  } from "express";
 import { check, query, validationResult } from "express-validator";
 import goalAnalyticsController from "../controllers/goalAnalyticsController";
-import authMiddleware, {
-  AuthenticatedRequest,
-} from "../middleware/authMiddleware";
+import authMiddleware from "../middleware/authMiddleware";
 import logger from "../utils/winstonLogger";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Utility function to handle route errors consistently
  */
-const handleRouteErrors = (
-  handler: (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ) => Promise<void>
-): ((
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-) => Promise<void>) => {
-  return async (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
-    try {
-      await handler(req, res, next);
-    } catch (error) {
-      logger.error(`Error occurred: ${(error as Error).message}`);
-      next(error);
-    }
-  };
-};
+const handleRouteErrors =
+  (handler: (req: Request, res: Response, next: NextFunction) => Promise<void>) =>
+    (req: Request, res: Response, next: NextFunction): void => {
+      handler(req, res, next).catch((error) => {
+        logger.error(`Error occurred: ${(error as Error).message}`);
+        next(error);
+      });
+    };
 
 /**
  * @route   GET /api/analytics/goals
@@ -44,21 +26,14 @@ const handleRouteErrors = (
 router.get(
   "/goals",
   authMiddleware,
-  handleRouteErrors(
-    async (
-      req: AuthenticatedRequest,
-      res: Response,
-      next: NextFunction
-    ): Promise<void> => {
-      // Pass the `req`, `res`, and `next` to the controller
-      const analytics = await goalAnalyticsController.getUserGoalAnalytics(
-        req,
-        res,
-        next
-      );
-      res.json({ success: true, data: analytics });
-    }
-  )
+  handleRouteErrors(async (req: Request, res: Response, next: NextFunction) => {
+    const analytics = goalAnalyticsController.getUserGoalAnalytics(
+      req,
+      res,
+      next
+    );
+    res.json({ success: true, data: analytics });
+  })
 );
 
 /**
@@ -72,28 +47,28 @@ router.get(
     authMiddleware,
     check("id", "Goal ID is invalid").isMongoId(), // Validate the goal ID format
   ],
-  handleRouteErrors(
-    async (
-      req: AuthenticatedRequest,
-      res: Response,
-      next: NextFunction
-    ): Promise<void> => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        logger.warn(`Validation error: ${JSON.stringify(errors.array())}`);
-        res.status(400).json({ success: false, errors: errors.array() });
-        return; // Explicit return to avoid executing further code
-      }
 
-      // Pass `req`, `res`, and `next` explicitly to the controller
-      const analytics = await goalAnalyticsController.getGoalAnalyticsById(
-        req,
-        res,
-        next
-      );
-      res.json({ success: true, data: analytics });
+  handleRouteErrors(async (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      logger.warn(`Validation error: ${JSON.stringify(errors.array())}`);
+      res.status(400).json({ success: false, errors: errors.array() });
+      return; // Explicit return to avoid further execution
     }
-  )
+
+    const { goalId } = req.params;
+    if (!goalId) {
+      res.status(400).json({ success: false, errors: ["Goal ID is required"] });
+      return;
+    }
+
+    const analytics = goalAnalyticsController.getGoalAnalyticsById(
+    { params: { goalId } } as Request<{ goalId: string }>,
+    res,
+    next
+    );
+    res.json({ success: true, data: analytics });
+  })
 );
 
 /**
@@ -118,30 +93,20 @@ router.get(
       .withMessage("Invalid end date format")
       .toDate(),
   ],
-  handleRouteErrors(
-    async (
-      req: AuthenticatedRequest,
-      res: Response,
-      next: NextFunction
-    ): Promise<void> => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        logger.warn(`Validation error: ${JSON.stringify(errors.array())}`);
-        res.status(400).json({ success: false, errors: errors.array() });
-        return; // Explicit return to prevent further execution
-      }
-
-      // Call the controller directly with req, res, and next
-      const analytics = await goalAnalyticsController.getGoalAnalyticsById(
-        req, // Pass `req` explicitly
-        res, // Pass `res` explicitly
-        next // Pass `next` explicitly
-      );
-
-      res.json({ success: true, data: analytics });
+  handleRouteErrors(async (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      logger.warn(`Validation error: ${JSON.stringify(errors.array())}`);
+      res.status(400).json({ success: false, errors: errors.array() });
+      return;
     }
-  )
+
+    
+    goalAnalyticsController.getGoalAnalyticsByDateRange(
+      req as Request<{ goalId: string }, any, any, { startDate: string; endDate: string }>,
+      res,
+      next
+    );
+  })
 );
-
-
 export default router;

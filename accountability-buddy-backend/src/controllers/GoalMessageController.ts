@@ -1,10 +1,21 @@
-import { Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import { GoalMessage } from "../models/GoalMessage";
 import Goal from "../models/Goal";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import { createError } from "../middleware/errorHandler";
+import logger from "../utils/winstonLogger";
+
+// Extend Request to include user info
+interface RequestWithUser extends Request {
+  user?: {
+    id: string;
+    email?: string;
+    role: "user" | "admin" | "moderator";
+    isAdmin?: boolean;
+  };
+}
 
 /**
  * @desc Create a new goal message
@@ -13,7 +24,7 @@ import { createError } from "../middleware/errorHandler";
  */
 export const createGoalMessage = catchAsync(
   async (
-    req: CustomRequest<{ goalId: string }, any, { message: string }>,
+    req: Request<{ goalId: string }, any, { message: string }>,
     res: Response
   ): Promise<void> => {
     const { goalId } = req.params;
@@ -49,7 +60,7 @@ export const createGoalMessage = catchAsync(
  */
 export const getGoalMessages = catchAsync(
   async (
-    req: CustomRequest<{ goalId: string }> ,
+    req: Request<{ goalId: string }> ,
     res: Response
   ): Promise<void> => {
     const { goalId } = req.params;
@@ -72,7 +83,44 @@ export const getGoalMessages = catchAsync(
     });
   }
 );
+/**
+ * @desc    Send a goal-related message
+ * @route   POST /goal-message/:goalId/send
+ * @access  Private
+ */
+export const sendGoalMessage = catchAsync(
+  async (
+    req: RequestWithUser,
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    const { goalId } = req.params;
+    const { message } = req.body;
+    const userId = req.user?.id;
 
+    // Validate user ID
+    if (!userId) {
+      sendResponse(res, 401, false, "Unauthorized");
+      return;
+    }
+
+    // Validate message content
+    if (!message || typeof message !== "string" || message.trim() === "") {
+      sendResponse(res, 400, false, "Message cannot be empty");
+      return;
+    }
+
+    // Save the message
+    const newMessage = await GoalMessage.create({
+      goalId,
+      user: userId,
+      message,
+    });
+
+    logger.info(`Message sent by user: ${userId} for goal: ${goalId}`);
+    sendResponse(res, 201, true, "Message sent successfully", { newMessage });
+  }
+);
 /**
  * @desc Delete a goal message
  * @route DELETE /api/goals/messages/:messageId
@@ -80,7 +128,7 @@ export const getGoalMessages = catchAsync(
  */
 export const deleteGoalMessage = catchAsync(
   async (
-    req: CustomRequest<{ messageId: string }> ,
+    req: Request<{ messageId: string }> ,
     res: Response
   ): Promise<void> => {
     const { messageId } = req.params;
@@ -112,7 +160,7 @@ export const deleteGoalMessage = catchAsync(
  */
 export const updateGoalMessage = catchAsync(
   async (
-    req: CustomRequest<{ messageId: string }, any, { message: string }>,
+    req: Request<{ messageId: string }, any, { message: string }>,
     res: Response
   ): Promise<void> => {
     const { messageId } = req.params;

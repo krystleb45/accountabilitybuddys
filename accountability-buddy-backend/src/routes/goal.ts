@@ -1,12 +1,12 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
-import * as goalController from "../controllers/GoalController"; // Corrected controller import path
-import authMiddleware from "../middleware/authMiddleware"; // Corrected middleware import path
-import checkSubscription from "../middleware/checkSubscription"; // Import for subscription check middleware
+import * as goalController from "../controllers/GoalController";
+import authMiddleware from "../middleware/authMiddleware";
+import checkSubscription from "../middleware/checkSubscription";
 import rateLimit from "express-rate-limit";
-import logger from "../utils/winstonLogger"; // Added logger utility
+import logger from "../utils/winstonLogger";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Rate limiter to prevent excessive requests to goal endpoints.
@@ -27,7 +27,8 @@ const handleValidationErrors = (
 ): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    res.status(400).json({ success: false, errors: errors.array() });
+    return; // Ensure function exits properly
   }
   next();
 };
@@ -48,12 +49,12 @@ router.post(
     check("dueDate", "Invalid date format").optional().isISO8601(),
   ],
   handleValidationErrors,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await goalController.createGoal(req, res);
+      await goalController.createGoal(req, res, next);
     } catch (error) {
       logger.error(`Error creating goal: ${(error as Error).message}`, { error });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(error); // Pass error to middleware
     }
   }
 );
@@ -73,12 +74,12 @@ router.put(
     }),
   ],
   handleValidationErrors,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await goalController.updateGoalProgress(req, res);
+      await goalController.updateGoalProgress(req, res, next);
     } catch (error) {
       logger.error(`Error updating goal progress: ${(error as Error).message}`, { error });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(error); // Forward error to middleware
     }
   }
 );
@@ -91,12 +92,12 @@ router.put(
 router.put(
   "/:goalId/complete",
   authMiddleware,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await goalController.completeGoal(req, res);
+      await goalController.completeGoal(req, res, next);
     } catch (error) {
       logger.error(`Error completing goal: ${(error as Error).message}`, { error });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(error); // Pass error to middleware
     }
   }
 );
@@ -109,12 +110,12 @@ router.put(
 router.get(
   "/my-goals",
   authMiddleware,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await goalController.getUserGoals(req, res);
+      await goalController.getUserGoals(req, res, next);
     } catch (error) {
       logger.error(`Error fetching user goals: ${(error as Error).message}`, { error });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(error); // Forward error to middleware
     }
   }
 );
@@ -128,12 +129,12 @@ router.get(
   "/analytics",
   authMiddleware,
   checkSubscription("standard"),
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await goalController.getAnalytics(req, res);
+      await goalController.getAnalytics(req, res, next);
     } catch (error) {
       logger.error(`Error fetching analytics: ${(error as Error).message}`, { error });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(error); // Forward error to middleware
     }
   }
 );
@@ -153,12 +154,12 @@ router.post(
     check("remindAt", "Invalid date-time format").isISO8601(),
   ],
   handleValidationErrors,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await goalController.setReminder(req, res);
+      await goalController.setReminder(req, res, next);
     } catch (error) {
       logger.error(`Error setting reminder: ${(error as Error).message}`, { error });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(error); // Forward error to middleware
     }
   }
 );
@@ -168,13 +169,16 @@ router.post(
  * @desc    Get public goals (available to all users)
  * @access  Public
  */
-router.get("/public", async (req: Request, res: Response) => {
-  try {
-    await goalController.getPublicGoals(req, res);
-  } catch (error) {
-    logger.error(`Error fetching public goals: ${(error as Error).message}`, { error });
-    res.status(500).json({ success: false, msg: "Server error" });
+router.get(
+  "/public",
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      await goalController.getPublicGoals(req, res, next);
+    } catch (error) {
+      logger.error(`Error fetching public goals: ${(error as Error).message}`, { error });
+      next(error); // Forward error to middleware
+    }
   }
-});
+);
 
 export default router;

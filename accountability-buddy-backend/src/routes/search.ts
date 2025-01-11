@@ -1,12 +1,12 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 import sanitize from "mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware"; // Correct middleware import path
-import searchController from "../controllers/SearchController"; // Corrected controller import path
+import * as searchController from "../controllers/SearchController"; // Ensure named import for controller methods
 import logger from "../utils/winstonLogger"; // Logger utility
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Rate limiter to prevent abuse of search functionality.
@@ -20,7 +20,11 @@ const searchLimiter = rateLimit({
 /**
  * Middleware to sanitize user input.
  */
-const sanitizeInput = (req: Request, res: Response, next: NextFunction): void => {
+const sanitizeInput = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): void => {
   try {
     req.query = sanitize(req.query);
     req.params = sanitize(req.params);
@@ -34,10 +38,15 @@ const sanitizeInput = (req: Request, res: Response, next: NextFunction): void =>
 /**
  * Middleware for handling validation errors.
  */
-const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
+const handleValidationErrors = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    res.status(400).json({ success: false, errors: errors.array() });
+    return;
   }
   next();
 };
@@ -45,7 +54,9 @@ const handleValidationErrors = (req: Request, res: Response, next: NextFunction)
 /**
  * Helper function to parse pagination parameters.
  */
-const parsePagination = (query: Record<string, string | undefined>): { page: number; limit: number } => {
+const parsePagination = (
+  query: Partial<Record<string, string | undefined>>
+): { page: number; limit: number } => {
   const page = Math.max(1, parseInt(query.page || "1", 10));
   const limit = Math.min(50, parseInt(query.limit || "10", 10)); // Limit results to a max of 50 per page
   return { page, limit };
@@ -62,56 +73,90 @@ router.get(
   searchLimiter,
   [
     check("query", "Search query is required").notEmpty(),
-    check("type", "Invalid search type").isIn(["user", "group", "goal", "task", "post"]),
+    check("type", "Invalid search type").isIn([
+      "user",
+      "group",
+      "goal",
+      "task",
+      "post",
+    ]),
   ],
   sanitizeInput,
   handleValidationErrors,
-  async (req: Request, res: Response): Promise<void> => {
-    const { query, type } = req.query as { query: string; type: string };
-    const { page, limit } = parsePagination(req.query);
-
+  async (
+    req: Request<{}, {}, {}, { query: string; type: string; page?: string; limit?: string }>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const results = await searchController.search(query, type, page, limit);
+      const { type } = req.query;
+      parsePagination(req.query);
+  
+      let results;
+      switch (type) {
+      case "user":
+        results = await searchController.searchUsers(req, res, next);
+        break;
+      case "group":
+        results = await searchController.searchGroups(req, res, next);
+        break;
+      case "goal":
+        results = await searchController.searchGoals(req, res, next);
+        break;
+      case "post":
+        results = await searchController.searchPosts(req, res, next);
+        break;
+      default:
+        throw new Error(`Invalid search type: ${type}`);
+      }
+  
       res.status(200).json({ success: true, results });
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unexpected error occurred";
       logger.error(`Error during search: ${errorMessage}`);
-      res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+      next(error); // Pass error to middleware
     }
-  }
-);
+  } // Added Closing Parenthesis
+); // Added Closing Brace
+
 
 /**
- * Common route handler factory for resource-specific searches.
+ * Factory function to handle resource-specific searches.
  */
 const createSearchRoute = (
   endpoint: string,
-  searchFunction: (query: string, page: number, limit: number) => Promise<unknown>
+  searchHandler: (
+    req: Request<{}, {}, {}, { query: string; page?: string; limit?: string }>,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>
 ): void => {
   router.get(
     endpoint,
-    authMiddleware,
-    searchLimiter,
-    [check("query", "Search query is required").notEmpty()],
-    sanitizeInput,
-    handleValidationErrors,
-    async (req: Request, res: Response): Promise<void> => {
-      const { query } = req.query as { query: string };
-      const { page, limit } = parsePagination(req.query);
-
+    authMiddleware, // Authentication middleware
+    searchLimiter, // Rate limiter middleware
+    [check("query", "Search query is required").notEmpty()], // Validation
+    sanitizeInput, // Sanitize input
+    handleValidationErrors, // Handle validation errors
+    async (
+      req: Request<{}, {}, {}, { query: string; page?: string; limit?: string }, Record<string, any>>,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
       try {
-        const results = await searchFunction(query, page, limit);
-        res.status(200).json({ success: true, results });
+        await searchHandler(req, res, next); // Use the passed search handler
       } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred";
+        const errorMessage =
+          error instanceof Error ? error.message : "Unexpected error occurred";
         logger.error(`Error searching ${endpoint}: ${errorMessage}`);
-        res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+        next(error); // Pass error to middleware
       }
     }
   );
 };
 
-// Resource-specific search routes
+// Resource-specific search routes using middleware-style handlers
 createSearchRoute("/users", searchController.searchUsers);
 createSearchRoute("/groups", searchController.searchGroups);
 createSearchRoute("/goals", searchController.searchGoals);

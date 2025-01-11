@@ -1,13 +1,13 @@
-import express, { Request, Response, NextFunction } from "express";
-import sanitize from "mongo-sanitize";
+import express, { Router, Request, Response, NextFunction } from "express";
 import rateLimit from "express-rate-limit";
-import authMiddleware from "../middleware/authMiddleware"; // Correct middleware import path
-import checkSubscription from "../middleware/checkSubscription"; // Correct subscription middleware import path
-import { validateReminder } from "../validators/reminderValidation"; // Correct validation import path
-import customReminderController from "../controllers/customReminderController"; // Corrected custom controller import path
+import authMiddleware from "../middleware/authMiddleware"; // Correct middleware path
+import checkSubscription from "../middleware/checkSubscription"; // Correct middleware path
+import { validateReminder } from "../validators/reminderValidation"; // Correct validator path
+import * as customReminderController from "../controllers/customReminderController"; // Correct controller path
 import logger from "../utils/winstonLogger"; // Logger utility
+import { ParsedQs } from "qs";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Rate limiter to prevent abuse of reminder functionality.
@@ -15,18 +15,11 @@ const router = express.Router();
 const reminderLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10, // Limit to 10 requests per window
-  message: "Too many reminder requests from this IP, please try again later.",
+  message: {
+    success: false,
+    message: "Too many reminder requests from this IP, please try again later.",
+  },
 });
-
-/**
- * Middleware to validate user access and input for reminders.
- */
-const checkUserRemindersAccess = [
-  authMiddleware, // Ensure the user is authenticated
-  checkSubscription("standard"), // Only standard and premium users can create reminders
-  reminderLimiter, // Apply rate limiting
-  validateReminder, // Validate reminder input
-];
 
 /**
  * @route   POST /create
@@ -35,23 +28,17 @@ const checkUserRemindersAccess = [
  */
 router.post(
   "/create",
-  checkUserRemindersAccess,
+  authMiddleware, // Ensure the user is authenticated
+  checkSubscription("standard"), // Only standard and premium users can create reminders
+  reminderLimiter, // Apply rate limiting
+  validateReminder, // Validate reminder input
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const sanitizedData = sanitize(req.body);
-      const newReminder = await customReminderController.createReminder(
-        sanitizedData,
-        req.user?.id
-      );
-      res.status(201).json({
-        success: true,
-        message: "Reminder created successfully.",
-        reminder: newReminder,
-      });
+      await customReminderController.createReminder(req, res, next);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(`Error creating custom reminder for user ${req.user?.id}: ${errorMessage}`);
-      next(error);
+      next(error); // Forward error to middleware
     }
   }
 );
@@ -66,8 +53,7 @@ router.get(
   authMiddleware,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const reminders = await customReminderController.getUserReminders(req.user?.id);
-      res.status(200).json({ success: true, reminders });
+      await customReminderController.getUserReminders(req, res, next);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(`Error fetching reminders for user ${req.user?.id}: ${errorMessage}`);
@@ -77,81 +63,76 @@ router.get(
 );
 
 /**
- * @route   PUT /disable/:id
+ * @route   PUT /disable/:reminderId
  * @desc    Disable a specific reminder by ID
  * @access  Private
  */
 router.put(
-  "/disable/:id",
+  "/disable/:reminderId",
   authMiddleware,
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (
+    req: Request<{ reminderId: string }>, // Match reminderId
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const reminderId = sanitize(req.params.id);
-      const result = await customReminderController.disableReminder(reminderId, req.user?.id);
-      res.status(200).json({
-        success: true,
-        message: "Reminder disabled successfully.",
-        result,
-      });
+      await customReminderController.disableReminder(req, res, next);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-      logger.error(`Error disabling reminder ${req.params.id} for user ${req.user?.id}: ${errorMessage}`);
+      logger.error(
+        `Error disabling reminder ${req.params.reminderId} for user ${req.user?.id}: ${errorMessage}`
+      );
       next(error);
     }
   }
 );
 
 /**
- * @route   PUT /edit/:id
+ * @route   PUT /edit/:reminderId
  * @desc    Edit an existing reminder
  * @access  Private
  */
 router.put(
-  "/edit/:id",
+  "/edit/:reminderId",
   authMiddleware,
   validateReminder,
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (
+    req: Request<{ reminderId: string }>, // Match reminderId
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const reminderId = sanitize(req.params.id);
-      const sanitizedData = sanitize(req.body);
-      const updatedReminder = await customReminderController.editReminder(
-        reminderId,
-        sanitizedData,
-        req.user?.id
-      );
-      res.status(200).json({
-        success: true,
-        message: "Reminder updated successfully.",
-        updatedReminder,
-      });
+      await customReminderController.editReminder(req, res, next); // Controller accepts full req
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-      logger.error(`Error editing reminder ${req.params.id} for user ${req.user?.id}: ${errorMessage}`);
+      logger.error(
+        `Error editing reminder ${req.params.reminderId} for user ${req.user?.id}: ${errorMessage}`
+      );
       next(error);
     }
   }
 );
 
 /**
- * @route   DELETE /delete/:id
+ * @route   DELETE /delete/:reminderId
  * @desc    Delete a reminder by ID
  * @access  Private
  */
 router.delete(
-  "/delete/:id",
+  "/delete/:reminderId",
   authMiddleware,
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (
+    req: Request<{ reminderId: string }, any, any, ParsedQs, Record<string, any>>, // Match reminderId
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const reminderId = sanitize(req.params.id);
-      const result = await customReminderController.deleteReminder(reminderId, req.user?.id);
-      res.status(200).json({
-        success: true,
-        message: "Reminder deleted successfully.",
-        result,
-      });
+      await customReminderController.deleteReminder(req, res, next);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-      logger.error(`Error deleting reminder ${req.params.id} for user ${req.user?.id}: ${errorMessage}`);
+      logger.error(
+        `Error deleting reminder ${req.params.reminderId} for user ${req.user?.id}: ${errorMessage}`
+      );
       next(error);
     }
   }

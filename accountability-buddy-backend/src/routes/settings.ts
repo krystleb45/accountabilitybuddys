@@ -1,12 +1,12 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 import sanitize from "mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware"; // Correct middleware import path
-import * as settingsController from "../controllers/SettingsController"; // Corrected controller import path
-import logger from "../utils/winstonLogger"; // Added logging utility
+import * as settingsController from "../controllers/SettingsController"; // Correct controller import path
+import logger from "../utils/winstonLogger"; // Logger utility
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Rate limiter to prevent abuse of settings updates.
@@ -14,13 +14,18 @@ const router = express.Router();
 const settingsLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10, // Limit to 10 requests per IP per window
-  message: "Too many settings update requests from this IP, please try again later.",
+  message:
+    "Too many settings update requests from this IP, please try again later.",
 });
 
 /**
  * Middleware to sanitize user input.
  */
-const sanitizeInput = (req: Request, res: Response, next: NextFunction): void => {
+const sanitizeInput = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): void => {
   try {
     req.body = sanitize(req.body);
     next();
@@ -32,10 +37,15 @@ const sanitizeInput = (req: Request, res: Response, next: NextFunction): void =>
 /**
  * Middleware to handle validation errors.
  */
-const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
+const handleValidationErrors = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    res.status(400).json({ success: false, errors: errors.array() });
+    return;
   }
   next();
 };
@@ -48,14 +58,15 @@ const handleValidationErrors = (req: Request, res: Response, next: NextFunction)
 router.get(
   "/",
   authMiddleware,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const settings = await settingsController.getUserSettings(req.user.id);
-      res.status(200).json({ success: true, data: settings });
+      // Pass the full req, res, and next objects as arguments
+      await settingsController.getUserSettings(req, res, next); // Fixed
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred.";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unexpected error occurred.";
       logger.error(`Error fetching settings: ${errorMessage}`);
-      res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+      next(error); // Pass error to middleware
     }
   }
 );
@@ -71,22 +82,33 @@ router.put(
   settingsLimiter,
   sanitizeInput,
   [
-    check("emailNotifications", "Invalid value for email notifications").optional().isBoolean(),
-    check("smsNotifications", "Invalid value for SMS notifications").optional().isBoolean(),
-    check("theme", "Invalid theme selection").optional().isIn(["light", "dark"]),
-    check("language", "Invalid language selection")
+    check("emailNotifications")
       .optional()
-      .isIn(["en", "es", "fr", "de", "zh"]),
+      .isBoolean()
+      .withMessage("Invalid value for email notifications."),
+    check("smsNotifications")
+      .optional()
+      .isBoolean()
+      .withMessage("Invalid value for SMS notifications."),
+    check("theme")
+      .optional()
+      .isIn(["light", "dark"])
+      .withMessage("Invalid theme selection."),
+    check("language")
+      .optional()
+      .isIn(["en", "es", "fr", "de", "zh"])
+      .withMessage("Invalid language selection."),
   ],
   handleValidationErrors,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const updatedSettings = await settingsController.updateUserSettings(req.user.id, req.body);
-      res.status(200).json({ success: true, data: updatedSettings });
+      // Pass the full req, res, and next to match catchAsync expectations
+      await settingsController.updateUserSettings(req, res, next); // Fixed
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred.";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unexpected error occurred.";
       logger.error(`Error updating settings: ${errorMessage}`);
-      res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+      next(error); // Pass error to middleware
     }
   }
 );
@@ -101,20 +123,27 @@ router.put(
   authMiddleware,
   sanitizeInput,
   [
-    check("currentPassword", "Current password is required").notEmpty(),
-    check("newPassword", "New password must be at least 6 characters long").isLength({ min: 6 }),
+    check("currentPassword")
+      .notEmpty()
+      .withMessage("Current password is required."),
+    check("newPassword")
+      .isLength({ min: 6 })
+      .withMessage("New password must be at least 6 characters long."),
   ],
   handleValidationErrors,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { currentPassword, newPassword } = req.body;
 
     try {
-      await settingsController.updateUserPassword(req.user.id, currentPassword, newPassword);
-      res.status(200).json({ success: true, msg: "Password updated successfully" });
+      settingsController.updateUserPassword(req, currentPassword, newPassword);
+      res
+        .status(200)
+        .json({ success: true, msg: "Password updated successfully" });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred.";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unexpected error occurred.";
       logger.error(`Error updating password: ${errorMessage}`);
-      res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+      next(error);
     }
   }
 );
@@ -129,22 +158,26 @@ router.put(
   authMiddleware,
   sanitizeInput,
   [
-    check("emailNotifications", "Invalid value for email notifications").isBoolean(),
-    check("smsNotifications", "Invalid value for SMS notifications").isBoolean(),
-    check("pushNotifications", "Invalid value for push notifications").isBoolean(),
+    check("emailNotifications")
+      .isBoolean()
+      .withMessage("Invalid value for email notifications."),
+    check("smsNotifications")
+      .isBoolean()
+      .withMessage("Invalid value for SMS notifications."),
+    check("pushNotifications")
+      .isBoolean()
+      .withMessage("Invalid value for push notifications."),
   ],
   handleValidationErrors,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const updatedNotifications = await settingsController.updateNotificationPreferences(
-        req.user.id,
-        req.body
-      );
-      res.status(200).json({ success: true, data: updatedNotifications });
+      // Pass req, res, and next directly to the controller
+      await settingsController.updateNotificationPreferences(req, res, next); // Fixed
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred.";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unexpected error occurred.";
       logger.error(`Error updating notification preferences: ${errorMessage}`);
-      res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+      next(error); // Pass error to middleware
     }
   }
 );
@@ -157,14 +190,15 @@ router.put(
 router.delete(
   "/account",
   authMiddleware,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await settingsController.deactivateUserAccount(req.user.id);
-      res.status(200).json({ success: true, msg: "Account deactivated successfully" });
+      // Pass req, res, and next to the controller
+      await settingsController.deactivateUserAccount(req, res, next); // Fixed
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred.";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unexpected error occurred.";
       logger.error(`Error deactivating account: ${errorMessage}`);
-      res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+      next(error); // Pass error to middleware
     }
   }
 );

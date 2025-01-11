@@ -1,11 +1,11 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction, Router } from "express";
 import { check, validationResult } from "express-validator";
 
 import { login, register, refreshToken } from "../../src/controllers/authController";
 import rateLimit from "express-rate-limit";
 import logger from "../utils/winstonLogger";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Rate limiter for login and registration
 const authLimiter = rateLimit({

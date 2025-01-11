@@ -3,9 +3,8 @@ import LoggingService from "./LoggingService";
 import Subscription from "../models/Subscription"; // Assuming a Subscription model
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2024-11-20.acacia", // Match the expected API version
+  apiVersion: "2024-12-18.acacia", // Replace with the correct API version
 });
-
 const PaymentService = {
   /**
    * Create a subscription session for a given user and plan

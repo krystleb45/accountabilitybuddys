@@ -1,11 +1,11 @@
-import express, { Request, Response } from "express";
-import Role from "../models/Role"; // Corrected model import path
+import express, { Router, Request, Response } from "express";
+import Role, { IRole } from "../models/Role"; // Corrected model import path
 import { roleBasedAccessControl } from "../middleware/roleBasedAccessControl"; // Corrected middleware import path
 import authMiddleware from "../middleware/authMiddleware"; // Corrected middleware import path
 import rateLimit from "express-rate-limit";
 import logger from "../utils/winstonLogger"; // Logger utility
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Rate limiter to prevent abuse of the roles route.
@@ -26,20 +26,21 @@ router.post(
   authMiddleware,
   roleBasedAccessControl(["admin"]),
   rateLimiter,
-  async (req: Request, res: Response): Promise<void> => {
+  async (_req: Request, res: Response): Promise<void> => {
     try {
       const roles = [
         { roleName: "admin", permissions: ["manage_users", "view_reports"] },
         { roleName: "user", permissions: ["view_content"] },
       ];
 
-      const seededRoles = [];
+      const seededRoles: IRole[] = []; // Explicitly type the array as IRole[]
 
       for (const role of roles) {
         const existingRole = await Role.findOne({ roleName: role.roleName });
         if (!existingRole) {
-          const createdRole = await Role.create(role);
-          seededRoles.push(createdRole);
+          // Explicit casting applied here
+          const createdRole = (await Role.create(role)) as IRole; // Cast to IRole
+          seededRoles.push(createdRole); // Push the created role
         }
       }
 
@@ -49,7 +50,8 @@ router.post(
         data: seededRoles,
       });
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(`Role seeding error: ${errorMessage}`);
       res.status(500).json({
         success: false,
@@ -59,5 +61,6 @@ router.post(
     }
   }
 );
+
 
 export default router;

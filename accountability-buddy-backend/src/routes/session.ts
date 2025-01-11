@@ -1,12 +1,12 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 import sanitize from "mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware"; // Correct middleware import path
-import sessionController from "../controllers/SessionController"; // Corrected controller import path
+import * as sessionController from "../controllers/SessionController"; // Ensure named import for controller methods
 import logger from "../utils/winstonLogger"; // Logger utility
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Rate limiter to prevent abuse of session-related actions.
@@ -20,7 +20,7 @@ const sessionLimiter = rateLimit({
 /**
  * Middleware to sanitize user input.
  */
-const sanitizeInput = (req: Request, res: Response, next: NextFunction): void => {
+const sanitizeInput = (req: Request, _res: Response, next: NextFunction): void => {
   try {
     req.query = sanitize(req.query);
     req.params = sanitize(req.params);
@@ -37,7 +37,8 @@ const sanitizeInput = (req: Request, res: Response, next: NextFunction): void =>
 const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    res.status(400).json({ success: false, errors: errors.array() });
+    return;
   }
   next();
 };
@@ -56,7 +57,7 @@ router.post(
   ],
   sanitizeInput,
   handleValidationErrors,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { email, password } = req.body;
 
     try {
@@ -64,7 +65,7 @@ router.post(
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred";
       logger.error(`Error during login: ${errorMessage}`);
-      res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+      next(error); // Pass error to middleware
     }
   }
 );
@@ -77,14 +78,14 @@ router.post(
 router.post(
   "/logout",
   authMiddleware,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       await sessionController.logout(req, res);
       res.json({ success: true, msg: "Logged out successfully" });
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred";
       logger.error(`Error during logout: ${errorMessage}`);
-      res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+      next(error);
     }
   }
 );
@@ -97,13 +98,13 @@ router.post(
 router.post(
   "/refresh",
   authMiddleware,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       await sessionController.refreshSession(req, res);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred";
       logger.error(`Error refreshing session: ${errorMessage}`);
-      res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+      next(error);
     }
   }
 );
@@ -116,14 +117,18 @@ router.post(
 router.get(
   "/",
   authMiddleware,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const sessions = await sessionController.getUserSessions(req.user.id);
+      const userId = req.user?.id as string; // Explicitly cast user ID to string
+
+      // Fetch all sessions for the current user
+      const sessions = await sessionController.getUserSessions(userId); // New controller method
       res.status(200).json({ success: true, sessions });
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unexpected error occurred";
       logger.error(`Error fetching user sessions: ${errorMessage}`);
-      res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+      next(error);
     }
   }
 );
@@ -136,19 +141,28 @@ router.get(
 router.delete(
   "/:sessionId",
   authMiddleware,
-  async (req: Request, res: Response): Promise<void> => {
-    const { sessionId } = req.params;
+  async (
+    req: Request<{ sessionId: string }>, // Explicitly define sessionId as string
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    const { sessionId } = req.params; // Extract sessionId
+    const userId = req.user?.id as string; // Explicitly cast user ID to string
 
     try {
-      await sessionController.deleteSession(sessionId, req.user.id);
+      // Call the controller method with explicit parameters
+      await sessionController.deleteSession(sessionId, userId);
       res.json({ success: true, msg: "Session ended successfully" });
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unexpected error occurred";
       logger.error(`Error ending session: ${errorMessage}`);
-      res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+      next(error); // Pass error to middleware
     }
   }
 );
+
+
 
 /**
  * @route   DELETE /session/all
@@ -158,16 +172,25 @@ router.delete(
 router.delete(
   "/all",
   authMiddleware,
-  async (req: Request, res: Response): Promise<void> => {
+  async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      await sessionController.deleteAllSessions(req.user.id, req.session.id);
+      const userId = req.user?.id as string; // Explicitly cast user ID to string
+      const sessionId = req.session.id as string; // Explicitly cast session ID to string
+
+      await sessionController.deleteAllSessions(userId, sessionId); // Pass IDs
       res.json({ success: true, msg: "All other sessions ended successfully" });
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unexpected error occurred";
       logger.error(`Error ending all sessions: ${errorMessage}`);
-      res.status(500).json({ success: false, msg: "Server error", error: errorMessage });
+      next(error);
     }
   }
 );
+
 
 export default router;

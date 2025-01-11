@@ -1,11 +1,32 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 import authMiddleware from "../middleware/authMiddleware";
 import sanitize from "mongo-sanitize";
 import logger from "../utils/winstonLogger";
-import { createTask, updateTask, deleteTask, getTaskById, getAllTasks } from "../controllers/TaskController";
+import {
+  createTask,
+  updateTask,
+  deleteTask,
+  getTaskById,
+  getAllTasks,
+} from "../controllers/TaskController";
 
-const router = express.Router();
+
+const router: Router = express.Router();
+
+/**
+ * Error handler for unexpected errors.
+ */
+const handleError = (
+  error: unknown,
+  res: Response,
+  defaultMessage: string
+): void => {
+  const errorMessage =
+    error instanceof Error ? error.message : "Unexpected error occurred.";
+  logger.error(`${defaultMessage}: ${errorMessage}`);
+  res.status(500).json({ success: false, msg: defaultMessage, error: errorMessage });
+};
 
 /**
  * @route   POST /tasks
@@ -19,22 +40,28 @@ router.post(
     check("title", "Task title is required").notEmpty(),
     check("dueDate", "Invalid due date").optional().isISO8601(),
   ],
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: Request<{}, {}, { title: string; dueDate?: string }>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      res.status(400).json({ errors: errors.array() });
+      return;
     }
 
     try {
       const sanitizedBody = sanitize(req.body);
-      const newTask = await createTask(req.user.id, sanitizedBody);
-      res.status(201).json(newTask);
+      const newTask = await createTask(req.user?.id as string, sanitizedBody); // Fixed call
+      res.status(201).json({ success: true, data: newTask });
     } catch (error) {
-      logger.error("Error creating task: ", error);
-      next(error);
+      handleError(error, res, "Error creating task");
+      return next(error);
     }
   }
 );
+
 
 /**
  * @route   GET /tasks
@@ -44,16 +71,19 @@ router.post(
 router.get(
   "/",
   authMiddleware,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const tasks = await getAllTasks(req.user.id);
-      res.status(200).json(tasks);
+      await getAllTasks(req, res, next); // Pass all required arguments
     } catch (error) {
-      logger.error("Error fetching tasks: ", error);
-      next(error);
+      handleError(error, res, "Error fetching tasks");
     }
   }
 );
+
 
 /**
  * @route   GET /tasks/:id
@@ -63,19 +93,20 @@ router.get(
 router.get(
   "/:id",
   authMiddleware,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: Request<{ id: string }>, // Explicitly define ID param type
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const task = await getTaskById(req.user.id, req.params.id);
-      if (!task) {
-        return res.status(404).json({ message: "Task not found" });
-      }
-      res.status(200).json(task);
+      await getTaskById(req, res, next); // Pass all required arguments
     } catch (error) {
-      logger.error("Error fetching task: ", error);
+      handleError(error, res, "Error fetching task");
       next(error);
     }
   }
 );
+
 
 /**
  * @route   PUT /tasks/:id
@@ -89,22 +120,23 @@ router.put(
     check("title", "Task title is required").optional().notEmpty(),
     check("dueDate", "Invalid due date").optional().isISO8601(),
   ],
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: Request<{ id: string }, {}, { title?: string; dueDate?: string }>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      res.status(400).json({ errors: errors.array() });
+      return;
     }
 
     try {
-      const sanitizedBody = sanitize(req.body);
-      const updatedTask = await updateTask(req.user.id, req.params.id, sanitizedBody);
-      if (!updatedTask) {
-        return res.status(404).json({ message: "Task not found" });
-      }
-      res.status(200).json(updatedTask);
+      // Pass the request, response, and next function directly
+      await updateTask(req, res, next);
     } catch (error) {
-      logger.error("Error updating task: ", error);
-      next(error);
+      handleError(error, res, "Error updating task");
+      next(error); // Pass error to middleware
     }
   }
 );
@@ -117,18 +149,20 @@ router.put(
 router.delete(
   "/:id",
   authMiddleware,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: Request<{ id: string }>, // Explicitly define ID param type
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const deletedTask = await deleteTask(req.user.id, req.params.id);
-      if (!deletedTask) {
-        return res.status(404).json({ message: "Task not found" });
-      }
-      res.status(200).json({ message: "Task deleted successfully" });
+      // Pass req, res, and next to the controller
+      await deleteTask(req, res, next);
     } catch (error) {
-      logger.error("Error deleting task: ", error);
-      next(error);
+      handleError(error, res, "Error deleting task");
+      next(error); // Pass error to middleware
     }
   }
 );
+
 
 export default router;

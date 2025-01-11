@@ -1,4 +1,4 @@
-import { Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import { createError } from "../middleware/errorHandler";
@@ -8,7 +8,7 @@ import { createError } from "../middleware/errorHandler";
  */
 export const getUserAnalytics = catchAsync(
   async (
-    req: CustomRequest,
+    req: Request<{}, {}, {}, {}>, // Explicitly define generics for Request
     res: Response,
     next: NextFunction
   ): Promise<void> => {
@@ -40,7 +40,7 @@ export const getUserAnalytics = catchAsync(
  */
 export const getGlobalAnalytics = catchAsync(
   async (
-    _req: CustomRequest,
+    _req: Request<{}, {}, {}, {}>, // Explicitly define generics for Request
     res: Response
   ): Promise<void> => {
     // Placeholder logic for global analytics (replace with actual implementation)
@@ -61,7 +61,7 @@ export const getGlobalAnalytics = catchAsync(
  */
 export const getCustomAnalytics = catchAsync(
   async (
-    req: CustomRequest,
+    req: Request<{}, {}, {}, { type?: string }>, // Explicitly define generics with query parameters
     res: Response,
     next: NextFunction
   ): Promise<void> => {

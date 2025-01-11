@@ -1,17 +1,21 @@
-import express from 'express';
-import { sendMessage, getResources, getDisclaimer } from '../controllers/militarySupportController';
-import authMiddleware from '../middleware/authMiddleware';
-import militaryAuth from '../middleware/militaryAuth';
+import express, {Router} from "express";
+import {
+  sendMessage,
+  getResources,
+  getDisclaimer,
+} from "../controllers/militarySupportController";
+import authMiddleware from "../middleware/authMiddleware";
+import militaryAuth from "../middleware/militaryAuth";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Chatroom Routes
-router.post('/chat/send', authMiddleware, militaryAuth, sendMessage);
+router.post("/chat/send", authMiddleware, militaryAuth, sendMessage);
 
 // Resources Route
-router.get('/resources', getResources);
+router.get("/resources", getResources);
 
 // Disclaimer Route
-router.get('/disclaimer', getDisclaimer);
+router.get("/disclaimer", getDisclaimer);
 
 export default router;

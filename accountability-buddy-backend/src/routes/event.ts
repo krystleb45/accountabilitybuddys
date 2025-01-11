@@ -1,11 +1,16 @@
-import express, { Request, Response } from "express";
+import express, { Router, Request, Response } from "express";
 import { check, validationResult } from "express-validator";
 import rateLimit from "express-rate-limit";
+import mongoose from "mongoose"; // For ObjectId validation
 import Event from "../models/Event";
 import authMiddleware from "../middleware/authMiddleware";
 import catchAsync from "../utils/catchAsync";
 
-const router = express.Router();
+const router: Router = express.Router();
+
+// Utility to validate MongoDB ObjectID
+const isValidObjectId = (id: string): boolean =>
+  mongoose.Types.ObjectId.isValid(id);
 
 // Middleware for validating event creation inputs
 const validateEventCreation = [
@@ -18,7 +23,10 @@ const validateEventCreation = [
 
 // Middleware for progress update validation
 const validateEventProgress = [
-  check("progress", "Progress must be a number between 0 and 100").isInt({ min: 0, max: 100 }),
+  check("progress", "Progress must be a number between 0 and 100").isInt({
+    min: 0,
+    max: 100,
+  }),
 ];
 
 // Rate limiter to prevent abuse
@@ -38,20 +46,30 @@ router.post(
   rateLimiter,
   authMiddleware,
   validateEventCreation,
-  catchAsync(async (req: Request, res: Response) => {
+  catchAsync(async (req: Request, res: Response): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, errors: errors.array() });
+      res.status(400).json({ success: false, errors: errors.array() });
+      return;
     }
 
     const { eventTitle, description, date, participants, location } = req.body;
+
+    const userId = req.user?.id;
+    if (!userId) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+      return;
+    }
 
     const newEvent = new Event({
       eventTitle,
       description,
       date,
-      createdBy: req.user?.id,
-      participants: [req.user?.id, ...participants],
+      createdBy: new mongoose.Types.ObjectId(userId),
+      participants: [
+        new mongoose.Types.ObjectId(userId),
+        ...participants.map((p: string) => new mongoose.Types.ObjectId(p)),
+      ],
       location,
     });
 
@@ -70,25 +88,45 @@ router.put(
   rateLimiter,
   authMiddleware,
   validateEventProgress,
-  catchAsync(async (req: Request, res: Response) => {
+  catchAsync(async (req: Request, res: Response): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, errors: errors.array() });
+      res.status(400).json({ success: false, errors: errors.array() });
+      return;
     }
 
+    const { id } = req.params;
     const { progress } = req.body;
-    const event = await Event.findById(req.params.id);
+
+    const userId = req.user?.id;
+    if (!userId) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+      return;
+    }
+
+    if (!isValidObjectId(id)) {
+      res.status(400).json({ success: false, message: "Invalid event ID" });
+      return;
+    }
+
+    const event = await Event.findById(id);
 
     if (!event) {
-      return res.status(404).json({ success: false, message: "Event not found" });
+      res.status(404).json({ success: false, message: "Event not found" });
+      return;
     }
 
     // Ensure only participants or the creator can update progress
     if (
-      !event.participants.includes(req.user?.id) &&
-      event.createdBy.toString() !== req.user?.id
+      !event.participants.some((p) =>
+        p.user.toString() === userId.toString()
+      ) &&
+      !event.createdBy.equals(new mongoose.Types.ObjectId(userId))
     ) {
-      return res.status(403).json({ success: false, message: "Not authorized to update this event" });
+      res
+        .status(403)
+        .json({ success: false, message: "Not authorized to update this event" });
+      return;
     }
 
     event.progress = progress;
@@ -107,13 +145,24 @@ router.get(
   "/my-events",
   rateLimiter,
   authMiddleware,
-  catchAsync(async (req: Request, res: Response) => {
+  catchAsync(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+      return;
+    }
+
     const events = await Event.find({
-      $or: [{ participants: req.user?.id }, { createdBy: req.user?.id }],
+      $or: [
+        { participants: new mongoose.Types.ObjectId(userId) },
+        { createdBy: new mongoose.Types.ObjectId(userId) },
+      ],
     }).sort({ createdAt: -1 });
 
     if (!events.length) {
-      return res.status(404).json({ success: false, message: "No events found" });
+      res.status(404).json({ success: false, message: "No events found" });
+      return;
     }
 
     res.status(200).json({ success: true, events });
@@ -129,11 +178,18 @@ router.get(
   "/:id",
   rateLimiter,
   authMiddleware,
-  catchAsync(async (req: Request, res: Response) => {
+  catchAsync(async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
-    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(400).json({ success: false, message: "Invalid event ID" });
+    const userId = req.user?.id;
+    if (!userId) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+      return;
+    }
+
+    if (!isValidObjectId(id)) {
+      res.status(400).json({ success: false, message: "Invalid event ID" });
+      return;
     }
 
     const event = await Event.findById(id)
@@ -141,15 +197,21 @@ router.get(
       .populate("createdBy", "username");
 
     if (!event) {
-      return res.status(404).json({ success: false, message: "Event not found" });
+      res.status(404).json({ success: false, message: "Event not found" });
+      return;
     }
 
     // Ensure only participants or the creator can view the event
     if (
-      !event.participants.includes(req.user?.id) &&
-      event.createdBy.toString() !== req.user?.id
+      !event.participants.some((p) =>
+        p.user.toString() === userId.toString()
+      ) &&
+      !event.createdBy.equals(new mongoose.Types.ObjectId(userId))
     ) {
-      return res.status(403).json({ success: false, message: "Not authorized to view this event" });
+      res
+        .status(403)
+        .json({ success: false, message: "Not authorized to view this event" });
+      return;
     }
 
     res.status(200).json({ success: true, event });

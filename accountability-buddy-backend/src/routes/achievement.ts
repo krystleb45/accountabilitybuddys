@@ -2,7 +2,6 @@ import express, { Router, Request, Response, NextFunction } from "express";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware";
 import * as AchievementController from "../controllers/AchievementController";
-import { AuthenticatedRequest } from "../types/AuthenticatedRequest"; // Correct import for AuthenticatedRequest
 
 // Explicitly define the router type
 const router: Router = express.Router();
@@ -49,7 +48,7 @@ router.get(
   ): Promise<void> => {
     try {
       // Explicitly assert the type as AuthenticatedRequest
-      const authReq = req as AuthenticatedRequest;
+      const authReq = req as Request;
 
       const userId = authReq.user?.id; // Safe access after type assertion
 
@@ -90,7 +89,7 @@ router.post(
     next: NextFunction
   ): Promise<void> => {
     try {
-      const authReq = req as AuthenticatedRequest; // Explicit type assertion
+      const authReq = req as Request; // Explicit type assertion
       const userId = authReq.user?.id;
 
       if (!userId) {

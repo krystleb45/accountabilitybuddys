@@ -1,11 +1,11 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
-import * as goalMessageController from "../controllers/GoalMessageController"; // Corrected controller import path
-import authMiddleware from "../middleware/authMiddleware"; // Corrected middleware import path
+import * as goalMessageController from "../controllers/GoalMessageController"; // Controller import
+import authMiddleware from "../middleware/authMiddleware"; // Auth middleware
 import rateLimit from "express-rate-limit";
-import logger from "../utils/winstonLogger"; // Added logger utility
+import logger from "../utils/winstonLogger"; // Logger utility
 
-const router = express.Router();
+const router: Router = express.Router();
 
 /**
  * Rate limiter to prevent excessive message sending.
@@ -26,7 +26,8 @@ const handleValidationErrors = (
 ): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    res.status(400).json({ success: false, errors: errors.array() });
+    return; // Ensure we exit the function early
   }
   next();
 };
@@ -47,23 +48,25 @@ router.post(
     }),
   ],
   handleValidationErrors,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { goalId } = req.params;
 
     // Validate goalId format
     if (!goalId.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(400).json({ success: false, msg: "Invalid goal ID" });
+      res.status(400).json({ success: false, msg: "Invalid goal ID" });
+      return;
     }
 
     try {
-      await goalMessageController.sendGoalMessage(req, res);
+      await goalMessageController.sendGoalMessage(req, res, next); // Added next
+      res.status(201).json({ success: true, msg: "Message sent successfully." }); // Response message
     } catch (error) {
       logger.error(`Error sending goal message: ${(error as Error).message}`, {
         error,
         goalId,
         userId: req.user?.id,
       });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(error); // Forward the error to middleware
     }
   }
 );
@@ -76,25 +79,32 @@ router.post(
 router.get(
   "/:goalId/messages",
   authMiddleware,
-  async (req: Request, res: Response) => {
+  async (
+    req: Request<{ goalId: string }>, // Explicitly define the 'goalId' parameter
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     const { goalId } = req.params;
 
     // Validate goalId format
     if (!goalId.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(400).json({ success: false, msg: "Invalid goal ID" });
+      res.status(400).json({ success: false, msg: "Invalid goal ID" });
+      return; // Ensure early exit
     }
 
     try {
-      await goalMessageController.getGoalMessages(req, res);
+      const messages = await goalMessageController.getGoalMessages(req, res, next); // Pass 'next'
+      res.status(200).json({ success: true, data: messages }); // Return fetched messages
     } catch (error) {
       logger.error(`Error fetching goal messages: ${(error as Error).message}`, {
         error,
         goalId,
         userId: req.user?.id,
       });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(error); // Forward the error to middleware
     }
   }
 );
+
 
 export default router;

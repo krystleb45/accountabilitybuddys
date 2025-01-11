@@ -1,5 +1,5 @@
-import { Response, NextFunction } from "express";
-import AuditTrail from "../models/AuditTrail"; // Ensure this model is defined and implemented correctly
+import { Request, Response, NextFunction } from "express";
+import AuditTrail from "../models/AuditLog"; // Ensure this model is defined and implemented correctly
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import { createError } from "../middleware/errorHandler";
@@ -10,7 +10,7 @@ import sanitize from "mongo-sanitize";
  */
 export const logAuditTrail = catchAsync(
   async (
-    req: CustomRequest<{}, any, { action: string; details?: string }>,
+    req: Request<{}, any, { action: string; details?: string }>,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
@@ -44,7 +44,7 @@ export const logAuditTrail = catchAsync(
  */
 export const getAuditTrails = catchAsync(
   async (
-    _req: CustomRequest,
+    _req: Request<{}, {}, {}, {}>,
     res: Response
   ): Promise<void> => {
     const trails = await AuditTrail.find().sort({ createdAt: -1 });

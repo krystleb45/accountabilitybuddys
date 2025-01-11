@@ -1,98 +1,134 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
-import sanitize from "mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware";
 import * as partnerController from "../controllers/partnerController";
 import logger from "../utils/winstonLogger"; // Use your logger here
 
-const router = express.Router();
+const router: Router = express.Router();
 
+/**
+ * Rate Limiter to prevent abuse
+ */
+const rateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit to 10 requests per window
+  message: {
+    success: false,
+    message: "Too many requests. Please try again later.",
+  },
+});
+
+/**
+ * Validation for Partner Notifications
+ */
 const validatePartnerInput = [
-  check("partnerId", "Partner ID is required and must be a valid Mongo ID").notEmpty().isMongoId(),
+  check("partnerId", "Partner ID is required and must be a valid Mongo ID")
+    .notEmpty()
+    .isMongoId(),
   check("goal", "Goal title is required").notEmpty(),
   check("milestone", "Milestone title is required").notEmpty(),
 ];
 
+/**
+ * Validation for Adding a Partner
+ */
 const validateAddPartnerInput = [
-  check("partnerId", "Partner ID is required and must be a valid Mongo ID").notEmpty().isMongoId(),
-  check("userId", "User ID is required and must be a valid Mongo ID").notEmpty().isMongoId(),
+  check("partnerId", "Partner ID is required and must be a valid Mongo ID")
+    .notEmpty()
+    .isMongoId(),
+  check("userId", "User ID is required and must be a valid Mongo ID")
+    .notEmpty()
+    .isMongoId(),
 ];
 
-const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
+/**
+ * Handle Validation Errors
+ */
+const handleValidationErrors = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    res.status(400).json({ success: false, errors: errors.array() });
+    return; // Exit early if validation fails
   }
   next();
 };
 
-const rateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // Limit to 10 requests per window
-  message: "Too many requests. Please try again later.",
-});
-
+/**
+ * @route   POST /partner/notify
+ * @desc    Notify partner about a goal milestone
+ * @access  Private
+ */
 router.post(
   "/notify",
   authMiddleware,
   rateLimiter,
   validatePartnerInput,
   handleValidationErrors,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { partnerId, goal, milestone } = sanitize(req.body);
+      // Call the controller function with req, res, and next
+      await partnerController.notifyPartner(req, res, next); // Pass 3 arguments directly
 
-      await partnerController.notifyPartner(req.user.id, partnerId, goal, milestone);
-
-      res.status(200).json({ success: true, message: "Partner notified successfully" });
+      // Success response is already handled in the controller
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
       logger.error(`Error notifying partner: ${errorMessage}`);
-      res.status(500).json({ success: false, message: "Server error", error: errorMessage });
+      next(err); // Forward error to middleware
     }
   }
 );
 
+
+/**
+ * @route   POST /partner/add
+ * @desc    Add a partner and send a notification
+ * @access  Private
+ */
 router.post(
   "/add",
   authMiddleware,
   rateLimiter,
   validateAddPartnerInput,
   handleValidationErrors,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { partnerId, userId } = sanitize(req.body);
-
-      await partnerController.addPartnerNotification(req.user.id, partnerId, userId);
-
-      res.status(200).json({ success: true, message: "Partner added and notified successfully" });
+      // Call the controller function with req, res, and next
+      await partnerController.addPartnerNotification(req, res, next); // Pass 3 arguments directly
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
       logger.error(`Error adding partner: ${errorMessage}`);
-      res.status(500).json({ success: false, message: "Server error", error: errorMessage });
+      next(err); // Forward error to middleware
     }
   }
 );
 
+
+/**
+ * @route   GET /partner/notifications
+ * @desc    Get partner notifications
+ * @access  Private
+ */
 router.get(
   "/notifications",
   authMiddleware,
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const notifications = await partnerController.getPartnerNotifications(req.user.id);
-
-      if (!notifications || notifications.length === 0) {
-        return res.status(404).json({ success: false, message: "No partner notifications found" });
-      }
-
-      res.status(200).json({ success: true, notifications });
+      // Pass req, res, and next to the controller function
+      await partnerController.getPartnerNotifications(req, res, next); // Fixed argument mismatch
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
-      logger.error(`Error fetching notifications: ${errorMessage}`);
-      res.status(500).json({ success: false, message: "Server error", error: errorMessage });
+      logger.error(`Error fetching partner notifications: ${errorMessage}`, {
+        userId: req.user?.id,
+      });
+      next(err); // Forward error to middleware
     }
   }
 );
+
 
 export default router;

@@ -1,14 +1,14 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Router, Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 import sanitize from "mongo-sanitize";
 import rateLimit from "express-rate-limit";
-import authMiddleware from "../middleware/authMiddleware"; // Corrected middleware import path
-import checkSubscription from "../middleware/checkSubscription"; // Corrected subscription middleware import path
-import * as groupController from "../controllers/groupController"; // Corrected controller import path
-import Group from "../models/Group"; // Corrected model import path
-import logger from "../utils/winstonLogger"; // Added logger utility
+import authMiddleware from "../middleware/authMiddleware";
+import checkSubscription from "../middleware/checkSubscription";
+import * as groupController from "../controllers/groupController";
 
-const router = express.Router();
+import logger from "../utils/winstonLogger";
+
+const router: Router = express.Router();
 
 /**
  * Rate limiter to prevent abuse of group-related endpoints.
@@ -29,7 +29,8 @@ const handleValidationErrors = (
 ): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    res.status(400).json({ success: false, errors: errors.array() });
+    return;
   }
   next();
 };
@@ -46,29 +47,22 @@ router.post(
   groupLimiter,
   [
     check("name", "Group name is required").notEmpty(),
-    check("name", "Group name must not exceed 100 characters").isLength({
-      max: 100,
-    }),
+    check("name", "Group name must not exceed 100 characters").isLength({ max: 100 }),
     check("interests", "Group interests must be an array").isArray(),
   ],
   handleValidationErrors,
-  async (req: Request, res: Response) => {
-    const { name, interests } = sanitize(req.body);
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    sanitize(req.body);
 
     try {
-      const group = new Group({
-        name,
-        interests,
-        createdBy: req.user.id,
-      });
-      await group.save();
+      const group = await groupController.createGroup(req, res, next); // Use controller function
       res.status(201).json({ success: true, group });
     } catch (err) {
       logger.error("Error creating group", {
         error: err,
-        userId: req.user.id,
+        userId: req.user?.id,
       });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(err); // Forward error to middleware
     }
   }
 );
@@ -84,31 +78,19 @@ router.post(
   groupLimiter,
   [check("groupId", "Group ID is required").notEmpty().isMongoId()],
   handleValidationErrors,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { groupId } = sanitize(req.body);
 
     try {
-      const group = await Group.findById(groupId);
-      if (!group) {
-        return res.status(404).json({ success: false, msg: "Group not found" });
-      }
-
-      if (group.members.includes(req.user.id)) {
-        return res
-          .status(400)
-          .json({ success: false, msg: "You are already a member of this group" });
-      }
-
-      group.members.push(req.user.id);
-      await group.save();
-      res.json({ success: true, msg: "Joined the group successfully", group });
+      const result = await groupController.joinGroup(req, res, next);
+      res.json({ success: true, msg: "Joined the group successfully", result });
     } catch (err) {
       logger.error("Error joining group", {
         error: err,
         groupId,
-        userId: req.user.id,
+        userId: req.user?.id,
       });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(err);
     }
   }
 );
@@ -123,27 +105,19 @@ router.post(
   authMiddleware,
   [check("groupId", "Group ID is required").notEmpty().isMongoId()],
   handleValidationErrors,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { groupId } = sanitize(req.body);
 
     try {
-      const group = await Group.findById(groupId);
-      if (!group) {
-        return res.status(404).json({ success: false, msg: "Group not found" });
-      }
-
-      group.members = group.members.filter(
-        (member) => member.toString() !== req.user.id
-      );
-      await group.save();
-      res.json({ success: true, msg: "Left the group successfully" });
+      const result = await groupController.leaveGroup(req, res, next);
+      res.json({ success: true, msg: "Left the group successfully", result });
     } catch (err) {
       logger.error("Error leaving group", {
         error: err,
         groupId,
-        userId: req.user.id,
+        userId: req.user?.id,
       });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(err);
     }
   }
 );
@@ -157,16 +131,16 @@ router.get(
   "/my-groups",
   authMiddleware,
   checkSubscription("basic"),
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const groups = await groupController.getUserGroups(req.user.id);
+      const groups = await groupController.getUserGroups(req, res, next);
       res.json({ success: true, groups });
     } catch (err) {
       logger.error("Error fetching user groups", {
         error: err,
-        userId: req.user.id,
+        userId: req.user?.id,
       });
-      res.status(500).json({ success: false, msg: "Server error" });
+      next(err);
     }
   }
 );

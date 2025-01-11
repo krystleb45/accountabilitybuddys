@@ -1,10 +1,9 @@
 import nodemailer from "nodemailer";
 import Notification from "../models/Notification";
-import LoggingService from "./LoggingService"; // For logging errors and info
-import client from "../config/twilioConfig"; // Twilio client for SMS
+import LoggingService from "./LoggingService";
+// import client from "../config/twilioConfig"; // Uncomment if Twilio is being used
 import firebaseAdmin from "../config/firebaseConfig"; // Firebase Admin SDK for push notifications
 
-// Setup email transporter (reusable)
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || "smtp.gmail.com",
   port: Number(process.env.EMAIL_PORT) || 587,
@@ -24,13 +23,6 @@ interface EmailOptions {
 }
 
 const NotificationService = {
-  /**
-   * Send Email Notification
-   * @param {string} to - Recipient's email address
-   * @param {string} subject - Subject of the email
-   * @param {string} text - Email body content
-   * @param {EmailOptions} [options] - Optional email configurations (e.g., attachments, HTML content)
-   */
   sendEmail: async (
     to: string,
     subject: string,
@@ -60,11 +52,6 @@ const NotificationService = {
     }
   },
 
-  /**
-   * Send In-App Notification
-   * @param {string} userId - ID of the user to receive the notification
-   * @param {string} message - Notification message content
-   */
   sendInAppNotification: async (
     userId: string,
     message: string,
@@ -74,7 +61,7 @@ const NotificationService = {
         userId,
         message,
         date: new Date(),
-        read: false, // Mark as unread by default
+        read: false,
       });
       await notification.save();
       LoggingService.logInfo(`In-app notification sent to user: ${userId}`);
@@ -90,11 +77,8 @@ const NotificationService = {
     }
   },
 
-  /**
-   * Send SMS Notification using Twilio
-   * @param {string} to - Recipient's phone number
-   * @param {string} message - SMS message content
-   */
+  // Uncomment if Twilio is used
+  /*
   sendSMS: async (to: string, message: string): Promise<void> => {
     try {
       await client.messages.create({
@@ -114,12 +98,8 @@ const NotificationService = {
       throw new Error("Failed to send SMS notification");
     }
   },
+  */
 
-  /**
-   * Send Push Notification
-   * @param {string} deviceToken - Device token for the push notification
-   * @param {string} message - Push notification message content
-   */
   sendPushNotification: async (
     deviceToken: string,
     message: string,
@@ -146,38 +126,6 @@ const NotificationService = {
         { deviceToken, message },
       );
       throw new Error("Failed to send push notification");
-    }
-  },
-
-  /**
-   * Send Batch Notifications (Multiple Users)
-   * @param {string[]} userIds - Array of user IDs to receive the notification
-   * @param {string} message - Notification message content
-   */
-  sendBatchInAppNotifications: async (
-    userIds: string[],
-    message: string,
-  ): Promise<void> => {
-    try {
-      const notifications = userIds.map((userId) => ({
-        userId,
-        message,
-        date: new Date(),
-        read: false,
-      }));
-      await Notification.insertMany(notifications);
-      LoggingService.logInfo(
-        `Batch in-app notifications sent to users: ${userIds.join(", ")}`,
-      );
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      LoggingService.logError(
-        "Error sending batch in-app notifications",
-        new Error(errorMessage),
-        { userIds },
-      );
-      throw new Error("Failed to send batch in-app notifications");
     }
   },
 };

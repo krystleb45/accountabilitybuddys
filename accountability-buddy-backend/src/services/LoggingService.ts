@@ -120,6 +120,20 @@ const LoggingService = {
       environment: process.env.NODE_ENV || "development",
     });
   },
+
+  /**
+   * Log contextual information for troubleshooting
+   * @param {string} message - The message to log
+   * @param {Metadata} context - Contextual information to include
+   */
+  logContext: (message: string, context: Metadata): void => {
+    logger.info({
+      message,
+      ...sanitizeMetadata(context),
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || "development",
+    });
+  },
 };
 
 /**
@@ -128,14 +142,11 @@ const LoggingService = {
  * @returns Sanitized metadata
  */
 function sanitizeMetadata(metadata: Metadata): Metadata {
-  const { message, ...rest } = metadata;
-  // Explicitly acknowledge `message` to avoid linter errors
-  void message; // Indicates that `message` is intentionally unused
+  const { message, timestamp, ...rest } = metadata;
+  // Explicitly ignore `message` and `timestamp` to avoid overwriting base keys
+  void message;
+  void timestamp;
   return rest;
 }
-
-
-
-
 
 export default LoggingService;

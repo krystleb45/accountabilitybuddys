@@ -11,45 +11,42 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "resolveJsonModule": true,
-
-    // Updated type roots for better resolution
+    "allowSyntheticDefaultImports": true,
     "typeRoots": [
-      "./node_modules/@types", // Default global types
-      "./@types", // Global custom types outside src
-      "./src/types" // Project-specific types inside src
+      "./node_modules/@types",
+      "./src/types"
     ],
-
-    // Explicitly include types
-    "types": ["node", "express"],
-
-    // Additional options for better debugging and enforcement
-    "allowJs": false,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
+    "types": [
+      "node",
+      "express",
+      "cors",
+      "jsonwebtoken"
+    ],
     "strictPropertyInitialization": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "isolatedModules": true, // Ensure each file is treated as a separate module
-
-    // Compatibility options
-    "allowSyntheticDefaultImports": true,
-    "incremental": true // Enable incremental builds
+    "isolatedModules": true,
+    "allowJs": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "incremental": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true
   },
   "include": [
-    "src/**/*", // Include all source files
-    "types/**/*.d.ts", // Include custom types folder inside src
-    "@types/**/*.d.ts" // Include types from @types directory outside src
+    "src/**/*",
+    "./src/types/**/*.d.ts"
   ],
   "exclude": [
-    "node_modules", // Exclude node_modules for performance
-    "dist", // Exclude compiled output folder
-    "**/*.test.ts", // Exclude test files
-    "**/*.spec.ts", // Exclude spec files
-    ".vscode", // Exclude editor-specific files
-    ".env", // Exclude environment variable files
-    "coverage" // Exclude coverage output folder
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    ".vscode",
+    ".env",
+    "coverage"
   ]
 }

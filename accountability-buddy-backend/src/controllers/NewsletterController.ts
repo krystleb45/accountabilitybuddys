@@ -1,96 +1,113 @@
 import { Request, Response, NextFunction } from "express";
 import crypto from "crypto";
-import Newsletter from "../models/Newsletter";
-import logger from "../utils/winstonLogger";
+import Newsletter from "../models/Newsletter"; // Assuming Newsletter model exists
+import logger from "../utils/winstonLogger"; // Logger utility
+import sendResponse from "../utils/sendResponse"; // Response utility
+import catchAsync from "../utils/catchAsync"; // Async error handler
 
-// Subscribe to the newsletter
-export const signupNewsletter = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
+/**
+ * @desc    Subscribe to the newsletter
+ * @route   POST /api/newsletter/signup
+ * @access  Public
+ */
+export const signupNewsletter = catchAsync(
+  async (
+    req: Request<{}, {}, { email: string }>, // Explicit request body type
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
     const { email } = req.body;
 
-    if (!email) {
-      res.status(400).json({ success: false, message: "Email is required." });
+    // Validate email
+    if (!email || !email.trim()) {
+      sendResponse(res, 400, false, "Email is required.");
       return;
     }
 
-    const subscriber = await Newsletter.findOrCreate(email);
+    // Check if email already exists
+    let subscriber = await Newsletter.findOne({ email });
+    if (subscriber && subscriber.status === "subscribed") {
+      sendResponse(res, 400, false, "Email is already subscribed.");
+      return;
+    }
 
-    if (subscriber.status === "unsubscribed") {
+    // If email exists but unsubscribed, resubscribe
+    if (subscriber && subscriber.status === "unsubscribed") {
       subscriber.status = "subscribed";
       subscriber.subscribedAt = new Date();
       subscriber.unsubscribeToken = crypto.randomBytes(16).toString("hex");
       await subscriber.save();
+    } else {
+      // Create a new subscriber
+      subscriber = await Newsletter.create({
+        email,
+        status: "subscribed",
+        subscribedAt: new Date(),
+        unsubscribeToken: crypto.randomBytes(16).toString("hex"),
+      });
     }
 
-    res.status(200).json({
-      success: true,
-      message: "You have successfully subscribed to the newsletter.",
-    });
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-    logger.error(`Newsletter subscription error: ${errorMessage}`);
-    next(error);
+    logger.info(`Newsletter subscription: ${email}`);
+    sendResponse(res, 201, true, "Successfully subscribed to the newsletter.");
   }
-};
+);
 
-// Unsubscribe from the newsletter
-export const unsubscribeNewsletter = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
+/**
+ * @desc    Unsubscribe from the newsletter
+ * @route   GET /api/newsletter/unsubscribe
+ * @access  Public
+ */
+export const unsubscribeNewsletter = catchAsync(
+  async (
+    req: Request<{}, {}, {}, { token: string }>, // Explicit query type
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
     const { token } = req.query;
 
+    // Validate token
     if (!token || typeof token !== "string") {
-      res.status(400).json({ success: false, message: "Invalid or missing token." });
+      sendResponse(res, 400, false, "Invalid or missing token.");
       return;
     }
 
+    // Find subscriber by unsubscribe token
     const subscriber = await Newsletter.findOne({ unsubscribeToken: token });
-
     if (!subscriber) {
-      res.status(404).json({ success: false, message: "Subscriber not found." });
+      sendResponse(res, 404, false, "Subscriber not found.");
       return;
     }
 
+    // Update status to unsubscribed
     subscriber.status = "unsubscribed";
     subscriber.unsubscribeToken = undefined;
     await subscriber.save();
 
-    res.status(200).json({
-      success: true,
-      message: "You have successfully unsubscribed from the newsletter.",
-    });
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-    logger.error(`Newsletter unsubscription error: ${errorMessage}`);
-    next(error);
+    logger.info(`Newsletter unsubscription: ${subscriber.email}`);
+    sendResponse(res, 200, true, "Successfully unsubscribed from the newsletter.");
   }
-};
-
-// Get all subscribers (Admin only)
-export const getSubscribers = async (
-  _req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
+);
+/**
+ * @desc    Get all subscribers (Admin only)
+ * @route   GET /api/newsletter/subscribers
+ * @access  Private (Admin)
+ */
+export const getSubscribers = catchAsync(
+  async (
+    _req: Request<{}, {}, {}, {}>, // Explicitly define type for Request
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
     const subscribers = await Newsletter.find({ status: "subscribed" });
 
     if (!subscribers || subscribers.length === 0) {
-      res.status(404).json({ success: false, message: "No subscribers found." });
+      sendResponse(res, 404, false, "No subscribers found.");
       return;
     }
 
-    res.status(200).json({ success: true, data: subscribers });
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-    logger.error(`Error fetching subscribers: ${errorMessage}`);
-    next(error);
+    sendResponse(res, 200, true, "Subscribers fetched successfully.", {
+      subscribers,
+    });
   }
-};
+);
+

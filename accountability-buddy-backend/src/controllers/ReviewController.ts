@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import User from "../models/User";
 import Review from "../models/Review"; // Assuming Review model exists
 import catchAsync from "../utils/catchAsync";
@@ -11,7 +11,7 @@ import sendResponse from "../utils/sendResponse";
  */
 export const submitReview = catchAsync(
   async (
-    req: CustomRequest<{}, any, { userId: string; rating: number; content: string }>,
+    req: Request<{}, any, { userId: string; rating: number; content: string }>,
     res: Response
   ): Promise<void> => {
     const { userId, rating, content } = req.body;
@@ -73,7 +73,7 @@ export const submitReview = catchAsync(
  */
 export const getUserReviews = catchAsync(
   async (
-    req: CustomRequest<{ userId: string }>,
+    req: Request<{ userId: string }>,
     res: Response
   ): Promise<void> => {
     const { userId } = req.params;
@@ -102,7 +102,7 @@ export const getUserReviews = catchAsync(
  */
 export const deleteReview = catchAsync(
   async (
-    req: CustomRequest<{ reviewId: string }>,
+    req: Request<{ reviewId: string }>,
     res: Response
   ): Promise<void> => {
     const { reviewId } = req.params;

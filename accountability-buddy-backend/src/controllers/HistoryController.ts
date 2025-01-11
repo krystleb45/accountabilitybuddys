@@ -1,57 +1,79 @@
 import { Request, Response, NextFunction } from "express";
 import History from "../models/History"; // Ensure you have a History model
+import catchAsync from "../utils/catchAsync"; // Import async handler
+import sendResponse from "../utils/sendResponse"; // Import utility for responses
+import { createError } from "../middleware/errorHandler"; // Custom error handler
 
 /**
- * Get all history records
+ * @desc    Get all history records for a user
+ * @route   GET /api/history
+ * @access  Private
  */
-export const getAllHistory = async (
-  _req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
-    const histories = await History.find().sort({ createdAt: -1 }); // Sort by newest first
-    res.status(200).json({ success: true, data: histories });
-  } catch (error) {
-    next(error);
+export const getAllHistory = catchAsync(
+  async (
+    req: Request<{}, {}, {}, {}>, // Explicitly annotate the type
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    const userId = (req as any).user?.id; // Extract userId from request
+
+    if (!userId) {
+      throw createError("Unauthorized access", 401); // Use centralized error handling
+    }
+
+    const histories = await History.find({ userId }).sort({ createdAt: -1 }); // Filter by userId and sort
+
+    sendResponse(res, 200, true, "User history fetched successfully", histories); // Send response
   }
-};
+);
 
 /**
- * Get a specific history record by ID
+ * @desc    Get a specific history record by ID
+ * @route   GET /api/history/:id
+ * @access  Private
  */
-export const getHistoryById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
+export const getHistoryById = catchAsync(
+  async (
+    req: Request<{ id: string }>, // Explicitly annotate the type for 'id'
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
     const { id } = req.params;
+
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      throw createError("Invalid history ID format", 400); // Validate ID format
+    }
+
     const history = await History.findById(id);
 
     if (!history) {
-      res.status(404).json({ success: false, message: "History record not found" });
-      return; // Ensure function ends here
+      throw createError("History record not found", 404);
     }
 
-    res.status(200).json({ success: true, data: history });
-  } catch (error) {
-    next(error);
+    sendResponse(res, 200, true, "History record fetched successfully", history);
   }
-};
+);
 
 /**
- * Create a new history record
+ * @desc    Create a new history record
+ * @route   POST /api/history
+ * @access  Private
  */
-export const createHistory = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
+export const createHistory = catchAsync(
+  async (
+    req: Request<{}, {}, { entity: string; action: string; details?: string }>, // Explicit types for body
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    const userId = (req as any).user?.id; // Ensure user is logged in
     const { entity, action, details } = req.body;
 
+    if (!userId) {
+      throw createError("Unauthorized access", 401);
+    }
+
     const newHistory = new History({
+      userId,
       entity,
       action,
       details,
@@ -59,34 +81,57 @@ export const createHistory = async (
     });
 
     const savedHistory = await newHistory.save();
-    res.status(201).json({ success: true, data: savedHistory });
-  } catch (error) {
-    next(error);
+
+    sendResponse(res, 201, true, "History record created successfully", savedHistory);
   }
-};
+);
 
 /**
- * Delete a specific history record by ID
+ * @desc    Delete a specific history record by ID
+ * @route   DELETE /api/history/:id
+ * @access  Private
  */
-export const deleteHistoryById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
+export const deleteHistoryById = catchAsync(
+  async (
+    req: Request<{ id: string }>, // Explicitly annotate 'id' in params
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
     const { id } = req.params;
+
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      throw createError("Invalid history ID format", 400);
+    }
+
     const deletedHistory = await History.findByIdAndDelete(id);
 
     if (!deletedHistory) {
-      res.status(404).json({ success: false, message: "History record not found" });
-      return; // Ensure function ends here
+      throw createError("History record not found", 404);
     }
 
-    res.status(200).json({
-      success: true,
-      message: "History record deleted successfully",
-    });
-  } catch (error) {
-    next(error);
+    sendResponse(res, 200, true, "History record deleted successfully");
   }
-};
+);
+
+/**
+ * @desc    Clear all history records for a user
+ * @route   DELETE /api/history/clear
+ * @access  Private
+ */
+export const clearHistory = catchAsync(
+  async (
+    req: Request<{}, {}, {}, {}>, // Explicitly annotate empty params
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    const userId = (req as any).user?.id; // Extract userId
+
+    if (!userId) {
+      throw createError("Unauthorized access", 401);
+    }
+
+    const result = await History.deleteMany({ userId }); // Delete all user's history
+
+    sendResponse(res, 200, true, "History cleared successfully", result);
+  }
+);

@@ -29,9 +29,14 @@ const FileUploadService = {
       }
 
       const uniqueFileName = `${uuidv4()}-${file.originalname}`;
+      const bucketName = process.env.S3_BUCKET;
+
+      if (!bucketName) {
+        throw new Error("S3_BUCKET environment variable is not defined");
+      }
 
       const params: AWS.S3.PutObjectRequest = {
-        Bucket: process.env.S3_BUCKET as string,
+        Bucket: bucketName,
         Key: uniqueFileName,
         Body: file.buffer,
         ContentType: file.mimetype,
@@ -49,7 +54,8 @@ const FileUploadService = {
         key: data.Key,
       };
     } catch (error: unknown) {
-      logger.error(`Error uploading file to S3: ${(error as Error).message}`);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      logger.error(`Error uploading file to S3: ${errorMessage}`);
       throw new Error("File upload failed");
     }
   },
@@ -65,8 +71,14 @@ const FileUploadService = {
         throw new Error("File key is required for deletion");
       }
 
+      const bucketName = process.env.S3_BUCKET;
+
+      if (!bucketName) {
+        throw new Error("S3_BUCKET environment variable is not defined");
+      }
+
       const params: AWS.S3.DeleteObjectRequest = {
-        Bucket: process.env.S3_BUCKET as string,
+        Bucket: bucketName,
         Key: fileKey,
       };
 
@@ -76,7 +88,8 @@ const FileUploadService = {
 
       return { success: true, message: "File deleted successfully" };
     } catch (error: unknown) {
-      logger.error(`Error deleting file from S3: ${(error as Error).message}`);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      logger.error(`Error deleting file from S3: ${errorMessage}`);
       throw new Error("File deletion failed");
     }
   },
@@ -93,8 +106,14 @@ const FileUploadService = {
         throw new Error("File key is required to generate a signed URL");
       }
 
+      const bucketName = process.env.S3_BUCKET;
+
+      if (!bucketName) {
+        throw new Error("S3_BUCKET environment variable is not defined");
+      }
+
       const params: AWS.S3.GetObjectRequest & { Expires: number } = {
-        Bucket: process.env.S3_BUCKET as string,
+        Bucket: bucketName,
         Key: fileKey,
         Expires: expires,
       };
@@ -105,7 +124,8 @@ const FileUploadService = {
 
       return signedUrl;
     } catch (error: unknown) {
-      logger.error(`Error generating signed URL for file: ${(error as Error).message}`);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      logger.error(`Error generating signed URL for file: ${errorMessage}`);
       throw new Error("Failed to generate signed URL");
     }
   },

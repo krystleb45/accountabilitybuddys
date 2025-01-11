@@ -101,7 +101,61 @@ export const uploadMultipleFiles = catchAsync(async (
 
   sendResponse(res, 200, true, "Files uploaded successfully", { fileUrls });
 });
+// Save file metadata
+export const saveFileMetadata = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { originalname, mimetype, size, filename } = req.file as Express.Multer.File;
 
+    // Example logic: save file info to the database (or log it for now)
+    const fileInfo = {
+      filename,
+      originalname,
+      mimetype,
+      size,
+      uploadedBy: req.user?.id, // Assuming req.user.id exists via authMiddleware
+    };
+
+    logger.info(`File uploaded successfully: ${JSON.stringify(fileInfo)}`);
+    sendResponse(res, 201, true, "File uploaded successfully", fileInfo);
+  } catch (error) {
+    logger.error(`Error saving file metadata: ${(error as Error).message}`);
+    next(error); // Pass error to middleware
+  }
+};
+// Download file function
+export const downloadFile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { fileId } = req.params;
+
+    // Simulate fetching file info based on ID (replace with DB call if needed)
+    const filePath = path.join(__dirname, "../../uploads/", `${fileId}.pdf`);
+
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      sendResponse(res, 404, false, "File not found");
+      return;
+    }
+
+    // Set headers for download
+    res.download(filePath, (err) => {
+      if (err) {
+        logger.error(`Error downloading file: ${err.message}`);
+        next(err); // Pass error to middleware
+      }
+    });
+  } catch (error) {
+    logger.error(`Error processing file download: ${(error as Error).message}`);
+    next(error);
+  }
+};
 /**
  * @desc    Delete a file
  * @route   DELETE /api/uploads/:filename

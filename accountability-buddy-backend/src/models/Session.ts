@@ -12,7 +12,11 @@ export interface ISession extends Document {
   expiresAt: Date;
   createdAt: Date;
   updatedAt: Date;
-  isExpired: boolean; // Virtual field
+
+  // Virtual field
+  isExpired: boolean;
+
+  // Methods
   invalidateSession: () => Promise<void>;
 }
 
@@ -74,45 +78,39 @@ const SessionSchema = new Schema<ISession>(
 // Index for optimized queries by user and expiration date
 SessionSchema.index({ user: 1, expiresAt: 1 });
 
-// Pre-save hook to sanitize fields before saving
+// Middleware: Pre-save hook to trim fields and check expiration
 SessionSchema.pre<ISession>("save", function (next): void {
-  if (this.ipAddress) {
-    this.ipAddress = this.ipAddress.trim();
-  }
-  if (this.device) {
-    this.device = this.device.trim();
-  }
-  if (this.userAgent) {
-    this.userAgent = this.userAgent.trim();
-  }
-  next();
-});
+  if (this.ipAddress) this.ipAddress = this.ipAddress.trim();
+  if (this.device) this.device = this.device.trim();
+  if (this.userAgent) this.userAgent = this.userAgent.trim();
 
-// Method to invalidate the session
-SessionSchema.methods.invalidateSession = async function (): Promise<void> {
-  this.isActive = false;
-  await this.save();
-};
-
-// Static method to invalidate all sessions for a user
-SessionSchema.statics.invalidateUserSessions = async function (
-  userId: Types.ObjectId
-): Promise<void> {
-  await this.updateMany({ user: userId, isActive: true }, { isActive: false });
-};
-
-// Middleware to check if the session has expired
-SessionSchema.pre<ISession>("save", function (next): void {
+  // Deactivate expired sessions
   if (this.expiresAt.getTime() <= Date.now()) {
     this.isActive = false;
   }
   next();
 });
 
-// Virtual to check if the session is expired
+// Virtual: Check if the session is expired
 SessionSchema.virtual("isExpired").get(function (): boolean {
   return this.expiresAt.getTime() <= Date.now();
 });
+
+// Method: Invalidate this session
+SessionSchema.methods.invalidateSession = async function (): Promise<void> {
+  this.isActive = false;
+  await this.save();
+};
+
+// Static Method: Invalidate all sessions for a user
+SessionSchema.statics.invalidateUserSessions = async function (
+  userId: Types.ObjectId
+): Promise<void> {
+  await this.updateMany(
+    { user: userId, isActive: true },
+    { isActive: false }
+  );
+};
 
 // Export the Session model
 export const Session: ISessionModel = mongoose.model<ISession, ISessionModel>(

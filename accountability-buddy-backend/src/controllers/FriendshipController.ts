@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Response } from "express";
+import { Request, Response } from "express";
 import FeedPost, { IFeedPost } from "../models/FeedPost";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -12,7 +12,7 @@ import logger from "../utils/winstonLogger";
  */
 export const createPost = catchAsync(
   async (
-    req: CustomRequest<{}, any, { goalId: string; milestone: string; message: string }>,
+    req: Request<{}, any, { goalId: string; milestone: string; message: string }>,
     res: Response
   ): Promise<void> => {
     const { goalId, milestone, message } = req.body;
@@ -51,7 +51,7 @@ export const createPost = catchAsync(
  */
 export const addLike = catchAsync(
   async (
-    req: CustomRequest<{ id: string }>,
+    req: Request<{ id: string }>,
     res: Response
   ): Promise<void> => {
     const postId = req.params.id;
@@ -89,7 +89,7 @@ export const addLike = catchAsync(
  */
 export const addComment = catchAsync(
   async (
-    req: CustomRequest<{ id: string }, any, { text: string }>,
+    req: Request<{ id: string }, any, { text: string }>,
     res: Response
   ): Promise<void> => {
     const postId = req.params.id;
@@ -131,7 +131,7 @@ export const addComment = catchAsync(
  */
 export const removeComment = catchAsync(
   async (
-    req: CustomRequest<{ postId: string; commentId: string }>,
+    req: Request<{ postId: string; commentId: string }>,
     res: Response
   ): Promise<void> => {
     const { postId, commentId } = req.params;

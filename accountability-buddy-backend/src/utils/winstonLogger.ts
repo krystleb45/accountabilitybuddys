@@ -1,65 +1,67 @@
 import { createLogger, format, transports } from "winston";
-import path from "path";
+import * as path from "path";
+import * as fs from "fs";
 import "winston-daily-rotate-file";
 
-// Define log directory (e.g., using an environment variable or default path)
+// Define log directory and level
 const logDir = process.env.LOG_DIR || "logs";
-
-// Define log level from environment variable or default to 'info'
 const logLevel = process.env.LOG_LEVEL || "info";
 
-// Define custom log format
-const customLogFormat = format.printf(
-  ({ timestamp, level, message, stack }) => {
-    return stack
-      ? `${timestamp} [${level}]: ${message} - ${stack}` // Log stack trace if present
-      : `${timestamp} [${level}]: ${message}`;
-  },
-);
+// Ensure log directory exists
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir, { recursive: true });
+}
 
-// Create a Winston logger instance
+// Define log format
+const customLogFormat = format.printf(({ timestamp, level, message, stack }) => {
+  return stack
+    ? `${timestamp} [${level}]: ${message} - ${stack}` // Log stack trace if present
+    : `${timestamp} [${level}]: ${message}`;
+});
+
+// Create the logger instance
 const logger = createLogger({
   level: logLevel,
   format: format.combine(
-    format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), // Standardized timestamp format
-    format.errors({ stack: true }), // Capture stack trace for error logs
+    format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), // Standardized timestamp
+    format.errors({ stack: true }), // Capture stack trace
     customLogFormat,
   ),
   transports: [
-    // Daily rotating file for error logs
+    // Daily rotating error logs
     new transports.DailyRotateFile({
       filename: path.join(logDir, "error-%DATE%.log"),
       datePattern: "YYYY-MM-DD",
       level: "error",
-      maxSize: "5m", // Limit file size to 5MB
-      maxFiles: "14d", // Retain logs for 14 days
-      zippedArchive: true, // Compress rotated logs
+      maxSize: process.env.LOG_MAX_SIZE || "5m",
+      maxFiles: process.env.LOG_MAX_FILES_ERROR || "14d",
+      zippedArchive: true,
     }),
-
-    // Daily rotating file for combined logs
+    // Daily rotating combined logs
     new transports.DailyRotateFile({
       filename: path.join(logDir, "combined-%DATE%.log"),
       datePattern: "YYYY-MM-DD",
-      maxSize: "5m",
-      maxFiles: "30d", // Retain logs for 30 days
+      maxSize: process.env.LOG_MAX_SIZE || "5m",
+      maxFiles: process.env.LOG_MAX_FILES_COMBINED || "30d",
       zippedArchive: true,
     }),
   ],
 });
 
-// Add console transport for non-production environments
+// Add console transport for development environments
 if (process.env.NODE_ENV !== "production") {
   logger.add(
     new transports.Console({
       format: format.combine(
-        format.colorize(), // Colorize console logs
-        format.simple(), // Simplified format for console output
+        format.colorize(),
+        format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        format.simple(),
       ),
     }),
   );
 }
 
-// Handle uncaught exceptions and unhandled rejections
+// Handle uncaught exceptions and rejections
 logger.exceptions.handle(
   new transports.File({ filename: path.join(logDir, "exceptions.log") }),
 );
@@ -68,5 +70,15 @@ logger.rejections.handle(
   new transports.File({ filename: path.join(logDir, "rejections.log") }),
 );
 
-// Export the logger for use in other modules
+// Handle logger errors
+logger.on("error", (err) => {
+  // eslint-disable-next-line no-console
+  console.error("Logger error:", err);
+});
+
+// Flush logs before exiting
+process.on("exit", () => {
+  logger.end();
+});
+
 export default logger;

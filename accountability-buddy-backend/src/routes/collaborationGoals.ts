@@ -1,18 +1,26 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, Router } from "express";
 import { check, validationResult } from "express-validator";
 import rateLimit from "express-rate-limit";
+import mongoose from "mongoose"; // For ObjectId validation
 import CollaborationGoal from "../models/CollaborationGoal";
 import authMiddleware from "../middleware/authMiddleware";
 import catchAsync from "../utils/catchAsync";
 
-const router = express.Router();
+const router: Router = express.Router();
+
+// Utility to validate MongoDB ObjectID
+const isValidObjectId = (id: string): boolean =>
+  mongoose.Types.ObjectId.isValid(id);
 
 // Middleware for validating goal creation inputs
 const validateGoalCreation = [
   check("goalTitle", "Goal title is required").notEmpty(),
   check("description", "Description is required").notEmpty(),
   check("participants", "Participants must be an array").isArray(),
-  check("target", "Target is required and must be a number greater than 0").isInt({ min: 1 }),
+  check(
+    "target",
+    "Target is required and must be a number greater than 0"
+  ).isInt({ min: 1 }),
 ];
 
 // Middleware for progress update validation
@@ -37,19 +45,30 @@ router.post(
   rateLimiter,
   authMiddleware,
   validateGoalCreation,
-  catchAsync(async (req: Request, res: Response) => {
+  catchAsync(async (req: Request, res: Response): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, errors: errors.array() });
+      res.status(400).json({ success: false, errors: errors.array() });
+      return;
     }
 
     const { goalTitle, description, participants, target } = req.body;
 
+    // Validate user authentication
+    const userId = req.user?.id;
+    if (!userId) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+      return;
+    }
+
     const newGoal = new CollaborationGoal({
       goalTitle,
       description,
-      createdBy: req.user?.id,
-      participants: [req.user?.id, ...participants],
+      createdBy: new mongoose.Types.ObjectId(userId), // Explicitly set ObjectId
+      participants: [
+        new mongoose.Types.ObjectId(userId),
+        ...participants.map((p: string) => new mongoose.Types.ObjectId(p)),
+      ],
       target,
     });
 
@@ -68,25 +87,46 @@ router.put(
   rateLimiter,
   authMiddleware,
   validateProgressUpdate,
-  catchAsync(async (req: Request, res: Response) => {
+  catchAsync(async (req: Request, res: Response): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, errors: errors.array() });
+      res.status(400).json({ success: false, errors: errors.array() });
+      return;
     }
 
+    const { id } = req.params;
     const { progress } = req.body;
-    const goal = await CollaborationGoal.findById(req.params.id);
+
+    // Validate user authentication
+    const userId = req.user?.id;
+    if (!userId) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+      return;
+    }
+
+    if (!isValidObjectId(id)) {
+      res.status(400).json({ success: false, message: "Invalid goal ID" });
+      return;
+    }
+
+    const goal = await CollaborationGoal.findById(id);
 
     if (!goal) {
-      return res.status(404).json({ success: false, message: "Goal not found" });
+      res.status(404).json({ success: false, message: "Goal not found" });
+      return;
     }
 
     // Ensure only participants or the creator can update progress
     if (
-      !goal.participants.includes(req.user?.id) &&
-      goal.createdBy.toString() !== req.user?.id
+      !goal.participants.some((p) =>
+        p.equals(new mongoose.Types.ObjectId(userId))
+      ) &&
+      !goal.createdBy.equals(new mongoose.Types.ObjectId(userId))
     ) {
-      return res.status(403).json({ success: false, message: "Not authorized to update this goal" });
+      res
+        .status(403)
+        .json({ success: false, message: "Not authorized to update this goal" });
+      return;
     }
 
     goal.progress = progress;
@@ -105,13 +145,24 @@ router.get(
   "/my-goals",
   rateLimiter,
   authMiddleware,
-  catchAsync(async (req: Request, res: Response) => {
+  catchAsync(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+      return;
+    }
+
     const goals = await CollaborationGoal.find({
-      $or: [{ participants: req.user?.id }, { createdBy: req.user?.id }],
+      $or: [
+        { participants: new mongoose.Types.ObjectId(userId) },
+        { createdBy: new mongoose.Types.ObjectId(userId) },
+      ],
     }).sort({ createdAt: -1 });
 
     if (!goals.length) {
-      return res.status(404).json({ success: false, message: "No collaboration goals found" });
+      res.status(404).json({ success: false, message: "No collaboration goals found" });
+      return;
     }
 
     res.status(200).json({ success: true, goals });
@@ -127,11 +178,13 @@ router.get(
   "/:id",
   rateLimiter,
   authMiddleware,
-  catchAsync(async (req: Request, res: Response) => {
+  catchAsync(async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
+    const userId = req.user?.id;
 
-    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(400).json({ success: false, message: "Invalid goal ID" });
+    if (!isValidObjectId(id)) {
+      res.status(400).json({ success: false, message: "Invalid goal ID" });
+      return;
     }
 
     const goal = await CollaborationGoal.findById(id)
@@ -139,15 +192,19 @@ router.get(
       .populate("createdBy", "username");
 
     if (!goal) {
-      return res.status(404).json({ success: false, message: "Goal not found" });
+      res.status(404).json({ success: false, message: "Goal not found" });
+      return;
     }
 
     // Ensure only participants or the creator can view the goal
     if (
-      !goal.participants.includes(req.user?.id) &&
-      goal.createdBy._id.toString() !== req.user?.id
+      !goal.participants.some((p) =>
+        p.equals(new mongoose.Types.ObjectId(userId))
+      ) &&
+      !goal.createdBy.equals(new mongoose.Types.ObjectId(userId))
     ) {
-      return res.status(403).json({ success: false, message: "Not authorized to view this goal" });
+      res.status(403).json({ success: false, message: "Not authorized to view this goal" });
+      return;
     }
 
     res.status(200).json({ success: true, goal });
