@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import logger from "./winstonLogger"; // Replace with your logger utility if using a different one
 
 /**
@@ -8,7 +8,7 @@ import logger from "./winstonLogger"; // Replace with your logger utility if usi
  * @returns A wrapped function that catches errors and forwards them to `next()`.
  */
 const catchAsync = <T extends Request>(
-  fn: (req: T, res: Response, next: NextFunction) => Promise<void>
+  fn: (req: T, res: Response, next: NextFunction) => Promise<void>,
 ): ((req: T, res: Response, next: NextFunction) => void) => {
   return (req: T, res: Response, next: NextFunction): void => {
     Promise.resolve(fn(req, res, next)).catch((err) => {

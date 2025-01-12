@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define a stricter type for settings if possible, or keep it as a generic key-value pair
 export interface IntegrationSettings {
@@ -48,7 +49,7 @@ const IntegrationSchema = new Schema<IIntegration>(
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields
-  }
+  },
 );
 
 // Indexes for optimized queries
@@ -57,7 +58,7 @@ IntegrationSchema.index({ type: 1 });
 
 // Instance method to toggle the active state of an integration
 IntegrationSchema.methods.toggleActiveState = async function (
-  this: IIntegration
+  this: IIntegration,
 ): Promise<IIntegration> {
   this.isActive = !this.isActive;
   await this.save();
@@ -66,7 +67,7 @@ IntegrationSchema.methods.toggleActiveState = async function (
 
 // Static method to fetch all active integrations for a user
 IntegrationSchema.statics.findActiveIntegrationsByUser = async function (
-  userId: mongoose.Types.ObjectId
+  userId: mongoose.Types.ObjectId,
 ): Promise<IIntegration[]> {
   return this.find({ user: userId, isActive: true });
 };

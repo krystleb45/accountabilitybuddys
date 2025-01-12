@@ -1,4 +1,5 @@
-import mongoose, { Document, Schema, Model, CallbackError } from "mongoose";
+import type { Document, Model, CallbackError } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Interface for Milestones
 interface Milestone {

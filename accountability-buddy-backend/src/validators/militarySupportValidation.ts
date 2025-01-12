@@ -44,7 +44,7 @@ const validateMilitarySupportRequest = [
     .withMessage("Support type is required.")
     .isIn(["peer_support", "resource_suggestion", "general_query"])
     .withMessage(
-      "Support type must be one of: peer_support, resource_suggestion, or general_query."
+      "Support type must be one of: peer_support, resource_suggestion, or general_query.",
     ),
   body("details")
     .optional()

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import AuditTrail from "../models/AuditLog"; // Ensure this model is defined and implemented correctly
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -12,7 +12,7 @@ export const logAuditTrail = catchAsync(
   async (
     req: Request<{}, any, { action: string; details?: string }>,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { action, details } = sanitize(req.body);
@@ -36,7 +36,7 @@ export const logAuditTrail = catchAsync(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -45,7 +45,7 @@ export const logAuditTrail = catchAsync(
 export const getAuditTrails = catchAsync(
   async (
     _req: Request<{}, {}, {}, {}>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const trails = await AuditTrail.find().sort({ createdAt: -1 });
 
@@ -57,5 +57,5 @@ export const getAuditTrails = catchAsync(
     sendResponse(res, 200, true, "Audit trail entries fetched successfully", {
       trails,
     });
-  }
+  },
 );

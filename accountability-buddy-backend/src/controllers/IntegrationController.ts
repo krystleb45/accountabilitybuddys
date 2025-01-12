@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { Integration } from "../models/Integration";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -14,7 +14,7 @@ import { createError } from "../middleware/errorHandler";
 export const createIntegration = catchAsync(
   async (
     req: Request<{}, any, { type: string; settings: object }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { type, settings } = sanitize(req.body);
     const userId = req.user?.id;
@@ -34,7 +34,7 @@ export const createIntegration = catchAsync(
     sendResponse(res, 201, true, "Integration created successfully", {
       integration: newIntegration,
     });
-  }
+  },
 );
 
 /**
@@ -51,7 +51,7 @@ export const getUserIntegrations = catchAsync(
     sendResponse(res, 200, true, "Integrations fetched successfully", {
       integrations,
     });
-  }
+  },
 );
 
 /**
@@ -62,7 +62,7 @@ export const getUserIntegrations = catchAsync(
 export const getIntegrationById = catchAsync(
   async (
     req: Request<{ integrationId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { integrationId } = sanitize(req.params);
     const userId = req.user?.id;
@@ -80,7 +80,7 @@ export const getIntegrationById = catchAsync(
     sendResponse(res, 200, true, "Integration fetched successfully", {
       integration,
     });
-  }
+  },
 );
 
 /**
@@ -91,7 +91,7 @@ export const getIntegrationById = catchAsync(
 export const updateIntegration = catchAsync(
   async (
     req: Request<{ integrationId: string }, any, { settings: object }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { integrationId } = sanitize(req.params);
     const updates = sanitize(req.body);
@@ -112,7 +112,7 @@ export const updateIntegration = catchAsync(
     sendResponse(res, 200, true, "Integration updated successfully", {
       integration,
     });
-  }
+  },
 );
 
 /**
@@ -123,7 +123,7 @@ export const updateIntegration = catchAsync(
 export const deleteIntegration = catchAsync(
   async (
     req: Request<{ integrationId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { integrationId } = sanitize(req.params);
     const userId = req.user?.id;
@@ -139,7 +139,7 @@ export const deleteIntegration = catchAsync(
     }
 
     sendResponse(res, 200, true, "Integration deleted successfully");
-  }
+  },
 );
 
 /**
@@ -150,7 +150,7 @@ export const deleteIntegration = catchAsync(
 export const testIntegration = catchAsync(
   async (
     req: Request<{ integrationId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { integrationId } = sanitize(req.params);
     const userId = req.user?.id;
@@ -179,5 +179,5 @@ export const testIntegration = catchAsync(
       logger.error("Integration error:", { error });
       sendResponse(res, 500, false, "An unknown error occurred");
     }
-  }
+  },
 );

@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document } from "mongoose";
+import type { Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface IMilitaryResource extends Document {
   title: string;
@@ -14,7 +15,7 @@ const MilitaryResourceSchema: Schema = new Schema(
     description: { type: String, trim: true },
     createdAt: { type: Date, default: Date.now },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model<IMilitaryResource>("MilitaryResource", MilitaryResourceSchema);

@@ -1,17 +1,34 @@
 import mongoose from "mongoose";
-import { Request, Response, NextFunction } from "express";
-import FeedPost, { IFeedPost } from "../models/FeedPost";
+import type { Request, Response, NextFunction } from "express";
+import FeedPost from "../models/FeedPost";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import logger from "../utils/winstonLogger";
+import Feedback from "@src/models/Feedback";
 
-// Extended Request type for user property
+// Define the type for the request body
+type CreatePostBody = {
+  goalId: string;
+  milestone?: string;
+  message: string;
+};
+
+type AddCommentBody = {
+  text: string; // The text of the comment
+};
+
+type SubmitFeedbackBody = {
+  text: string; // The text of the comment
+};
+
+// Define a custom type for requests with user information
 interface RequestWithUser extends Request {
   user?: {
     id: string;
     email?: string;
     role: "user" | "admin" | "moderator";
     isAdmin?: boolean;
+    password(currentPassword: any, password: any): unknown; // Include the required `password` method
   };
 }
 
@@ -22,9 +39,9 @@ interface RequestWithUser extends Request {
  */
 export const createPost = catchAsync(
   async (
-    req: RequestWithUser,
+    req: Request<{}, {}, CreatePostBody> & RequestWithUser,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const { goalId, milestone, message } = req.body;
     const userId = req.user?.id;
@@ -52,7 +69,7 @@ export const createPost = catchAsync(
     sendResponse(res, 201, true, "Milestone shared successfully", {
       post: newPost,
     });
-  }
+  },
 );
 
 /**
@@ -62,11 +79,11 @@ export const createPost = catchAsync(
  */
 export const addLike = catchAsync(
   async (
-    req: RequestWithUser,
+    req: Request<{ id: string }> & RequestWithUser,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
-    const postId = req.params.id;
+    const { id: postId } = req.params;
     const userId = req.user?.id;
 
     if (!userId) {
@@ -74,7 +91,7 @@ export const addLike = catchAsync(
       return;
     }
 
-    const post = (await FeedPost.findById(postId)) as IFeedPost | null;
+    const post = await FeedPost.findById(postId);
     if (!post) {
       sendResponse(res, 404, false, "Post not found");
       return;
@@ -91,9 +108,68 @@ export const addLike = catchAsync(
 
     logger.info(`Post liked by user: ${userId}`);
     sendResponse(res, 200, true, "Post liked successfully", { post });
-  }
+  },
+);
+/**
+ * @desc    Get feedback submitted by the authenticated user
+ * @route   GET /api/feedback
+ * @access  Private
+ */
+export const getUserFeedback = catchAsync(
+  async (
+    req: RequestWithUser,
+    res: Response,
+    _next: NextFunction,
+  ): Promise<void> => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      sendResponse(res, 401, false, "Unauthorized");
+      return;
+    }
+
+    const feedback = await Feedback.find({ user: userId }).sort({
+      createdAt: -1,
+    });
+
+    logger.info(`Feedback retrieved for user: ${userId}`);
+    sendResponse(res, 200, true, "User feedback retrieved successfully", {
+      feedback,
+    });
+  },
 );
 
+/**
+ * @desc    Delete feedback by ID
+ * @route   DELETE /api/feedback/:feedbackId
+ * @access  Private
+ */
+export const deleteFeedback = catchAsync(
+  async (
+    req: Request<{ feedbackId: string }> & RequestWithUser,
+    res: Response,
+    _next: NextFunction,
+  ): Promise<void> => {
+    const { feedbackId } = req.params;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      sendResponse(res, 401, false, "Unauthorized");
+      return;
+    }
+
+    const feedback = await Feedback.findOne({ _id: feedbackId, user: userId });
+    if (!feedback) {
+      sendResponse(res, 404, false, "Feedback not found or access denied");
+      return;
+    }
+
+    await feedback.deleteOne();
+
+    logger.info(`Feedback deleted by user: ${userId}, feedback ID: ${feedbackId}`);
+    sendResponse(res, 200, true, "Feedback deleted successfully");
+  },
+);
 /**
  * @desc    Add a comment to a post
  * @route   POST /api/feed/:id/comment
@@ -101,11 +177,11 @@ export const addLike = catchAsync(
  */
 export const addComment = catchAsync(
   async (
-    req: RequestWithUser,
+    req: Request<{ id: string }, {}, AddCommentBody> & RequestWithUser,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
-    const postId = req.params.id;
+    const { id: postId } = req.params;
     const { text } = req.body;
     const userId = req.user?.id;
 
@@ -119,7 +195,7 @@ export const addComment = catchAsync(
       return;
     }
 
-    const post = (await FeedPost.findById(postId)) as IFeedPost | null;
+    const post = await FeedPost.findById(postId);
     if (!post) {
       sendResponse(res, 404, false, "Post not found");
       return;
@@ -134,7 +210,7 @@ export const addComment = catchAsync(
 
     logger.info(`Comment added by user: ${userId} to post: ${postId}`);
     sendResponse(res, 201, true, "Comment added successfully", { post });
-  }
+  },
 );
 
 /**
@@ -144,9 +220,9 @@ export const addComment = catchAsync(
  */
 export const removeComment = catchAsync(
   async (
-    req: RequestWithUser,
+    req: Request<{ postId: string; commentId: string }> & RequestWithUser,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const { postId, commentId } = req.params;
     const userId = req.user?.id;
@@ -156,14 +232,14 @@ export const removeComment = catchAsync(
       return;
     }
 
-    const post = (await FeedPost.findById(postId)) as IFeedPost | null;
+    const post = await FeedPost.findById(postId);
     if (!post) {
       sendResponse(res, 404, false, "Post not found");
       return;
     }
 
     const commentIndex = post.comments.findIndex(
-      (comment) => comment._id.toString() === commentId
+      (comment) => comment._id.toString() === commentId,
     );
 
     if (commentIndex === -1) {
@@ -174,7 +250,11 @@ export const removeComment = catchAsync(
     const comment = post.comments[commentIndex];
     const isAdmin = req.user?.isAdmin || false;
 
-    if (comment.user.toString() !== userId && post.user.toString() !== userId && !isAdmin) {
+    if (
+      comment.user.toString() !== userId &&
+      post.user.toString() !== userId &&
+      !isAdmin
+    ) {
       sendResponse(res, 403, false, "Unauthorized action");
       return;
     }
@@ -184,71 +264,7 @@ export const removeComment = catchAsync(
 
     logger.info(`Comment removed by user: ${userId} from post: ${postId}`);
     sendResponse(res, 200, true, "Comment removed successfully", { post });
-  }
-);
-/**
- * @desc    Get feedback submitted by the authenticated user
- * @route   GET /api/feedback
- * @access  Private
- */
-export const getUserFeedback = catchAsync(
-  async (
-    req: RequestWithUser,
-    res: Response,
-    _next: NextFunction
-  ): Promise<void> => {
-    const userId = req.user?.id;
-
-    if (!userId) {
-      sendResponse(res, 401, false, "Unauthorized");
-      return;
-    }
-
-    // Mock fetching feedback (replace with actual DB query)
-    const feedback = [
-      { id: "1", message: "Great feature!", type: "feature-request" },
-      { id: "2", message: "Bug detected in dashboard", type: "bug" },
-    ];
-
-    logger.info(`Feedback fetched for user: ${userId}`);
-    sendResponse(res, 200, true, "Feedback retrieved successfully", { feedback });
-  }
-);
-/**
- * @desc    Delete feedback by ID
- * @route   DELETE /api/feedback/:feedbackId
- * @access  Private
- */
-export const deleteFeedback = catchAsync(
-  async (
-    req: RequestWithUser,
-    res: Response,
-    _next: NextFunction
-  ): Promise<void> => {
-    const { feedbackId } = req.params;
-    const userId = req.user?.id;
-
-    if (!userId) {
-      sendResponse(res, 401, false, "Unauthorized");
-      return;
-    }
-
-    // Validate feedback ID format
-    if (!mongoose.Types.ObjectId.isValid(feedbackId)) {
-      sendResponse(res, 400, false, "Invalid feedback ID");
-      return;
-    }
-
-    // Mock feedback deletion (replace with actual DB query)
-    const deleted = true; // Simulate successful deletion
-    if (!deleted) {
-      sendResponse(res, 404, false, "Feedback not found");
-      return;
-    }
-
-    logger.info(`Feedback deleted by user: ${userId}, ID: ${feedbackId}`);
-    sendResponse(res, 200, true, "Feedback deleted successfully");
-  }
+  },
 );
 
 /**
@@ -258,9 +274,9 @@ export const deleteFeedback = catchAsync(
  */
 export const submitFeedback = catchAsync(
   async (
-    req: RequestWithUser,
+    req: Request<{}, {}, SubmitFeedbackBody> & RequestWithUser,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const { message, type } = req.body;
     const userId = req.user?.id;
@@ -270,13 +286,12 @@ export const submitFeedback = catchAsync(
       return;
     }
 
-    // Mock feedback submission
     logger.info(`Feedback submitted by user: ${userId}`);
     sendResponse(res, 201, true, "Feedback submitted successfully", {
       message,
       type,
     });
-  }
+  },
 );
 
 export default {
@@ -284,7 +299,7 @@ export default {
   addLike,
   addComment,
   removeComment,
-  getUserFeedback,
-  deleteFeedback,
   submitFeedback,
+  getUserFeedback,
+  deleteFeedback, 
 };

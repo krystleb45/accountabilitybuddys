@@ -1,7 +1,9 @@
-import express, { Request, Response, NextFunction, Router } from "express";
+import type { Response, NextFunction, Router } from "express";
+import express from "express";
 import { check, validationResult } from "express-validator";
 import AuditLog from "../models/AuditLog";
-import authMiddleware, { AuthenticatedRequest } from "../middleware/authMiddleware";
+import type { AuthenticatedRequest } from "../middleware/authMiddleware";
+import authMiddleware from "../middleware/authMiddleware";
 import { roleBasedAccessControl } from "../middleware/roleBasedAccessControl";
 import logger from "../utils/winstonLogger";
 
@@ -14,10 +16,22 @@ const isAdminOrAuditor = roleBasedAccessControl(["admin", "auditor"]);
 /**
  * Utility function to handle errors in routes
  */
-const handleRouteErrors = (
-  handler: (req: Request, res: Response, next: NextFunction) => Promise<void>
-): ((req: Request, res: Response, next: NextFunction) => Promise<void>) => {
-  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const handleRouteErrors = <
+  Params extends Record<string, any> = {},
+  ResBody = any,
+  ReqBody = any
+>(
+    handler: (
+    req: AuthenticatedRequest<Params, ResBody, ReqBody>,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>,
+  ) => {
+  return async (
+    req: AuthenticatedRequest<Params, ResBody, ReqBody>,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
       await handler(req, res, next);
     } catch (error) {
@@ -35,7 +49,7 @@ const handleRouteErrors = (
 router.get(
   "/logs",
   [authMiddleware, isAdminOrAuditor],
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  handleRouteErrors(async (req, res): Promise<void> => {
     const logs = await AuditLog.find().sort({ createdAt: -1 });
 
     if (!logs.length) {
@@ -46,7 +60,7 @@ router.get(
 
     logger.info(`Logs accessed by User: ${req.user?.id}, IP: ${req.ip}`);
     res.json({ success: true, data: logs });
-  })
+  }),
 );
 
 /**
@@ -61,7 +75,7 @@ router.get(
     isAdminOrAuditor,
     check("userId", "Invalid User ID format").isMongoId(),
   ],
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  handleRouteErrors<{ userId: string }>(async (req, res): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       logger.warn(`Validation error: ${JSON.stringify(errors.array())}`);
@@ -80,7 +94,7 @@ router.get(
 
     logger.info(`Logs for user ${userId} accessed by: ${req.user?.id}, IP: ${req.ip}`);
     res.json({ success: true, data: userLogs });
-  })
+  }),
 );
 
 /**
@@ -95,7 +109,7 @@ router.delete(
     isAdmin,
     check("logId", "Invalid Log ID format").isMongoId(),
   ],
-  handleRouteErrors(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  handleRouteErrors<{ logId: string }>(async (req, res): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       logger.warn(`Validation error: ${JSON.stringify(errors.array())}`);
@@ -115,7 +129,7 @@ router.delete(
     await AuditLog.deleteOne({ _id: logId });
     logger.info(`Log ID: ${logId} deleted by Admin: ${req.user?.id}, IP: ${req.ip}`);
     res.json({ success: true, msg: "Log deleted successfully" });
-  })
+  }),
 );
 
 export default router;

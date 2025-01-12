@@ -27,7 +27,7 @@ const helmetMiddleware = helmet({
       upgradeInsecureRequests: [], // Automatically upgrade HTTP to HTTPS
       blockAllMixedContent: [], // Prevent mixed content
     },
-    reportOnly: process.env.CSP_REPORT_ONLY === "true" // Enable CSP report-only mode for testing
+    reportOnly: process.env.CSP_REPORT_ONLY === "true", // Enable CSP report-only mode for testing
   },
   dnsPrefetchControl: { allow: false }, // Disallow DNS prefetching
   frameguard: { action: "deny" }, // Prevent clickjacking by blocking iframes
@@ -39,7 +39,7 @@ const helmetMiddleware = helmet({
   },
   ieNoOpen: true, // Prevent IE from executing downloads in site's context
   noSniff: true, // Prevent MIME-type sniffing
-  referrerPolicy: { policy: "no-referrer" } // Restrict referrer information
+  referrerPolicy: { policy: "no-referrer" }, // Restrict referrer information
 });
 
 export default helmetMiddleware; // Use ES module export for TypeScript compliance

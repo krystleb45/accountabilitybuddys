@@ -1,10 +1,13 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import sanitize from "mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware"; // Correct middleware import path
 import * as sessionController from "../controllers/SessionController"; // Ensure named import for controller methods
 import logger from "../utils/winstonLogger"; // Logger utility
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
@@ -31,17 +34,7 @@ const sanitizeInput = (req: Request, _res: Response, next: NextFunction): void =
   }
 };
 
-/**
- * Middleware to handle validation errors.
- */
-const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return;
-  }
-  next();
-};
+
 
 /**
  * @route   POST /session/login
@@ -67,7 +60,7 @@ router.post(
       logger.error(`Error during login: ${errorMessage}`);
       next(error); // Pass error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -87,7 +80,7 @@ router.post(
       logger.error(`Error during logout: ${errorMessage}`);
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -106,7 +99,7 @@ router.post(
       logger.error(`Error refreshing session: ${errorMessage}`);
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -130,7 +123,7 @@ router.get(
       logger.error(`Error fetching user sessions: ${errorMessage}`);
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -144,7 +137,7 @@ router.delete(
   async (
     req: Request<{ sessionId: string }>, // Explicitly define sessionId as string
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     const { sessionId } = req.params; // Extract sessionId
     const userId = req.user?.id as string; // Explicitly cast user ID to string
@@ -159,7 +152,7 @@ router.delete(
       logger.error(`Error ending session: ${errorMessage}`);
       next(error); // Pass error to middleware
     }
-  }
+  },
 );
 
 
@@ -175,7 +168,7 @@ router.delete(
   async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const userId = req.user?.id as string; // Explicitly cast user ID to string
@@ -189,7 +182,7 @@ router.delete(
       logger.error(`Error ending all sessions: ${errorMessage}`);
       next(error);
     }
-  }
+  },
 );
 
 

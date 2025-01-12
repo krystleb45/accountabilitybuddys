@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import mongoose from "mongoose";
 import CollaborationGoal from "../models/CollaborationGoal";
 import catchAsync from "../utils/catchAsync";
@@ -37,7 +37,7 @@ export const createCollaborationGoal = catchAsync(
     await newGoal.save();
 
     sendResponse(res, 201, true, "Collaboration goal created successfully", { goal: newGoal });
-  }
+  },
 );
 
 /**
@@ -66,7 +66,7 @@ export const getUserCollaborationGoals = catchAsync(
     }
 
     sendResponse(res, 200, true, "Collaboration goals fetched successfully", { goals });
-  }
+  },
 );
 
 /**
@@ -98,7 +98,7 @@ export const deleteCollaborationGoal = catchAsync(
     await CollaborationGoal.deleteOne({ _id: goalId });
 
     sendResponse(res, 200, true, "Collaboration goal deleted successfully");
-  }
+  },
 );
 
 /**
@@ -136,5 +136,5 @@ export const addParticipant = catchAsync(
     }
 
     sendResponse(res, 200, true, "Participant added successfully", { goal });
-  }
+  },
 );

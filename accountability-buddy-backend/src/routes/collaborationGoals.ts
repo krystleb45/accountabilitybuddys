@@ -1,4 +1,5 @@
-import express, { Request, Response, Router } from "express";
+import type { Request, Response, Router } from "express";
+import express from "express";
 import { check, validationResult } from "express-validator";
 import rateLimit from "express-rate-limit";
 import mongoose from "mongoose"; // For ObjectId validation
@@ -19,7 +20,7 @@ const validateGoalCreation = [
   check("participants", "Participants must be an array").isArray(),
   check(
     "target",
-    "Target is required and must be a number greater than 0"
+    "Target is required and must be a number greater than 0",
   ).isInt({ min: 1 }),
 ];
 
@@ -74,7 +75,7 @@ router.post(
 
     await newGoal.save();
     res.status(201).json({ success: true, goal: newGoal });
-  })
+  }),
 );
 
 /**
@@ -119,7 +120,7 @@ router.put(
     // Ensure only participants or the creator can update progress
     if (
       !goal.participants.some((p) =>
-        p.equals(new mongoose.Types.ObjectId(userId))
+        p.equals(new mongoose.Types.ObjectId(userId)),
       ) &&
       !goal.createdBy.equals(new mongoose.Types.ObjectId(userId))
     ) {
@@ -133,7 +134,7 @@ router.put(
     await goal.save();
 
     res.status(200).json({ success: true, goal });
-  })
+  }),
 );
 
 /**
@@ -166,7 +167,7 @@ router.get(
     }
 
     res.status(200).json({ success: true, goals });
-  })
+  }),
 );
 
 /**
@@ -199,7 +200,7 @@ router.get(
     // Ensure only participants or the creator can view the goal
     if (
       !goal.participants.some((p) =>
-        p.equals(new mongoose.Types.ObjectId(userId))
+        p.equals(new mongoose.Types.ObjectId(userId)),
       ) &&
       !goal.createdBy.equals(new mongoose.Types.ObjectId(userId))
     ) {
@@ -208,7 +209,7 @@ router.get(
     }
 
     res.status(200).json({ success: true, goal });
-  })
+  }),
 );
 
 export default router;

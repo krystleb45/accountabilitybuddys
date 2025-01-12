@@ -1,4 +1,4 @@
-import { Server, Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 import Room from "../models/Room"; // Room model for database operations
 import logger from "../utils/winstonLogger"; // Logger for tracking room events
 
@@ -76,7 +76,7 @@ const roomManagementSocket = (io: Server, socket: Socket): void => {
         return; // Explicitly return after emitting the error
       }
   
-      socket.join(roomId);
+      void socket.join(roomId);
       logger.info(`User ${userId} joined room ${roomId}`);
       socket.to(roomId).emit("userJoinedRoom", { userId, roomId });
   
@@ -102,7 +102,7 @@ const roomManagementSocket = (io: Server, socket: Socket): void => {
         return; // Explicitly return after emitting the error
       }
   
-      socket.leave(roomId);
+      void socket.leave(roomId);
       logger.info(`User ${userId} left room ${roomId}`);
       socket.to(roomId).emit("userLeftRoom", { userId, roomId });
   

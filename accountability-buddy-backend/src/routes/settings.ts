@@ -1,10 +1,13 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import sanitize from "mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware"; // Correct middleware import path
 import * as settingsController from "../controllers/SettingsController"; // Correct controller import path
 import logger from "../utils/winstonLogger"; // Logger utility
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
@@ -24,7 +27,7 @@ const settingsLimiter = rateLimit({
 const sanitizeInput = (
   req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   try {
     req.body = sanitize(req.body);
@@ -34,21 +37,7 @@ const sanitizeInput = (
   }
 };
 
-/**
- * Middleware to handle validation errors.
- */
-const handleValidationErrors = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return;
-  }
-  next();
-};
+
 
 /**
  * @route   GET /settings
@@ -68,7 +57,7 @@ router.get(
       logger.error(`Error fetching settings: ${errorMessage}`);
       next(error); // Pass error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -110,7 +99,7 @@ router.put(
       logger.error(`Error updating settings: ${errorMessage}`);
       next(error); // Pass error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -145,7 +134,7 @@ router.put(
       logger.error(`Error updating password: ${errorMessage}`);
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -179,7 +168,7 @@ router.put(
       logger.error(`Error updating notification preferences: ${errorMessage}`);
       next(error); // Pass error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -200,7 +189,7 @@ router.delete(
       logger.error(`Error deactivating account: ${errorMessage}`);
       next(error); // Pass error to middleware
     }
-  }
+  },
 );
 
 export default router;

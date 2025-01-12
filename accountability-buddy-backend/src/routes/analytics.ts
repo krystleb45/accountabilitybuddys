@@ -1,4 +1,5 @@
-import express, { Request, Response, NextFunction, Router  } from "express";
+import type { Request, Response, NextFunction, Router  } from "express";
+import express from "express";
 import { check, query, validationResult } from "express-validator";
 import goalAnalyticsController from "../controllers/goalAnalyticsController";
 import authMiddleware from "../middleware/authMiddleware";
@@ -30,10 +31,10 @@ router.get(
     const analytics = goalAnalyticsController.getUserGoalAnalytics(
       req,
       res,
-      next
+      next,
     );
     res.json({ success: true, data: analytics });
-  })
+  }),
 );
 
 /**
@@ -65,10 +66,10 @@ router.get(
     const analytics = goalAnalyticsController.getGoalAnalyticsById(
     { params: { goalId } } as Request<{ goalId: string }>,
     res,
-    next
+    next,
     );
     res.json({ success: true, data: analytics });
-  })
+  }),
 );
 
 /**
@@ -105,8 +106,8 @@ router.get(
     goalAnalyticsController.getGoalAnalyticsByDateRange(
       req as Request<{ goalId: string }, any, any, { startDate: string; endDate: string }>,
       res,
-      next
+      next,
     );
-  })
+  }),
 );
 export default router;

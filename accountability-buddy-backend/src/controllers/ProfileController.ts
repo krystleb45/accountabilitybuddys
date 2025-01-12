@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import Profile from "../models/profile"; // Assuming Profile model exists
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -19,7 +19,7 @@ export const getProfile = catchAsync(
   async (
     req: Request<{}, {}, {}, {}, Record<string, any>>, // Explicit type for Request
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id; // Get user ID from middleware
 
@@ -31,7 +31,7 @@ export const getProfile = catchAsync(
     // Fetch the profile
     const profile = await Profile.findOne({ user: userId }).populate(
       "user",
-      "email name"
+      "email name",
     );
 
     if (!profile) {
@@ -41,7 +41,7 @@ export const getProfile = catchAsync(
 
     // Success response
     sendResponse(res, 200, true, "Profile fetched successfully", { profile });
-  }
+  },
 );
 
 
@@ -54,7 +54,7 @@ export const updateProfile = catchAsync(
   async (
     req: Request<{}, {}, { name?: string; email?: string }>,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id;
 
@@ -75,7 +75,7 @@ export const updateProfile = catchAsync(
     const profile = await Profile.findOneAndUpdate(
       { user: userId },
       { $set: { name, email } },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!profile) {
@@ -85,7 +85,7 @@ export const updateProfile = catchAsync(
 
     // Success response
     sendResponse(res, 200, true, "Profile updated successfully", { profile });
-  }
+  },
 );
 
 /**
@@ -96,7 +96,7 @@ export const updateProfile = catchAsync(
 export const createSubscriptionSession = catchAsync(
   async (
     req: Request<{}, any, { planId: string; successUrl: string; cancelUrl: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { planId, successUrl, cancelUrl } = req.body;
     const userId = req.user?.id;
@@ -125,7 +125,7 @@ export const createSubscriptionSession = catchAsync(
       LoggingService.logError("Error creating subscription session", err);
       sendResponse(res, 500, false, "Failed to create session");
     }
-  }
+  },
 );
 
 /**
@@ -137,7 +137,7 @@ export const handleStripeWebhook = catchAsync(
   async (
     req: Request<{}, {}, {}, {}, Record<string, any>>, // Explicit type for Request
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const sig = req.headers["stripe-signature"] as string;
 
@@ -145,31 +145,31 @@ export const handleStripeWebhook = catchAsync(
       const event = stripe.webhooks.constructEvent(
         (req as any).rawBody as Buffer, // Handle raw body as Buffer
         sig,
-        process.env.STRIPE_WEBHOOK_SECRET!
+        process.env.STRIPE_WEBHOOK_SECRET!,
       );
 
       switch (event.type) {
-      case "checkout.session.completed":
-        await handleSubscriptionCompleted(
-            event.data.object as Stripe.Checkout.Session
-        );
-        break;
+        case "checkout.session.completed":
+          await handleSubscriptionCompleted(
+            event.data.object as Stripe.Checkout.Session,
+          );
+          break;
 
-      case "invoice.payment_succeeded":
-        await handlePaymentSucceeded(
-            event.data.object as Stripe.Invoice
-        );
-        break;
+        case "invoice.payment_succeeded":
+          await handlePaymentSucceeded(
+            event.data.object as Stripe.Invoice,
+          );
+          break;
 
-      case "invoice.payment_failed":
-        await handlePaymentFailed(
-            event.data.object as Stripe.Invoice
-        );
-        break;
+        case "invoice.payment_failed":
+          await handlePaymentFailed(
+            event.data.object as Stripe.Invoice,
+          );
+          break;
 
-      default:
-        LoggingService.logInfo(`Unhandled event type: ${event.type}`);
-        break;
+        default:
+          LoggingService.logInfo(`Unhandled event type: ${event.type}`);
+          break;
       }
 
       // Send response to acknowledge webhook event
@@ -179,7 +179,7 @@ export const handleStripeWebhook = catchAsync(
       LoggingService.logError("Webhook handling error", err);
       res.status(400).send(`Webhook Error: ${err.message}`);
     }
-  }
+  },
 );
 
 
@@ -216,7 +216,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
 
   LoggingService.logError(
     `Payment failed for customer ${customerId}`,
-    new Error("Payment processing error") // Added second required argument
+    new Error("Payment processing error"), // Added second required argument
   );
   
 }

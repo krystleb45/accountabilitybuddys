@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 
 /**
@@ -7,7 +7,7 @@ import { check, validationResult } from "express-validator";
 export const validationMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const errors = validationResult(req);
 

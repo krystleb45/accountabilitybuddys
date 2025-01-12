@@ -1,4 +1,5 @@
-import Task, { ITask } from "../models/Task";
+import type { ITask } from "../models/Task";
+import Task from "../models/Task";
 import NotificationService from "./NotificationService";
 import LoggingService from "./LoggingService";
 

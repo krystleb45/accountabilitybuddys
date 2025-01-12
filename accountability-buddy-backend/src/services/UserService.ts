@@ -1,5 +1,6 @@
-import { FilterQuery } from "mongoose";
-import User, { IUser } from "../models/User";
+import type { FilterQuery } from "mongoose";
+import type { IUser } from "../models/User";
+import User from "../models/User";
 import logger from "../utils/winstonLogger";
 import { CustomError } from "./errorHandler";
 import bcrypt from "bcryptjs"; // For password hashing
@@ -65,7 +66,7 @@ const UserService = {
    */
   async updateUser(
     userId: string,
-    updates: Partial<IUser>
+    updates: Partial<IUser>,
   ): Promise<IUser | null> {
     try {
       // If updating password, hash it
@@ -119,7 +120,7 @@ const UserService = {
    */
   async authenticateUser(
     email: string,
-    password: string
+    password: string,
   ): Promise<IUser | null> {
     try {
       const user = await User.findOne({ email });
@@ -151,7 +152,7 @@ const UserService = {
   async getAllUsers(
     filters: FilterQuery<IUser> = {},
     page = 1,
-    limit = 10
+    limit = 10,
   ): Promise<{ users: IUser[]; total: number; totalPages: number }> {
     try {
       const query = User.find(filters);

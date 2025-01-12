@@ -1,5 +1,6 @@
-import { Server as SocketIOServer, Socket } from "socket.io";
-import http from "http";
+import type { Socket } from "socket.io";
+import { Server as SocketIOServer } from "socket.io";
+import type http from "http";
 import logger from "./logging";
 import { verifyJWT } from "../../src/utils/jwtUtils"; // JWT verification utility
 
@@ -91,7 +92,7 @@ const configureSocketIO = (httpServer: http.Server): SocketIOServer => {
     // Custom event handler for room joining
     socket.on("joinRoom", (room: string) => {
       try {
-        socket.join(room);
+        void socket.join(room);
         logger.info(`User ${user.id} joined room: ${room}`);
         io.to(room).emit("roomMessage", `User ${user.id} has joined the room.`);
       } catch (error) {
@@ -102,7 +103,7 @@ const configureSocketIO = (httpServer: http.Server): SocketIOServer => {
     // Custom event handler for room leaving
     socket.on("leaveRoom", (room: string) => {
       try {
-        socket.leave(room);
+        void socket.leave(room);
         logger.info(`User ${user.id} left room: ${room}`);
         io.to(room).emit("roomMessage", `User ${user.id} has left the room.`);
       } catch (error) {

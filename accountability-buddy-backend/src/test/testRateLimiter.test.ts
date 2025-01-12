@@ -1,4 +1,5 @@
-import express, { Application } from "express";
+import type { Application } from "express";
+import express from "express";
 import supertest from "supertest";
 import { globalRateLimiter } from "../utils/rateLimiter";
 import logger from "../utils/winstonLogger";

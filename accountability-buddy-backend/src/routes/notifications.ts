@@ -1,10 +1,13 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import rateLimit from "express-rate-limit";
 import sanitize from "mongo-sanitize";
 import authMiddleware from "../middleware/authMiddleware";
 import * as NotificationController from "../controllers/NotificationController";
 import logger from "../utils/winstonLogger";
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
@@ -22,21 +25,7 @@ const notificationLimiter = rateLimit({
   },
 });
 
-/**
- * Middleware to handle validation errors.
- */
-const handleValidationErrors = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return; // Exit early to prevent further processing
-  }
-  next();
-};
+
 
 /**
  * @route   POST /send-sms-notification
@@ -83,7 +72,7 @@ router.post(
       });
       next(err); // Forward error to middleware
     }
-  }
+  },
 );
 
 export default router;

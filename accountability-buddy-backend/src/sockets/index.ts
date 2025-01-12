@@ -1,5 +1,6 @@
-import { Server as HttpServer } from "http";
-import { Server, Socket } from "socket.io";
+import type { Server as HttpServer } from "http";
+import type { Socket } from "socket.io";
+import { Server } from "socket.io";
 import chatSocket from "./chat"; // Chat event handlers
 import Notification from "../models/Notification"; // Notification model for real-time notifications
 import AuthService from "../services/AuthService"; // Import AuthService for JWT verification
@@ -66,7 +67,7 @@ const socketServer = (server: HttpServer): Server => {
         socket.emit("notifications", notifications);
       } catch (error) {
         logger.error(
-          `Error fetching notifications for user ${userId}: ${(error as Error).message}`
+          `Error fetching notifications for user ${userId}: ${(error as Error).message}`,
         );
         socket.emit("error", "Unable to fetch notifications.");
       }

@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, CallbackError } from "mongoose";
+import type { Document, Model, CallbackError } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define the Activity interface
 export interface Activity extends Document {
@@ -39,7 +40,7 @@ const ActivitySchema = new Schema<Activity>(
     timestamps: true, // Automatically create createdAt and updatedAt fields
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // Index for optimized queries

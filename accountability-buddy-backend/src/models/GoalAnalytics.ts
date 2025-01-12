@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import type { Document, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define the interface for GoalAnalytics
 export interface IGoalAnalytics extends Document {
@@ -66,7 +67,7 @@ const GoalAnalyticsSchema = new Schema<IGoalAnalytics>(
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields
-  }
+  },
 );
 
 // Pre-save middleware to calculate the completion rate
@@ -85,7 +86,7 @@ GoalAnalyticsSchema.pre<IGoalAnalytics>("save", function (next) {
 
 // Static method to calculate streaks
 GoalAnalyticsSchema.statics.updateStreak = async function (
-  goalId: Types.ObjectId
+  goalId: Types.ObjectId,
 ): Promise<void> {
   const analytics = await this.findOne({ goal: goalId });
   if (!analytics) {

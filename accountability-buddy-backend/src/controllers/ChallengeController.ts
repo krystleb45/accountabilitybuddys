@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import Challenge from "../models/Challenge";
 import catchAsync from "../utils/catchAsync";
@@ -20,7 +20,7 @@ export const createChallenge = catchAsync(
       progressTracking?: boolean; 
     }>, // Explicitly define the body type
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const {
@@ -45,7 +45,7 @@ export const createChallenge = catchAsync(
           res,
           400,
           false,
-          "Title, description, goal, and end date are required"
+          "Title, description, goal, and end date are required",
         );
         return;
       }
@@ -75,7 +75,7 @@ export const createChallenge = catchAsync(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -84,7 +84,7 @@ export const createChallenge = catchAsync(
 export const getPublicChallenges = catchAsync(
   async (
     _req: Request<{}, {}, {}, {}>, // Explicitly define empty types for params, body, query, and locals
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const challenges = await Challenge.find({ visibility: "public" })
       .populate("creator", "username profilePicture")
@@ -100,9 +100,9 @@ export const getPublicChallenges = catchAsync(
       200,
       true,
       "Public challenges fetched successfully",
-      { challenges }
+      { challenges },
     );
-  }
+  },
 );
 
 /**
@@ -111,7 +111,7 @@ export const getPublicChallenges = catchAsync(
 export const joinChallenge = catchAsync(
   async (
     req: Request<{}, {}, { challengeId: string }>, // Explicitly define body type
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { challengeId } = sanitize(req.body);
     const userId = req.user?.id;
@@ -139,7 +139,7 @@ export const joinChallenge = catchAsync(
         res,
         400,
         false,
-        "You are already a participant in this challenge"
+        "You are already a participant in this challenge",
       );
       return;
     }
@@ -154,7 +154,7 @@ export const joinChallenge = catchAsync(
     sendResponse(res, 200, true, "Joined challenge successfully", {
       challenge,
     });
-  }
+  },
 );
 
 /**
@@ -163,7 +163,7 @@ export const joinChallenge = catchAsync(
 export const leaveChallenge = catchAsync(
   async (
     req: Request<{}, {}, { challengeId: string }>, // Explicitly define body type
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { challengeId } = sanitize(req.body);
     const userId = req.user?.id;
@@ -187,14 +187,14 @@ export const leaveChallenge = catchAsync(
     const userObjectId = new mongoose.Types.ObjectId(userId);
 
     const participantIndex = challenge.participants.findIndex((p) =>
-      p.user.equals(userObjectId)
+      p.user.equals(userObjectId),
     );
     if (participantIndex === -1) {
       sendResponse(
         res,
         400,
         false,
-        "You are not a participant of this challenge"
+        "You are not a participant of this challenge",
       );
       return;
     }
@@ -205,5 +205,5 @@ export const leaveChallenge = catchAsync(
     sendResponse(res, 200, true, "Left challenge successfully", {
       challenge,
     });
-  }
+  },
 );

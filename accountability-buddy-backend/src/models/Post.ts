@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Types, Query } from "mongoose";
+import type { Document, Model, Types, Query } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Interface for Post Document
 export interface IPost extends Document {
@@ -51,7 +52,7 @@ const PostSchema = new Schema<IPost>(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // Virtual field for the number of likes
@@ -79,7 +80,7 @@ PostSchema.pre<IPost>("save", function (next) {
 // Static method to add a like to a post
 PostSchema.statics.addLike = async function (
   postId: string,
-  userId: string
+  userId: string,
 ): Promise<IPost> {
   const post = await this.findById(postId);
   if (!post) throw new Error("Post not found");
@@ -97,7 +98,7 @@ PostSchema.statics.addLike = async function (
 // Static method to remove a like from a post
 PostSchema.statics.removeLike = async function (
   postId: string,
-  userId: string
+  userId: string,
 ): Promise<IPost> {
   const post = await this.findById(postId);
   if (!post) throw new Error("Post not found");
@@ -105,7 +106,7 @@ PostSchema.statics.removeLike = async function (
   const userObjectId = new mongoose.Types.ObjectId(userId);
 
   post.likes = post.likes.filter(
-    (like: Types.ObjectId) => !like.equals(userObjectId)
+    (like: Types.ObjectId) => !like.equals(userObjectId),
   );
   await post.save();
 

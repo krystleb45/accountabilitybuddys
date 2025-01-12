@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import Achievement from "../models/Achievement";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -27,7 +27,7 @@ const sanitizeInput = (input: any): any => {
 export const getAllAchievements = catchAsync(async (
   _req: Request<Record<string, any>, any, any, Record<string, any>>, 
   res: Response, 
-  _next: NextFunction
+  _next: NextFunction,
 ): Promise<void> => {
   const achievements = await Achievement.find();
   sendResponse(res, 200, true, "Achievements fetched successfully", { achievements });
@@ -41,7 +41,7 @@ export const getAllAchievements = catchAsync(async (
 export const getAchievementById = catchAsync(async (
   req: Request<Record<string, any>, any, any, Record<string, any>>, 
   res: Response, 
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const { id } = req.params;
   const achievement = await Achievement.findById(id);
@@ -61,7 +61,7 @@ export const getAchievementById = catchAsync(async (
 export const createAchievement = catchAsync(async (
   req: Request<Record<string, any>, any, any, Record<string, any>>, 
   res: Response, 
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const sanitizedData = sanitizeInput(req.body);
   const { name, description } = sanitizedData;
@@ -82,7 +82,7 @@ export const createAchievement = catchAsync(async (
 export const updateAchievement = catchAsync(async (
   req: Request<Record<string, any>, any, any, Record<string, any>>, 
   res: Response, 
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const { id } = req.params;
   const sanitizedData = sanitizeInput(req.body);
@@ -104,7 +104,7 @@ export const updateAchievement = catchAsync(async (
 export const deleteAchievement = catchAsync(async (
   req: Request<Record<string, any>, any, any, Record<string, any>>, 
   res: Response, 
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const { id } = req.params;
 

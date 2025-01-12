@@ -1,5 +1,5 @@
 import logger from "./winstonLogger"; // Replace with your logger utility
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 
 /**
  * @desc    Logs details of requests that trigger rate limits.
@@ -16,7 +16,7 @@ export const logRateLimitExceeded = (
   message: string,
   limit: number,
   remaining: number,
-  retryAfter: number
+  retryAfter: number,
 ): void => {
   const logData = {
     ip: req.ip || "unknown-client",
@@ -41,7 +41,7 @@ export const logRateLimitExceeded = (
 export const rateLimitLoggerMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   res.on("finish", () => {
     if (res.statusCode === 429) {

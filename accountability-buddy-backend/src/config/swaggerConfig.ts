@@ -1,6 +1,7 @@
-import swaggerJSDoc, { Options } from "swagger-jsdoc";
+import type { Options } from "swagger-jsdoc";
+import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import { Application } from "express";
+import type { Application } from "express";
 import logger from "../utils/winstonLogger"; // Adjust the path as needed
 
 // Swagger options with TypeScript typing

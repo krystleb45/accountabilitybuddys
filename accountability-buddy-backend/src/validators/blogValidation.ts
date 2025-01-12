@@ -30,7 +30,7 @@ const validateBlogCreation = [
     .isArray()
     .withMessage("Tags must be an array.")
     .custom((tags: string[]) =>
-      tags.every((tag) => typeof tag === "string" && tag.length <= 30)
+      tags.every((tag) => typeof tag === "string" && tag.length <= 30),
     )
     .withMessage("Each tag must be a string with a maximum of 30 characters."),
   body("metaTitle")

@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import type { Request, Response, NextFunction } from "express";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import User from "./User";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -21,7 +22,7 @@ const RewardSchema: Schema<IReward> = new Schema(
     description: { type: String },
     points: { type: Number, required: true, default: 0 },
   },
-  { timestamps: true } // Adds createdAt and updatedAt fields automatically
+  { timestamps: true }, // Adds createdAt and updatedAt fields automatically
 );
 
 // Create the Reward model
@@ -40,7 +41,7 @@ export const getUserRewards = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly define generics
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id;
 
@@ -54,7 +55,7 @@ export const getUserRewards = catchAsync(
     // Ensure rewards array exists and is populated
     const rewards = user.rewards || [];
     sendResponse(res, 200, true, "User rewards fetched successfully", { rewards });
-  }
+  },
 );
 
 /**
@@ -65,7 +66,7 @@ export const getUserRewards = catchAsync(
 export const redeemReward = catchAsync(
   async (
     req: Request<{}, any, { rewardId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { rewardId } = req.body;
     const userId = req.user?.id;
@@ -97,7 +98,7 @@ export const redeemReward = catchAsync(
     await user.save(); // Save changes
 
     sendResponse(res, 200, true, "Reward redeemed successfully", { reward });
-  }
+  },
 );
 
 
@@ -110,7 +111,7 @@ export const redeemReward = catchAsync(
 export const createReward = catchAsync(
   async (
     req: Request<{}, any, { title: string; description?: string; points: number }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { title, description, points } = req.body;
 
@@ -128,7 +129,7 @@ export const createReward = catchAsync(
     });
 
     sendResponse(res, 201, true, "Reward created successfully", { reward: newReward });
-  }
+  },
 );
 
 /**

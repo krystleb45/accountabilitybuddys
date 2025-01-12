@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface IMatch extends Document {
   user1: mongoose.Types.ObjectId;
@@ -32,7 +33,7 @@ const MatchSchema: Schema<IMatch> = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 MatchSchema.index({ user1: 1, user2: 1 }, { unique: true });
@@ -40,7 +41,7 @@ MatchSchema.index({ status: 1 });
 
 // Static method
 MatchSchema.statics.findMatchesForUser = async function (
-  userId: mongoose.Types.ObjectId
+  userId: mongoose.Types.ObjectId,
 ): Promise<IMatch[]> {
   return await this.find({ $or: [{ user1: userId }, { user2: userId }] })
     .populate("user1", "username profilePicture")
@@ -51,7 +52,7 @@ MatchSchema.statics.findMatchesForUser = async function (
 // Instance method
 MatchSchema.methods.updateStatus = async function (
   this: IMatch,
-  status: "pending" | "active" | "rejected" | "completed"
+  status: "pending" | "active" | "rejected" | "completed",
 ): Promise<IMatch> {
   this.status = status;
   await this.save();

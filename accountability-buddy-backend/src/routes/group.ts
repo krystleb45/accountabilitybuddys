@@ -1,10 +1,13 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import sanitize from "mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware";
 import checkSubscription from "../middleware/checkSubscription";
 import * as groupController from "../controllers/groupController";
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 import logger from "../utils/winstonLogger";
 
@@ -19,21 +22,7 @@ const groupLimiter = rateLimit({
   message: "Too many requests, please try again later.",
 });
 
-/**
- * Middleware for handling validation errors.
- */
-const handleValidationErrors = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return;
-  }
-  next();
-};
+
 
 /**
  * @route   POST /group/create
@@ -64,7 +53,7 @@ router.post(
       });
       next(err); // Forward error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -92,7 +81,7 @@ router.post(
       });
       next(err);
     }
-  }
+  },
 );
 
 /**
@@ -119,7 +108,7 @@ router.post(
       });
       next(err);
     }
-  }
+  },
 );
 
 /**
@@ -142,7 +131,7 @@ router.get(
       });
       next(err);
     }
-  }
+  },
 );
 
 export default router;

@@ -1,9 +1,9 @@
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import xssClean from "xss-clean";
-import * as cors from "cors"; // Fixed import for cors
+import cors from "cors"; // Fixed import for cors
 import * as express from "express";
-import { Application, Request, Response, NextFunction } from "express";
+import type { Application, Request, Response, NextFunction } from "express";
 import logger from "../utils/winstonLogger";
 
 
@@ -22,7 +22,7 @@ const configureCORS = (): cors.CorsOptions => {
   return {
     origin: (
       origin: string | undefined,
-      callback: (err: Error | null, allow?: boolean) => void
+      callback: (err: Error | null, allow?: boolean) => void,
     ): void => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -36,6 +36,7 @@ const configureCORS = (): cors.CorsOptions => {
 };
 
 // Rate Limiting Configuration
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const configureRateLimiter = () => {
   const maxRequests = parseInt(process.env.RATE_LIMIT_MAX || "100", 10);
   logger.info(`Rate Limit Max: ${maxRequests}`);

@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction, RequestHandler } from "express";
-import { AuthenticatedRequest } from "../middleware/authMiddleware"; // Ensure this is correctly imported
+import type { Request, Response, NextFunction, RequestHandler } from "express";
+import type { AuthenticatedRequest } from "../middleware/authMiddleware"; // Ensure this is correctly imported
 import logger from "../utils/winstonLogger";
 
 /**

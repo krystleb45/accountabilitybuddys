@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import CustomReminder from "../models/CustomReminder";
 import catchAsync from "../utils/catchAsync";
@@ -14,7 +14,7 @@ export const createReminder = catchAsync(
   async (
     req: Request<{}, any, { reminderMessage: string; reminderTime: string; recurrence?: string }>, // Explicit typing
     res: Response,
-    next: NextFunction // Added next for error propagation
+    next: NextFunction, // Added next for error propagation
   ): Promise<void> => {
     try {
       const { reminderMessage, reminderTime, recurrence } = sanitize(req.body);
@@ -55,7 +55,7 @@ export const createReminder = catchAsync(
     } catch (error) {
       next(error); // Ensure errors are passed to the middleware
     }
-  }
+  },
 );
 /**
  * @desc    Edit a custom reminder
@@ -66,7 +66,7 @@ export const editReminder = catchAsync(
   async (
     req: Request<{ reminderId: string }, {}, { reminderMessage?: string; reminderTime?: string; recurrence?: string }>,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const { reminderId } = req.params;
     const { reminderMessage, reminderTime, recurrence } = sanitize(req.body);
@@ -97,7 +97,7 @@ export const editReminder = catchAsync(
     const updatedReminder = await CustomReminder.findOneAndUpdate(
       { _id: reminderId, user: new mongoose.Types.ObjectId(userId) },
       updateData,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!updatedReminder) {
@@ -106,7 +106,7 @@ export const editReminder = catchAsync(
     }
 
     sendResponse(res, 200, true, "Reminder updated successfully", { reminder: updatedReminder });
-  }
+  },
 );
 /**
  * @desc    Disable a custom reminder
@@ -117,7 +117,7 @@ export const disableReminder = catchAsync(
   async (
     req: Request<{ reminderId: string }>, // Ensure reminderId is expected
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const { reminderId } = req.params;
     const userId = req.user?.id;
@@ -130,7 +130,7 @@ export const disableReminder = catchAsync(
     const reminder = await CustomReminder.findOneAndUpdate(
       { _id: reminderId, user: new mongoose.Types.ObjectId(userId) },
       { disabled: true }, // Mark reminder as disabled
-      { new: true }
+      { new: true },
     );
 
     if (!reminder) {
@@ -139,7 +139,7 @@ export const disableReminder = catchAsync(
     }
 
     sendResponse(res, 200, true, "Reminder disabled successfully", { reminder });
-  }
+  },
 );
 /**
  * @desc    Update a custom reminder
@@ -149,7 +149,7 @@ export const disableReminder = catchAsync(
 export const updateReminder = catchAsync(
   async (
     req: Request<{ reminderId: string }, any, { reminderMessage?: string; reminderTime?: string; recurrence?: string }>,
-    res: Response
+    res: Response,
   ) => {
     const { reminderId } = req.params;
     const { reminderMessage, reminderTime, recurrence } = sanitize(req.body);
@@ -180,7 +180,7 @@ export const updateReminder = catchAsync(
     const updatedReminder = await CustomReminder.findOneAndUpdate(
       { _id: reminderId, user: new mongoose.Types.ObjectId(userId) },
       updateData,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!updatedReminder) {
@@ -189,7 +189,7 @@ export const updateReminder = catchAsync(
     }
 
     sendResponse(res, 200, true, "Reminder updated successfully", { reminder: updatedReminder });
-  }
+  },
 );
 
 /**
@@ -201,7 +201,7 @@ export const deleteReminder = catchAsync(
   async (
     req: Request<{ reminderId: string }>, // Explicit type for Request
     res: Response,
-    next: NextFunction // Added 'next' parameter
+    next: NextFunction, // Added 'next' parameter
   ): Promise<void> => {
     try {
       const reminderId = sanitize(req.params.reminderId); // Sanitize reminder ID
@@ -230,7 +230,7 @@ export const deleteReminder = catchAsync(
     } catch (error) {
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
 
 
@@ -242,7 +242,7 @@ export const deleteReminder = catchAsync(
 export const getUserReminders = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>,
-    res: Response
+    res: Response,
   ) => {
     const userId = req.user?.id;
 
@@ -261,5 +261,5 @@ export const getUserReminders = catchAsync(
     }
 
     sendResponse(res, 200, true, "Reminders fetched successfully", { reminders });
-  }
+  },
 );

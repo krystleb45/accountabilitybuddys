@@ -1,7 +1,8 @@
-import session, { SessionOptions } from "express-session";
+import type { SessionOptions } from "express-session";
+import session from "express-session";
 import connectRedis from "connect-redis";
 import { createClient } from "redis";
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import logger from "../utils/winstonLogger";
 
 // Create Redis client
@@ -12,14 +13,14 @@ const redisClient = createClient({
 
 // Redis client error handling
 redisClient.on("error", (err: Error) =>
-  logger.error(`Redis client error: ${err.message}`)
+  logger.error(`Redis client error: ${err.message}`),
 );
 redisClient.on("connect", () =>
-  logger.info("Connected to Redis server")
+  logger.info("Connected to Redis server"),
 );
 
 // Ensure Redis client connects before use
-(async (): Promise<void> => {
+void (async (): Promise<void> => {
   try {
     await redisClient.connect();
   } catch (error) {
@@ -56,9 +57,9 @@ const sessionMiddleware = session({
 const enhancedSessionMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
-  sessionMiddleware(req, res, (err?: any) => {
+  void sessionMiddleware(req, res, (err?: any) => {
     if (err instanceof Error) {
       logger.error(`Session middleware error: ${err.message}`);
       res.status(500).json({ message: "Session handling error" });

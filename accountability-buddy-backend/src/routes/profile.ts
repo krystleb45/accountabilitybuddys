@@ -1,26 +1,15 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import authMiddleware from "../middleware/authMiddleware"; // Corrected middleware import path
 import * as ProfileController from "../controllers/ProfileController"; // Corrected controller import path
 import logger from "../utils/winstonLogger"; // Import logger utility
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
-/**
- * Middleware to handle validation errors.
- */
-const handleValidationErrors = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() }); // Explicit return
-    return;
-  }
-  next();
-};
+
 
 /**
  * @route   GET /profile
@@ -47,7 +36,7 @@ router.get(
       logger.error(`Error fetching profile for user ${req.user?.id}: ${errorMessage}`);
       next(error); // Pass error to global error handler
     }
-  }
+  },
 );
 
 
@@ -81,7 +70,7 @@ router.put(
       logger.error(`Error updating profile for user ${req.user?.id}: ${errorMessage}`);
       next(error); // Pass error to global error handler
     }
-  }
+  },
 );
 
 export default router;

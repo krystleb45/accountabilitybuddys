@@ -1,4 +1,5 @@
-import express, { Router, Request, Response, NextFunction } from "express";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
 import Stripe from "stripe";
 import bodyParser from "body-parser";
 import rateLimit from "express-rate-limit";
@@ -33,7 +34,7 @@ const handleErrors = (
   error: unknown,
   res: Response,
   statusCode = 500,
-  message = "An error occurred"
+  message = "An error occurred",
 ): void => {
   const errorMessage =
     error instanceof Error ? error.message : "Unknown error occurred";
@@ -82,7 +83,7 @@ router.post(
       handleErrors(error, res, 500, "Failed to create payment intent.");
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -121,7 +122,7 @@ router.post(
       handleErrors(error, res, 500, "Failed to create payment session.");
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -145,7 +146,7 @@ router.post(
       event = stripe.webhooks.constructEvent(
         req.body,
         sig,
-        process.env.STRIPE_WEBHOOK_SECRET as string
+        process.env.STRIPE_WEBHOOK_SECRET as string,
       );
     } catch (error: unknown) {
       handleErrors(error, res, 400, "Webhook signature verification failed.");
@@ -154,29 +155,29 @@ router.post(
 
     try {
       switch (event.type) {
-      case "checkout.session.completed": {
-        const session = event.data.object as Stripe.Checkout.Session;
-        logger.info(`Payment successful for session: ${session.id}`);
-        // TODO: Handle post-payment logic
-        break;
-      }
+        case "checkout.session.completed": {
+          const session = event.data.object as Stripe.Checkout.Session;
+          logger.info(`Payment successful for session: ${session.id}`);
+          // TODO: Handle post-payment logic
+          break;
+        }
 
-      case "invoice.payment_succeeded": {
-        const invoice = event.data.object as Stripe.Invoice;
-        logger.info(`Payment succeeded for invoice: ${invoice.id}`);
-        // TODO: Handle subscription renewal logic
-        break;
-      }
+        case "invoice.payment_succeeded": {
+          const invoice = event.data.object as Stripe.Invoice;
+          logger.info(`Payment succeeded for invoice: ${invoice.id}`);
+          // TODO: Handle subscription renewal logic
+          break;
+        }
 
-      case "invoice.payment_failed": {
-        const invoiceFailed = event.data.object as Stripe.Invoice;
-        logger.error(`Payment failed for invoice: ${invoiceFailed.id}`);
-        // TODO: Handle subscription payment failure
-        break;
-      }
+        case "invoice.payment_failed": {
+          const invoiceFailed = event.data.object as Stripe.Invoice;
+          logger.error(`Payment failed for invoice: ${invoiceFailed.id}`);
+          // TODO: Handle subscription payment failure
+          break;
+        }
 
-      default:
-        logger.warn(`Unhandled event type: ${event.type}`);
+        default:
+          logger.warn(`Unhandled event type: ${event.type}`);
       }
     } catch (error: unknown) {
       handleErrors(error, res, 500, `Error handling event ${event.type}.`);
@@ -184,7 +185,7 @@ router.post(
     }
 
     res.status(200).json({ received: true });
-  }
+  },
 );
 
 export default router;

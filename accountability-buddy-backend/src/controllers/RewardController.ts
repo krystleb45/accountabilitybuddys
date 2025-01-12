@@ -1,8 +1,9 @@
 // RewardsController.ts
-import { Request, Response, NextFunction } from "express";
-import  { Types } from "mongoose";
+import type { Request, Response, NextFunction } from "express";
+import type  { Types } from "mongoose";
 import User from "../models/User";
-import { Reward, IReward } from "../models/Rewards";
+import type { IReward } from "../models/Rewards";
+import { Reward } from "../models/Rewards";
 import Review from "../models/Review";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -16,7 +17,7 @@ export const getUserRewards = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id;
 
@@ -32,7 +33,7 @@ export const getUserRewards = catchAsync(
     sendResponse(res, 200, true, "User rewards fetched successfully", {
       rewards: user.rewards ?? [],
     });
-  }
+  },
 );
 
 /**
@@ -43,7 +44,7 @@ export const getUserRewards = catchAsync(
 export const redeemReward = catchAsync(
   async (
     req: Request<{}, any, { rewardId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { rewardId } = req.body;
     const userId = req.user?.id;
@@ -71,7 +72,7 @@ export const redeemReward = catchAsync(
     await user.save();
 
     sendResponse(res, 200, true, "Reward redeemed successfully", { reward });
-  }
+  },
 );
 
 /**
@@ -82,7 +83,7 @@ export const redeemReward = catchAsync(
 export const createReward = catchAsync(
   async (
     req: Request<{}, any, { title: string; description?: string; points: number }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { title, description, points } = req.body;
 
@@ -98,7 +99,7 @@ export const createReward = catchAsync(
     });
 
     sendResponse(res, 201, true, "Reward created successfully", { reward: newReward });
-  }
+  },
 );
 
 /**
@@ -124,7 +125,7 @@ export const awardPoints = async (userId: string, points: number): Promise<void>
 export const submitReview = catchAsync(
   async (
     req: Request<{}, any, { userId: string; rating: number; content: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { userId, rating, content } = req.body;
     const reviewerId = req.user?.id;
@@ -167,5 +168,5 @@ export const submitReview = catchAsync(
     });
 
     sendResponse(res, 201, true, "Review submitted successfully", { review: newReview });
-  }
+  },
 );

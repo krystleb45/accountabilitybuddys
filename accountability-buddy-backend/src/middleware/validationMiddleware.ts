@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { validationResult, ValidationChain } from "express-validator";
+import type { Request, Response, NextFunction } from "express";
+import type { ValidationChain } from "express-validator";
+import { validationResult } from "express-validator";
 import logger from "../utils/winstonLogger";
 
 /**
@@ -11,7 +12,7 @@ const validationMiddleware = (validations: ValidationChain[] = []): ((req: Reque
   return async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       // Run all validations

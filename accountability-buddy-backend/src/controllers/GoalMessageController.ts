@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import { GoalMessage } from "../models/GoalMessage";
 import Goal from "../models/Goal";
@@ -7,13 +7,19 @@ import sendResponse from "../utils/sendResponse";
 import { createError } from "../middleware/errorHandler";
 import logger from "../utils/winstonLogger";
 
-// Extend Request to include user info
+// Define reusable types for request parameters and bodies
+type GoalParams = { goalId: string };
+type MessageParams = { messageId: string };
+type CreateMessageBody = { message: string };
+
+// Extend Request to include the user property
 interface RequestWithUser extends Request {
   user?: {
     id: string;
     email?: string;
     role: "user" | "admin" | "moderator";
     isAdmin?: boolean;
+    password(currentPassword: any, password: any): unknown; // Ensure compatibility with other controllers
   };
 }
 
@@ -24,33 +30,34 @@ interface RequestWithUser extends Request {
  */
 export const createGoalMessage = catchAsync(
   async (
-    req: Request<{ goalId: string }, any, { message: string }>,
-    res: Response
+    req: Request<GoalParams, {}, CreateMessageBody> & RequestWithUser,
+    res: Response,
+    next: NextFunction,
   ): Promise<void> => {
     const { goalId } = req.params;
     const { message } = req.body;
     const userId = req.user?.id;
 
-    // Validate input
-    if (!goalId || !message || message.trim() === "") {
-      throw createError("Goal ID and message are required", 400);
+    if (!userId) {
+      return next(createError("Unauthorized access", 401));
     }
 
-    // Check if goal exists and belongs to the user
+    if (!goalId || !message || message.trim() === "") {
+      return next(createError("Goal ID and message are required", 400));
+    }
+
     const goal = await Goal.findOne({ _id: goalId, user: userId });
     if (!goal) {
       sendResponse(res, 404, false, "Goal not found or access denied");
       return;
     }
 
-    // Create a new goal message
-    const newMessage = new GoalMessage({ goal: goalId, user: userId, message });
-    await newMessage.save();
+    const newMessage = await GoalMessage.create({ goal: goalId, user: userId, message });
 
     sendResponse(res, 201, true, "Goal message created successfully", {
       message: newMessage,
     });
-  }
+  },
 );
 
 /**
@@ -60,67 +67,65 @@ export const createGoalMessage = catchAsync(
  */
 export const getGoalMessages = catchAsync(
   async (
-    req: Request<{ goalId: string }> ,
-    res: Response
+    req: Request<GoalParams> & RequestWithUser,
+    res: Response,
+    next: NextFunction,
   ): Promise<void> => {
     const { goalId } = req.params;
     const userId = req.user?.id;
 
-    // Check if the user owns the goal
+    if (!userId) {
+      return next(createError("Unauthorized access", 401));
+    }
+
     const goal = await Goal.findOne({ _id: goalId, user: userId });
     if (!goal) {
       sendResponse(res, 404, false, "Goal not found or access denied");
       return;
     }
 
-    // Fetch messages for the specified goal
     const messages = await GoalMessage.find({ goal: goalId })
       .populate("user", "username profilePicture")
       .sort({ createdAt: -1 });
 
-    sendResponse(res, 200, true, "Goal messages fetched successfully", {
-      messages,
-    });
-  }
+    sendResponse(res, 200, true, "Goal messages fetched successfully", { messages });
+  },
 );
+
 /**
- * @desc    Send a goal-related message
- * @route   POST /goal-message/:goalId/send
- * @access  Private
+ * @desc Send a goal-related message
+ * @route POST /goal-message/:goalId/send
+ * @access Private
  */
 export const sendGoalMessage = catchAsync(
   async (
-    req: RequestWithUser,
+    req: Request<GoalParams, {}, CreateMessageBody> & RequestWithUser,
     res: Response,
-    _next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     const { goalId } = req.params;
     const { message } = req.body;
     const userId = req.user?.id;
 
-    // Validate user ID
     if (!userId) {
-      sendResponse(res, 401, false, "Unauthorized");
-      return;
+      return next(createError("Unauthorized access", 401));
     }
 
-    // Validate message content
     if (!message || typeof message !== "string" || message.trim() === "") {
-      sendResponse(res, 400, false, "Message cannot be empty");
-      return;
+      return next(createError("Message cannot be empty", 400));
     }
 
-    // Save the message
     const newMessage = await GoalMessage.create({
-      goalId,
+      goal: goalId,
       user: userId,
       message,
     });
 
     logger.info(`Message sent by user: ${userId} for goal: ${goalId}`);
     sendResponse(res, 201, true, "Message sent successfully", { newMessage });
-  }
+  },
 );
+
 /**
  * @desc Delete a goal message
  * @route DELETE /api/goals/messages/:messageId
@@ -128,29 +133,31 @@ export const sendGoalMessage = catchAsync(
  */
 export const deleteGoalMessage = catchAsync(
   async (
-    req: Request<{ messageId: string }> ,
-    res: Response
+    req: Request<MessageParams> & RequestWithUser,
+    res: Response,
+    next: NextFunction,
   ): Promise<void> => {
     const { messageId } = req.params;
     const userId = req.user?.id;
 
-    // Validate ObjectId format
-    if (!mongoose.Types.ObjectId.isValid(messageId)) {
-      throw createError("Invalid message ID format", 400);
+    if (!userId) {
+      return next(createError("Unauthorized access", 401));
     }
 
-    // Find the message and ensure it belongs to the user
+    if (!mongoose.Types.ObjectId.isValid(messageId)) {
+      return next(createError("Invalid message ID format", 400));
+    }
+
     const message = await GoalMessage.findOne({ _id: messageId, user: userId });
     if (!message) {
       sendResponse(res, 404, false, "Message not found or access denied");
       return;
     }
 
-    // Delete the message
     await message.deleteOne();
 
     sendResponse(res, 200, true, "Goal message deleted successfully");
-  }
+  },
 );
 
 /**
@@ -160,39 +167,45 @@ export const deleteGoalMessage = catchAsync(
  */
 export const updateGoalMessage = catchAsync(
   async (
-    req: Request<{ messageId: string }, any, { message: string }>,
-    res: Response
+    req: Request<MessageParams, {}, CreateMessageBody> & RequestWithUser,
+    res: Response,
+    next: NextFunction,
   ): Promise<void> => {
     const { messageId } = req.params;
     const { message } = req.body;
     const userId = req.user?.id;
 
-    // Validate input
+    if (!userId) {
+      return next(createError("Unauthorized access", 401));
+    }
+
     if (!message || message.trim() === "") {
-      throw createError("Message content cannot be empty", 400);
+      return next(createError("Message content cannot be empty", 400));
     }
 
-    // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(messageId)) {
-      throw createError("Invalid message ID format", 400);
+      return next(createError("Invalid message ID format", 400));
     }
 
-    // Find the message and ensure it belongs to the user
-    const existingMessage = await GoalMessage.findOne({
-      _id: messageId,
-      user: userId,
-    });
+    const existingMessage = await GoalMessage.findOne({ _id: messageId, user: userId });
     if (!existingMessage) {
       sendResponse(res, 404, false, "Message not found or access denied");
       return;
     }
 
-    // Update the message content
     existingMessage.message = message;
     await existingMessage.save();
 
     sendResponse(res, 200, true, "Goal message updated successfully", {
       message: existingMessage,
     });
-  }
+  },
 );
+
+export default {
+  createGoalMessage,
+  getGoalMessages,
+  sendGoalMessage,
+  deleteGoalMessage,
+  updateGoalMessage,
+};

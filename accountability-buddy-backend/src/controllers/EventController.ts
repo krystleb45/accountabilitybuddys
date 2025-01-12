@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-import { Request, Response } from "express";
-import Event, { IEvent } from "../models/Event"; // Import IEvent with participants
+import type { Request, Response } from "express";
+import type { IEvent } from "../models/Event";
+import Event from "../models/Event"; // Import IEvent with participants
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import logger from "../utils/winstonLogger";
@@ -13,7 +14,7 @@ import logger from "../utils/winstonLogger";
 export const joinEvent = catchAsync(
   async (
     req: Request<{ eventId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { eventId } = req.params;
     const userId = req.user?.id; // Ensure user ID exists in req.user
@@ -32,7 +33,7 @@ export const joinEvent = catchAsync(
 
     // Check if user is already a participant
     const isParticipant = event.participants.some((p) =>
-      p.user.toString() === userId
+      p.user.toString() === userId,
     );
     if (isParticipant) {
       sendResponse(res, 400, false, "You are already attending this event");
@@ -49,7 +50,7 @@ export const joinEvent = catchAsync(
 
     logger.info(`User ${userId} joined event: ${event.title}`);
     sendResponse(res, 200, true, "Joined event successfully", { event });
-  }
+  },
 );
 
 /**
@@ -60,7 +61,7 @@ export const joinEvent = catchAsync(
 export const leaveEvent = catchAsync(
   async (
     req: Request<{ eventId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { eventId } = req.params;
     const userId = req.user?.id;
@@ -78,7 +79,7 @@ export const leaveEvent = catchAsync(
 
     // Check if user is a participant
     const isParticipant = event.participants.some((p) =>
-      p.user.toString() === userId
+      p.user.toString() === userId,
     );
     if (!isParticipant) {
       sendResponse(res, 400, false, "You are not attending this event");
@@ -87,13 +88,13 @@ export const leaveEvent = catchAsync(
 
     // Remove user from participants
     event.participants = event.participants.filter(
-      (p) => p.user.toString() !== userId
+      (p) => p.user.toString() !== userId,
     );
     await event.save();
 
     logger.info(`User ${userId} left event: ${event.title}`);
     sendResponse(res, 200, true, "Left event successfully", { event });
-  }
+  },
 );
 
 export default {

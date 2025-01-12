@@ -6,7 +6,7 @@ import logger from "../utils/winstonLogger"; // Adjust the path as needed
 const oAuth2Client = new google.auth.OAuth2(
   process.env.EMAIL_CLIENT_ID,
   process.env.EMAIL_CLIENT_SECRET,
-  process.env.EMAIL_REDIRECT_URI
+  process.env.EMAIL_REDIRECT_URI,
 );
 
 oAuth2Client.setCredentials({

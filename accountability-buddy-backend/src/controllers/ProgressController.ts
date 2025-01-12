@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import Goal from "../models/Goal"; // Ensure Goal model exists
 import AccountabilityPartnership from "../models/AccountabilityPartnership"; // Ensure Partnership model exists
 import catchAsync from "../utils/catchAsync";
@@ -86,7 +86,7 @@ export const updateProgress = catchAsync(
   async (
     req: Request<{}, {}, { goalId: string; progress: number }>,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id;
     const { goalId, progress } = req.body;

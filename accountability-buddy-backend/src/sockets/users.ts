@@ -1,4 +1,4 @@
-import { Server, Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 import redisClient from "../config/redisClient";
 import User from "../models/User";
 import logger from "../utils/winstonLogger"; // Winston logger
@@ -118,7 +118,7 @@ const usersSocket = (io: Server, socket: Socket): void => {
 
         // Check if recipient is online
         const recipientSockets = Array.from(io.sockets.sockets.values()).filter(
-          (s) => s.data.user?.id === recipientId
+          (s) => s.data.user?.id === recipientId,
         );
 
         if (recipientSockets.length === 0) {
@@ -129,7 +129,7 @@ const usersSocket = (io: Server, socket: Socket): void => {
 
         // Send the message to the recipient
         recipientSockets.forEach((recipientSocket) =>
-          recipientSocket.emit("privateMessage", { from: userId, message })
+          recipientSocket.emit("privateMessage", { from: userId, message }),
         );
 
         logger.info(`Private message from user ${userId} to user ${recipientId}`);
@@ -137,7 +137,7 @@ const usersSocket = (io: Server, socket: Socket): void => {
         logger.error(`Error in privateMessage event for user ${userId}: ${(error as Error).message}`);
         socket.emit("error", { msg: "Failed to send private message." });
       }
-    }
+    },
   );
 };
 

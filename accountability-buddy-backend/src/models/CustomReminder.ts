@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define TypeScript interface for the reminder document
 interface ICustomReminder extends Document {
@@ -71,7 +72,7 @@ const CustomReminderSchema: Schema<ICustomReminder> = new Schema(
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields
-  }
+  },
 );
 
 // Indexes for optimized queries
@@ -97,7 +98,7 @@ CustomReminderSchema.methods.deactivate = async function (): Promise<void> {
 // Static method to get active reminders scheduled within a specific timeframe
 CustomReminderSchema.statics.getUpcomingReminders = async function (
   start: Date,
-  end: Date
+  end: Date,
 ): Promise<ICustomReminder[]> {
   return this.find({
     isActive: true,
@@ -108,7 +109,7 @@ CustomReminderSchema.statics.getUpcomingReminders = async function (
 // Static method to get reminders by user with optional filters
 CustomReminderSchema.statics.getUserReminders = async function (
   userId: Types.ObjectId,
-  filters: Partial<ICustomReminder> = {}
+  filters: Partial<ICustomReminder> = {},
 ): Promise<ICustomReminder[]> {
   const query = {
     user: userId,
@@ -121,7 +122,7 @@ CustomReminderSchema.statics.getUserReminders = async function (
 // Export the CustomReminder model
 const CustomReminder: ICustomReminderModel = mongoose.model<ICustomReminder, ICustomReminderModel>(
   "CustomReminder",
-  CustomReminderSchema
+  CustomReminderSchema,
 );
 
 export default CustomReminder;

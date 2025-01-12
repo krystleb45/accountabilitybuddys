@@ -1,9 +1,12 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware";
 import * as partnerController from "../controllers/partnerController";
 import logger from "../utils/winstonLogger"; // Use your logger here
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
@@ -42,21 +45,7 @@ const validateAddPartnerInput = [
     .isMongoId(),
 ];
 
-/**
- * Handle Validation Errors
- */
-const handleValidationErrors = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return; // Exit early if validation fails
-  }
-  next();
-};
+
 
 /**
  * @route   POST /partner/notify
@@ -80,7 +69,7 @@ router.post(
       logger.error(`Error notifying partner: ${errorMessage}`);
       next(err); // Forward error to middleware
     }
-  }
+  },
 );
 
 
@@ -104,7 +93,7 @@ router.post(
       logger.error(`Error adding partner: ${errorMessage}`);
       next(err); // Forward error to middleware
     }
-  }
+  },
 );
 
 
@@ -127,7 +116,7 @@ router.get(
       });
       next(err); // Forward error to middleware
     }
-  }
+  },
 );
 
 

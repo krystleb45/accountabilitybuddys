@@ -21,40 +21,40 @@
     "prettier/prettier": [
       "warn",
       {
-        "singleQuote": true, // Ensure single quotes
-        "semi": true,       // Ensure semicolons
-        "tabWidth": 2       // Set indentation width
+        "singleQuote": true,
+        "semi": true,
+        "tabWidth": 2
       }
     ],
-    "no-console": ["warn", { "allow": ["warn", "error"] }], // Allow console.warn and console.error
-    "no-unused-vars": "off", // Disable default rule in favor of TS-specific rule
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn",
       { "args": "none", "ignoreRestSiblings": true }
     ],
-    "@typescript-eslint/explicit-function-return-type": "off", // Allow inferred return types
+    "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": [
       "warn",
       { "ignoreRestArgs": true }
-    ], // Warn on `any` with flexibility for function rest args
-    "@typescript-eslint/no-non-null-assertion": "off", // Allow non-null assertions (!)
+    ],
+    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/ban-ts-comment": [
       "warn",
       {
-        "ts-ignore": "allow-with-description" // Require a description with `@ts-ignore`
+        "ts-ignore": "allow-with-description"
       }
     ],
-    "@typescript-eslint/no-floating-promises": "error", // Prevent unhandled promises
-    "@typescript-eslint/consistent-type-imports": "warn", // Enforce consistent type imports
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/array-type": [
       "warn",
-      { "default": "array-simple" } // Prefer simple array types like `string[]`
+      { "default": "array-simple" }
     ],
-    "@typescript-eslint/no-inferrable-types": "warn", // Warn on explicit types that can be inferred
+    "@typescript-eslint/no-inferrable-types": "warn",
     "sort-imports": [
       "warn",
       {
-        "ignoreDeclarationSort": true, // Only sort within import statements
+        "ignoreDeclarationSort": true,
         "ignoreCase": true
       }
     ]
@@ -64,6 +64,7 @@
     "dist/",
     "coverage/",
     "types/**/*.d.ts",
+    "@types/**/*.d.ts",
     "*.config.js",
     "*.config.cjs",
     "*.config.mjs"

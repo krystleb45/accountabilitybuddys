@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define Badge Level and Type enums
 export type BadgeLevel = "Bronze" | "Silver" | "Gold";
@@ -85,7 +86,7 @@ const BadgeProgressSchema = new Schema<IBadgeProgress, BadgeProgressModel>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Index to optimize lookup by user and badgeType
@@ -95,7 +96,7 @@ BadgeProgressSchema.index({ user: 1, badgeType: 1 }, { unique: true });
 BadgeProgressSchema.statics.updateProgress = async function (
   userId: mongoose.Types.ObjectId,
   badgeType: BadgeType,
-  increment: number
+  increment: number,
 ): Promise<IBadgeProgress> {
   const progress = await this.findOne({ user: userId, badgeType });
   if (!progress) {
@@ -119,7 +120,7 @@ BadgeProgressSchema.statics.updateProgress = async function (
 // Static method: Calculate remaining progress
 BadgeProgressSchema.statics.getRemainingProgress = function (
   progress: number,
-  goal: number
+  goal: number,
 ): number {
   return Math.max(goal - progress, 0);
 };
@@ -127,7 +128,7 @@ BadgeProgressSchema.statics.getRemainingProgress = function (
 // Static method: Reset progress
 BadgeProgressSchema.statics.resetProgress = async function (
   userId: mongoose.Types.ObjectId,
-  badgeType: BadgeType
+  badgeType: BadgeType,
 ): Promise<IBadgeProgress | null> {
   const progress = await this.findOne({ user: userId, badgeType });
   if (!progress) return null;
@@ -143,7 +144,7 @@ BadgeProgressSchema.statics.resetProgress = async function (
 // Static method: Upgrade badge level
 BadgeProgressSchema.statics.upgradeBadgeLevel = async function (
   userId: mongoose.Types.ObjectId,
-  badgeType: BadgeType
+  badgeType: BadgeType,
 ): Promise<IBadgeProgress | null> {
   const progress = await this.findOne({ user: userId, badgeType });
   if (!progress) return null;
@@ -189,7 +190,7 @@ BadgeProgressSchema.post<IBadgeProgress>("save", function (doc) {
 // Export the model
 const BadgeProgress = mongoose.model<IBadgeProgress, BadgeProgressModel>(
   "BadgeProgress",
-  BadgeProgressSchema
+  BadgeProgressSchema,
 );
 
 export default BadgeProgress;

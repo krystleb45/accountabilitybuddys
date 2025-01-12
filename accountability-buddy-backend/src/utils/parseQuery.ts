@@ -38,29 +38,29 @@ const parseQuery = (
 
     // Handle type conversion and sanitization
     switch (type) {
-    case "number":
-      value = value !== undefined ? Number(value) : defaultValue;
-      if (isNaN(value as number)) value = defaultValue ?? null;
-      break;
+      case "number":
+        value = value !== undefined ? Number(value) : defaultValue;
+        if (isNaN(value as number)) value = defaultValue ?? null;
+        break;
 
-    case "boolean":
-      value = value === "true" || value === true;
-      break;
+      case "boolean":
+        value = value === "true" || value === true;
+        break;
 
-    case "date":
-      value =
+      case "date":
+        value =
           value !== undefined && new Date(value as string).toString() !== "Invalid Date"
             ? new Date(value as string)
             : defaultValue ?? null;
-      break;
+        break;
 
-    case "string":
-      value = value !== undefined ? sanitizeString(value as string) : defaultValue ?? null;
-      break;
+      case "string":
+        value = value !== undefined ? sanitizeString(value as string) : defaultValue ?? null;
+        break;
 
-    default:
-      value = defaultValue ?? null;
-      break;
+      default:
+        value = defaultValue ?? null;
+        break;
     }
 
     parsedQuery[key] = value as string | number | boolean | Date | null;

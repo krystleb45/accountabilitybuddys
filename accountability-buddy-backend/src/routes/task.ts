@@ -1,4 +1,5 @@
-import express, { Router, Request, Response, NextFunction } from "express";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
 import { check, validationResult } from "express-validator";
 import authMiddleware from "../middleware/authMiddleware";
 import sanitize from "mongo-sanitize";
@@ -20,7 +21,7 @@ const router: Router = express.Router();
 const handleError = (
   error: unknown,
   res: Response,
-  defaultMessage: string
+  defaultMessage: string,
 ): void => {
   const errorMessage =
     error instanceof Error ? error.message : "Unexpected error occurred.";
@@ -43,7 +44,7 @@ router.post(
   async (
     req: Request<{}, {}, { title: string; dueDate?: string }>,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -59,7 +60,7 @@ router.post(
       handleError(error, res, "Error creating task");
       return next(error);
     }
-  }
+  },
 );
 
 
@@ -74,14 +75,14 @@ router.get(
   async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       await getAllTasks(req, res, next); // Pass all required arguments
     } catch (error) {
       handleError(error, res, "Error fetching tasks");
     }
-  }
+  },
 );
 
 
@@ -96,7 +97,7 @@ router.get(
   async (
     req: Request<{ id: string }>, // Explicitly define ID param type
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       await getTaskById(req, res, next); // Pass all required arguments
@@ -104,7 +105,7 @@ router.get(
       handleError(error, res, "Error fetching task");
       next(error);
     }
-  }
+  },
 );
 
 
@@ -123,7 +124,7 @@ router.put(
   async (
     req: Request<{ id: string }, {}, { title?: string; dueDate?: string }>,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -138,7 +139,7 @@ router.put(
       handleError(error, res, "Error updating task");
       next(error); // Pass error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -152,7 +153,7 @@ router.delete(
   async (
     req: Request<{ id: string }>, // Explicitly define ID param type
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       // Pass req, res, and next to the controller
@@ -161,7 +162,7 @@ router.delete(
       handleError(error, res, "Error deleting task");
       next(error); // Pass error to middleware
     }
-  }
+  },
 );
 
 

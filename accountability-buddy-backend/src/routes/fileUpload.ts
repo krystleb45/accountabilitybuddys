@@ -1,5 +1,7 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import multer, { FileFilterCallback } from "multer";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import type { FileFilterCallback } from "multer";
+import multer from "multer";
 import * as fileUploadController from "../controllers/FileUploadController"; // Corrected controller import path
 import authMiddleware from "../middleware/authMiddleware"; // Corrected middleware import path
 import rateLimit from "express-rate-limit";
@@ -69,7 +71,7 @@ router.post(
       logger.error(`Error uploading file: ${(error as Error).message}`, { error });
       next(error); // Pass error to error-handling middleware
     }
-  }
+  },
 );
 
 
@@ -100,7 +102,7 @@ router.get(
       logger.error(`Error downloading file: ${(error as Error).message}`, { error });
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -132,7 +134,7 @@ router.delete(
       logger.error(`Error deleting file: ${(error as Error).message}`, { error });
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
 
 

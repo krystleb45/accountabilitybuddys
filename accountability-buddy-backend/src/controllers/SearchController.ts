@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import User from "../models/User";
 import Group from "../models/Group";
 import Goal from "../models/Goal"; // Added Goal model
-import { Post}  from "../models/Post"; // Added Post model
+import { Post }  from "../models/Post"; // Added Post model
 import sanitize from "mongo-sanitize";
 import sendResponse from "../utils/sendResponse";
-import { Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
 
 // Helper function to sanitize input
 const sanitizeInput = (input: any): any => sanitize(input);
@@ -15,7 +15,7 @@ const paginate = async <T extends Document>(
   model: Model<T>,
   query: Record<string, unknown>,
   page: number,
-  limit: number
+  limit: number,
 ): Promise<{ results: T[]; totalCount: number }> => {
   const [results, totalCount] = await Promise.all([
     model
@@ -37,14 +37,14 @@ const paginate = async <T extends Document>(
 export const searchUsers = async (
   req: Request<{}, {}, {}, { query: string; page?: string; limit?: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const query = sanitizeInput(req.query.query);
     const page = parseInt(sanitizeInput(req.query.page || "1"), 10);
     const limit = Math.min(
       parseInt(sanitizeInput(req.query.limit || "10"), 10),
-      50
+      50,
     );
 
     const searchQuery = {
@@ -58,7 +58,7 @@ export const searchUsers = async (
       User,
       searchQuery,
       page,
-      limit
+      limit,
     );
 
     sendResponse(res, 200, true, "Users fetched successfully", {
@@ -82,14 +82,14 @@ export const searchUsers = async (
 export const searchGroups = async (
   req: Request<{}, {}, {}, { query: string; page?: string; limit?: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const query = sanitizeInput(req.query.query);
     const page = parseInt(sanitizeInput(req.query.page || "1"), 10);
     const limit = Math.min(
       parseInt(sanitizeInput(req.query.limit || "10"), 10),
-      50
+      50,
     );
 
     const searchQuery = { name: { $regex: query, $options: "i" } };
@@ -98,7 +98,7 @@ export const searchGroups = async (
       Group,
       searchQuery,
       page,
-      limit
+      limit,
     );
 
     sendResponse(res, 200, true, "Groups fetched successfully", {
@@ -122,14 +122,14 @@ export const searchGroups = async (
 export const searchGoals = async (
   req: Request<{}, {}, {}, { query: string; page?: string; limit?: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const query = sanitizeInput(req.query.query);
     const page = parseInt(sanitizeInput(req.query.page || "1"), 10);
     const limit = Math.min(
       parseInt(sanitizeInput(req.query.limit || "10"), 10),
-      50
+      50,
     );
 
     const searchQuery = { title: { $regex: query, $options: "i" } };
@@ -138,7 +138,7 @@ export const searchGoals = async (
       Goal,
       searchQuery,
       page,
-      limit
+      limit,
     );
 
     sendResponse(res, 200, true, "Goals fetched successfully", {
@@ -162,14 +162,14 @@ export const searchGoals = async (
 export const searchPosts = async (
   req: Request<{}, {}, {}, { query: string; page?: string; limit?: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const query = sanitizeInput(req.query.query);
     const page = parseInt(sanitizeInput(req.query.page || "1"), 10);
     const limit = Math.min(
       parseInt(sanitizeInput(req.query.limit || "10"), 10),
-      50
+      50,
     );
 
     const searchQuery = {
@@ -183,7 +183,7 @@ export const searchPosts = async (
       Post,
       searchQuery,
       page,
-      limit
+      limit,
     );
 
     sendResponse(res, 200, true, "Posts fetched successfully", {

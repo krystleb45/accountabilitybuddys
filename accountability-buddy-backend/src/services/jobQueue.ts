@@ -28,7 +28,7 @@ const emailQueue = new Queue("emailQueue", {
 });
 
 // Process email jobs from the queue
-emailQueue.process(async (job): Promise<void> => {
+void emailQueue.process(async (job): Promise<void> => {
   const { to, subject, text } = job.data;
   try {
     logger.info(`Processing email job: ${job.id} to ${to}`);
@@ -47,7 +47,7 @@ const addEmailToQueue = async (
   to: string,
   subject: string,
   text: string,
-  priority = 3
+  priority = 3,
 ): Promise<void> => {
   try {
     await emailQueue.add(
@@ -55,7 +55,7 @@ const addEmailToQueue = async (
       {
         priority, // Set job priority (lower numbers have higher priority)
         lifo: false, // Jobs are processed in FIFO order (First In, First Out)
-      }
+      },
     );
     logger.info(`Email job added to queue for ${to} with priority ${priority}`);
   } catch (error: unknown) {

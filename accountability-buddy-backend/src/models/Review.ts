@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define the Review interface
 export interface IReview extends Document {
@@ -56,7 +57,7 @@ const ReviewSchema = new Schema<IReview>(
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields
-  }
+  },
 );
 
 // Compound index for optimized queries
@@ -74,7 +75,7 @@ ReviewSchema.pre("save", function (next) {
 
 // Static method to get reviews for a specific user
 ReviewSchema.statics.getReviewsForUser = async function (
-  userId: Types.ObjectId
+  userId: Types.ObjectId,
 ): Promise<IReview[]> {
   return this.find({ reviewedUser: userId })
     .populate("user", "username")
@@ -83,7 +84,7 @@ ReviewSchema.statics.getReviewsForUser = async function (
 
 // Static method to flag a review
 ReviewSchema.statics.flagReview = async function (
-  reviewId: string
+  reviewId: string,
 ): Promise<IReview | null> {
   const review = await this.findById(reviewId);
   if (review) {
@@ -95,7 +96,7 @@ ReviewSchema.statics.flagReview = async function (
 
 // Static method to calculate the average rating for a user
 ReviewSchema.statics.getAverageRating = async function (
-  userId: Types.ObjectId
+  userId: Types.ObjectId,
 ): Promise<number | null> {
   const result = await this.aggregate([
     { $match: { reviewedUser: new mongoose.Types.ObjectId(userId) } },
@@ -107,7 +108,7 @@ ReviewSchema.statics.getAverageRating = async function (
 // Export the Review model
 export const Review: IReviewModel = mongoose.model<IReview, IReviewModel>(
   "Review",
-  ReviewSchema
+  ReviewSchema,
 );
 
 export default Review;

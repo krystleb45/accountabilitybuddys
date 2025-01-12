@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import logger from "../utils/winstonLogger";
 
 interface CustomError extends Error {
@@ -10,13 +10,13 @@ const errorMiddleware = (
   error: CustomError,
   req: Request,
   res: Response,
-  _next: NextFunction 
+  _next: NextFunction, 
 ): void => {
   // Log the error
   logger.error(
     `Error: ${error.message}, Status: ${error.status || 500}, Path: ${
       req.path
-    }, IP: ${req.ip}`
+    }, IP: ${req.ip}`,
   );
 
   // Send a generic or detailed response based on environment

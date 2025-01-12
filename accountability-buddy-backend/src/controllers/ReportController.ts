@@ -13,7 +13,7 @@ export const createReport = async (
   userId: string,
   reportedId: string,
   reportType: string,
-  reason: string
+  reason: string,
 ): Promise<object> => {
   try {
     const report = await Report.create({
@@ -77,7 +77,7 @@ export const resolveReport = async (reportId: string, resolvedBy: string): Promi
     const report = await Report.findByIdAndUpdate(
       reportId,
       { status: "resolved", resolvedBy, resolvedAt: new Date() },
-      { new: true } // Return the updated document
+      { new: true }, // Return the updated document
     );
 
     if (!report) {

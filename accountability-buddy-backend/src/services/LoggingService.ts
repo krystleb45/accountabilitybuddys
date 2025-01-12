@@ -42,7 +42,7 @@ const LoggingService = {
   logError: (
     message: string,
     err: Error | string,
-    metadata: Metadata = {}
+    metadata: Metadata = {},
   ): void => {
     const errorDetails =
       typeof err === "string"
@@ -83,7 +83,7 @@ const LoggingService = {
   logFatal: (
     message: string,
     err: Error | string,
-    metadata: Metadata = {}
+    metadata: Metadata = {},
   ): void => {
     const errorDetails =
       typeof err === "string"
@@ -110,7 +110,7 @@ const LoggingService = {
   logPerformance: (
     message: string,
     metrics: Record<string, unknown>,
-    metadata: Metadata = {}
+    metadata: Metadata = {},
   ): void => {
     logger.info({
       message,

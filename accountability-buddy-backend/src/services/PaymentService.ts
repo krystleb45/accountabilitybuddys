@@ -14,7 +14,7 @@ const PaymentService = {
    */
   createSession: async (
     userId: string,
-    planId: string
+    planId: string,
   ): Promise<Stripe.Checkout.Session> => {
     try {
       const session = await stripe.checkout.sessions.create({
@@ -27,7 +27,7 @@ const PaymentService = {
       });
 
       LoggingService.logInfo(
-        `Stripe session created for user ${userId}, Plan: ${planId}`
+        `Stripe session created for user ${userId}, Plan: ${planId}`,
       );
       return session;
     } catch (error: unknown) {
@@ -35,7 +35,7 @@ const PaymentService = {
         error instanceof Error ? error.message : "Unknown error";
       LoggingService.logError(
         "Error creating Stripe session",
-        new Error(errorMessage)
+        new Error(errorMessage),
       );
       throw new Error("Failed to create subscription session");
     }
@@ -48,26 +48,26 @@ const PaymentService = {
   handleWebhook: async (event: Stripe.Event): Promise<void> => {
     try {
       switch (event.type) {
-      case "checkout.session.completed":
-        await PaymentService.handleSubscriptionCompleted(
-            event.data.object as Stripe.Checkout.Session
-        );
-        break;
+        case "checkout.session.completed":
+          await PaymentService.handleSubscriptionCompleted(
+            event.data.object as Stripe.Checkout.Session,
+          );
+          break;
 
-      case "invoice.payment_succeeded":
-        await PaymentService.handlePaymentSucceeded(
-            event.data.object as Stripe.Invoice
-        );
-        break;
+        case "invoice.payment_succeeded":
+          await PaymentService.handlePaymentSucceeded(
+            event.data.object as Stripe.Invoice,
+          );
+          break;
 
-      case "invoice.payment_failed":
-        await PaymentService.handlePaymentFailed(
-            event.data.object as Stripe.Invoice
-        );
-        break;
+        case "invoice.payment_failed":
+          await PaymentService.handlePaymentFailed(
+            event.data.object as Stripe.Invoice,
+          );
+          break;
 
-      default:
-        LoggingService.logInfo(`Unhandled event type: ${event.type}`);
+        default:
+          LoggingService.logInfo(`Unhandled event type: ${event.type}`);
       }
     } catch (error: unknown) {
       const errorMessage =
@@ -75,7 +75,7 @@ const PaymentService = {
       LoggingService.logError(
         "Error processing Stripe webhook",
         new Error(errorMessage),
-        { eventType: event.type }
+        { eventType: event.type },
       );
       throw new Error("Failed to process payment event");
     }
@@ -86,7 +86,7 @@ const PaymentService = {
    * @param {Stripe.Checkout.Session} session - Stripe checkout session object
    */
   handleSubscriptionCompleted: async (
-    session: Stripe.Checkout.Session
+    session: Stripe.Checkout.Session,
   ): Promise<void> => {
     try {
       const userId = session.customer as string;
@@ -103,7 +103,7 @@ const PaymentService = {
       });
 
       LoggingService.logInfo(
-        `Subscription created for user ${userId}, Subscription ID: ${subscriptionId}`
+        `Subscription created for user ${userId}, Subscription ID: ${subscriptionId}`,
       );
     } catch (error: unknown) {
       const errorMessage =
@@ -111,7 +111,7 @@ const PaymentService = {
       LoggingService.logError(
         "Error completing subscription",
         new Error(errorMessage),
-        { session }
+        { session },
       );
       throw new Error("Failed to handle subscription completion");
     }
@@ -130,11 +130,11 @@ const PaymentService = {
         subscription.status = "active";
         await subscription.save();
         LoggingService.logInfo(
-          `Payment succeeded for subscription ${subscriptionId}`
+          `Payment succeeded for subscription ${subscriptionId}`,
         );
       } else {
         LoggingService.logWarn(
-          `No subscription found for ID ${subscriptionId} after payment success`
+          `No subscription found for ID ${subscriptionId} after payment success`,
         );
       }
     } catch (error: unknown) {
@@ -143,10 +143,10 @@ const PaymentService = {
       LoggingService.logError(
         "Error handling payment success",
         new Error(errorMessage),
-        { invoice }
+        { invoice },
       );
       throw new Error(
-        "Failed to update subscription status after payment success"
+        "Failed to update subscription status after payment success",
       );
     }
   },
@@ -164,11 +164,11 @@ const PaymentService = {
         subscription.status = "past_due";
         await subscription.save();
         LoggingService.logInfo(
-          `Payment failed for subscription ${subscriptionId}`
+          `Payment failed for subscription ${subscriptionId}`,
         );
       } else {
         LoggingService.logWarn(
-          `No subscription found for ID ${subscriptionId} after payment failure`
+          `No subscription found for ID ${subscriptionId} after payment failure`,
         );
       }
     } catch (error: unknown) {
@@ -177,10 +177,10 @@ const PaymentService = {
       LoggingService.logError(
         "Error handling payment failure",
         new Error(errorMessage),
-        { invoice }
+        { invoice },
       );
       throw new Error(
-        "Failed to update subscription status after payment failure"
+        "Failed to update subscription status after payment failure",
       );
     }
   },
@@ -191,20 +191,20 @@ const PaymentService = {
    * @returns {Stripe.Response<Stripe.Subscription>} - The updated subscription object
    */
   cancelSubscription: async (
-    subscriptionId: string
+    subscriptionId: string,
   ): Promise<Stripe.Response<Stripe.Subscription>> => {
     try {
       const canceledSubscription = await stripe.subscriptions.update(
         subscriptionId,
         {
           cancel_at_period_end: true, // Optional: Cancel at the end of the billing period
-        }
+        },
       );
 
       // Update the status in the database
       await Subscription.findOneAndUpdate(
         { subscriptionId },
-        { status: "canceled", subscriptionEnd: new Date() }
+        { status: "canceled", subscriptionEnd: new Date() },
       );
 
       LoggingService.logInfo(`Subscription canceled: ${subscriptionId}`);
@@ -215,7 +215,7 @@ const PaymentService = {
       LoggingService.logError(
         "Error canceling subscription",
         new Error(errorMessage),
-        { subscriptionId }
+        { subscriptionId },
       );
       throw new Error("Failed to cancel subscription");
     }
@@ -227,12 +227,12 @@ const PaymentService = {
    * @returns {Stripe.Subscription} - Stripe subscription object
    */
   getSubscriptionDetails: async (
-    subscriptionId: string
+    subscriptionId: string,
   ): Promise<Stripe.Subscription> => {
     try {
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
       LoggingService.logInfo(
-        `Retrieved subscription details for: ${subscriptionId}`
+        `Retrieved subscription details for: ${subscriptionId}`,
       );
       return subscription;
     } catch (error: unknown) {
@@ -241,7 +241,7 @@ const PaymentService = {
       LoggingService.logError(
         "Error retrieving subscription details",
         new Error(errorMessage),
-        { subscriptionId }
+        { subscriptionId },
       );
       throw new Error("Failed to retrieve subscription details");
     }

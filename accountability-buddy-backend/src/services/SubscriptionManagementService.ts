@@ -65,7 +65,7 @@ const SubscriptionManagementService = {
    */
   async cancelSubscription(
     userId: string,
-    subscriptionId: string
+    subscriptionId: string,
   ): Promise<any> {
     try {
       const userSubscription = await Subscription.findOne({
@@ -80,7 +80,7 @@ const SubscriptionManagementService = {
       // Update the subscription to cancel it
       const canceledSubscription = await stripe.subscriptions.update(
         subscriptionId,
-        { cancel_at_period_end: true } // Cancels the subscription at the end of the current period
+        { cancel_at_period_end: true }, // Cancels the subscription at the end of the current period
       );
   
       // Update subscription status in the database
@@ -103,7 +103,7 @@ const SubscriptionManagementService = {
    */
   async updateSubscription(
     subscriptionId: string,
-    newPlanId: string
+    newPlanId: string,
   ): Promise<any> {
     try {
       const updatedSubscription = await stripe.subscriptions.update(
@@ -116,7 +116,7 @@ const SubscriptionManagementService = {
               price: newPlanId,
             },
           ],
-        }
+        },
       );
 
       // Update the database with new subscription details
@@ -127,7 +127,7 @@ const SubscriptionManagementService = {
         userSubscription.plan = newPlanId;
         userSubscription.status = updatedSubscription.status;
         userSubscription.currentPeriodEnd = new Date(
-          updatedSubscription.current_period_end * 1000
+          updatedSubscription.current_period_end * 1000,
         );
         await userSubscription.save();
       }
@@ -148,7 +148,7 @@ const SubscriptionManagementService = {
   async getSubscriptionStatus(subscriptionId: string): Promise<any> {
     try {
       const subscription = await stripe.subscriptions.retrieve(
-        subscriptionId
+        subscriptionId,
       );
       logger.info(`Fetched subscription status for ID ${subscriptionId}`);
       return subscription;

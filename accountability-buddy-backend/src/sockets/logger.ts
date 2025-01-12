@@ -9,7 +9,7 @@ type LogLevel = "INFO" | "WARN" | "ERROR" | "DEBUG";
 const LOG_DIRECTORY = path.resolve(__dirname, "../../logs");
 const LOG_FILE = path.join(
   LOG_DIRECTORY,
-  `${format(new Date(), "yyyy-MM-dd")}.log`
+  `${format(new Date(), "yyyy-MM-dd")}.log`,
 );
 
 // Ensure the log directory exists
@@ -26,7 +26,7 @@ if (!fs.existsSync(LOG_DIRECTORY)) {
 const log = (
   level: LogLevel,
   message: string,
-  meta?: Record<string, any>
+  meta?: Record<string, any>,
 ): void => {
   const timestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
   const logEntry = `${timestamp} [${level}] ${message} ${
@@ -38,18 +38,18 @@ const log = (
 
   // Log to console
   switch (level) {
-  case "INFO":
+    case "INFO":
     
-    break;
-  case "WARN":
+      break;
+    case "WARN":
     
-    break;
-  case "ERROR":
+      break;
+    case "ERROR":
     
-    break;
-  case "DEBUG":
+      break;
+    case "DEBUG":
     
-    break;
+      break;
   }
 };
 

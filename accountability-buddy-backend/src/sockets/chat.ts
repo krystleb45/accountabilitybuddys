@@ -1,4 +1,4 @@
-import { Server, Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 import Chat from "../models/Chat"; // Chat model for storing messages
 import Group from "../models/Group"; // Group model for managing groups
 import User from "../models/User"; // User model for user details
@@ -49,7 +49,7 @@ const chatSocket = (io: Server, socket: Socket): void => {
         return; // Exit early if room is not found
       }
   
-      socket.join(roomId);
+      void socket.join(roomId);
       logger.info(`User ${userId} joined room ${roomId}`);
   
       socket.to(roomId).emit("userJoined", { userId, username: user.username, roomId });
@@ -86,7 +86,7 @@ const chatSocket = (io: Server, socket: Socket): void => {
         return; // Exit early if room is not found
       }
   
-      socket.leave(roomId);
+      void socket.leave(roomId);
       logger.info(`User ${userId} left room ${roomId}`);
   
       // Notify others in the room that the user has left

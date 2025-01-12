@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
+import type { ValidationError, ValidationChain } from "express-validator";
 import { check, validationResult } from "express-validator";
 
 /**
@@ -10,22 +11,14 @@ import { check, validationResult } from "express-validator";
 export const chatValidationMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const formattedErrors = errors.array().map((error) => {
-      if ("param" in error) {
-        return {
-          field: error.param,
-          message: error.msg,
-        };
-      }
-      return {
-        field: "unknown",
-        message: error.msg,
-      };
-    });
+    const formattedErrors = errors.array().map((error: ValidationError) => ({
+      field: "param" in error ? error.param : "unknown",
+      message: error.msg,
+    }));
 
     res.status(400).json({
       success: false,
@@ -40,9 +33,9 @@ export const chatValidationMiddleware = (
 /**
  * Generates a common validation rule for Mongo ID fields.
  * @param field - The field name to validate.
- * @returns Array of validation rules.
+ * @returns Array of validation chains for the specified field.
  */
-const mongoIdRule = (field: string) => [
+const mongoIdRule = (field: string): ValidationChain[] => [
   check(field)
     .notEmpty()
     .withMessage(`${field} is required`)
@@ -77,11 +70,12 @@ export const createGroupValidation = [
     .trim()
     .escape(),
   check("members")
-    .isArray()
-    .withMessage("Group members must be an array")
-    .notEmpty()
-    .withMessage("Group must have at least one member"),
-  check("members.*").isMongoId().withMessage("Invalid member ID"),
+    .isArray({ min: 1 })
+    .withMessage("Group members must be an array with at least one member")
+    .bail(),
+  check("members.*")
+    .isMongoId()
+    .withMessage("Each group member ID must be a valid Mongo ID"),
   chatValidationMiddleware,
 ];
 

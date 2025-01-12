@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import History from "../models/History"; // Ensure you have a History model
 import catchAsync from "../utils/catchAsync"; // Import async handler
 import sendResponse from "../utils/sendResponse"; // Import utility for responses
@@ -13,7 +13,7 @@ export const getAllHistory = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly annotate the type
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = (req as any).user?.id; // Extract userId from request
 
@@ -24,7 +24,7 @@ export const getAllHistory = catchAsync(
     const histories = await History.find({ userId }).sort({ createdAt: -1 }); // Filter by userId and sort
 
     sendResponse(res, 200, true, "User history fetched successfully", histories); // Send response
-  }
+  },
 );
 
 /**
@@ -36,7 +36,7 @@ export const getHistoryById = catchAsync(
   async (
     req: Request<{ id: string }>, // Explicitly annotate the type for 'id'
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const { id } = req.params;
 
@@ -51,7 +51,7 @@ export const getHistoryById = catchAsync(
     }
 
     sendResponse(res, 200, true, "History record fetched successfully", history);
-  }
+  },
 );
 
 /**
@@ -63,7 +63,7 @@ export const createHistory = catchAsync(
   async (
     req: Request<{}, {}, { entity: string; action: string; details?: string }>, // Explicit types for body
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = (req as any).user?.id; // Ensure user is logged in
     const { entity, action, details } = req.body;
@@ -83,7 +83,7 @@ export const createHistory = catchAsync(
     const savedHistory = await newHistory.save();
 
     sendResponse(res, 201, true, "History record created successfully", savedHistory);
-  }
+  },
 );
 
 /**
@@ -95,7 +95,7 @@ export const deleteHistoryById = catchAsync(
   async (
     req: Request<{ id: string }>, // Explicitly annotate 'id' in params
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const { id } = req.params;
 
@@ -110,7 +110,7 @@ export const deleteHistoryById = catchAsync(
     }
 
     sendResponse(res, 200, true, "History record deleted successfully");
-  }
+  },
 );
 
 /**
@@ -122,7 +122,7 @@ export const clearHistory = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly annotate empty params
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = (req as any).user?.id; // Extract userId
 
@@ -133,5 +133,5 @@ export const clearHistory = catchAsync(
     const result = await History.deleteMany({ userId }); // Delete all user's history
 
     sendResponse(res, 200, true, "History cleared successfully", result);
-  }
+  },
 );

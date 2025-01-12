@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import catchAsync from "../utils/catchAsync"; // Centralized async error handling
 import sendResponse from "../utils/sendResponse"; // Standardized API responses
 
@@ -14,7 +14,7 @@ export const getResources = catchAsync(
   async (
     _req: Request<{}, {}, {}, {}>, // Explicitly define request types
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       // Fetch resources from the database
@@ -29,7 +29,7 @@ export const getResources = catchAsync(
     } catch (error) {
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
   
 
@@ -42,7 +42,7 @@ export const getDisclaimer = catchAsync(
   async (
     _req: Request<{}, {}, {}, {}>,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {const disclaimerText =
           "Disclaimer: The information provided in this platform is for support purposes only and does not replace professional medical, legal, or mental health advice. If you are in crisis, please contact emergency services or a licensed professional immediately.";
@@ -53,7 +53,7 @@ export const getDisclaimer = catchAsync(
     } catch (error) {
       next(error); // Forward error
     }
-  }
+  },
 );
   
 
@@ -66,7 +66,7 @@ export const sendMessage = catchAsync(
   async (
     req: Request<{}, {}, { text: string }, {}>,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { text } = req.body;
@@ -86,6 +86,6 @@ export const sendMessage = catchAsync(
     } catch (error) {
       next(error); // Forward error
     }
-  }
+  },
 );
   

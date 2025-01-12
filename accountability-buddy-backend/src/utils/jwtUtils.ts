@@ -1,4 +1,5 @@
-import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
+import type { JwtPayload, SignOptions } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 interface TokenPayload extends JwtPayload {
   id: string;

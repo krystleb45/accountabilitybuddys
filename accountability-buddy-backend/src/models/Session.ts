@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import validator from "validator"; // For validating IP addresses
 
 // Define the Session interface
@@ -72,7 +73,7 @@ const SessionSchema = new Schema<ISession>(
     timestamps: true, // Automatically create 'createdAt' and 'updatedAt' fields
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // Index for optimized queries by user and expiration date
@@ -104,16 +105,16 @@ SessionSchema.methods.invalidateSession = async function (): Promise<void> {
 
 // Static Method: Invalidate all sessions for a user
 SessionSchema.statics.invalidateUserSessions = async function (
-  userId: Types.ObjectId
+  userId: Types.ObjectId,
 ): Promise<void> {
   await this.updateMany(
     { user: userId, isActive: true },
-    { isActive: false }
+    { isActive: false },
   );
 };
 
 // Export the Session model
 export const Session: ISessionModel = mongoose.model<ISession, ISessionModel>(
   "Session",
-  SessionSchema
+  SessionSchema,
 );

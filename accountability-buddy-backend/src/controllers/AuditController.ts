@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import AuditLog from "../models/AuditLog"; // Ensure this model is defined and implemented correctly
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -12,7 +12,7 @@ export const logAuditEvent = catchAsync(
   async (
     req: Request<{}, {}, { action: string; details?: string }>, // Explicit generic types
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { action, details } = sanitize(req.body);
@@ -38,7 +38,7 @@ export const logAuditEvent = catchAsync(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -47,7 +47,7 @@ export const logAuditEvent = catchAsync(
 export const getAuditLogs = catchAsync(
   async (
     _req: Request<{}, {}, {}, {}>, // Explicit generic types
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const auditLogs = await AuditLog.find().sort({ createdAt: -1 });
 
@@ -59,7 +59,7 @@ export const getAuditLogs = catchAsync(
     sendResponse(res, 200, true, "Audit logs fetched successfully", {
       auditLogs,
     });
-  }
+  },
 );
 
 /**
@@ -69,7 +69,7 @@ export const getAuditLogsByUser = catchAsync(
   async (
     req: Request<{ userId: string }, {}, {}, {}>, // Explicit generic types
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { userId } = req.params;
@@ -94,5 +94,5 @@ export const getAuditLogsByUser = catchAsync(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );

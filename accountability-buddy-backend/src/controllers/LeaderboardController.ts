@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { Leaderboard } from "../models/Leaderboard";
 import Goal from "../models/Goal";
@@ -15,7 +15,7 @@ import logger from "../utils/winstonLogger";
 export const getLeaderboard = catchAsync(
   async (
     req: Request<{}, any, { limit?: string; page?: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const limit = parseInt(req.query.limit as string, 10) || 10;
     const page = parseInt(req.query.page as string, 10) || 1;
@@ -37,7 +37,7 @@ export const getLeaderboard = catchAsync(
         totalPages,
       },
     });
-  }
+  },
 );
 
 /**
@@ -61,13 +61,13 @@ export const updateLeaderboard = async (userId: string): Promise<void> => {
     await Leaderboard.findOneAndUpdate(
       { user: userId },
       { completedGoals, completedMilestones },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
+      { upsert: true, new: true, setDefaultsOnInsert: true },
     );
 
     logger.info(`Leaderboard updated for user: ${userId}`);
   } catch (error) {
     logger.error(
-      `Error updating leaderboard for user ${userId}: ${(error as Error).message}`
+      `Error updating leaderboard for user ${userId}: ${(error as Error).message}`,
     );
   }
 };
@@ -88,7 +88,7 @@ export const getUserLeaderboardPosition = catchAsync(
     const userPosition =
       leaderboard.findIndex((entry) => entry.user.toString() === userId) + 1;
     const userEntry = leaderboard.find(
-      (entry) => entry.user.toString() === userId
+      (entry) => entry.user.toString() === userId,
     );
 
     if (!userEntry) {
@@ -104,9 +104,9 @@ export const getUserLeaderboardPosition = catchAsync(
       {
         userPosition,
         userEntry,
-      }
+      },
     );
-  }
+  },
 );
 
 /**
@@ -124,5 +124,5 @@ export const resetLeaderboard = catchAsync(
     await Leaderboard.deleteMany();
 
     sendResponse(res, 200, true, "Leaderboard reset successfully");
-  }
+  },
 );

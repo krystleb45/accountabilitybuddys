@@ -1,4 +1,5 @@
-import express, { Router, Request, Response, NextFunction } from "express";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
 import { signupNewsletter } from "../controllers/NewsletterController"; // Corrected controller import path
 import rateLimit from "express-rate-limit";
 import logger from "../utils/winstonLogger"; // Corrected logger import path
@@ -39,7 +40,7 @@ router.post(
       });
       next(error); // Forward error to error handler
     }
-  }
+  },
 );
 
 export default router;

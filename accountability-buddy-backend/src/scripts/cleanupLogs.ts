@@ -29,4 +29,4 @@ const cleanupLogs = async (): Promise<void> => {
   }
 };
 
-cleanupLogs();
+void cleanupLogs();

@@ -1,4 +1,5 @@
-import express, { Router, Request, Response, NextFunction } from "express";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
 import authMiddleware from "../middleware/authMiddleware"; // Corrected middleware import path
 import * as HistoryController from "../controllers/HistoryController"; // Corrected controller import path
 import logger from "../utils/winstonLogger"; // Added logger utility
@@ -32,7 +33,7 @@ router.get(
       });
       next(error); // Pass error to middleware
     }
-  }
+  },
 );
 
 
@@ -64,7 +65,7 @@ router.delete(
       });
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
 
 

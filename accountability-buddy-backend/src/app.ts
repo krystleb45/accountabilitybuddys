@@ -1,4 +1,5 @@
-import express, { Request, Response, Express } from "express";
+import type { Request, Response, Express } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -30,7 +31,7 @@ app.post(
   (req, _res, next) => {
     (req as any).rawBody = req.body; // Explicitly add rawBody for Stripe
     next();
-  }
+  },
 );
 
 // Middleware to parse JSON requests
@@ -51,13 +52,13 @@ app.use(limiter);
 app.use(
   helmet({
     contentSecurityPolicy: false, // Disable CSP for flexibility
-  })
+  }),
 );
 app.use(
   cors({
     origin: process.env.ALLOWED_ORIGINS?.split(",") || "*", // Allow multiple origins
     credentials: true, // Allow credentials
-  })
+  }),
 );
 app.use(mongoSanitize()); // Prevent NoSQL injection
 app.use(xssClean()); // Prevent XSS attacks
@@ -69,7 +70,7 @@ app.use(
     stream: {
       write: (message: string) => logger.info(message.trim()),
     },
-  })
+  }),
 );
 
 // Compression Middleware

@@ -1,10 +1,11 @@
-import express, {
+import type {
   Router,
   Request,
   Response,
   NextFunction,
   RequestHandler,
 } from "express";
+import express from "express";
 import { check, validationResult } from "express-validator";
 import logger from "../utils/winstonLogger";
 import {
@@ -15,7 +16,7 @@ import {
 import authMiddleware from "../middleware/authMiddleware";
 import { roleBasedAccessControl } from "../middleware/roleBasedAccessControl";
 
-import { ParsedQs } from "qs";
+import type { ParsedQs } from "qs";
 
 // Explicitly define the router type
 const router: Router = express.Router();
@@ -31,12 +32,12 @@ const handleRouteErrors = (
     req: Request, // Fix: Use explicit Request type
     res: Response,
     next: NextFunction
-  ) => Promise<void>
+  ) => Promise<void>,
 ): RequestHandler => {
   return async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       // Fix: Explicit cast to Request
@@ -60,7 +61,7 @@ router.get(
   isAdmin as express.RequestHandler, // Fix: Explicitly cast role-based middleware
   handleRouteErrors(async (req: Request, res: Response, next: NextFunction) => {
     getAllUsers(req, res, next);
-  })
+  }),
 );
 
 /**
@@ -88,7 +89,7 @@ router.patch(
 
     const result = updateUserRole(req, res, next); // Fix: Await async result
     res.status(200).json({ success: true, data: result });
-  })
+  }),
 );
 
 /**
@@ -104,14 +105,14 @@ router.delete(
   async (
     req: Request<{ userId: string }, any, any, ParsedQs, Record<string, any>>,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) => {
     deleteUserAccount(req, res, next); // Fix: Await async result
     logger.info(`User account deleted. UserID: ${req.params.userId}`);
     res
       .status(200)
       .json({ success: true, msg: "User account deleted successfully" });
-  }
+  },
   
 );
 

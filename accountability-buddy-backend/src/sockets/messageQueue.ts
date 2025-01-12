@@ -1,4 +1,5 @@
-import amqp, { Connection, Channel, ConsumeMessage } from "amqplib"; // RabbitMQ library for message queuing
+import type { Connection, Channel, ConsumeMessage } from "amqplib";
+import amqp from "amqplib"; // RabbitMQ library for message queuing
 import logger from "../utils/winstonLogger"; // Winston logger for logging
 
 // RabbitMQ configuration (can be replaced with Redis if preferred)
@@ -58,7 +59,7 @@ const publishMessage = async (message: Record<string, unknown>): Promise<void> =
  * @returns Promise<void>
  */
 const consumeMessages = async (
-  messageHandler: (message: Record<string, unknown>) => void
+  messageHandler: (message: Record<string, unknown>) => void,
 ): Promise<void> => {
   try {
     const { channel } = await initializeQueue();
@@ -80,13 +81,13 @@ const consumeMessages = async (
             logger.info(`Message consumed: ${messageContent}`);
           } catch (handlerError) {
             logger.error(
-              `Error processing message: ${(handlerError as Error).message}`
+              `Error processing message: ${(handlerError as Error).message}`,
             );
             // Optionally requeue the message or handle it differently
           }
         }
       },
-      { noAck: false } // Acknowledge messages only after processing
+      { noAck: false }, // Acknowledge messages only after processing
     );
   } catch (error) {
     logger.error(`Error consuming messages from queue: ${(error as Error).message}`);

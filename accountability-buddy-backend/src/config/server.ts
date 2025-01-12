@@ -1,8 +1,10 @@
-import express, { Application } from "express";
+import type { Application } from "express";
+import express from "express";
 import mongoose from "mongoose";
 import compression from "compression";
 import { createServer } from "http";
-import { Server, Socket } from "socket.io";
+import type { Socket } from "socket.io";
+import { Server } from "socket.io";
 import dotenv from "dotenv";
 import cron from "node-cron";
 
@@ -123,12 +125,12 @@ cron.schedule("* * * * *", async (): Promise<void> => {
 // Unhandled Errors
 process.on("unhandledRejection", (reason: unknown, promise: Promise<unknown>): void => {
   logger.error(`Unhandled Rejection at: ${promise}, reason: ${String(reason)}`);
-  shutdown();
+  void shutdown();
 });
 
 process.on("uncaughtException", (error: Error): void => {
   logger.error(`Uncaught Exception: ${error.message}`);
-  shutdown();
+  void shutdown();
 });
 
 // Start the Server

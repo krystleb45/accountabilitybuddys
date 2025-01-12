@@ -1,4 +1,5 @@
-import mongoose, { Document, Schema } from "mongoose";
+import type { Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define the IRole interface
 export interface IRole extends Document {
@@ -33,7 +34,7 @@ const RoleSchema: Schema<IRole> = new Schema(
       default: "",
     },
   },
-  { timestamps: true } // Automatically adds `createdAt` and `updatedAt` fields
+  { timestamps: true }, // Automatically adds `createdAt` and `updatedAt` fields
 );
 
 // Export the Role model

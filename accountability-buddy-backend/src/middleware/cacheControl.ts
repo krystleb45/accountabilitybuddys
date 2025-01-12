@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express-serve-static-core";
+import type { Request, Response, NextFunction } from "express-serve-static-core";
 
 interface CacheControlOptions {
   maxAge?: number;       // Maximum time (in seconds) the response should be cached

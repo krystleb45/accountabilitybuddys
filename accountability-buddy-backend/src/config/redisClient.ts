@@ -1,4 +1,5 @@
-import { createClient, RedisClientType } from "@redis/client";
+import type { RedisClientType } from "@redis/client";
+import { createClient } from "@redis/client";
 import logger from "../utils/winstonLogger"; // Adjust the path if needed
 
 // Define Redis configuration
@@ -32,7 +33,7 @@ redisClient.on("end", (): void => {
 });
 
 // Connect to Redis
-(async (): Promise<void> => {
+void (async (): Promise<void> => {
   try {
     await redisClient.connect();
     logger.info("Successfully connected to Redis.");

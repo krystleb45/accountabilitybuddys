@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document } from "mongoose";
+import type { Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface IMilitaryMessage extends Document {
   user: mongoose.Types.ObjectId;
@@ -12,7 +13,7 @@ const MilitaryMessageSchema: Schema = new Schema(
     text: { type: String, required: true, trim: true },
     timestamp: { type: Date, default: Date.now },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model<IMilitaryMessage>("MilitaryMessage", MilitaryMessageSchema);

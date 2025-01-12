@@ -27,4 +27,4 @@ const migrateData = async (): Promise<void> => {
   }
 };
 
-migrateData();
+void migrateData();

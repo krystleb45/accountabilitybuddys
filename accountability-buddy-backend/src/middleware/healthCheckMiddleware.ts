@@ -1,4 +1,4 @@
-import { Request, Response} from "express-serve-static-core";
+import type { Request, Response } from "express-serve-static-core";
 import mongoose from "mongoose";
 import os from "os";
 

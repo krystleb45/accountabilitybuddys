@@ -10,7 +10,7 @@ const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
     winston.format.errors({ stack: true }), // Include error stack trace
-    winston.format.json()
+    winston.format.json(),
   ),
   transports: [
     // Rotating file transport for error logs
@@ -38,9 +38,9 @@ if (process.env.NODE_ENV !== "production") {
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(), // Colorize console output
-        winston.format.simple()
+        winston.format.simple(),
       ),
-    })
+    }),
   );
 }
 
@@ -51,7 +51,7 @@ logger.exceptions.handle(
     datePattern: "YYYY-MM-DD",
     maxFiles: "7d", // Retain exception logs for 7 days
     zippedArchive: true,
-  })
+  }),
 );
 
 // Handle unhandled promise rejections

@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { CustomError } from "../services/errorHandler"; // Import CustomError for consistency
 
 // Define Participant interface
@@ -126,7 +127,7 @@ const EventSchema: Schema<IEvent> = new Schema(
       max: [100, "Progress cannot be more than 100"],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Indexes for optimized queries
@@ -146,13 +147,13 @@ EventSchema.pre("save", function (next) {
 EventSchema.statics.addParticipant = async function (
   eventId: string,
   userId: Types.ObjectId,
-  status: "invited" | "accepted" | "declined" | "interested" = "invited"
+  status: "invited" | "accepted" | "declined" | "interested" = "invited",
 ): Promise<IEvent> {
   const event = await this.findById(eventId);
   if (!event) throw new CustomError("Event not found", 404);
 
   const isParticipant = event.participants.some((p: IParticipant) =>
-    p.user.toString() === userId.toString()
+    p.user.toString() === userId.toString(),
   );
   if (isParticipant) throw new CustomError("User is already a participant", 400);
 
@@ -164,13 +165,13 @@ EventSchema.statics.addParticipant = async function (
 // Static method to remove participants
 EventSchema.statics.removeParticipant = async function (
   eventId: string,
-  userId: Types.ObjectId
+  userId: Types.ObjectId,
 ): Promise<IEvent> {
   const event = await this.findById(eventId);
   if (!event) throw new CustomError("Event not found", 404);
 
   event.participants = event.participants.filter(
-    (p: IParticipant) => p.user.toString() !== userId.toString()
+    (p: IParticipant) => p.user.toString() !== userId.toString(),
   );
   await event.save();
   return event;
@@ -179,7 +180,7 @@ EventSchema.statics.removeParticipant = async function (
 // Instance method to add a reminder
 EventSchema.methods.addReminder = async function (
   message: string,
-  scheduledTime: Date
+  scheduledTime: Date,
 ): Promise<void> {
   if (!message || !scheduledTime)
     throw new CustomError("Message and scheduled time are required", 400);
@@ -191,7 +192,7 @@ EventSchema.methods.addReminder = async function (
 EventSchema.methods.getActiveReminders = function (): IReminder[] {
   return this.reminders.filter(
     (reminder: IReminder) =>
-      !reminder.sent && reminder.scheduledTime > new Date()
+      !reminder.sent && reminder.scheduledTime > new Date(),
   );
 };
 

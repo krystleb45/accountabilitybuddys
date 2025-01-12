@@ -1,4 +1,5 @@
-import { createLogger, format, transports, Logger } from "winston";
+import type { Logger } from "winston";
+import { createLogger, format, transports } from "winston";
 import * as path from "path";
 import * as fs from "fs";
 import "winston-daily-rotate-file";
@@ -25,7 +26,7 @@ const logger: Logger = createLogger({
   format: format.combine(
     format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), // Standardized timestamp
     format.errors({ stack: true }), // Capture stack trace
-    customLogFormat
+    customLogFormat,
   ),
   transports: [
     // Daily rotating error logs
@@ -62,24 +63,24 @@ if (process.env.NODE_ENV !== "production") {
       format: format.combine(
         format.colorize(),
         format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        format.simple()
+        format.simple(),
       ),
-    })
+    }),
   );
 }
 
 // Handle uncaught exceptions and rejections
 logger.exceptions.handle(
-  new transports.File({ filename: path.join(logDir, "exceptions.log") })
+  new transports.File({ filename: path.join(logDir, "exceptions.log") }),
 );
 
 logger.rejections.handle(
-  new transports.File({ filename: path.join(logDir, "rejections.log") })
+  new transports.File({ filename: path.join(logDir, "rejections.log") }),
 );
 
 // Handle logger errors
 logger.on("error", (err) => {
-  // eslint-disable-next-line no-console
+   
   console.error("Logger error:", err);
 });
 

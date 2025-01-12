@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface IPaymentTransaction extends Document {
   userId: Types.ObjectId;
@@ -95,7 +96,7 @@ const PaymentTransactionSchema: Schema<IPaymentTransaction> = new Schema(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // Pre-save validation
@@ -108,7 +109,7 @@ PaymentTransactionSchema.pre<IPaymentTransaction>("save", function (next) {
 
 // Mark transaction as completed
 PaymentTransactionSchema.methods.markAsCompleted = async function (
-  this: IPaymentTransaction
+  this: IPaymentTransaction,
 ): Promise<void> {
   this.status = "completed";
   this.completedAt = new Date();
@@ -118,7 +119,7 @@ PaymentTransactionSchema.methods.markAsCompleted = async function (
 // Mark transaction as failed
 PaymentTransactionSchema.methods.markAsFailed = async function (
   this: IPaymentTransaction,
-  reason: string
+  reason: string,
 ): Promise<void> {
   this.status = "failed";
   this.description = `Failed: ${reason}`;
@@ -128,7 +129,7 @@ PaymentTransactionSchema.methods.markAsFailed = async function (
 // Initiate a refund
 PaymentTransactionSchema.methods.initiateRefund = async function (
   this: IPaymentTransaction,
-  reason: string
+  reason: string,
 ): Promise<IPaymentTransaction> {
   if (!this.isRefundable) {
     throw new Error("This transaction is not eligible for a refund.");
@@ -146,13 +147,13 @@ PaymentTransactionSchema.methods.initiateRefund = async function (
 
 // Static methods
 PaymentTransactionSchema.statics.findByUser = function (
-  userId: Types.ObjectId
+  userId: Types.ObjectId,
 ): Promise<IPaymentTransaction[]> {
   return this.find({ userId }).sort({ initiatedAt: -1 });
 };
 
 PaymentTransactionSchema.statics.getTotalAmountForUser = async function (
-  userId: Types.ObjectId
+  userId: Types.ObjectId,
 ): Promise<number> {
   const result = await this.aggregate([
     { $match: { userId: new mongoose.Types.ObjectId(userId), status: "completed" } },

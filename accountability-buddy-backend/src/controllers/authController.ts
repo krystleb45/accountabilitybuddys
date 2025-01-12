@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../models/User";
@@ -12,13 +12,13 @@ const generateTokens = (userId: string): { accessToken: string; refreshToken: st
   const accessToken = jwt.sign(
     { id: userId },
     process.env.ACCESS_TOKEN_SECRET || "default_access_secret",
-    { expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN || "15m" }
+    { expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN || "15m" },
   );
 
   const refreshToken = jwt.sign(
     { id: userId },
     process.env.REFRESH_TOKEN_SECRET || "default_refresh_secret",
-    { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || "7d" }
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || "7d" },
   );
 
   return { accessToken, refreshToken };
@@ -32,7 +32,7 @@ const generateTokens = (userId: string): { accessToken: string; refreshToken: st
 export const register = catchAsync(
   async (
     req: Request<{}, {}, { email: string; password: string; username: string }>, // Explicit type for body
-    res: Response
+    res: Response,
   ) => {
     const { email, password, username } = req.body;
 
@@ -51,7 +51,7 @@ export const register = catchAsync(
     // Hash password before saving
     const hashedPassword = await bcrypt.hash(
       password,
-      parseInt(process.env.SALT_ROUNDS || "12", 10)
+      parseInt(process.env.SALT_ROUNDS || "12", 10),
     );
     const newUser = new User({ email, password: hashedPassword, username });
 
@@ -64,7 +64,7 @@ export const register = catchAsync(
       accessToken,
       refreshToken,
     });
-  }
+  },
 );
 
 /**
@@ -76,7 +76,7 @@ export const login = catchAsync(
   async (
     req: Request<{}, {}, { email: string; password: string }>, // Explicit type for body
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) => {
     const { email, password } = req.body;
 
@@ -104,7 +104,7 @@ export const login = catchAsync(
       accessToken,
       refreshToken,
     });
-  }
+  },
 );
 
 /**
@@ -116,7 +116,7 @@ export const refreshToken = catchAsync(
   async (
     req: Request<{}, {}, { refreshToken: string }>, // Explicit type for body
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ) => {
     const { refreshToken: token } = req.body;
 
@@ -129,7 +129,7 @@ export const refreshToken = catchAsync(
     try {
       const decoded = jwt.verify(
         token,
-        process.env.REFRESH_TOKEN_SECRET || "default_refresh_secret"
+        process.env.REFRESH_TOKEN_SECRET || "default_refresh_secret",
       ) as { id: string };
 
       // Find user
@@ -150,7 +150,7 @@ export const refreshToken = catchAsync(
       logger.error(`Refresh token error: ${(error as Error).message}`);
       sendResponse(res, 401, false, "Invalid refresh token");
     }
-  }
+  },
 );
 
 /**
@@ -179,5 +179,5 @@ export const getCurrentUser = catchAsync(
     sendResponse(res, 200, true, "User details fetched successfully", {
       user,
     });
-  }
+  },
 );

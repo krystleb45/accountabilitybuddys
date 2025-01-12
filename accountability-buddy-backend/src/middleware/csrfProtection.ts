@@ -1,5 +1,5 @@
 import csrf from "csurf";
-import { Request, Response, NextFunction } from "express-serve-static-core";
+import type { Request, Response, NextFunction } from "express-serve-static-core";
 import logger from "../utils/winstonLogger";
 
 /**

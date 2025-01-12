@@ -1,4 +1,4 @@
-import { Request } from "express";
+import type { Request } from "express";
 
 /**
  * Interface for military user object.

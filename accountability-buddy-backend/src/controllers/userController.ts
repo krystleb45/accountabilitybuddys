@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import User from "../models/User"; // Assuming User model exists
 import bcrypt from "bcryptjs"; // For password hashing
 import catchAsync from "../utils/catchAsync";
@@ -10,7 +10,7 @@ export const getUserProfile = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly define generics for portability
     res: Response,
-    _next: NextFunction // Include _next for compatibility, even if not used
+    _next: NextFunction, // Include _next for compatibility, even if not used
   ): Promise<void> => {
     // Get user ID from request
     const userId = req.user?.id;
@@ -26,7 +26,7 @@ export const getUserProfile = catchAsync(
 
     // Respond with user profile data
     sendResponse(res, 200, true, "User profile fetched successfully", user);
-  }
+  },
 );
 
 /**
@@ -38,7 +38,7 @@ export const updateUserProfile = catchAsync(
   async (
     req: Request<{}, {}, { email?: string; username?: string }>, // Explicitly define request body
     res: Response,
-    _next: NextFunction // Explicitly include _next even if unused
+    _next: NextFunction, // Explicitly include _next even if unused
   ): Promise<void> => {
     const userId = req.user?.id;
     const updates = req.body;
@@ -57,7 +57,7 @@ export const updateUserProfile = catchAsync(
 
     // Respond with the updated user profile
     sendResponse(res, 200, true, "User profile updated successfully", updatedUser);
-  }
+  },
 );
 
 
@@ -70,13 +70,13 @@ export const updateUserProfile = catchAsync(
 export const changePassword = catchAsync(
   async (
     req: Request<{}, {}, { currentPassword: string; newPassword: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
 
     // Explicitly assert the type after sanitization
     const { currentPassword, newPassword } = sanitizeInput(
-      req.body
+      req.body,
     ) as { currentPassword: string; newPassword: string };
 
     // Fetch user and check password
@@ -91,7 +91,7 @@ export const changePassword = catchAsync(
     await user.save();
 
     sendResponse(res, 200, true, "Password updated successfully");
-  }
+  },
 );
 
 /**
@@ -103,7 +103,7 @@ export const deleteUserAccount = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly define generics for portability
     res: Response,
-    _next: NextFunction // Include _next for compatibility, even if not used
+    _next: NextFunction, // Include _next for compatibility, even if not used
   ): Promise<void> => {
     // Get user ID from request
     const userId = req.user?.id;
@@ -119,7 +119,7 @@ export const deleteUserAccount = catchAsync(
 
     // Respond with success message
     sendResponse(res, 200, true, "Account deleted successfully");
-  }
+  },
 );
 
 

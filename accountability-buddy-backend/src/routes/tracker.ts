@@ -1,4 +1,5 @@
-import express, { Router, Request, Response, NextFunction } from "express";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
 import authMiddleware from "../middleware/authMiddleware"; // Correct middleware import path
 import * as TrackerController from "../controllers/TrackerController"; // Correct controller import path
 import rateLimit from "express-rate-limit";
@@ -21,7 +22,7 @@ const trackerRateLimiter = rateLimit({
 const handleError = (
   error: unknown,
   res: Response,
-  defaultMessage: string
+  defaultMessage: string,
 ): void => {
   const errorMessage =
     error instanceof Error ? error.message : "An unexpected error occurred.";
@@ -47,7 +48,7 @@ router.get(
       handleError(error, res, "Error fetching tracking data");
       next(error); // Ensure errors are passed to middleware
     }
-  }
+  },
 );
 
 /**
@@ -76,7 +77,7 @@ router.post(
       handleError(error, res, "Error adding tracking data");
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -90,7 +91,7 @@ router.delete(
   async (
     req: Request<{ id: string }>, // Explicit ID param type
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { id } = req.params;
@@ -106,7 +107,7 @@ router.delete(
       handleError(error, res, "Error deleting tracking data");
       next(error);
     }
-  }
+  },
 );
 
 export default router;

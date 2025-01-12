@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import Notification from "../models/Notification"; // Ensure this matches your model export
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -14,7 +14,7 @@ export const notifyPartner = catchAsync(
   async (
     req: Request<{}, {}, { partnerId: string; goal: string; milestone: string }>,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     // Extract and sanitize inputs
     const { partnerId, goal, milestone } = sanitize(req.body);
@@ -44,7 +44,7 @@ export const notifyPartner = catchAsync(
       });
       next(error); // Forward the error to middleware
     }
-  }
+  },
 );
 
 
@@ -57,7 +57,7 @@ export const addPartnerNotification = catchAsync(
   async (
     req: Request<{}, {}, { partnerId: string; userId: string }>,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const { partnerId, userId } = sanitize(req.body);
     const senderId = req.user?.id; // Get sender ID from authenticated user
@@ -76,7 +76,7 @@ export const addPartnerNotification = catchAsync(
     });
 
     sendResponse(res, 200, true, "Partner added and notified successfully.", { notification });
-  }
+  },
 );
 
 
@@ -89,7 +89,7 @@ export const getPartnerNotifications = catchAsync(
   async (
     req: Request<{}, {}, {}, { page?: string; limit?: string }>,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id;
     const page = parseInt(req.query.page || "1", 10);
@@ -129,5 +129,5 @@ export const getPartnerNotifications = catchAsync(
       });
       next(error); // Pass the error to middleware
     }
-  }
+  },
 );

@@ -1,10 +1,13 @@
-import express, { Response, NextFunction, Router, Request } from "express";
-import { check, validationResult } from "express-validator";
+import type { Response, NextFunction, Router, Request } from "express";
+import express from "express";
+import { check } from "express-validator";
 import rateLimit from "express-rate-limit";
 import * as badgeController from "../controllers/BadgeController";
 import authMiddleware from "../middleware/authMiddleware";
 import { roleBasedAccessControl } from "../middleware/roleBasedAccessControl";
 import logger from "../utils/winstonLogger";
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
@@ -35,19 +38,6 @@ const validateBadgeData = [
     .withMessage("Increment must be a positive integer"),
 ];
 
-// Custom function to validate and handle errors
-const handleValidationErrors = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return; // Explicit return for void type
-  }
-  next();
-};
 
 /**
  * Utility function to handle route errors
@@ -57,12 +47,12 @@ const handleRouteErrors = (
     req: Request,
     res: Response,
     next: NextFunction
-  ) => Promise<void>
+  ) => Promise<void>,
 ) => {
   return async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       await handler(req, res, next);
@@ -84,8 +74,8 @@ router.get(
   handleRouteErrors(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       await badgeController.getUserBadges(req, res, next); // Pass all 3 arguments
-    }
-  )
+    },
+  ),
 );
 
 
@@ -99,9 +89,9 @@ router.get(
   authMiddleware,
   handleRouteErrors(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      await badgeController.getUserBadgeShowcase(req, res, next); // Pass all 3 arguments
-    }
-  )
+      await badgeController.getUserBadgeShowcase(req as any, res, next); // Pass all 3 arguments
+    },
+  ),
 );
 
 
@@ -115,7 +105,7 @@ router.post(
   [authMiddleware, adminMiddleware, ...validateBadgeData, handleValidationErrors],
   handleRouteErrors(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     await badgeController.awardBadge(req, res, next);
-  })
+  }),
 );
 
 
@@ -129,7 +119,7 @@ router.post(
   [authMiddleware, ...validateBadgeData, handleValidationErrors], // Spread validation
   handleRouteErrors(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     await badgeController.updateBadgeProgress(req, res, next); // Pass full req, res, next
-  })
+  }),
 );
 
 
@@ -142,8 +132,8 @@ router.post(
   "/badges/upgrade",
   [authMiddleware, ...validateBadgeData, handleValidationErrors], // Spread validateBadgeData
   handleRouteErrors(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    await badgeController.upgradeBadgeLevel(req, res, next); // Pass req, res, next directly
-  })
+    await badgeController.upgradeBadgeLevel(req as any, res, next); // Pass req, res, next directly
+  }),
 );
 
 
@@ -158,7 +148,7 @@ router.delete(
   [authMiddleware, adminMiddleware],
   handleRouteErrors(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     await badgeController.removeExpiredBadges(req, res, next); // Pass req, res, and next
-  })
+  }),
 );
 
 

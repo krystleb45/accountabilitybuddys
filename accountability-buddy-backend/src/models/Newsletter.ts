@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import validator from "validator"; // Use validator for email validation
 
 // Define the interface for the Newsletter document
@@ -45,7 +46,7 @@ const newsletterSchema: Schema<INewsletter> = new Schema<INewsletter>(
   },
   {
     timestamps: true, // Automatically add createdAt and updatedAt fields
-  }
+  },
 );
 
 
@@ -57,7 +58,7 @@ newsletterSchema.pre("save", function (next) {
 
 // Static method to find or create a subscription
 newsletterSchema.statics.findOrCreate = async function (
-  email: string
+  email: string,
 ): Promise<INewsletter> {
   let subscriber = await this.findOne({ email });
   if (!subscriber) {
@@ -72,7 +73,7 @@ newsletterSchema.index({ email: 1 });
 // Export the model
 const Newsletter: INewsletterModel = mongoose.model<INewsletter, INewsletterModel>(
   "Newsletter",
-  newsletterSchema
+  newsletterSchema,
 );
 
 export default Newsletter;

@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import logger from "../utils/winstonLogger";
 
 export const ValidationService = {
@@ -26,7 +26,7 @@ export const ValidationService = {
     const isValid = passwordRegex.test(password);
     if (!isValid)
       logger.warn(
-        "Invalid password: Must be at least 8 characters long, include letters, numbers, and special characters."
+        "Invalid password: Must be at least 8 characters long, include letters, numbers, and special characters.",
       );
     return isValid;
   },
@@ -41,7 +41,7 @@ export const ValidationService = {
     const isValid = usernameRegex.test(username);
     if (!isValid)
       logger.warn(
-        "Invalid username: Must be 3-30 characters long, containing only letters, numbers, dots, underscores, or hyphens."
+        "Invalid username: Must be 3-30 characters long, containing only letters, numbers, dots, underscores, or hyphens.",
       );
     return isValid;
   },
@@ -54,7 +54,7 @@ export const ValidationService = {
    */
   validateSchema(
     schema: Joi.ObjectSchema,
-    data: Record<string, unknown>
+    data: Record<string, unknown>,
   ): { valid: boolean; errors?: string[] } {
     const { error } = schema.validate(data, { abortEarly: false });
     if (error) {
@@ -78,7 +78,7 @@ export const ValidationService = {
       if (error) {
         logger.warn(
           "Request validation errors:",
-          error.details.map((d) => d.message)
+          error.details.map((d) => d.message),
         );
         res.status(400).json({
           status: "error",
@@ -99,7 +99,7 @@ export const exampleSchemas = {
     email: Joi.string().email().required(),
     password: Joi.string()
       .pattern(
-        new RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+        new RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
       )
       .required(),
   }),

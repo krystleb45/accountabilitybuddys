@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import User from "../models/User";
 import Review from "../models/Review"; // Assuming Review model exists
 import catchAsync from "../utils/catchAsync";
@@ -12,7 +12,7 @@ import sendResponse from "../utils/sendResponse";
 export const submitReview = catchAsync(
   async (
     req: Request<{}, any, { userId: string; rating: number; content: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { userId, rating, content } = req.body;
     const reviewerId = req.user?.id;
@@ -63,7 +63,7 @@ export const submitReview = catchAsync(
     sendResponse(res, 201, true, "Review submitted successfully", {
       review: newReview,
     });
-  }
+  },
 );
 
 /**
@@ -74,7 +74,7 @@ export const submitReview = catchAsync(
 export const getUserReviews = catchAsync(
   async (
     req: Request<{ userId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { userId } = req.params;
 
@@ -88,11 +88,11 @@ export const getUserReviews = catchAsync(
     // Fetch reviews for the user
     const reviews = await Review.find({ reviewee: userId }).populate(
       "reviewer",
-      "username profilePicture"
+      "username profilePicture",
     );
 
     sendResponse(res, 200, true, "User reviews fetched successfully", { reviews });
-  }
+  },
 );
 
 /**
@@ -103,7 +103,7 @@ export const getUserReviews = catchAsync(
 export const deleteReview = catchAsync(
   async (
     req: Request<{ reviewId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { reviewId } = req.params;
     const reviewerId = req.user?.id;
@@ -120,5 +120,5 @@ export const deleteReview = catchAsync(
     }
 
     sendResponse(res, 200, true, "Review deleted successfully");
-  }
+  },
 );

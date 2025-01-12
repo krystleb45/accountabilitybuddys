@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { validationResult, check } from "express-validator";
 
 interface CustomValidationError {
@@ -15,7 +15,7 @@ interface CustomValidationError {
 export const authValidationMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -49,7 +49,7 @@ const passwordRule = [
     .withMessage("Password must be at least 6 characters long")
     .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/)
     .withMessage(
-      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
     ),
 ];
 
@@ -63,7 +63,7 @@ export const registerValidation = [
     .withMessage("Username must be between 3 and 20 characters")
     .matches(/^[a-zA-Z0-9_-]+$/)
     .withMessage(
-      "Username can only contain letters, numbers, underscores, and dashes"
+      "Username can only contain letters, numbers, underscores, and dashes",
     ),
   check("email")
     .isEmail()

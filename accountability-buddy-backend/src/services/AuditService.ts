@@ -1,6 +1,6 @@
 import AuditLog from "../models/AuditLog"; // Import the AuditLog model
 import logger from "../utils/winstonLogger"; // Import Winston logger
-import { Document } from "mongoose"; // Import Mongoose Document type
+import type { Document } from "mongoose"; // Import Mongoose Document type
 
 interface AuditLogData {
   userId: string;
@@ -74,8 +74,8 @@ const AuditService = {
    */
   getAuditLogs: async (
     filter: AuditLogFilter = {},
-    limit: number = 100,
-    skip: number = 0,
+    limit = 100,
+    skip = 0,
   ): Promise<Array<AuditLogType>> => {
     try {
       const logs = await AuditLog.find(filter)
@@ -99,7 +99,7 @@ const AuditService = {
    * @param   {number} retentionDays - Number of days to retain logs.
    * @returns {Promise<void>}
    */
-  deleteOldLogs: async (retentionDays: number = 90): Promise<void> => {
+  deleteOldLogs: async (retentionDays = 90): Promise<void> => {
     try {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - retentionDays);

@@ -1,4 +1,5 @@
-import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
+import type { JwtPayload, SignOptions } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 // Default expiration times
 const DEFAULT_ACCESS_TOKEN_EXPIRY = "1h";

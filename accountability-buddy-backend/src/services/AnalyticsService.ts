@@ -43,8 +43,8 @@ const calculateChallengeParticipationRate = async (userId: string): Promise<numb
 
     const completedChallenges = challenges.filter((challenge) =>
       challenge.participants.some(
-        (participant) => participant.user.toString() === userId && participant.progress >= 100
-      )
+        (participant) => participant.user.toString() === userId && participant.progress >= 100,
+      ),
     ).length;
 
     return (completedChallenges / challenges.length) * 100;

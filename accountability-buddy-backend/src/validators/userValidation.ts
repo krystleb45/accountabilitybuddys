@@ -1,4 +1,5 @@
-import { check, ValidationChain } from "express-validator";
+import type { ValidationChain } from "express-validator";
+import { check } from "express-validator";
 
 /**
  * Validation for registering a new user.
@@ -30,7 +31,7 @@ export const registerUserValidation: ValidationChain[] = [
     .withMessage("Password must be at least 6 characters long.")
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/)
     .withMessage(
-      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
     ),
 ];
 
@@ -61,7 +62,7 @@ export const updateUserProfileValidation: ValidationChain[] = [
     .withMessage("Password must be at least 6 characters long.")
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/)
     .withMessage(
-      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
     ),
 ];
 
@@ -77,7 +78,7 @@ export const changePasswordValidation: ValidationChain[] = [
     .withMessage("New password must be at least 6 characters long.")
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/)
     .withMessage(
-      "New password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+      "New password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
     ),
 ];
 

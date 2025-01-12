@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document } from "mongoose";
+import type { Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Interface for Tracker document
 export interface ITracker extends Document {
@@ -32,7 +33,7 @@ const TrackerSchema: Schema<ITracker> = new Schema(
   },
   {
     timestamps: true, // Automatically add createdAt and updatedAt fields
-  }
+  },
 );
 
 // Create and export the model

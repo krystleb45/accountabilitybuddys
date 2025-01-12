@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, model } from "mongoose";
+import type { Document } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
 // Define the structure of a Room document
 export interface IRoom extends Document {
@@ -42,7 +43,7 @@ const RoomSchema: Schema = new Schema<IRoom>(
   },
   {
     timestamps: true, // Automatically add createdAt and updatedAt fields
-  }
+  },
 );
 
 // Create and export the Room model

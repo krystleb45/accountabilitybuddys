@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import Milestone from "../models/Milestone"; // Ensure a corresponding Milestone model exists
 import catchAsync from "../utils/catchAsync"; // Catch async errors
@@ -14,7 +14,7 @@ export const getUserMilestones = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly define generic type
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = (req as any).user?.id; // Explicitly cast req for user property
 
@@ -25,7 +25,7 @@ export const getUserMilestones = catchAsync(
 
     const milestones = await Milestone.find({ user: userId }).sort({ createdAt: -1 });
     sendResponse(res, 200, true, "Milestones fetched successfully", { milestones });
-  }
+  },
 );
 
 /**
@@ -37,7 +37,7 @@ export const addMilestone = catchAsync(
   async (
     req: Request<{}, {}, { title: string; description?: string; dueDate: string }>, // Added body type
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = (req as any).user?.id;
     const { title, description, dueDate } = req.body;
@@ -61,7 +61,7 @@ export const addMilestone = catchAsync(
 
     const savedMilestone = await newMilestone.save();
     sendResponse(res, 201, true, "Milestone added successfully", { milestone: savedMilestone });
-  }
+  },
 );
 
 /**
@@ -73,7 +73,7 @@ export const updateMilestone = catchAsync(
   async (
     req: Request<{}, {}, { milestoneId: string; updates: Record<string, any> }>, // Added body type
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = (req as any).user?.id;
     const { milestoneId, updates } = req.body;
@@ -91,7 +91,7 @@ export const updateMilestone = catchAsync(
     const milestone = await Milestone.findOneAndUpdate(
       { _id: milestoneId, user: userId },
       { $set: updates },
-      { new: true }
+      { new: true },
     );
 
     if (!milestone) {
@@ -100,7 +100,7 @@ export const updateMilestone = catchAsync(
     }
 
     sendResponse(res, 200, true, "Milestone updated successfully", { milestone });
-  }
+  },
 );
 
 /**
@@ -112,7 +112,7 @@ export const deleteMilestone = catchAsync(
   async (
     req: Request<{}, {}, { milestoneId: string }>, // Added body type
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = (req as any).user?.id;
     const { milestoneId } = req.body;
@@ -138,5 +138,5 @@ export const deleteMilestone = catchAsync(
     }
 
     sendResponse(res, 200, true, "Milestone deleted successfully");
-  }
+  },
 );

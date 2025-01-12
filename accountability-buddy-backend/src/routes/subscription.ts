@@ -1,4 +1,5 @@
-import express, { Router, Request, Response, NextFunction } from "express";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware"; // Correct middleware import path
 import checkSubscription from "../middleware/checkSubscription"; // Correct subscription middleware import path
@@ -41,7 +42,7 @@ router.post(
     } catch (error) {
       handleError(error, res, "Error creating subscription session");
     }
-  }
+  },
 );
 
 /**
@@ -58,7 +59,7 @@ router.get(
     } catch (error) {
       handleError(error, res, "Error checking subscription status");
     }
-  }
+  },
 );
 
 /**
@@ -75,7 +76,7 @@ router.get(
       success: true,
       msg: "This is premium content available to subscribed users.",
     });
-  }
+  },
 );
 
 /**
@@ -92,7 +93,7 @@ router.get(
     } catch (error) {
       handleError(error, res, "Error fetching current subscription");
     }
-  }
+  },
 );
 
 /**
@@ -110,7 +111,7 @@ router.post(
     } catch (error) {
       handleError(error, res, "Error upgrading subscription");
     }
-  }
+  },
 );
 
 /**
@@ -127,7 +128,7 @@ router.delete(
     } catch (error) {
       handleError(error, res, "Error canceling subscription");
     }
-  }
+  },
 );
 
 /**
@@ -144,7 +145,7 @@ router.post(
     } catch (error) {
       handleError(error, res, "Error handling Stripe webhook");
     }
-  }
+  },
 );
 
 export default router;

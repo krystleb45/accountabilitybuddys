@@ -1,4 +1,5 @@
-import mongoose, { Document, Model, Schema, Types } from "mongoose";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 interface Milestone {
   name: string;
@@ -65,7 +66,7 @@ const gamificationSchema = new Schema<GamificationDocument>(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // Static method for level thresholds
@@ -93,7 +94,7 @@ gamificationSchema.pre<GamificationDocument>("save", function (next) {
 // Method to add points
 gamificationSchema.methods.addPoints = async function (
   this: GamificationDocument,
-  points: number
+  points: number,
 ): Promise<GamificationDocument> {
   this.points += points;
   for (let i = levelThresholds.length - 1; i >= 0; i--) {
@@ -111,7 +112,7 @@ gamificationSchema.methods.addPoints = async function (
 // Method to add a badge
 gamificationSchema.methods.addBadge = async function (
   this: GamificationDocument,
-  badgeName: string
+  badgeName: string,
 ): Promise<GamificationDocument> {
   if (!this.badges.includes(badgeName)) {
     this.badges.push(badgeName);
@@ -123,7 +124,7 @@ gamificationSchema.methods.addBadge = async function (
 // Method to track milestones
 gamificationSchema.methods.trackMilestone = async function (
   this: GamificationDocument,
-  milestoneName: string
+  milestoneName: string,
 ): Promise<GamificationDocument> {
   const milestone = this.milestones.find((m: Milestone) => m.name === milestoneName);
 

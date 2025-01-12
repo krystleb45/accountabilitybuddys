@@ -12,7 +12,7 @@ const validateUserAnalyticsQuery = [
     .withMessage("Date range must be a string.")
     .matches(/^(last7days|last30days|lastYear|custom)$/)
     .withMessage(
-      "Date range must be one of: last7days, last30days, lastYear, or custom."
+      "Date range must be one of: last7days, last30days, lastYear, or custom.",
     ),
   query("customStartDate")
     .optional()
@@ -44,7 +44,7 @@ const validateGoalAnalyticsQuery = [
     .optional()
     .isIn(["progress", "completionRate", "timeSpent"])
     .withMessage(
-      "Metric type must be one of: progress, completionRate, or timeSpent."
+      "Metric type must be one of: progress, completionRate, or timeSpent.",
     ),
 ];
 
@@ -54,7 +54,7 @@ const validatePlatformAnalyticsQuery = [
     .withMessage("Metric type is required.")
     .isIn(["userGrowth", "activeUsers", "goalCreation", "subscriptionRate"])
     .withMessage(
-      "Metric type must be one of: userGrowth, activeUsers, goalCreation, or subscriptionRate."
+      "Metric type must be one of: userGrowth, activeUsers, goalCreation, or subscriptionRate.",
     ),
   query("dateRange")
     .optional()
@@ -62,7 +62,7 @@ const validatePlatformAnalyticsQuery = [
     .withMessage("Date range must be a string.")
     .matches(/^(last7days|last30days|lastYear|custom)$/)
     .withMessage(
-      "Date range must be one of: last7days, last30days, lastYear, or custom."
+      "Date range must be one of: last7days, last30days, lastYear, or custom.",
     ),
   query("customStartDate")
     .optional()
@@ -116,7 +116,7 @@ const validateAnalyticsReportGeneration = [
     .withMessage("Date range must be a string.")
     .matches(/^(last7days|last30days|lastYear|custom)$/)
     .withMessage(
-      "Date range must be one of: last7days, last30days, lastYear, or custom."
+      "Date range must be one of: last7days, last30days, lastYear, or custom.",
     ),
   body("customStartDate")
     .optional()

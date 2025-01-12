@@ -1,11 +1,14 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import sanitize from "mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware"; // Middleware path
 import { roleBasedAccessControl } from "../middleware/roleBasedAccessControl"; // RBAC middleware
 import * as reportController from "../controllers/ReportController"; // Controller path
 import logger from "../utils/winstonLogger"; // Logger utility
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
@@ -43,17 +46,7 @@ const sanitizeInput = (req: Request, _res: Response, next: NextFunction): void =
   next();
 };
 
-/**
- * Middleware for handling validation errors.
- */
-const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return;
-  }
-  next();
-};
+
 
 /**
  * @route   POST /report
@@ -76,7 +69,7 @@ router.post(
         (req.user as { id: string }).id, // Type assertion
         reportedId,
         reportType,
-        reason
+        reason,
       );
       
 
@@ -86,7 +79,7 @@ router.post(
       logger.error(`Error creating report: ${errorMessage}`);
       next(error); // Pass error to middleware
     }
-  }
+  },
 );
 
 
@@ -108,7 +101,7 @@ router.get(
       logger.error(`Error fetching reports: ${errorMessage}`);
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -136,7 +129,7 @@ router.get(
       logger.error(`Error fetching report: ${errorMessage}`);
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -154,7 +147,7 @@ router.put(
 
       const resolvedReport = await reportController.resolveReport(
         reportId,
-        (req.user as { id: string }).id // Type assertion
+        (req.user as { id: string }).id, // Type assertion
       );
       
 
@@ -169,7 +162,7 @@ router.put(
       logger.error(`Error resolving report: ${errorMessage}`);
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -198,7 +191,7 @@ router.delete(
       logger.error(`Error deleting report: ${errorMessage}`);
       next(error);
     }
-  }
+  },
 );
 
 export default router;

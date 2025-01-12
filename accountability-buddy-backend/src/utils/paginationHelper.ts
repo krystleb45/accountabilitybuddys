@@ -1,7 +1,7 @@
 export const paginate = (
   totalItems: number,
   currentPage: number,
-  pageSize: number
+  pageSize: number,
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
   const totalPages = Math.ceil(totalItems / pageSize);

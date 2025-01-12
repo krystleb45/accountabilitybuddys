@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import crypto from "crypto";
 import Newsletter from "../models/Newsletter"; // Assuming Newsletter model exists
 import logger from "../utils/winstonLogger"; // Logger utility
@@ -14,7 +14,7 @@ export const signupNewsletter = catchAsync(
   async (
     req: Request<{}, {}, { email: string }>, // Explicit request body type
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const { email } = req.body;
 
@@ -49,7 +49,7 @@ export const signupNewsletter = catchAsync(
 
     logger.info(`Newsletter subscription: ${email}`);
     sendResponse(res, 201, true, "Successfully subscribed to the newsletter.");
-  }
+  },
 );
 
 /**
@@ -61,7 +61,7 @@ export const unsubscribeNewsletter = catchAsync(
   async (
     req: Request<{}, {}, {}, { token: string }>, // Explicit query type
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const { token } = req.query;
 
@@ -85,7 +85,7 @@ export const unsubscribeNewsletter = catchAsync(
 
     logger.info(`Newsletter unsubscription: ${subscriber.email}`);
     sendResponse(res, 200, true, "Successfully unsubscribed from the newsletter.");
-  }
+  },
 );
 /**
  * @desc    Get all subscribers (Admin only)
@@ -96,7 +96,7 @@ export const getSubscribers = catchAsync(
   async (
     _req: Request<{}, {}, {}, {}>, // Explicitly define type for Request
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const subscribers = await Newsletter.find({ status: "subscribed" });
 
@@ -108,6 +108,6 @@ export const getSubscribers = catchAsync(
     sendResponse(res, 200, true, "Subscribers fetched successfully.", {
       subscribers,
     });
-  }
+  },
 );
 

@@ -1,4 +1,4 @@
-import { Socket } from "socket.io";
+import type { Socket } from "socket.io";
 import redisClient from "../config/redisClient"; // Redis client for rate limiter
 import logger from "../utils/winstonLogger"; // Logger for rate limiting events
 
@@ -14,7 +14,7 @@ import logger from "../utils/winstonLogger"; // Logger for rate limiting events
 const createSocketRateLimiter = (
   maxRequests: number,
   windowMs: number,
-  eventName: string
+  eventName: string,
 ) => {
   return async (socket: Socket, next: (err?: Error) => void): Promise<void> => {
     const userId = socket.data.user?.id as string; // Retrieve the user ID from socket data
@@ -38,14 +38,14 @@ const createSocketRateLimiter = (
       if (requests > maxRequests) {
         logger.warn(`Rate limit exceeded for user ${userId} on event ${eventName}`);
         return next(
-          new Error(`Rate limit exceeded for ${eventName}. Please wait before trying again.`)
+          new Error(`Rate limit exceeded for ${eventName}. Please wait before trying again.`),
         );
       }
 
       next(); // Proceed to the next middleware or event handler
     } catch (error) {
       logger.error(
-        `Rate limiter error for user ${userId} on event ${eventName}: ${(error as Error).message}`
+        `Rate limiter error for user ${userId} on event ${eventName}: ${(error as Error).message}`,
       );
       next(new Error("Rate limiter error. Please try again later."));
     }

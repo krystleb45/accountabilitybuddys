@@ -1,5 +1,6 @@
-import { Server, Socket } from "socket.io";
-import Notification, { NotificationDocument } from "../models/Notification";
+import type { Server, Socket } from "socket.io";
+import type { NotificationDocument } from "../models/Notification";
+import Notification from "../models/Notification";
 import logger from "../utils/winstonLogger";
 
 /**

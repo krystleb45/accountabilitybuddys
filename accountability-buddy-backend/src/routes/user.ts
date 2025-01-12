@@ -1,4 +1,5 @@
-import express, { Router, Request, Response, NextFunction } from "express";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
 import { check } from "express-validator";
 import authMiddleware from "../middleware/authMiddleware";
 import rateLimit from "express-rate-limit";
@@ -26,7 +27,7 @@ const sensitiveOperationLimiter = rateLimit({
 const handleError = (
   error: unknown,
   res: Response,
-  defaultMessage: string
+  defaultMessage: string,
 ): void => {
   const errorMessage =
     error instanceof Error ? error.message : "An unexpected error occurred.";
@@ -42,7 +43,7 @@ const handleError = (
 router.get(
   "/profile",
   authMiddleware,
-  getUserProfile // Pass the function reference directly
+  getUserProfile, // Pass the function reference directly
 );
 
 
@@ -58,7 +59,7 @@ router.put(
     check("email", "Invalid email").optional().isEmail(),
     check("username", "Username cannot be empty").optional().notEmpty(),
   ],
-  updateUserProfile // Pass function reference directly
+  updateUserProfile, // Pass function reference directly
 );
 
 
@@ -75,7 +76,7 @@ router.patch(
     check("currentPassword", "Current password is required").notEmpty(),
     check("newPassword", "New password must be at least 8 characters").isLength({ min: 8 }),
   ],
-  changePassword // Use controller as middleware
+  changePassword, // Use controller as middleware
 );
 
 
@@ -91,7 +92,7 @@ router.delete(
   async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       // Pass all required arguments
@@ -100,7 +101,7 @@ router.delete(
       handleError(error, res, "Error deleting user account");
       next(error);
     }
-  }
+  },
 );
 
 export default router;

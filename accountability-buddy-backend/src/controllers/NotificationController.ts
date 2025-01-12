@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import Notification from "../models/Notification"; // Adjusted import
 import User from "../models/User";
 import catchAsync from "../utils/catchAsync";
@@ -26,7 +26,7 @@ const sanitizeInput = (input: any): any => {
 export const sendNotification = catchAsync(
   async (
     req: Request<{}, {}, { receiverId: string; message: string }>, // Explicit body type
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { receiverId, message } = sanitizeInput(req.body);
     const senderId = req.user?.id;
@@ -57,7 +57,7 @@ export const sendNotification = catchAsync(
     sendResponse(res, 201, true, "Notification sent successfully", {
       notification: newNotification,
     });
-  }
+  },
 );
 
 /**
@@ -68,7 +68,7 @@ export const sendNotification = catchAsync(
 export const getNotifications = catchAsync(
   async (
     req: Request<{}, {}, {}, { limit?: string; page?: string }>, // Explicit query parameters
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
     const limit = parseInt(req.query.limit || "10", 10);
@@ -89,7 +89,7 @@ export const getNotifications = catchAsync(
         totalPages: Math.ceil(totalNotifications / limit),
       },
     });
-  }
+  },
 );
 
 /**
@@ -100,20 +100,20 @@ export const getNotifications = catchAsync(
 export const markNotificationsAsRead = catchAsync(
   async (
     req: Request<{}, {}, { notificationIds: string[] }>, // Explicit body type
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
     const { notificationIds } = req.body;
 
     const result = await Notification.updateMany(
       { receiver: userId, _id: { $in: notificationIds }, isRead: false },
-      { isRead: true }
+      { isRead: true },
     );
 
     sendResponse(res, 200, true, "Notifications marked as read", {
       updatedCount: result.modifiedCount,
     });
-  }
+  },
 );
 
 /**
@@ -124,7 +124,7 @@ export const markNotificationsAsRead = catchAsync(
 export const deleteNotification = catchAsync(
   async (
     req: Request<{ notificationId: string }>, // Explicit route parameters
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { notificationId } = req.params;
 
@@ -137,5 +137,5 @@ export const deleteNotification = catchAsync(
     await notification.deleteOne();
     logger.info(`Notification with ID ${notificationId} deleted`);
     sendResponse(res, 200, true, "Notification deleted successfully");
-  }
+  },
 );

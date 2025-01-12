@@ -83,7 +83,7 @@ export const decryptData = (encryptedData: string, key: string): string => {
  * @throws {Error} - Throws error if token generation fails.
  */
 export const generateRandomToken = async (
-  length: number = 32,
+  length = 32,
 ): Promise<string> => {
   try {
     const buffer = await crypto.randomBytes(length);

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 
 /**
@@ -7,7 +7,7 @@ import { check, validationResult } from "express-validator";
 export const validationMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const errors = validationResult(req);
 
@@ -75,7 +75,7 @@ export const updateSettingsValidation = [
     .custom((prefs: Record<string, boolean>) => {
       const validPrefs = ["marketingEmails", "transactionalEmails", "updateEmails"];
       return Object.keys(prefs).every(
-        (key) => validPrefs.includes(key) && typeof prefs[key] === "boolean"
+        (key) => validPrefs.includes(key) && typeof prefs[key] === "boolean",
       );
     })
     .withMessage("Email preferences must contain valid keys with boolean values."),

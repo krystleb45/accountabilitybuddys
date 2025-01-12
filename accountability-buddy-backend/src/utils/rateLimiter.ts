@@ -1,7 +1,9 @@
-import rateLimit, { Options, RateLimitRequestHandler } from "express-rate-limit";
-import RedisStore, { RedisReply } from "rate-limit-redis";
+import type { Options, RateLimitRequestHandler } from "express-rate-limit";
+import rateLimit from "express-rate-limit";
+import type { RedisReply } from "rate-limit-redis";
+import RedisStore from "rate-limit-redis";
 import redisClient from "../config/redisClient"; // Ensure this points to your Redis client configuration
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import logger from "./winstonLogger"; // Replace with your logger utility
 
 
@@ -16,8 +18,8 @@ import logger from "./winstonLogger"; // Replace with your logger utility
 const createRateLimiter = (
   maxRequests: number,
   windowMs: number,
-  message: string = "Too many requests, please try again later.",
-  useRedis: boolean = false,
+  message = "Too many requests, please try again later.",
+  useRedis = false,
 ): RateLimitRequestHandler => {
   const options: Partial<Options> = {
     windowMs,
@@ -109,7 +111,7 @@ export const customRateLimiter = (
   maxRequests: number,
   windowMs: number,
   message: string,
-  useRedis: boolean = false,
+  useRedis = false,
 ): RateLimitRequestHandler => {
   return createRateLimiter(maxRequests, windowMs, message, useRedis);
 };

@@ -1,15 +1,15 @@
 // Updated adminMiddleware.ts
-import {  Response, NextFunction } from "express";
+import type {  Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import sanitize from "mongo-sanitize";
 import User from "../models/User";
 import logger from "../utils/winstonLogger";
-import { AuthenticatedRequest } from "../types/AuthenticatedRequest"; // Ensure proper import
+import type { AuthenticatedRequest } from "../types/AuthenticatedRequest"; // Ensure proper import
 
 const adminMiddleware = async (
   req: AuthenticatedRequest, // Explicitly use AuthenticatedRequest
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
@@ -29,7 +29,7 @@ const adminMiddleware = async (
 
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET || "secret"
+      process.env.JWT_SECRET || "secret",
     ) as { id: string; role: "user" | "admin" | "moderator" };
 
     if (!decoded || !decoded.id || !decoded.role) {

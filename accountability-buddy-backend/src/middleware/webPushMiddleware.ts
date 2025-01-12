@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express-serve-static-core";
+import type { Request, Response, NextFunction } from "express-serve-static-core";
 import webPush from "web-push";
 import logger from "../utils/winstonLogger"; // Replace with your logger utility
 
@@ -21,7 +21,7 @@ webPush.setVapidDetails(`mailto:${EMAIL}`, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 export const sendNotification = async (
   req: Request,
   res: Response,
-  _next: NextFunction // Renamed 'next' to '_next' to avoid the unused variable warning
+  _next: NextFunction, // Renamed 'next' to '_next' to avoid the unused variable warning
 ): Promise<void> => {
   try {
     const { subscription, payload } = req.body;

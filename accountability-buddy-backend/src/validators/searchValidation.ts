@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 
 /**
@@ -7,7 +7,7 @@ import { check, validationResult } from "express-validator";
 export const validationMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const errors = validationResult(req);
 
@@ -48,7 +48,7 @@ export const searchValidation = [
     .withMessage("Filters must be an object.")
     .custom((filters: Record<string, unknown>) => {
       return Object.values(filters).every(
-        (value) => typeof value === "string" || typeof value === "number"
+        (value) => typeof value === "string" || typeof value === "number",
       );
     })
     .withMessage("All filter values must be strings or numbers."),

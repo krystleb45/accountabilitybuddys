@@ -1,4 +1,5 @@
-import express, { Router, Request, Response, NextFunction } from "express";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
 import { check } from "express-validator";
 import rateLimit from "express-rate-limit";
 import Activity from "../models/Activity";
@@ -10,7 +11,7 @@ const router: Router = express.Router();
 
 // Role-Based Access Control Middleware
 const roleBasedAccessControl = (
-  allowedRoles: Array<"user" | "admin" | "moderator">
+  allowedRoles: Array<"user" | "admin" | "moderator">,
 ) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const authReq = req as Request;
@@ -66,7 +67,7 @@ router.get(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 // GET /api/activity/all - Admin Access Only
@@ -82,7 +83,7 @@ router.get(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 // POST /api/activity/log - Log User Activity
@@ -128,7 +129,7 @@ router.post(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 export default router;

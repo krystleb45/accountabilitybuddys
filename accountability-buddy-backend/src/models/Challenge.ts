@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Interface for a reward
 export interface IReward {
@@ -124,7 +125,7 @@ const ChallengeSchema = new Schema<IChallenge, ChallengeModel>(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // Indexes for faster querying
@@ -143,13 +144,13 @@ ChallengeSchema.pre<IChallenge>("save", function (next) {
 // Static method to add participants to a challenge
 ChallengeSchema.statics.addParticipant = async function (
   challengeId: string,
-  userId: string
+  userId: string,
 ): Promise<IChallenge> {
   const challenge = await this.findById(challengeId);
   if (!challenge) throw new Error("Challenge not found");
 
   const isParticipant = challenge.participants.some(
-    (p) => p.user.toString() === userId
+    (p) => p.user.toString() === userId,
   );
   if (isParticipant) throw new Error("User is already participating in this challenge");
 
@@ -166,13 +167,13 @@ ChallengeSchema.statics.addParticipant = async function (
 ChallengeSchema.statics.updateProgress = async function (
   challengeId: string,
   userId: string,
-  progressUpdate: number
+  progressUpdate: number,
 ): Promise<IChallenge> {
   const challenge = await this.findById(challengeId);
   if (!challenge) throw new Error("Challenge not found");
 
   const participant = challenge.participants.find(
-    (p) => p.user.toString() === userId
+    (p) => p.user.toString() === userId,
   );
   if (!participant) throw new Error("User is not a participant in this challenge");
 
@@ -184,7 +185,7 @@ ChallengeSchema.statics.updateProgress = async function (
 // Instance method to add a reward to a challenge
 ChallengeSchema.methods.addReward = async function (
   rewardType: IReward["rewardType"],
-  rewardValue: string
+  rewardValue: string,
 ): Promise<void> {
   this.rewards.push({ rewardType, rewardValue });
   await this.save();
@@ -193,7 +194,7 @@ ChallengeSchema.methods.addReward = async function (
 // Instance method to add a milestone to a challenge
 ChallengeSchema.methods.addMilestone = async function (
   milestoneTitle: string,
-  dueDate: Date
+  dueDate: Date,
 ): Promise<void> {
   this.milestones.push({
     title: milestoneTitle,
@@ -217,7 +218,7 @@ ChallengeSchema.virtual("isActive").get(function () {
 // Export the Challenge model
 const Challenge = mongoose.model<IChallenge, ChallengeModel>(
   "Challenge",
-  ChallengeSchema
+  ChallengeSchema,
 );
 
 export default Challenge;

@@ -1,5 +1,7 @@
-import cron, { ScheduledTask } from "node-cron";
-import { Reminder, IReminder } from "../../src/models/Reminder";
+import type { ScheduledTask } from "node-cron";
+import cron from "node-cron";
+import type { IReminder } from "../../src/models/Reminder";
+import { Reminder } from "../../src/models/Reminder";
 import NotificationService from "./NotificationService";
 import LoggingService from "./LoggingService";
 
@@ -90,7 +92,7 @@ export const scheduleReminder = async (reminder: IReminder): Promise<ScheduledTa
           LoggingService.logError("Error during scheduled reminder execution", new Error(errorMessage), { reminder });
         }
       },
-      { scheduled: true, timezone: process.env.TIMEZONE || "UTC" } // Set timezone if needed
+      { scheduled: true, timezone: process.env.TIMEZONE || "UTC" }, // Set timezone if needed
     );
 
     LoggingService.logInfo(`Reminder scheduled for user: ${reminder.user} at ${reminder.remindAt}`);

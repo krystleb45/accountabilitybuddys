@@ -1,4 +1,5 @@
-import Event, { IEvent } from "../models/Event";
+import type { IEvent } from "../models/Event";
+import Event from "../models/Event";
 import { CustomError } from "./errorHandler";
 import LoggingService from "./LoggingService";
 
@@ -47,8 +48,8 @@ const EventService = {
    */
   getAllEvents: async (
     filters: EventFilters = {},
-    page: number = 1,
-    limit: number = 10
+    page = 1,
+    limit = 10,
   ): Promise<{ events: IEvent[]; totalPages: number; currentPage: number }> => {
     try {
       const events = await Event.find(filters)
@@ -78,7 +79,7 @@ const EventService = {
    */
   updateEvent: async (
     eventId: string,
-    updateData: Record<string, unknown>
+    updateData: Record<string, unknown>,
   ): Promise<IEvent> => {
     try {
       const event = await Event.findByIdAndUpdate(eventId, updateData, {

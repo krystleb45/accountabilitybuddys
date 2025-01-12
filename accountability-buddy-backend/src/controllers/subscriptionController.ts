@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import User from "../models/User";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import Stripe from "stripe";
-import { IUser } from "../models/User"; // Assuming the user interface exists
-import { ISubscription } from "../models/Subscription"; // Assuming Subscription model
+import type { IUser } from "../models/User"; // Assuming the user interface exists
+import type { ISubscription } from "../models/Subscription"; // Assuming Subscription model
 
 
 // Initialize Stripe
@@ -26,7 +26,7 @@ export const createSubscriptionSession = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly define the types for Request
     res: Response,
-    _next: NextFunction // Explicitly define the NextFunction parameter
+    _next: NextFunction, // Explicitly define the NextFunction parameter
   ): Promise<void> => {
     const userId = req.user?.id;
 
@@ -53,14 +53,14 @@ export const createSubscriptionSession = catchAsync(
     });
 
     sendResponse(res, 200, true, "Checkout session created", { sessionId: session.id });
-  }
+  },
 );
 
 export const checkSubscriptionStatus = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly defined Request type
     res: Response,
-    _next: NextFunction // Explicitly included NextFunction
+    _next: NextFunction, // Explicitly included NextFunction
   ): Promise<void> => {
     const userId = req.user?.id;
 
@@ -74,13 +74,13 @@ export const checkSubscriptionStatus = catchAsync(
 
     // Ensure subscriptions is treated as an array even if undefined
     const hasActiveSubscription = (user.subscriptions ?? []).some(
-      (subscription: any) => subscription.isActive // Check if any subscription is active
+      (subscription: any) => subscription.isActive, // Check if any subscription is active
     );
 
     sendResponse(res, 200, true, "Subscription status fetched successfully", {
       hasActiveSubscription,
     });
-  }
+  },
 );
 
 
@@ -93,7 +93,7 @@ export const getCurrentSubscription = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly define the request type
     res: Response,
-    _next: NextFunction // Include the next function explicitly
+    _next: NextFunction, // Include the next function explicitly
   ): Promise<void> => {
     // Get user ID from request
     const userId = req.user?.id;
@@ -114,14 +114,14 @@ export const getCurrentSubscription = catchAsync(
 
     // Check if the user has any active subscriptions
     const currentSubscription = (populatedUser.subscriptions ?? []).find(
-      (subscription) => subscription.isActive
+      (subscription) => subscription.isActive,
     );
 
     // Send the response
     sendResponse(res, 200, true, "Current subscription fetched successfully", {
       subscription: currentSubscription || null, // Return null if no active subscription
     });
-  }
+  },
 );
 
 /**
@@ -133,7 +133,7 @@ export const upgradeSubscription = catchAsync(
   async (
     req: Request<{}, {}, { newPriceId: string }>, // Explicitly define request type
     res: Response,
-    _next: NextFunction // Include the next function for middleware compliance
+    _next: NextFunction, // Include the next function for middleware compliance
   ): Promise<void> => {
     const { newPriceId } = req.body; // Pass the new plan price ID
     const userId = req.user?.id;
@@ -185,7 +185,7 @@ export const upgradeSubscription = catchAsync(
     sendResponse(res, 200, true, "Subscription upgraded successfully", {
       subscription: updatedSubscription,
     });
-  }
+  },
 );
 
 /**
@@ -197,7 +197,7 @@ export const cancelSubscription = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly define request type
     res: Response,
-    _next: NextFunction // Include the next function for middleware compliance
+    _next: NextFunction, // Include the next function for middleware compliance
   ): Promise<void> => {
     const userId = req.user?.id;
 
@@ -222,7 +222,7 @@ export const cancelSubscription = catchAsync(
 
     // Cancel the subscription in Stripe using 'cancel' instead of 'del'
     const canceledSubscription = await stripe.subscriptions.cancel(
-      stripeSubscriptionId
+      stripeSubscriptionId,
     );
 
     if (!canceledSubscription || canceledSubscription.status !== "canceled") {
@@ -235,7 +235,7 @@ export const cancelSubscription = catchAsync(
     await user.save();
 
     sendResponse(res, 200, true, "Subscription canceled successfully");
-  }
+  },
 );
 
 /**
@@ -247,7 +247,7 @@ export const handleStripeWebhook = catchAsync(
   async (
     req: Request<{}, {}, Buffer>, // Explicitly define request type with raw body as Buffer
     res: Response,
-    _next: NextFunction // Include NextFunction for middleware compliance
+    _next: NextFunction, // Include NextFunction for middleware compliance
   ): Promise<void> => {
     // Retrieve Stripe signature and webhook secret
     const sig = req.headers["stripe-signature"] as string;
@@ -267,29 +267,29 @@ export const handleStripeWebhook = catchAsync(
 
     // Handle different event types
     switch (event.type) {
-    case "customer.subscription.deleted":
+      case "customer.subscription.deleted":
       // Handle subscription cancellation in the database
-      const subscription = event.data.object as { id: string };
-      await User.updateOne(
-        { "subscriptions.stripeSubscriptionId": subscription.id },
-        { $set: { "subscriptions.$.isActive": false } } // Mark subscription as inactive
-      );
-      break;
+        const subscription = event.data.object as { id: string };
+        await User.updateOne(
+          { "subscriptions.stripeSubscriptionId": subscription.id },
+          { $set: { "subscriptions.$.isActive": false } }, // Mark subscription as inactive
+        );
+        break;
 
-    case "customer.subscription.updated":
+      case "customer.subscription.updated":
       // Handle subscription updates, e.g., status changes
-      const updatedSubscription = event.data.object as { id: string; status: string };
-      await User.updateOne(
-        { "subscriptions.stripeSubscriptionId": updatedSubscription.id },
-        { $set: { "subscriptions.$.status": updatedSubscription.status } }
-      );
-      break;
+        const updatedSubscription = event.data.object as { id: string; status: string };
+        await User.updateOne(
+          { "subscriptions.stripeSubscriptionId": updatedSubscription.id },
+          { $set: { "subscriptions.$.status": updatedSubscription.status } },
+        );
+        break;
 
-    default:
+      default:
       
     }
 
     // Respond with success
     res.status(200).send("Webhook received");
-  }
+  },
 );

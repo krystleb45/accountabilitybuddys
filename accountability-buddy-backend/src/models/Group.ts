@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define the Group interface
 export interface IGroup extends Document {
@@ -53,7 +54,7 @@ const GroupSchema = new Schema<IGroup>(
     timestamps: true, // Adds createdAt and updatedAt fields automatically
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // Middleware to ensure the creator is added as a member
@@ -70,7 +71,7 @@ GroupSchema.pre("save", function (next) {
 
 // Instance method to add a member
 GroupSchema.methods.addMember = async function (
-  userId: mongoose.Types.ObjectId
+  userId: mongoose.Types.ObjectId,
 ): Promise<void> {
   if (!this.members.includes(userId)) {
     this.members.push(userId);
@@ -80,10 +81,10 @@ GroupSchema.methods.addMember = async function (
 
 // Instance method to remove a member
 GroupSchema.methods.removeMember = async function (
-  userId: mongoose.Types.ObjectId
+  userId: mongoose.Types.ObjectId,
 ): Promise<void> {
   this.members = this.members.filter(
-    (member: mongoose.Types.ObjectId) => member.toString() !== userId.toString()
+    (member: mongoose.Types.ObjectId) => member.toString() !== userId.toString(),
   );
   await this.save();
 };

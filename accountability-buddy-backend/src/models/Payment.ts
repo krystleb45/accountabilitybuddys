@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define the Payment interface
 export interface IPayment extends Document {
@@ -86,7 +87,7 @@ const PaymentSchema: Schema<IPayment> = new Schema<IPayment>(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 
@@ -153,7 +154,7 @@ PaymentSchema.virtual("isExpired").get(function (): boolean {
 // Export the Payment model
 const Payment: IPaymentModel = mongoose.model<IPayment, IPaymentModel>(
   "Payment",
-  PaymentSchema
+  PaymentSchema,
 );
 
 export default Payment;

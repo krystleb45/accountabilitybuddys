@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import type { Document, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 /**
  * @desc Interface for the Report model.
@@ -28,7 +29,7 @@ const ReportSchema = new Schema<IReport>(
     resolvedBy: { type: Schema.Types.ObjectId, ref: "User" },
     resolvedAt: { type: Date },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 /**

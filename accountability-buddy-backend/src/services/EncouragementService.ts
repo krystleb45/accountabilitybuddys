@@ -97,7 +97,7 @@ const sendNotification = async (userId: string, message: string): Promise<void> 
     LoggingService.logError(
       "Failed to send notification",
       error instanceof Error ? error : new Error("Unknown error"),
-      { userId }
+      { userId },
     );
     throw new Error("Failed to send notification.");
   }
@@ -136,7 +136,7 @@ const encourageUser = async (userId: string, goalId: string, type: "milestone" |
     LoggingService.logError(
       `Error encouraging ${type}`,
       error instanceof Error ? error : new Error("Unknown error"),
-      { userId, goalId }
+      { userId, goalId },
     );
     throw new Error(`Failed to encourage ${type}.`);
   }
@@ -155,7 +155,7 @@ const sendMotivationalBoost = async (userId: string): Promise<void> => {
       LoggingService.logError(
         "User not found for motivational boost",
         new Error("User not found"),
-        { userId }
+        { userId },
       );
       throw new Error("User not found.");
     }
@@ -171,7 +171,7 @@ const sendMotivationalBoost = async (userId: string): Promise<void> => {
     LoggingService.logError(
       "Error sending motivational boost",
       error instanceof Error ? error : new Error("Unknown error"),
-      { userId }
+      { userId },
     );
     throw new Error("Failed to send motivational boost.");
   }
@@ -196,7 +196,7 @@ const sendPeriodicEncouragement = async (): Promise<void> => {
     LoggingService.logError(
       "Error sending periodic encouragement",
       error instanceof Error ? error : new Error("Unknown error"),
-      { functionName: "sendPeriodicEncouragement" } // Metadata for context
+      { functionName: "sendPeriodicEncouragement" }, // Metadata for context
     );
     throw new Error("Failed to send periodic encouragement.");
   }

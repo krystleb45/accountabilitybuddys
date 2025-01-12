@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -23,7 +23,7 @@ export const loginRateLimiter = rateLimit({
 export const login = catchAsync(
   async (
     req: Request<{}, any, { email: string; password: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { email, password } = req.body;
 
@@ -49,7 +49,7 @@ export const login = catchAsync(
     );
 
     sendResponse(res, 200, true, "Login successful", { token, refreshToken });
-  }
+  },
 );
 
 /**
@@ -60,7 +60,7 @@ export const login = catchAsync(
 export const requestPasswordReset = catchAsync(
   async (
     req: Request<{}, any, { email: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { email } = req.body;
 
@@ -96,7 +96,7 @@ export const requestPasswordReset = catchAsync(
       await user.save({ validateBeforeSave: false });
       sendResponse(res, 500, false, "Failed to send password reset email");
     }
-  }
+  },
 );
 
 /**
@@ -107,7 +107,7 @@ export const requestPasswordReset = catchAsync(
 export const resetPassword = catchAsync(
   async (
     req: Request<{ token: string }, any, { newPassword: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { token } = req.params;
     const { newPassword } = req.body;
@@ -134,7 +134,7 @@ export const resetPassword = catchAsync(
     await user.save();
 
     sendResponse(res, 200, true, "Password reset successful");
-  }
+  },
 );
 
 /**
@@ -145,7 +145,7 @@ export const resetPassword = catchAsync(
 export const setupTwoFactorAuth = catchAsync(
   async (
     req: Request<{ userId: string }, any, {}>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { userId } = req.params;
 
@@ -160,7 +160,7 @@ export const setupTwoFactorAuth = catchAsync(
     await user.save();
 
     sendResponse(res, 200, true, "Two-factor authentication setup successful", { secret });
-  }
+  },
 );
 
 /**
@@ -171,7 +171,7 @@ export const setupTwoFactorAuth = catchAsync(
 export const verifyTwoFactorAuth = catchAsync(
   async (
     req: Request<{ userId: string }, any, { token: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { userId } = req.params;
     const { token } = req.body;
@@ -194,5 +194,5 @@ export const verifyTwoFactorAuth = catchAsync(
     }
 
     sendResponse(res, 200, true, "Two-factor authentication verified successfully");
-  }
+  },
 );

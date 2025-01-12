@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document } from "mongoose";
+import type { Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Message Schema for Military Support Chat
 interface IMessage extends Document {
@@ -30,6 +31,6 @@ const MilitaryUserSchema: Schema = new Schema({
 
 const MilitaryUser = mongoose.model<IMilitaryUser>(
   "MilitaryUser",
-  MilitaryUserSchema
+  MilitaryUserSchema,
 );
 export default MilitaryUser;

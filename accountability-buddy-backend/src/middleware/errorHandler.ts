@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import logger from "../utils/winstonLogger";
 
 // Define the extended error interface
@@ -11,8 +11,8 @@ interface CustomError extends Error {
 // Utility to create custom errors
 export const createError = (
   message: string,
-  statusCode: number = 500,
-  isOperational: boolean = true,
+  statusCode = 500,
+  isOperational = true,
   details: unknown = null,
 ): CustomError => {
   const error: CustomError = new Error(message) as CustomError;
@@ -33,7 +33,7 @@ export const errorHandler = (
   logger.error(
     `Error: ${err.message}, Status: ${err.statusCode || 500}, Details: ${
       err.details || "N/A"
-    }`
+    }`,
   );
 
   // Prepare the response

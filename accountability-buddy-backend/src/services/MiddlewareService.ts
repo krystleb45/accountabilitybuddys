@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import type { Request, Response, NextFunction } from "express";
+import type { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { CustomError } from "../services/errorHandler"; // Centralized error handling
 import User from "../models/User"; // User model for authorization
 import logger from "../utils/winstonLogger"; // Logger utility
@@ -92,7 +93,7 @@ export const MiddlewareService = {
     err: CustomError | Error,
     _req: Request,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): void {
     const statusCode = (err as CustomError).statusCode || 500;
     const message = err.message || "Internal Server Error";

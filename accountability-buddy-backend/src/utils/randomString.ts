@@ -12,9 +12,9 @@ import crypto from "crypto";
  * @throws  Throws error if input parameters are invalid.
  */
 const randomString = (
-  length: number = 16,
+  length = 16,
   charset: "alphanumeric" | "numeric" | "hex" | "alphabetic" | string = "alphanumeric",
-  cryptoSecure: boolean = false
+  cryptoSecure = false,
 ): string => {
   // Validate length
   if (typeof length !== "number" || length <= 0 || !Number.isInteger(length)) {

@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define the Reminder interface
 export interface IReminder extends Document {
@@ -82,7 +83,7 @@ const ReminderSchema = new Schema<IReminder>(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // Index to ensure reminders are fetched by user and reminder time
@@ -101,7 +102,7 @@ ReminderSchema.pre("save", function (next) {
 
 // Static method to get upcoming reminders for a user
 ReminderSchema.statics.getUpcomingReminders = async function (
-  userId: Types.ObjectId
+  userId: Types.ObjectId,
 ): Promise<IReminder[]> {
   return await this.find({
     user: userId,
@@ -112,7 +113,7 @@ ReminderSchema.statics.getUpcomingReminders = async function (
 
 // Static method to mark a reminder as sent
 ReminderSchema.statics.markAsSent = async function (
-  reminderId: string
+  reminderId: string,
 ): Promise<IReminder | null> {
   const reminder = await this.findById(reminderId);
   if (reminder) {
@@ -130,5 +131,5 @@ ReminderSchema.virtual("isRecurring").get(function (): boolean {
 // Export the Reminder model
 export const Reminder: IReminderModel = mongoose.model<IReminder, IReminderModel>(
   "Reminder",
-  ReminderSchema
+  ReminderSchema,
 );

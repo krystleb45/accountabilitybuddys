@@ -1,4 +1,5 @@
-import express, { Router, Request, Response } from "express";
+import type { Router, Request, Response } from "express";
+import express from "express";
 import { check, validationResult } from "express-validator";
 import rateLimit from "express-rate-limit";
 import mongoose from "mongoose"; // For ObjectId validation
@@ -75,7 +76,7 @@ router.post(
 
     await newEvent.save();
     res.status(201).json({ success: true, event: newEvent });
-  })
+  }),
 );
 
 /**
@@ -119,7 +120,7 @@ router.put(
     // Ensure only participants or the creator can update progress
     if (
       !event.participants.some((p) =>
-        p.user.toString() === userId.toString()
+        p.user.toString() === userId.toString(),
       ) &&
       !event.createdBy.equals(new mongoose.Types.ObjectId(userId))
     ) {
@@ -133,7 +134,7 @@ router.put(
     await event.save();
 
     res.status(200).json({ success: true, event });
-  })
+  }),
 );
 
 /**
@@ -166,7 +167,7 @@ router.get(
     }
 
     res.status(200).json({ success: true, events });
-  })
+  }),
 );
 
 /**
@@ -204,7 +205,7 @@ router.get(
     // Ensure only participants or the creator can view the event
     if (
       !event.participants.some((p) =>
-        p.user.toString() === userId.toString()
+        p.user.toString() === userId.toString(),
       ) &&
       !event.createdBy.equals(new mongoose.Types.ObjectId(userId))
     ) {
@@ -215,7 +216,7 @@ router.get(
     }
 
     res.status(200).json({ success: true, event });
-  })
+  }),
 );
 
 export default router;

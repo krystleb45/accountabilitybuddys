@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import Task from "../models/Task"; // Assuming Task model exists
 
 /**
@@ -9,7 +9,7 @@ import Task from "../models/Task"; // Assuming Task model exists
 export const getAllTasks = async (
   req: Request, 
   res: Response, 
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     // Use userId to fetch tasks dynamically
@@ -35,7 +35,7 @@ export const getAllTasks = async (
 export const getTaskById = async (
   req: Request<{ id: string }>, // Expect 'id' parameter
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const userId = req.user?.id; // Extract user ID
@@ -63,7 +63,7 @@ export const getTaskById = async (
  */
 export const createTask = async (
   userId: string,
-  taskData: { title: string; dueDate?: string }
+  taskData: { title: string; dueDate?: string },
 ): Promise<any> => {
   try {
     const newTask = {
@@ -88,7 +88,7 @@ export const createTask = async (
 export const updateTask = async (
   req: Request<{ id: string }, {}, { title?: string; dueDate?: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const { id } = req.params;
@@ -98,7 +98,7 @@ export const updateTask = async (
     const updatedTask = await Task.findOneAndUpdate(
       { _id: id, userId: req.user?.id },
       { $set: updates },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!updatedTask) {
@@ -121,7 +121,7 @@ export const updateTask = async (
 export const deleteTask = async (
   req: Request<{ id: string }>, // Explicitly define ID param type
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const { id } = req.params;

@@ -1,6 +1,7 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import multer, { MulterError } from "multer";
-import { check, validationResult, ValidationChain, ValidationError } from "express-validator";
+import type { ValidationChain, ValidationError } from "express-validator";
+import { check, validationResult } from "express-validator";
 
 
 
@@ -26,7 +27,7 @@ const upload = multer({
  * Middleware to handle file upload validation using Multer.
  */
 export const multerMiddleware = (req: Request, res: Response, next: NextFunction): void => {
-  upload(req, res, (err) => {
+  void upload(req, res, (err) => {
     if (err) {
       if (err instanceof MulterError) {
         // Handle Multer-specific errors
@@ -99,7 +100,7 @@ const isValidationErrorWithParam = (error: ValidationError): error is Validation
 export const validationMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const errors = validationResult(req);
 

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { PrivateMessage } from "../models/PrivateMessage";
 import User from "../models/User"; // Ensure User is properly exported
 import catchAsync from "../utils/catchAsync";
@@ -18,7 +18,7 @@ const sanitizeInput = (input: string): string => {
 export const sendMessage = catchAsync(
   async (
     req: Request<{}, {}, { receiverId: string; message: string }>, // Explicitly define body type
-    res: Response
+    res: Response,
   ) => {
     const { receiverId, message } = req.body;
     const senderId = req.user?.id; // Uses globally-augmented 'req.user'
@@ -51,7 +51,7 @@ export const sendMessage = catchAsync(
     sendResponse(res, 201, true, "Message sent successfully", {
       message: newMessage,
     });
-  }
+  },
 );
 
 /**
@@ -62,7 +62,7 @@ export const sendMessage = catchAsync(
 export const getMessagesWithUser = catchAsync(
   async (
     req: Request<{ userId: string }, {}, {}, { page?: string; limit?: string }>, // Explicitly define route params and query
-    res: Response
+    res: Response,
   ) => {
     const { userId } = req.params;
     const page = parseInt(req.query.page || "1", 10);
@@ -99,7 +99,7 @@ export const getMessagesWithUser = catchAsync(
         totalPages: Math.ceil(totalMessages / limit),
       },
     });
-  }
+  },
 );
 
 /**
@@ -110,7 +110,7 @@ export const getMessagesWithUser = catchAsync(
 export const deleteMessage = catchAsync(
   async (
     req: Request<{ messageId: string }>, // Explicitly define route parameters
-    res: Response
+    res: Response,
   ) => {
     const { messageId } = req.params;
     const userId = req.user?.id;
@@ -130,7 +130,7 @@ export const deleteMessage = catchAsync(
 
     logger.info(`Message with ID ${messageId} deleted by user ${userId}`);
     sendResponse(res, 200, true, "Message deleted successfully");
-  }
+  },
 );
 
 /**
@@ -141,7 +141,7 @@ export const deleteMessage = catchAsync(
 export const markMessagesAsRead = catchAsync(
   async (
     req: Request<{ userId: string }>, // Explicitly define route parameters
-    res: Response
+    res: Response,
   ) => {
     const { userId } = req.params;
     const currentUserId = req.user?.id;
@@ -154,5 +154,5 @@ export const markMessagesAsRead = catchAsync(
     sendResponse(res, 200, true, "Messages marked as read", {
       updatedMessages: updatedMessages.modifiedCount,
     });
-  }
+  },
 );

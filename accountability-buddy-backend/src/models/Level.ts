@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define Reward interface
 interface IReward {
@@ -70,7 +71,7 @@ const LevelSchema = new Schema<ILevel>(
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt timestamps
-  }
+  },
 );
 
 // Pre-save hook to calculate level-up logic
@@ -88,7 +89,7 @@ LevelSchema.pre<ILevel>("save", function (next) {
 // Static method to add points and handle leveling up
 LevelSchema.statics.addPoints = async function (
   userId: Types.ObjectId,
-  points: number
+  points: number,
 ): Promise<ILevel> {
   let userLevel = await this.findOne({ user: userId });
 
@@ -112,7 +113,7 @@ LevelSchema.virtual("totalRewards").get(function () {
 // Instance method to add a reward
 LevelSchema.methods.addReward = async function (
   rewardType: "badge" | "discount" | "customization",
-  rewardValue: string
+  rewardValue: string,
 ): Promise<void> {
   this.rewards.push({ rewardType, rewardValue, achievedAt: new Date() });
   await this.save();
@@ -126,7 +127,7 @@ LevelSchema.index({ lastActivity: -1 });
 // Export the Level model
 export const Level: ILevelModel = mongoose.model<ILevel, ILevelModel>(
   "Level",
-  LevelSchema
+  LevelSchema,
 );
 
 export default Level;

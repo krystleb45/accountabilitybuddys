@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface ISubscription extends Document {
   isActive: boolean; // Changed from `unknown` to `boolean` for clarity
@@ -59,7 +60,7 @@ const SubscriptionSchema: Schema<ISubscription> = new Schema(
     stripeSubscriptionId: { type: String }, // Added for Stripe subscription ID
     currentPeriodEnd: { type: Date }, // Added for subscription period tracking
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Pre-save hook to update the subscription status if expired
@@ -83,7 +84,7 @@ SubscriptionSchema.pre<ISubscription>("save", function (next) {
 
 const Subscription: Model<ISubscription> = mongoose.model<ISubscription>(
   "Subscription",
-  SubscriptionSchema
+  SubscriptionSchema,
 );
 
 export default Subscription;

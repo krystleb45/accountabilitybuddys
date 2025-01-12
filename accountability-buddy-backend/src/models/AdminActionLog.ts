@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, CallbackError } from "mongoose";
+import type { Document, Model, CallbackError } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define the AdminActionLog interface
 export interface AdminActionLog extends Document {
@@ -75,7 +76,7 @@ const AdminActionLogSchema = new Schema<AdminActionLog>(
     timestamps: true, // Automatically adds createdAt and updatedAt fields
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // Compound indexes for optimized queries

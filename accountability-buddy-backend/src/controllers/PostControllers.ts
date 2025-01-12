@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import Notification from "../models/Notification"; // Ensure this matches your model export
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -12,7 +12,7 @@ import sanitize from "mongo-sanitize";
 export const createNotification = catchAsync(
   async (
     req: Request<{}, {}, { userId: string; message: string; type?: string }>, // Explicit body type
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { userId, message, type } = sanitize(req.body);
 
@@ -30,7 +30,7 @@ export const createNotification = catchAsync(
     sendResponse(res, 201, true, "Notification created successfully", {
       notification: newNotification,
     });
-  }
+  },
 );
 
 /**
@@ -41,7 +41,7 @@ export const createNotification = catchAsync(
 export const getUserNotifications = catchAsync(
   async (
     req: Request<{}, {}, {}, { page?: string; limit?: string }>, // Explicit query type
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
     const page = parseInt(req.query.page || "1", 10);
@@ -62,7 +62,7 @@ export const getUserNotifications = catchAsync(
         totalPages: Math.ceil(totalNotifications / limit),
       },
     });
-  }
+  },
 );
 
 /**
@@ -73,14 +73,14 @@ export const getUserNotifications = catchAsync(
 export const markAsRead = catchAsync(
   async (
     req: Request<{ notificationId: string }>, // Explicit route params type
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { notificationId } = req.params;
 
     const updatedNotification = await Notification.findByIdAndUpdate(
       notificationId,
       { read: true },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedNotification) {
@@ -91,7 +91,7 @@ export const markAsRead = catchAsync(
     sendResponse(res, 200, true, "Notification marked as read", {
       notification: updatedNotification,
     });
-  }
+  },
 );
 
 /**
@@ -102,7 +102,7 @@ export const markAsRead = catchAsync(
 export const markAllAsRead = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Empty generics
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
 
@@ -111,7 +111,7 @@ export const markAllAsRead = catchAsync(
     sendResponse(res, 200, true, "All notifications marked as read", {
       modifiedCount: result.modifiedCount,
     });
-  }
+  },
 );
 
 /**
@@ -122,7 +122,7 @@ export const markAllAsRead = catchAsync(
 export const deleteNotification = catchAsync(
   async (
     req: Request<{ notificationId: string }>, // Explicit route params type
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { notificationId } = req.params;
 
@@ -134,7 +134,7 @@ export const deleteNotification = catchAsync(
     }
 
     sendResponse(res, 200, true, "Notification deleted successfully");
-  }
+  },
 );
 
 /**
@@ -145,7 +145,7 @@ export const deleteNotification = catchAsync(
 export const deleteAllNotifications = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Empty generics
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
 
@@ -154,5 +154,5 @@ export const deleteAllNotifications = catchAsync(
     sendResponse(res, 200, true, "All notifications deleted successfully", {
       deletedCount: result.deletedCount,
     });
-  }
+  },
 );

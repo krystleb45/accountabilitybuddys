@@ -83,7 +83,7 @@ export const generatePBKDF2Key = async (
   password: string,
   salt: string,
   iterations: number,
-  keyLength: number
+  keyLength: number,
 ): Promise<string> => {
   return new Promise((resolve, reject) => {
     crypto.pbkdf2(password, salt, iterations, keyLength, "sha256", (err, derivedKey) => {

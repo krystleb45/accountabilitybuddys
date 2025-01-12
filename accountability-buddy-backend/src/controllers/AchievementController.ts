@@ -6,7 +6,7 @@ const achievements: Array<{ id: string; userId: string; name: string; descriptio
  * Get all achievements for a user
  */
 export const getAllAchievements = async (
-  userId: string
+  userId: string,
 ): Promise<{ id: string; userId: string; name: string; description: string }[]> => {
   try {
     // Filter achievements by userId
@@ -20,7 +20,7 @@ export const getAllAchievements = async (
  * Get a single achievement by ID
  */
 export const getAchievementById = async (
-  id: string
+  id: string,
 ): Promise<{ id: string; userId: string; name: string; description: string } | null> => {
   try {
     const achievement = achievements.find((a) => a.id === id);
@@ -35,7 +35,7 @@ export const getAchievementById = async (
  */
 export const addAchievement = async (
   userId: string,
-  achievementData: { name: string; description: string }
+  achievementData: { name: string; description: string },
 ): Promise<{ id: string; userId: string; name: string; description: string }> => {
   try {
     const { name, description } = achievementData;
@@ -58,7 +58,7 @@ export const addAchievement = async (
  */
 export const updateAchievement = async (
   id: string,
-  updateData: { name?: string; description?: string }
+  updateData: { name?: string; description?: string },
 ): Promise<{ id: string; userId: string; name: string; description: string } | null> => {
   try {
     const achievement = achievements.find((a) => a.id === id);

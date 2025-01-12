@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import sanitize from "mongo-sanitize"; // To sanitize input data
 
 // Define the FileUpload interface
@@ -90,7 +91,7 @@ const FileUploadSchema: Schema<IFileUpload> = new Schema(
   },
   {
     timestamps: true, // Automatically add createdAt and updatedAt fields
-  }
+  },
 );
 
 // Pre-save hook to sanitize the file path and original name
@@ -110,23 +111,23 @@ FileUploadSchema.index({ fileType: 1 });
 
 // Static method to increment download count
 FileUploadSchema.statics.incrementDownloadCount = async function (
-  fileId: string
+  fileId: string,
 ): Promise<IFileUpload | null> {
   return this.findByIdAndUpdate(
     fileId,
     { $inc: { downloadCount: 1 } },
-    { new: true }
+    { new: true },
   );
 };
 
 // Static method for soft deletion
 FileUploadSchema.statics.softDelete = async function (
-  fileId: string
+  fileId: string,
 ): Promise<IFileUpload | null> {
   return this.findByIdAndUpdate(
     fileId,
     { isDeleted: true },
-    { new: true }
+    { new: true },
   );
 };
 
@@ -151,7 +152,7 @@ FileUploadSchema.virtual("isImage").get(function (): boolean {
 // Export the FileUpload model
 const FileUpload: IFileUploadModel = mongoose.model<IFileUpload, IFileUploadModel>(
   "FileUpload",
-  FileUploadSchema
+  FileUploadSchema,
 );
 
 export default FileUpload;

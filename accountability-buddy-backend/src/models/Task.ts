@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface ITask extends Document {
   user: mongoose.Types.ObjectId;
@@ -39,7 +40,7 @@ const TaskSchema: Schema<ITask> = new Schema(
     dueDate: { type: Date },
     completedAt: { type: Date },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Pre-save hook to handle status changes

@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import sanitize from "mongo-sanitize"; // For sanitizing input
 
 // Define Feedback interface
@@ -61,7 +62,7 @@ const FeedbackSchema: Schema<IFeedback> = new Schema(
   },
   {
     timestamps: true, // Automatically add `createdAt` and `updatedAt` fields
-  }
+  },
 );
 
 // Pre-save hook to sanitize message content
@@ -90,7 +91,7 @@ FeedbackSchema.methods.markAsReviewed = async function (): Promise<void> {
 
 // Static method to get feedback by type
 FeedbackSchema.statics.getFeedbackByType = async function (
-  feedbackType: "bug" | "feature-request" | "other"
+  feedbackType: "bug" | "feature-request" | "other",
 ): Promise<IFeedback[]> {
   return this.find({ type: feedbackType });
 };

@@ -1,6 +1,6 @@
 import rateLimit from "express-rate-limit";
 import logger from "../utils/winstonLogger";
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 
 // Load IP whitelist from environment variables or fallback to defaults
 const trustedIps: string[] = (
@@ -60,7 +60,7 @@ const limiter = rateLimit({
 export const rateLimitLogger = (
   req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   logger.info(`[Rate Limit Check] ${req.method} ${req.originalUrl}`, {
     ip: req.ip ?? "unknown",

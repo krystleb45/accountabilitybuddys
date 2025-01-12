@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Query } from "mongoose";
+import type { Document, Model, Query } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface IPrivateMessage extends Document {
   sender: mongoose.Types.ObjectId;
@@ -44,7 +45,7 @@ const PrivateMessageSchema = new Schema<IPrivateMessage>(
     timestamps: true, // Automatically add 'createdAt' and 'updatedAt' fields
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // Indexes for optimized querying
@@ -65,7 +66,7 @@ PrivateMessageSchema.pre<IPrivateMessage>("save", function (next): void {
 
 // Static method to mark a message as read
 PrivateMessageSchema.statics.markAsRead = async function (
-  messageId: string
+  messageId: string,
 ): Promise<IPrivateMessage> {
   const message = await this.findById(messageId);
   if (!message) throw new Error("Message not found");
@@ -80,7 +81,7 @@ PrivateMessageSchema.statics.markAsRead = async function (
 
 // Static method for soft deletion of messages
 PrivateMessageSchema.statics.softDelete = async function (
-  messageId: string
+  messageId: string,
 ): Promise<IPrivateMessage> {
   const message = await this.findById(messageId);
   if (!message) throw new Error("Message not found");
@@ -96,7 +97,7 @@ PrivateMessageSchema.pre<Query<IPrivateMessage[], IPrivateMessage>>(
   function (next): void {
     this.where({ isDeleted: false });
     next();
-  }
+  },
 );
 
 // Middleware to prevent sending messages to oneself
@@ -111,5 +112,5 @@ PrivateMessageSchema.pre<IPrivateMessage>("validate", function (next): void {
 // Export the model
 export const PrivateMessage: Model<IPrivateMessage> = mongoose.model<IPrivateMessage>(
   "PrivateMessage",
-  PrivateMessageSchema
+  PrivateMessageSchema,
 );

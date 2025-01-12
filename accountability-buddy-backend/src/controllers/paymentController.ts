@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import LoggingService from "../services/LoggingService";
@@ -11,7 +11,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 
 // Placeholder functions for webhook handling
 async function handleSubscriptionCompleted(
-  _session: Stripe.Checkout.Session
+  _session: Stripe.Checkout.Session,
 ): Promise<void> {
   // Implement subscription completed logic here
 }
@@ -36,7 +36,7 @@ export const createSubscriptionSession = catchAsync(
       {},
       { planId: string; successUrl: string; cancelUrl: string }
     >, // Explicit body type
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { planId, successUrl, cancelUrl } = req.body;
     const userId = req.user?.id;
@@ -65,7 +65,7 @@ export const createSubscriptionSession = catchAsync(
       LoggingService.logError("Error creating subscription session", err);
       sendResponse(res, 500, false, "Failed to create session");
     }
-  }
+  },
 );
 
 /**
@@ -76,7 +76,7 @@ export const createSubscriptionSession = catchAsync(
 export const handleStripeWebhook = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicit empty generics
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const sig = req.headers["stripe-signature"] as string;
 
@@ -88,23 +88,23 @@ export const handleStripeWebhook = catchAsync(
       const event = stripe.webhooks.constructEvent(
         req.rawBody, // Use rawBody populated by middleware
         sig,
-        process.env.STRIPE_WEBHOOK_SECRET!
+        process.env.STRIPE_WEBHOOK_SECRET!,
       );
 
       switch (event.type) {
-      case "checkout.session.completed":
-        await handleSubscriptionCompleted(
-            event.data.object as Stripe.Checkout.Session
-        );
-        break;
-      case "invoice.payment_succeeded":
-        await handlePaymentSucceeded(event.data.object as Stripe.Invoice);
-        break;
-      case "invoice.payment_failed":
-        await handlePaymentFailed(event.data.object as Stripe.Invoice);
-        break;
-      default:
-        LoggingService.logInfo(`Unhandled event type: ${event.type}`);
+        case "checkout.session.completed":
+          await handleSubscriptionCompleted(
+            event.data.object as Stripe.Checkout.Session,
+          );
+          break;
+        case "invoice.payment_succeeded":
+          await handlePaymentSucceeded(event.data.object as Stripe.Invoice);
+          break;
+        case "invoice.payment_failed":
+          await handlePaymentFailed(event.data.object as Stripe.Invoice);
+          break;
+        default:
+          LoggingService.logInfo(`Unhandled event type: ${event.type}`);
       }
 
       res.json({ received: true });
@@ -113,5 +113,5 @@ export const handleStripeWebhook = catchAsync(
       LoggingService.logError("Webhook handling error", err);
       res.status(400).send(`Webhook Error: ${err.message}`);
     }
-  }
+  },
 );

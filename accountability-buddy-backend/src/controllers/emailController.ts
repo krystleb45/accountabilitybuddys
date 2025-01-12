@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
-import { Request, Response } from "express";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
+import type { Request, Response } from "express";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import sanitize from "mongo-sanitize";
@@ -31,7 +31,7 @@ const isValidEmail = (email: string): boolean =>
 export const sendEmail = catchAsync(
   async (
     req: Request<{}, any, { to: string; subject: string; message: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     try {
       const { to, subject, message } = sanitize(req.body);
@@ -62,5 +62,5 @@ export const sendEmail = catchAsync(
       logger.error(`Failed to send email: ${errorMessage}`);
       sendResponse(res, 500, false, "Failed to send email");
     }
-  }
+  },
 );

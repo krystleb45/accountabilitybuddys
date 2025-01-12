@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, CallbackError } from "mongoose";
+import type { Document, CallbackError } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import validator from "validator";
 import logger from "../utils/winstonLogger";
 
@@ -49,7 +50,7 @@ const AuditTrailSchema: Schema<IAuditTrail> = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 AuditTrailSchema.index({ action: 1, createdAt: -1 });
@@ -71,7 +72,7 @@ AuditTrailSchema.pre<IAuditTrail>("save", function (this: IAuditTrail, next: (er
 
 AuditTrailSchema.post<IAuditTrail>("save", function (this: IAuditTrail, doc: IAuditTrail) {
   logger.info(
-    `AuditTrail created for ${doc.entityType} ${doc.entityId}: ${doc.action} by user ${doc.userId || "Unknown"} at ${doc.createdAt}`
+    `AuditTrail created for ${doc.entityType} ${doc.entityId}: ${doc.action} by user ${doc.userId || "Unknown"} at ${doc.createdAt}`,
   );
 });
 
@@ -79,12 +80,12 @@ AuditTrailSchema.post<IAuditTrail>("save", function (
   this: IAuditTrail,
   error: CallbackError,
   doc: IAuditTrail,
-  next: (err?: CallbackError) => void
+  next: (err?: CallbackError) => void,
 ) {
   try {
     const err = error as Error;
     logger.error(
-      `Error saving AuditTrail for ${doc.entityType} ${doc.entityId}: ${err.message}`
+      `Error saving AuditTrail for ${doc.entityType} ${doc.entityId}: ${err.message}`,
     );
     next(error);
   } catch (caughtErr) {

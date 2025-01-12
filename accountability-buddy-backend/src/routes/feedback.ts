@@ -1,9 +1,12 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import * as feedbackController from "../controllers/FeedbackController";
 import authMiddleware from "../middleware/authMiddleware";
 import rateLimit from "express-rate-limit";
 import logger from "../utils/winstonLogger";
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
@@ -16,17 +19,6 @@ const feedbackLimiter = rateLimit({
   message: "Too many feedback submissions, please try again later",
 });
 
-/**
- * Middleware to handle validation errors.
- */
-const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return; // Exit early without returning a value
-  }
-  next();
-};
 
 /**
  * @route   POST /feedback
@@ -51,7 +43,7 @@ router.post(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       // Await the controller function to handle the async operation
-      await feedbackController.submitFeedback(req, res, next); // Add 'await'
+      await feedbackController.submitFeedback(req as any, res, next); // Add 'await'
     } catch (error) {
       // Log and pass error to middleware
       logger.error(`Error submitting feedback: ${(error as Error).message}`, {
@@ -59,7 +51,7 @@ router.post(
       });
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
 
 
@@ -73,13 +65,13 @@ router.get(
   authMiddleware,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const feedback = feedbackController.getUserFeedback(req, res, next); // Pass 'next'
+      const feedback = feedbackController.getUserFeedback(req as any, res, next); // Pass 'next'
       res.status(200).json({ success: true, data: feedback });
     } catch (error) {
       logger.error(`Error fetching feedback: ${(error as Error).message}`, { error });
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -100,13 +92,13 @@ router.delete(
     }
 
     try {
-      feedbackController.deleteFeedback(req, res, next); // Pass 'next'
+      feedbackController.deleteFeedback(req as any, res, next); // Pass 'next'
       res.status(200).json({ success: true, msg: "Feedback deleted successfully" });
     } catch (error) {
       logger.error(`Error deleting feedback: ${(error as Error).message}`, { error });
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
 
 export default router;

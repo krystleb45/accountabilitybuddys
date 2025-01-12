@@ -1,4 +1,5 @@
-import mongoose, { ConnectOptions } from "mongoose";
+import type { ConnectOptions } from "mongoose";
+import mongoose from "mongoose";
 import config from "./config";
 import winston from "../utils/winstonLogger";
 

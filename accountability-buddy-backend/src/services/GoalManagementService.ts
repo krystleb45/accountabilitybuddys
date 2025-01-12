@@ -1,8 +1,9 @@
-import Goal, { IGoal } from "../models/Goal"; // Import the Goal model and interface
+import type { IGoal } from "../models/Goal";
+import Goal from "../models/Goal"; // Import the Goal model and interface
 import User from "../models/User"; // Import the User model
 import logger from "../utils/winstonLogger"; // Logging utility
 import { CustomError } from "./errorHandler"; // Centralized error handling
-import { FilterQuery } from "mongoose";
+import type { FilterQuery } from "mongoose";
 
 const GoalManagementService = {
   /**
@@ -119,7 +120,7 @@ const GoalManagementService = {
    */
   async getUserGoals(
     userId: string,
-    filters: FilterQuery<IGoal> = {}
+    filters: FilterQuery<IGoal> = {},
   ): Promise<IGoal[]> {
     try {
       const goals = await Goal.find({ user: userId, ...filters }).sort({ createdAt: -1 });

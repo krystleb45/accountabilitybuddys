@@ -1,5 +1,5 @@
 import { errorHandler } from "../middleware/errorHandler";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 describe("Error Handling Tests", () => {
   it("should return a 500 error for unhandled exceptions", () => {

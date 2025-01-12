@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define badge levels and types
 export type BadgeLevel = "Bronze" | "Silver" | "Gold";
@@ -91,12 +92,12 @@ const BadgeSchema = new Schema<IBadge, BadgeModel>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Static method: Get the next badge level
 BadgeSchema.statics.getNextLevel = function (
-  currentLevel: BadgeLevel
+  currentLevel: BadgeLevel,
 ): BadgeLevel {
   const levels: BadgeLevel[] = ["Bronze", "Silver", "Gold"];
   const currentIndex = levels.indexOf(currentLevel);
@@ -110,7 +111,7 @@ BadgeSchema.statics.isExpired = function (expiresAt?: Date): boolean {
 
 // Static method: Award points for badges
 BadgeSchema.statics.awardPointsForBadge = function (
-  badgeType: BadgeType
+  badgeType: BadgeType,
 ): number {
   const pointsMapping: Record<BadgeType, number> = {
     goal_completed: 50,
@@ -140,7 +141,7 @@ import logger from "../utils/winstonLogger"; // Replace this path with the corre
 // Post-save hook: Log badge creation or updates
 BadgeSchema.post<IBadge>("save", function (doc) {
   logger.info(
-    `Badge ${doc.badgeType} at ${doc.level} level awarded to user ${doc.user}`
+    `Badge ${doc.badgeType} at ${doc.level} level awarded to user ${doc.user}`,
   );
 });
 

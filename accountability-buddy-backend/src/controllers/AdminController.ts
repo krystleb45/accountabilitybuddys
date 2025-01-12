@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import User from "../models/User";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -10,12 +10,12 @@ import { createError } from "../middleware/errorHandler";
 export const checkAdminAccess = (
   req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   try {
     if (!req.user || req.user.role !== "admin") {
       return next(
-        createError("Access denied. Admin privileges required.", 403)
+        createError("Access denied. Admin privileges required.", 403),
       );
     }
     next();
@@ -40,7 +40,7 @@ export const getAllUsers = catchAsync(
     }
   
     res.json(users);
-  }
+  },
 );
 
 /**
@@ -57,7 +57,7 @@ export const updateUserRole = catchAsync(
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { role },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     ).select("-password");
 
     if (!updatedUser) {
@@ -67,7 +67,7 @@ export const updateUserRole = catchAsync(
     sendResponse(res, 200, true, "User role updated successfully", {
       user: updatedUser,
     });
-  }
+  },
 );
 
 /**
@@ -77,7 +77,7 @@ export const deleteUserAccount = catchAsync(
   async (
     req: Request<{ userId: string }>,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const { userId } = req.params;
 
@@ -92,7 +92,7 @@ export const deleteUserAccount = catchAsync(
     }
 
     sendResponse(res, 200, true, "User account deleted successfully");
-  }
+  },
 );
 
 /**
@@ -104,7 +104,7 @@ export const getUserAnalytics = catchAsync(
     sendResponse(res, 200, true, "User analytics fetched successfully", {
       analytics,
     });
-  }
+  },
 );
 
 /**
@@ -116,5 +116,5 @@ export const getFinancialAnalytics = catchAsync(
     sendResponse(res, 200, true, "Financial analytics fetched successfully", {
       analytics,
     });
-  }
+  },
 );

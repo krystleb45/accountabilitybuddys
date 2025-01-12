@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { globalRateLimiter } from "../utils/rateLimiter";
 
 describe("Middleware Tests", () => {
@@ -7,7 +7,7 @@ describe("Middleware Tests", () => {
     const res = {} as Response;
     const next = jest.fn();
 
-    globalRateLimiter(req, res, next);
+    void globalRateLimiter(req, res, next);
     expect(next).toHaveBeenCalled();
   });
 });

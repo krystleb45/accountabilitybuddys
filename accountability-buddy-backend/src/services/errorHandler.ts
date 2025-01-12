@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import logger from "../utils/winstonLogger"; // Logger for error logging
 
 /**
@@ -17,7 +17,7 @@ export class CustomError extends Error {
   constructor(
     message: string,
     statusCode = 500,
-    details: Record<string, unknown> | Array<unknown> | null = null
+    details: Record<string, unknown> | Array<unknown> | null = null,
   ) {
     super(message);
     this.statusCode = statusCode;
@@ -42,7 +42,7 @@ export const errorHandler = (
   err: CustomError | Error,
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): void => {
   const statusCode = err instanceof CustomError ? err.statusCode : 500;
   const errorResponse: Record<string, unknown> = {
@@ -59,7 +59,7 @@ export const errorHandler = (
   logger.error(
     `Error: ${err.message} | Status: ${statusCode} | URL: ${req.originalUrl} | Method: ${req.method} | IP: ${req.ip} | User: ${
       req.user ? (req.user as { id: string }).id : "Guest"
-    }`
+    }`,
   );
 
   // Include stack trace in development environment
@@ -77,7 +77,7 @@ export const errorHandler = (
  * @returns Wrapped async function with error handling
  */
 export const asyncHandler = (
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<unknown>
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<unknown>,
 ): ((req: Request, res: Response, next: NextFunction) => void) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     Promise.resolve(fn(req, res, next)).catch(next);
@@ -93,7 +93,7 @@ export const asyncHandler = (
 export const logError = (err: Error, req: Request): void => {
   // Add additional logging logic here (e.g., send error details to a monitoring service)
   logger.error(
-    `Error Logged: ${err.message} | Status: ${(err as CustomError).statusCode || 500} | URL: ${req.originalUrl}`
+    `Error Logged: ${err.message} | Status: ${(err as CustomError).statusCode || 500} | URL: ${req.originalUrl}`,
   );
 };
 

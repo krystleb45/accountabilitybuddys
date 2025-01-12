@@ -1,10 +1,13 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import sanitize from "mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware"; // Correct middleware import path
 import * as searchController from "../controllers/SearchController"; // Ensure named import for controller methods
 import logger from "../utils/winstonLogger"; // Logger utility
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
@@ -23,7 +26,7 @@ const searchLimiter = rateLimit({
 const sanitizeInput = (
   req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   try {
     req.query = sanitize(req.query);
@@ -35,27 +38,13 @@ const sanitizeInput = (
   }
 };
 
-/**
- * Middleware for handling validation errors.
- */
-const handleValidationErrors = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return;
-  }
-  next();
-};
+
 
 /**
  * Helper function to parse pagination parameters.
  */
 const parsePagination = (
-  query: Partial<Record<string, string | undefined>>
+  query: Partial<Record<string, string | undefined>>,
 ): { page: number; limit: number } => {
   const page = Math.max(1, parseInt(query.page || "1", 10));
   const limit = Math.min(50, parseInt(query.limit || "10", 10)); // Limit results to a max of 50 per page
@@ -86,7 +75,7 @@ router.get(
   async (
     req: Request<{}, {}, {}, { query: string; type: string; page?: string; limit?: string }>,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { type } = req.query;
@@ -94,20 +83,20 @@ router.get(
   
       let results;
       switch (type) {
-      case "user":
-        results = await searchController.searchUsers(req, res, next);
-        break;
-      case "group":
-        results = await searchController.searchGroups(req, res, next);
-        break;
-      case "goal":
-        results = await searchController.searchGoals(req, res, next);
-        break;
-      case "post":
-        results = await searchController.searchPosts(req, res, next);
-        break;
-      default:
-        throw new Error(`Invalid search type: ${type}`);
+        case "user":
+          results = await searchController.searchUsers(req, res, next);
+          break;
+        case "group":
+          results = await searchController.searchGroups(req, res, next);
+          break;
+        case "goal":
+          results = await searchController.searchGoals(req, res, next);
+          break;
+        case "post":
+          results = await searchController.searchPosts(req, res, next);
+          break;
+        default:
+          throw new Error(`Invalid search type: ${type}`);
       }
   
       res.status(200).json({ success: true, results });
@@ -117,7 +106,7 @@ router.get(
       logger.error(`Error during search: ${errorMessage}`);
       next(error); // Pass error to middleware
     }
-  } // Added Closing Parenthesis
+  }, // Added Closing Parenthesis
 ); // Added Closing Brace
 
 
@@ -130,7 +119,7 @@ const createSearchRoute = (
     req: Request<{}, {}, {}, { query: string; page?: string; limit?: string }>,
     res: Response,
     next: NextFunction
-  ) => Promise<void>
+  ) => Promise<void>,
 ): void => {
   router.get(
     endpoint,
@@ -142,7 +131,7 @@ const createSearchRoute = (
     async (
       req: Request<{}, {}, {}, { query: string; page?: string; limit?: string }, Record<string, any>>,
       res: Response,
-      next: NextFunction
+      next: NextFunction,
     ): Promise<void> => {
       try {
         await searchHandler(req, res, next); // Use the passed search handler
@@ -152,7 +141,7 @@ const createSearchRoute = (
         logger.error(`Error searching ${endpoint}: ${errorMessage}`);
         next(error); // Pass error to middleware
       }
-    }
+    },
   );
 };
 

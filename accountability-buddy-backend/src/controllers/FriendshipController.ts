@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-import { Request, Response } from "express";
-import FeedPost, { IFeedPost } from "../models/FeedPost";
+import type { Request, Response } from "express";
+import type { IFeedPost } from "../models/FeedPost";
+import FeedPost from "../models/FeedPost";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import logger from "../utils/winstonLogger";
@@ -13,7 +14,7 @@ import logger from "../utils/winstonLogger";
 export const createPost = catchAsync(
   async (
     req: Request<{}, any, { goalId: string; milestone: string; message: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { goalId, milestone, message } = req.body;
     const userId = req.user?.id;
@@ -41,7 +42,7 @@ export const createPost = catchAsync(
     sendResponse(res, 201, true, "Milestone shared successfully", {
       post: newPost,
     });
-  }
+  },
 );
 
 /**
@@ -52,7 +53,7 @@ export const createPost = catchAsync(
 export const addLike = catchAsync(
   async (
     req: Request<{ id: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const postId = req.params.id;
     const userId = req.user?.id;
@@ -79,7 +80,7 @@ export const addLike = catchAsync(
 
     logger.info(`Post liked by user: ${userId}`);
     sendResponse(res, 200, true, "Post liked successfully", { post });
-  }
+  },
 );
 
 /**
@@ -90,7 +91,7 @@ export const addLike = catchAsync(
 export const addComment = catchAsync(
   async (
     req: Request<{ id: string }, any, { text: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const postId = req.params.id;
     const { text } = req.body;
@@ -121,7 +122,7 @@ export const addComment = catchAsync(
 
     logger.info(`Comment added by user: ${userId} to post: ${postId}`);
     sendResponse(res, 201, true, "Comment added successfully", { post });
-  }
+  },
 );
 
 /**
@@ -132,7 +133,7 @@ export const addComment = catchAsync(
 export const removeComment = catchAsync(
   async (
     req: Request<{ postId: string; commentId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { postId, commentId } = req.params;
     const userId = req.user?.id;
@@ -149,7 +150,7 @@ export const removeComment = catchAsync(
     }
 
     const commentIndex = post.comments.findIndex(
-      (comment) => comment._id.toString() === commentId
+      (comment) => comment._id.toString() === commentId,
     );
 
     if (commentIndex === -1) {
@@ -169,7 +170,7 @@ export const removeComment = catchAsync(
 
     logger.info(`Comment removed by user: ${userId} from post: ${postId}`);
     sendResponse(res, 200, true, "Comment removed successfully", { post });
-  }
+  },
 );
 
 export default {

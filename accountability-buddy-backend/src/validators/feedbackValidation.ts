@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { check, validationResult, ValidationChain } from "express-validator";
+import type { Request, Response, NextFunction } from "express";
+import type { ValidationChain } from "express-validator";
+import { check, validationResult } from "express-validator";
 
 /**
  * Middleware to handle validation results and send errors in a structured format.
@@ -10,7 +11,7 @@ import { check, validationResult, ValidationChain } from "express-validator";
 export const feedbackValidationMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -52,6 +53,6 @@ export const submitFeedbackValidation: ValidationChain[] = [
     .optional()
     .isIn(["bug", "feature-request", "other"])
     .withMessage(
-      "Invalid feedback type. Must be one of: bug, feature-request, or other."
+      "Invalid feedback type. Must be one of: bug, feature-request, or other.",
     ),
 ];

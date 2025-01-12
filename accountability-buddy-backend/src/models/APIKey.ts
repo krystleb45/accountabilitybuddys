@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import crypto from "crypto";
 
 // Define the APIKey interface extending Mongoose's Document
@@ -61,7 +62,7 @@ const APIKeySchema = new Schema<APIKeyDocument>(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // Compound indexes for efficient queries
@@ -82,7 +83,7 @@ APIKeySchema.pre("validate", function (next): void {
 });
 
 APIKeySchema.methods.deactivate = async function (
-  this: APIKeyDocument // Explicitly define 'this' type
+  this: APIKeyDocument, // Explicitly define 'this' type
 ): Promise<APIKeyDocument> {
   this.isActive = false; // Set the API key as inactive
   await this.save(); // Save changes
@@ -92,7 +93,7 @@ APIKeySchema.methods.deactivate = async function (
 
 // Static method to validate an API key
 APIKeySchema.statics.validateKey = async function (
-  apiKey: string
+  apiKey: string,
 ): Promise<APIKeyDocument | null> {
   return this.findOne({
     key: apiKey,
@@ -105,7 +106,7 @@ APIKeySchema.statics.validateKey = async function (
 APIKeySchema.statics.generateKeyForUser = async function (
   userId: mongoose.Types.ObjectId,
   permissions: ("read" | "write" | "delete" | "admin")[] = ["read"],
-  expirationDays = 30
+  expirationDays = 30,
 ): Promise<APIKeyDocument> {
   const newKey = new this({
     key: crypto.randomBytes(32).toString("hex"), // Generate key here to ensure it's stored
@@ -120,7 +121,7 @@ APIKeySchema.statics.generateKeyForUser = async function (
 // Method to renew the expiration date of the API key
 APIKeySchema.methods.renew = async function (
   this: APIKeyDocument, // Explicitly define 'this'
-  days = 30
+  days = 30,
 ): Promise<APIKeyDocument> {
   this.expiresAt = new Date(Date.now() + days * 24 * 60 * 60 * 1000); // Extend expiration
   await this.save(); // Save changes
@@ -131,7 +132,7 @@ APIKeySchema.methods.renew = async function (
 // Method to check if the API key has specific permissions
 APIKeySchema.methods.hasPermission = function (
   this: APIKeyDocument, // Explicitly define 'this'
-  permission: "read" | "write" | "delete" | "admin" // Restrict parameter to match union type
+  permission: "read" | "write" | "delete" | "admin", // Restrict parameter to match union type
 ): boolean {
   // Check permissions or admin access
   return (

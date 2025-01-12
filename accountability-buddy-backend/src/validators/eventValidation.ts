@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { check, validationResult, ValidationChain } from "express-validator";
+import type { Request, Response, NextFunction } from "express";
+import type { ValidationChain } from "express-validator";
+import { check, validationResult } from "express-validator";
 
 /**
  * Middleware to handle validation results and send errors in a structured format.
@@ -10,7 +11,7 @@ import { check, validationResult, ValidationChain } from "express-validator";
 export const eventValidationMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

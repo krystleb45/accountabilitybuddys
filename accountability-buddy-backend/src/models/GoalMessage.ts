@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import sanitize from "mongo-sanitize"; // For sanitizing input
 
 // Define the interface for GoalMessage documents
@@ -46,7 +47,7 @@ const GoalMessageSchema = new Schema<IGoalMessage>(
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields
-  }
+  },
 );
 
 // Pre-save hook to sanitize the message content
@@ -62,7 +63,7 @@ GoalMessageSchema.pre<IGoalMessage>("save", function (next) {
 // Static method for retrieving messages for a goal
 GoalMessageSchema.statics.getMessagesByGoal = async function (
   goalId: mongoose.Types.ObjectId,
-  limit = 50
+  limit = 50,
 ): Promise<IGoalMessage[]> {
   return await this.find({ goal: goalId, isDeleted: false })
     .sort({ createdAt: -1 }) // Sort messages by latest
@@ -83,5 +84,5 @@ GoalMessageSchema.index({ sender: 1, createdAt: -1 }); // Compound index for sor
 // Export the GoalMessage model
 export const GoalMessage: IGoalMessageModel = mongoose.model<IGoalMessage, IGoalMessageModel>(
   "GoalMessage",
-  GoalMessageSchema
+  GoalMessageSchema,
 );

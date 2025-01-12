@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import { createError } from "../middleware/errorHandler";
@@ -10,7 +10,7 @@ export const getUserAnalytics = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly define generics for Request
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const userId = req.user?.id;
@@ -32,7 +32,7 @@ export const getUserAnalytics = catchAsync(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -41,7 +41,7 @@ export const getUserAnalytics = catchAsync(
 export const getGlobalAnalytics = catchAsync(
   async (
     _req: Request<{}, {}, {}, {}>, // Explicitly define generics for Request
-    res: Response
+    res: Response,
   ): Promise<void> => {
     // Placeholder logic for global analytics (replace with actual implementation)
     const analytics = {
@@ -53,7 +53,7 @@ export const getGlobalAnalytics = catchAsync(
     sendResponse(res, 200, true, "Global analytics fetched successfully", {
       analytics,
     });
-  }
+  },
 );
 
 /**
@@ -63,14 +63,14 @@ export const getCustomAnalytics = catchAsync(
   async (
     req: Request<{}, {}, {}, { type?: string }>, // Explicitly define generics with query parameters
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { type } = req.query;
 
       if (!type || typeof type !== "string") {
         return next(
-          createError("Invalid or missing query parameter 'type'", 400)
+          createError("Invalid or missing query parameter 'type'", 400),
         );
       }
 
@@ -84,5 +84,5 @@ export const getCustomAnalytics = catchAsync(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );

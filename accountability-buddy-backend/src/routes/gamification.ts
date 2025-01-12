@@ -1,9 +1,12 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, query, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check, query } from "express-validator";
 import Gamification from "../models/Gamification"; // Corrected model import path
 import authMiddleware from "../middleware/authMiddleware"; // Corrected middleware import path
 import rateLimit from "express-rate-limit";
 import logger from "../utils/winstonLogger"; // Added logger utility
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
@@ -16,21 +19,7 @@ const leaderboardLimiter = rateLimit({
   message: "Too many requests, please try again later",
 });
 
-/**
- * Middleware to handle validation errors
- */
-const handleValidationErrors = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return; // Ensure all code paths return a value
-  }
-  next();
-};
+
 
 /**
  * @route   GET /gamification/leaderboard
@@ -78,7 +67,7 @@ router.get(
       logger.error(`Error fetching leaderboard: ${(error as Error).message}`, { error });
       next(error); // Use `next()` for error handling
     }
-  }
+  },
 );
 
 /**
@@ -129,7 +118,7 @@ router.post(
       logger.error(`Error adding points: ${(error as Error).message}`, { error });
       next(error); // Use `next()` to handle errors properly
     }
-  }
+  },
 );
 
 export default router;

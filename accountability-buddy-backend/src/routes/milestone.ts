@@ -1,9 +1,12 @@
-import express, { Router, Request, Response, NextFunction } from "express";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware"; // Middleware path
 import * as MilestoneController from "../controllers/MilestoneController"; // Controller path
 import logger from "../utils/winstonLogger"; // Logger utility
-import { check, validationResult } from "express-validator";
+import { check } from "express-validator";
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
@@ -16,21 +19,7 @@ const rateLimiter = rateLimit({
   message: "Too many requests. Please try again later.",
 });
 
-/**
- * Middleware to handle validation errors.
- */
-const handleValidationErrors = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return;
-  }
-  next();
-};
+
 
 /**
  * @route   GET /milestones
@@ -58,7 +47,7 @@ router.get(
       });
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -94,7 +83,7 @@ router.post(
       });
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -131,7 +120,7 @@ router.put(
       });
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -165,7 +154,7 @@ router.delete(
       });
       next(error);
     }
-  }
+  },
 );
 
 export default router;

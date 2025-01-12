@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import mongoose from "mongoose";
 import { Match } from "../models/Match";
 import User from "../models/User";
@@ -14,7 +14,7 @@ import logger from "../utils/winstonLogger";
 export const createMatch = catchAsync(
   async (
     req: Request<{}, {}, { user1: string; user2: string; status: string }>, // Explicitly define body type
-    res: Response
+    res: Response,
   ) => {
     const { user1, user2, status } = req.body;
 
@@ -51,7 +51,7 @@ export const createMatch = catchAsync(
 
     logger.info(`Match created between users: ${user1} and ${user2}`);
     sendResponse(res, 201, true, "Match created successfully", { match: newMatch });
-  }
+  },
 );
 
 /**
@@ -62,7 +62,7 @@ export const createMatch = catchAsync(
 export const getUserMatches = catchAsync(
   async (
     req: Request<{}, {}, {}, { limit?: string; page?: string }>, // Explicitly define query parameters
-    res: Response
+    res: Response,
   ) => {
     const userId = req.user?.id; // Uses globally augmented 'req.user'
     const limit = Math.max(parseInt(req.query.limit || "10"), 1);
@@ -89,7 +89,7 @@ export const getUserMatches = catchAsync(
         totalPages,
       },
     });
-  }
+  },
 );
 
 /**
@@ -100,7 +100,7 @@ export const getUserMatches = catchAsync(
 export const getMatchById = catchAsync(
   async (
     req: Request<{ matchId: string }>, // Explicitly define route parameters
-    res: Response
+    res: Response,
   ) => {
     const { matchId } = req.params;
 
@@ -119,7 +119,7 @@ export const getMatchById = catchAsync(
     }
 
     sendResponse(res, 200, true, "Match fetched successfully", { match });
-  }
+  },
 );
 
 /**
@@ -130,7 +130,7 @@ export const getMatchById = catchAsync(
 export const updateMatchStatus = catchAsync(
   async (
     req: Request<{ matchId: string }, {}, { status: string }>, // Explicitly define params and body types
-    res: Response
+    res: Response,
   ) => {
     const { matchId } = req.params;
     const { status } = req.body;
@@ -161,7 +161,7 @@ export const updateMatchStatus = catchAsync(
     sendResponse(res, 200, true, "Match status updated successfully", {
       match: updatedMatch,
     });
-  }
+  },
 );
 
 /**
@@ -172,7 +172,7 @@ export const updateMatchStatus = catchAsync(
 export const deleteMatch = catchAsync(
   async (
     req: Request<{ matchId: string }>, // Explicitly define route parameters
-    res: Response
+    res: Response,
   ) => {
     const { matchId } = req.params;
 
@@ -189,5 +189,5 @@ export const deleteMatch = catchAsync(
 
     logger.info(`Match deleted with ID ${matchId}`);
     sendResponse(res, 200, true, "Match deleted successfully");
-  }
+  },
 );

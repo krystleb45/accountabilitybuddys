@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
-import { Request, Response } from "express";
+ 
+import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Session } from "../models/Session"; // Import Session model
@@ -17,7 +17,7 @@ export const login = async (
   email: string,
   password: string,
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     // Find user by email
@@ -68,7 +68,7 @@ export const login = async (
  */
 export const logout = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const sessionId = req.session.id;
@@ -96,13 +96,13 @@ export const logout = async (
  */
 export const deleteAllSessions = async (
   userId: string,
-  sessionId: string
+  sessionId: string,
 ): Promise<void> => {
   try {
     // Invalidate all sessions except the current one
     await Session.updateMany(
       { user: userId, _id: { $ne: sessionId } }, // Exclude the current session
-      { isActive: false } // Mark as inactive
+      { isActive: false }, // Mark as inactive
     );
   } catch (err) {
     console.error("Delete All Sessions Error:", err);
@@ -117,7 +117,7 @@ export const deleteAllSessions = async (
  */
 export const refreshSession = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const userId = req.user?.id;
@@ -136,7 +136,7 @@ export const refreshSession = async (
     const session = await Session.findOneAndUpdate(
       { user: userId, isActive: true },
       { token, expiresAt: new Date(Date.now() + 60 * 60 * 1000) }, // Extend by 1 hour
-      { new: true }
+      { new: true },
     );
 
     if (!session) {
@@ -162,7 +162,7 @@ export const refreshSession = async (
  */
 export const getSession = async (
   req: Request<{ sessionId: string }>, // Explicitly define sessionId as string
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { sessionId } = req.params; // Safely destructure sessionId
@@ -197,7 +197,7 @@ export const getSession = async (
  * @access Private
  */
 export const getUserSessions = async (
-  userId: string // Expect userId as a string
+  userId: string, // Expect userId as a string
 ): Promise<any[]> => {
   try {
     const sessions = await Session.find({ user: userId, isActive: true }).populate("user");
@@ -215,7 +215,7 @@ export const getUserSessions = async (
  */
 export const deleteSession = async (
   sessionId: string,
-  userId: string
+  userId: string,
 ): Promise<void> => {
   try {
     // Validate session ownership and delete it

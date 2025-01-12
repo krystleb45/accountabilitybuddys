@@ -1,4 +1,11 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
+
+// Reminder interface
+export interface IReminder {
+  message: string;
+  remindAt: Date;
+}
 
 // Milestone interface
 export interface IMilestone {
@@ -19,6 +26,7 @@ export interface IGoal extends Document {
   milestones: IMilestone[];
   tags: string[];
   priority: "high" | "medium" | "low";
+  reminders?: IReminder[]; // Added reminders field
 }
 
 // Define the schema
@@ -73,8 +81,25 @@ const GoalSchema: Schema<IGoal> = new Schema(
       enum: ["high", "medium", "low"],
       default: "medium",
     },
+    reminders: [
+      {
+        message: {
+          type: String,
+          required: [true, "Reminder message is required"],
+          trim: true,
+        },
+        remindAt: {
+          type: Date,
+          required: [true, "Reminder time is required"],
+          validate: {
+            validator: (value: Date) => value > new Date(),
+            message: "Reminder time must be in the future.",
+          },
+        },
+      },
+    ], // Added reminders schema
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Pre-save hook to handle status changes

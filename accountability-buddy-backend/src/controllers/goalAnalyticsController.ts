@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import GoalAnalytics from "../models/GoalAnalytics";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -12,7 +12,7 @@ import { createError } from "../middleware/errorHandler";
 export const getUserGoalAnalytics = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
 
@@ -30,7 +30,7 @@ export const getUserGoalAnalytics = catchAsync(
     sendResponse(res, 200, true, "User goal analytics fetched successfully", {
       analytics,
     });
-  }
+  },
 );
 
 /**
@@ -41,7 +41,7 @@ export const getUserGoalAnalytics = catchAsync(
 export const getGlobalGoalAnalytics = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     if (!req.user?.isAdmin) {
       throw createError("Access denied", 403);
@@ -57,7 +57,7 @@ export const getGlobalGoalAnalytics = catchAsync(
     sendResponse(res, 200, true, "Global goal analytics fetched successfully", {
       analytics,
     });
-  }
+  },
 );
 
 /**
@@ -86,7 +86,7 @@ export const getGoalAnalyticsById = catchAsync(
     sendResponse(res, 200, true, "Goal analytics fetched successfully", {
       analytics,
     });
-  }
+  },
 );
 
 /**
@@ -97,7 +97,7 @@ export const getGoalAnalyticsById = catchAsync(
 export const updateGoalAnalytics = catchAsync(
   async (
     req: Request<{ goalId: string }, any, any>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { goalId } = req.params;
     const updates = req.body;
@@ -109,7 +109,7 @@ export const updateGoalAnalytics = catchAsync(
     const updatedAnalytics = await GoalAnalytics.findOneAndUpdate(
       { goal: goalId },
       updates,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!updatedAnalytics) {
@@ -120,7 +120,7 @@ export const updateGoalAnalytics = catchAsync(
     sendResponse(res, 200, true, "Goal analytics updated successfully", {
       analytics: updatedAnalytics,
     });
-  }
+  },
 );
 
 /**
@@ -131,7 +131,7 @@ export const updateGoalAnalytics = catchAsync(
 export const deleteGoalAnalytics = catchAsync(
   async (
     req: Request<{ goalId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     if (!req.user?.isAdmin) {
       throw createError("Access denied", 403);
@@ -151,7 +151,7 @@ export const deleteGoalAnalytics = catchAsync(
     }
 
     sendResponse(res, 200, true, "Goal analytics deleted successfully");
-  }
+  },
 );
 
 /**
@@ -163,7 +163,7 @@ export const getGoalAnalyticsByDateRange = catchAsync(
   async (
     req: Request<{ goalId: string }, any, any, { startDate: string; endDate: string }>,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     if (!req.user?.isAdmin) {
       throw createError("Access denied", 403);
@@ -188,7 +188,7 @@ export const getGoalAnalyticsByDateRange = catchAsync(
     }
 
     sendResponse(res, 200, true, "Goal analytics deleted successfully");
-  }
+  },
 );
 
 export default {

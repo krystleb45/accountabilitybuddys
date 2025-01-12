@@ -1,4 +1,4 @@
-import { Server, Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 import redisClient from "../config/redisClient";
 import logger from "../utils/winstonLogger";
 

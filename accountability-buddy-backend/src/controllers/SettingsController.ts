@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction  } from "express";
+import type { Request, Response, NextFunction  } from "express";
 import bcrypt from "bcryptjs";
 import User from "../models/User";
 import catchAsync from "../utils/catchAsync";
@@ -14,12 +14,12 @@ export const getUserSettings = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly specify generics for the Request type
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id;
 
     const user = await User.findById(userId).select(
-      "email username enableNotifications settings"
+      "email username enableNotifications settings",
     );
     if (!user) {
       sendResponse(res, 404, false, "User not found");
@@ -29,7 +29,7 @@ export const getUserSettings = catchAsync(
     sendResponse(res, 200, true, "User settings fetched successfully", {
       settings: user.settings,
     });
-  }
+  },
 );
 
 /**
@@ -42,7 +42,7 @@ export const updateUserSettings = catchAsync(
     req: Request<{}, {}, {
       password: any; email?: string; username?: string 
 }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
     const updates = sanitize(req.body);
@@ -63,7 +63,7 @@ export const updateUserSettings = catchAsync(
     sendResponse(res, 200, true, "Account settings updated successfully", {
       user,
     });
-  }
+  },
 );
 
 /**
@@ -74,7 +74,7 @@ export const updateUserSettings = catchAsync(
 export const updateUserPassword = catchAsync(
   async (
     req: Request<{}, {}, { currentPassword: string; newPassword: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
     const { currentPassword, newPassword } = req.body;
@@ -94,7 +94,7 @@ export const updateUserPassword = catchAsync(
     await user.save();
 
     sendResponse(res, 200, true, "Password updated successfully");
-  }
+  },
 );
 
 /**
@@ -105,7 +105,7 @@ export const updateUserPassword = catchAsync(
 export const updateNotificationPreferences = catchAsync(
   async (
     req: Request<{}, {}, { emailNotifications: boolean; smsNotifications: boolean; pushNotifications: boolean }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
     const { emailNotifications, smsNotifications, pushNotifications } = req.body;
@@ -131,7 +131,7 @@ export const updateNotificationPreferences = catchAsync(
     sendResponse(res, 200, true, "Notification preferences updated successfully", {
       notifications: user.settings?.notifications,
     });
-  }
+  },
 );
 
 /**
@@ -142,7 +142,7 @@ export const updateNotificationPreferences = catchAsync(
 export const updateEmail = catchAsync(
   async (
     req: Request<{}, {}, { newEmail: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
     const { newEmail } = req.body;
@@ -170,7 +170,7 @@ export const updateEmail = catchAsync(
     sendResponse(res, 200, true, "Email updated successfully", {
       email: newEmail,
     });
-  }
+  },
 );
 
 /**
@@ -182,7 +182,7 @@ export const deactivateUserAccount = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly define the Request type with generics
     res: Response,
-    _next: NextFunction // Include NextFunction for compatibility
+    _next: NextFunction, // Include NextFunction for compatibility
   ): Promise<void> => {
     const userId = req.user?.id; // Safely extract userId
 
@@ -194,5 +194,5 @@ export const deactivateUserAccount = catchAsync(
     }
 
     sendResponse(res, 200, true, "Account deactivated successfully");
-  }
+  },
 );

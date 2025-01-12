@@ -1,10 +1,13 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import * as goalController from "../controllers/GoalController";
 import authMiddleware from "../middleware/authMiddleware";
 import checkSubscription from "../middleware/checkSubscription";
 import rateLimit from "express-rate-limit";
 import logger from "../utils/winstonLogger";
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
@@ -17,21 +20,7 @@ const goalLimiter = rateLimit({
   message: "Too many requests, please try again later.",
 });
 
-/**
- * Middleware to handle validation errors.
- */
-const handleValidationErrors = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return; // Ensure function exits properly
-  }
-  next();
-};
+
 
 /**
  * @route   POST /goal/create
@@ -51,12 +40,12 @@ router.post(
   handleValidationErrors,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await goalController.createGoal(req, res, next);
+      await goalController.createGoal(req as any, res, next);
     } catch (error) {
       logger.error(`Error creating goal: ${(error as Error).message}`, { error });
       next(error); // Pass error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -76,12 +65,12 @@ router.put(
   handleValidationErrors,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await goalController.updateGoalProgress(req, res, next);
+      await goalController.updateGoalProgress(req as any, res, next);
     } catch (error) {
       logger.error(`Error updating goal progress: ${(error as Error).message}`, { error });
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -94,12 +83,12 @@ router.put(
   authMiddleware,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await goalController.completeGoal(req, res, next);
+      await goalController.completeGoal(req as any, res, next);
     } catch (error) {
       logger.error(`Error completing goal: ${(error as Error).message}`, { error });
       next(error); // Pass error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -112,12 +101,12 @@ router.get(
   authMiddleware,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await goalController.getUserGoals(req, res, next);
+      await goalController.getUserGoals(req as any, res, next);
     } catch (error) {
       logger.error(`Error fetching user goals: ${(error as Error).message}`, { error });
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -131,12 +120,12 @@ router.get(
   checkSubscription("standard"),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await goalController.getAnalytics(req, res, next);
+      await goalController.getAnalytics(req as any, res, next);
     } catch (error) {
       logger.error(`Error fetching analytics: ${(error as Error).message}`, { error });
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -156,12 +145,12 @@ router.post(
   handleValidationErrors,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await goalController.setReminder(req, res, next);
+      await goalController.setReminder(req as any, res, next);
     } catch (error) {
       logger.error(`Error setting reminder: ${(error as Error).message}`, { error });
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -178,7 +167,7 @@ router.get(
       logger.error(`Error fetching public goals: ${(error as Error).message}`, { error });
       next(error); // Forward error to middleware
     }
-  }
+  },
 );
 
 export default router;

@@ -32,7 +32,7 @@ export const DataProcessingService = {
   paginateArray<T>(
     data: T[],
     page: number,
-    limit: number
+    limit: number,
   ): { items: T[]; total: number; totalPages: number; currentPage: number } {
     const total = data.length;
     const totalPages = Math.ceil(total / limit);
@@ -92,7 +92,7 @@ export const DataProcessingService = {
    */
   calculateStatistics<T>(
     data: T[],
-    numericKey: keyof T
+    numericKey: keyof T,
   ): { sum: number; average: number; min: number; max: number } {
     const values = data.map((item) => Number(item[numericKey])).filter((v) => !isNaN(v));
     const sum = values.reduce((acc, val) => acc + val, 0);
@@ -114,7 +114,7 @@ export const DataProcessingService = {
   flattenObject(
     obj: Record<string, unknown>,
     parentKey = "",
-    separator = "."
+    separator = ".",
   ): Record<string, unknown> {
     return Object.keys(obj).reduce((acc, key) => {
       const newKey = parentKey ? `${parentKey}${separator}${key}` : key;

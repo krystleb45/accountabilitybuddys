@@ -1,9 +1,12 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import * as goalMessageController from "../controllers/GoalMessageController"; // Controller import
 import authMiddleware from "../middleware/authMiddleware"; // Auth middleware
 import rateLimit from "express-rate-limit";
 import logger from "../utils/winstonLogger"; // Logger utility
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
@@ -16,21 +19,7 @@ const messageLimiter = rateLimit({
   message: "Too many messages sent, please try again later.",
 });
 
-/**
- * Middleware to handle validation errors.
- */
-const handleValidationErrors = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return; // Ensure we exit the function early
-  }
-  next();
-};
+
 
 /**
  * @route   POST /goal-message/:goalId/send
@@ -58,7 +47,7 @@ router.post(
     }
 
     try {
-      await goalMessageController.sendGoalMessage(req, res, next); // Added next
+      await goalMessageController.sendGoalMessage(req as any, res, next); // Added next
       res.status(201).json({ success: true, msg: "Message sent successfully." }); // Response message
     } catch (error) {
       logger.error(`Error sending goal message: ${(error as Error).message}`, {
@@ -68,7 +57,7 @@ router.post(
       });
       next(error); // Forward the error to middleware
     }
-  }
+  },
 );
 
 /**
@@ -82,7 +71,7 @@ router.get(
   async (
     req: Request<{ goalId: string }>, // Explicitly define the 'goalId' parameter
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     const { goalId } = req.params;
 
@@ -93,7 +82,7 @@ router.get(
     }
 
     try {
-      const messages = await goalMessageController.getGoalMessages(req, res, next); // Pass 'next'
+      const messages = await goalMessageController.getGoalMessages(req as any, res, next); // Pass 'next'
       res.status(200).json({ success: true, data: messages }); // Return fetched messages
     } catch (error) {
       logger.error(`Error fetching goal messages: ${(error as Error).message}`, {
@@ -103,7 +92,7 @@ router.get(
       });
       next(error); // Forward the error to middleware
     }
-  }
+  },
 );
 
 

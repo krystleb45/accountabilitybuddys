@@ -1,4 +1,4 @@
-import { Server, Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 import Room from "../models/Room"; // Room model for database operations
 import logger from "../utils/winstonLogger"; // Logger for tracking room events
 import mongoose from "mongoose";
@@ -80,7 +80,7 @@ const roomSocket = (io: Server, socket: Socket): void => {
         await room.save();
       }
   
-      socket.join(roomId);
+      void socket.join(roomId);
       logger.info(`User ${userId} joined room ${roomId}`);
       socket.to(roomId).emit("userJoinedRoom", { userId, roomId });
       socket.emit("roomJoined", { roomId, roomName: room.name });
@@ -111,7 +111,7 @@ const roomSocket = (io: Server, socket: Socket): void => {
       room.members = room.members.filter((member) => member.toString() !== userId);
       await room.save();
 
-      socket.leave(roomId);
+      void socket.leave(roomId);
       logger.info(`User ${userId} left room ${roomId}`);
       socket.to(roomId).emit("userLeftRoom", { userId, roomId });
       socket.emit("roomLeft", { roomId });

@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Interface for the Leaderboard document
 export interface ILeaderboard extends Document {
@@ -44,7 +45,7 @@ const LeaderboardSchema = new Schema<ILeaderboard>(
     timestamps: true, // Automatically manage createdAt and updatedAt fields
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // Compound index for efficient leaderboard sorting
@@ -59,7 +60,7 @@ LeaderboardSchema.statics.updateLeaderboard = async function (
   userId: mongoose.Types.ObjectId,
   points: number,
   goals: number,
-  milestones: number
+  milestones: number,
 ): Promise<ILeaderboard | null> {
   return await this.findOneAndUpdate(
     { user: userId },
@@ -70,7 +71,7 @@ LeaderboardSchema.statics.updateLeaderboard = async function (
         completedMilestones: milestones,
       },
     },
-    { new: true, upsert: true, setDefaultsOnInsert: true } // Create a new entry if it doesn't exist
+    { new: true, upsert: true, setDefaultsOnInsert: true }, // Create a new entry if it doesn't exist
   );
 };
 
@@ -93,14 +94,14 @@ LeaderboardSchema.statics.recalculateRanks = async function (): Promise<void> {
 // Virtual field for rank description
 LeaderboardSchema.virtual("rankDescription").get(function (): string {
   switch (this.rank) {
-  case 1:
-    return "Champion";
-  case 2:
-    return "Runner-up";
-  case 3:
-    return "Third Place";
-  default:
-    return `Rank ${this.rank}`;
+    case 1:
+      return "Champion";
+    case 2:
+      return "Runner-up";
+    case 3:
+      return "Third Place";
+    default:
+      return `Rank ${this.rank}`;
   }
 });
 
@@ -111,8 +112,8 @@ LeaderboardSchema.pre<ILeaderboard>("save", function (next): void {
   if (this.totalPoints < minimumPoints) {
     return next(
       new Error(
-        "Total points cannot be less than the sum of completed goals and milestones"
-      )
+        "Total points cannot be less than the sum of completed goals and milestones",
+      ),
     );
   }
   next();
@@ -121,7 +122,7 @@ LeaderboardSchema.pre<ILeaderboard>("save", function (next): void {
 // Export the Leaderboard model
 export const Leaderboard: Model<ILeaderboard> = mongoose.model<ILeaderboard>(
   "Leaderboard",
-  LeaderboardSchema
+  LeaderboardSchema,
 );
 
 export default Leaderboard;

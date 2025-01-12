@@ -49,7 +49,7 @@ const seedRoles = async (): Promise<void> => {
     if (rolesToCreate.length > 0) {
       await Role.insertMany(rolesToCreate);
       rolesToCreate.forEach((role) =>
-        logger.info(`Created role: ${role.roleName} with permissions: ${role.permissions.join(", ")}`)
+        logger.info(`Created role: ${role.roleName} with permissions: ${role.permissions.join(", ")}`),
       );
     } else {
       logger.info("All roles already exist.");
@@ -76,4 +76,4 @@ process.on("SIGINT", async () => {
 });
 
 // Execute the seeding function
-seedRoles();
+void seedRoles();

@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Types, Model, CallbackError } from "mongoose";
+import type { Document, Types, Model, CallbackError } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
@@ -85,7 +86,7 @@ const UserSchema: Schema<IUser> = new Schema(
     },
     twoFactorSecret: { type: String },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Password hashing
@@ -102,7 +103,7 @@ UserSchema.pre<IUser>("save", async function (next) {
 
 // Compare Password
 UserSchema.methods.comparePassword = async function (
-  candidatePassword: string
+  candidatePassword: string,
 ): Promise<boolean> {
   return bcrypt.compare(candidatePassword, this.password);
 };

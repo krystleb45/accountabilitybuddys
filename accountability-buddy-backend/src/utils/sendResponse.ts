@@ -1,4 +1,4 @@
-import { Response } from "express";
+import type { Response } from "express";
 
 /**
  * @desc    Standardizes API responses for consistent structure across endpoints.
@@ -14,7 +14,7 @@ const sendResponse = <T>(
   res: Response,
   statusCode: number,
   success: boolean,
-  message: string = "No message provided",
+  message = "No message provided",
   data: T | null = null,
   errors: Record<string, unknown>[] | Record<string, unknown> | null = null,
   meta: Record<string, unknown> | null = null,

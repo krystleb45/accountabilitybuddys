@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import sanitize from "mongo-sanitize";
 
 // Define the Comment interface
@@ -38,7 +39,7 @@ const CommentSchema: Schema<IComment> = new Schema(
       default: Date.now,
     },
   },
-  { _id: true }
+  { _id: true },
 );
 
 // Define the FeedPost schema
@@ -64,7 +65,7 @@ const FeedPostSchema: Schema<IFeedPost> = new Schema(
     ],
     comments: [CommentSchema], // Nested comments schema
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Pre-save hook to sanitize content
@@ -83,6 +84,6 @@ FeedPostSchema.pre<IFeedPost>("save", function (next) {
 // Export the model
 const FeedPost: Model<IFeedPost> = mongoose.model<IFeedPost>(
   "FeedPost",
-  FeedPostSchema
+  FeedPostSchema,
 );
 export default FeedPost;

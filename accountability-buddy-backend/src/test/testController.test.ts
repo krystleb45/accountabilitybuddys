@@ -1,5 +1,5 @@
 import { someController } from "../controllers/someController";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 describe("Controller Tests", () => {
   it("should return a successful response", () => {

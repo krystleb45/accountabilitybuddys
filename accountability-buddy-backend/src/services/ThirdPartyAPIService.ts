@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
 import LoggingService from "./LoggingService";
 
 class ThirdPartyAPIService {

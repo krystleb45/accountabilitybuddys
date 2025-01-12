@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import mongoose from "mongoose";
 import Group from "../models/Group";
 import catchAsync from "../utils/catchAsync";
@@ -13,7 +13,7 @@ import { createError } from "../middleware/errorHandler";
 export const createGroup = catchAsync(
   async (
     req: Request<{}, any, { name: string; members: string[] }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { name, members } = req.body;
     const userId = req.user?.id;
@@ -23,7 +23,7 @@ export const createGroup = catchAsync(
     }
 
     const uniqueMembers = [...new Set([userId, ...members])].map(
-      (id) => new mongoose.Types.ObjectId(String(id))
+      (id) => new mongoose.Types.ObjectId(String(id)),
     );
 
     const newGroup = new Group({
@@ -34,7 +34,7 @@ export const createGroup = catchAsync(
     await newGroup.save();
 
     sendResponse(res, 201, true, "Group created successfully", { group: newGroup });
-  }
+  },
 );
 
 /**
@@ -45,7 +45,7 @@ export const createGroup = catchAsync(
 export const getUserGroups = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Use explicit types
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
 
@@ -56,7 +56,7 @@ export const getUserGroups = catchAsync(
       .populate("createdBy", "username profilePicture");
 
     sendResponse(res, 200, true, "User groups fetched successfully", { groups });
-  }
+  },
 );
 
 
@@ -68,7 +68,7 @@ export const getUserGroups = catchAsync(
 export const joinGroup = catchAsync(
   async (
     req: Request<{}, any, { groupId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { groupId } = req.body;
     const userId = req.user?.id;
@@ -94,7 +94,7 @@ export const joinGroup = catchAsync(
     await group.save();
 
     sendResponse(res, 200, true, "Joined the group successfully", { group });
-  }
+  },
 );
 
 /**
@@ -105,7 +105,7 @@ export const joinGroup = catchAsync(
 export const leaveGroup = catchAsync(
   async (
     req: Request<{}, any, { groupId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { groupId } = req.body;
     const userId = req.user?.id;
@@ -122,13 +122,13 @@ export const leaveGroup = catchAsync(
 
     // Remove the user from the group members
     group.members = group.members.filter(
-      (member) => !member.equals(new mongoose.Types.ObjectId(userId))
+      (member) => !member.equals(new mongoose.Types.ObjectId(userId)),
     );
 
     await group.save();
 
     sendResponse(res, 200, true, "Left the group successfully", { group });
-  }
+  },
 );
 
 /**
@@ -139,7 +139,7 @@ export const leaveGroup = catchAsync(
 export const getGroupById = catchAsync(
   async (
     req: Request<{ groupId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { groupId } = req.params;
 
@@ -157,7 +157,7 @@ export const getGroupById = catchAsync(
     }
 
     sendResponse(res, 200, true, "Group fetched successfully", { group });
-  }
+  },
 );
 
 /**
@@ -168,7 +168,7 @@ export const getGroupById = catchAsync(
 export const deleteGroup = catchAsync(
   async (
     req: Request<{ groupId: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { groupId } = req.params;
     const userId = req.user?.id;
@@ -189,5 +189,5 @@ export const deleteGroup = catchAsync(
 
     await group.deleteOne();
     sendResponse(res, 200, true, "Group deleted successfully");
-  }
+  },
 );

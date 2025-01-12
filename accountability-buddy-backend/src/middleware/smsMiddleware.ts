@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from "express-serve-static-core";
-import twilio, { Twilio } from "twilio";
+import type { Request, Response, NextFunction } from "express-serve-static-core";
+import type { Twilio } from "twilio";
+import twilio from "twilio";
 import logger from "../utils/winstonLogger";
 
 // Twilio configuration
@@ -16,7 +17,7 @@ const client: Twilio = twilio(accountSid, authToken);
 const smsMiddleware = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const { to, message } = req.body;
 

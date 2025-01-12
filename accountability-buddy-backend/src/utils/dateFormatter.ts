@@ -38,7 +38,7 @@ interface PaginatedResponse<T> {
  */
 export const formatSuccessResponse = <T>(
   data: T,
-  message: string = "Request successful",
+  message = "Request successful",
 ): SuccessResponse<T> => {
   return {
     success: true,
@@ -57,7 +57,7 @@ export const formatSuccessResponse = <T>(
  */
 export const formatErrorResponse = (
   errorMessage: string,
-  statusCode: number = 400,
+  statusCode = 400,
   details: string[] = [],
 ): ErrorResponse => {
   return {
@@ -83,7 +83,7 @@ export const formatPaginatedResponse = <T>(
   page: number,
   pageSize: number,
   totalItems: number,
-  message: string = "Request successful",
+  message = "Request successful",
 ): PaginatedResponse<T> => {
   const totalPages = Math.ceil(totalItems / pageSize) || 1;
 

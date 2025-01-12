@@ -1,4 +1,5 @@
-import express, { Router, Request, Response, NextFunction } from "express";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware";
 import * as AchievementController from "../controllers/AchievementController";
@@ -44,7 +45,7 @@ router.get(
   async (
     req: Request, // Start with generic Request
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       // Explicitly assert the type as AuthenticatedRequest
@@ -70,7 +71,7 @@ router.get(
     } catch (error) {
       next(error); // Delegate errors to middleware
     }
-  }
+  },
 );
 
 /**
@@ -86,7 +87,7 @@ router.post(
   async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const authReq = req as Request; // Explicit type assertion
@@ -104,7 +105,7 @@ router.post(
 
       const newAchievement = await AchievementController.addAchievement(
         userId,
-        achievementData
+        achievementData,
       );
 
       res.status(201).json({
@@ -115,7 +116,7 @@ router.post(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -130,7 +131,7 @@ router.delete(
   async (
     req: Request, // Keep it as Express default Request type
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       // Explicitly cast req to AuthenticatedRequest
@@ -159,7 +160,7 @@ router.delete(
     } catch (error) {
       next(error); // Pass error to middleware for handling
     }
-  }
+  },
 );
 
 

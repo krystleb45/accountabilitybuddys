@@ -1,7 +1,7 @@
 import rateLimit from "express-rate-limit";
 import RedisStore from "rate-limit-redis";
 import redisClient from "./redisClient";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import logger from "../utils/winstonLogger"; // Adjust the path as needed
 
 // Validate environment variables and set defaults

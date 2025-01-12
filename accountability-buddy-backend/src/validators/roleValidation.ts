@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 
 /**
@@ -7,7 +7,7 @@ import { check, validationResult } from "express-validator";
 export const validationMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const errors = validationResult(req);
 
@@ -56,7 +56,7 @@ export const createRoleValidation = [
     .isArray({ min: 1 })
     .withMessage("Permissions must be an array with at least one permission.")
     .custom((permissions: unknown[]) =>
-      permissions.every((permission) => typeof permission === "string")
+      permissions.every((permission) => typeof permission === "string"),
     )
     .withMessage("Each permission must be a valid string."),
 
@@ -87,7 +87,7 @@ export const updateRoleValidation = [
     .isArray()
     .withMessage("Permissions must be an array.")
     .custom((permissions: unknown[]) =>
-      permissions.every((permission) => typeof permission === "string")
+      permissions.every((permission) => typeof permission === "string"),
     )
     .withMessage("Each permission must be a valid string."),
 

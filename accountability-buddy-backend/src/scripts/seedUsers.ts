@@ -40,4 +40,4 @@ const seedUsers = async (): Promise<void> => {
   }
 };
 
-seedUsers();
+void seedUsers();

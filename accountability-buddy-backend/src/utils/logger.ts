@@ -1,4 +1,5 @@
-import { createLogger, format, transports, Logger } from "winston";
+import type { Logger } from "winston";
+import { createLogger, format, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file"; // Explicitly import
 
 const { combine, timestamp, printf, colorize, errors } = format;

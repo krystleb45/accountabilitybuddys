@@ -1,24 +1,16 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import authMiddleware from "../middleware/authMiddleware"; // Correct middleware import path
 import { roleBasedAccessControl } from "../middleware/roleBasedAccessControl"; // Corrected RBAC middleware import path
 import * as RewardController from "../controllers/RewardController"; // Corrected controller import path
 import rateLimit from "express-rate-limit";
 import logger from "../utils/winstonLogger"; // Logger utility
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
-/**
- * Middleware for handling validation errors.
- */
-const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void | Response => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    // Return response directly to fix the error
-    return res.status(400).json({ success: false, errors: errors.array() });
-  }
-  next(); // Continue to the next middleware if no errors
-};
 
 
 /**
@@ -40,14 +32,13 @@ router.get(
   authMiddleware,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      // Pass req, res, and next to properly handle async operations in the controller
       await RewardController.getUserRewards(req, res, next);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(`Error fetching rewards for user ${req.user?.id}: ${errorMessage}`);
-      next(error); // Pass error to middleware
+      next(error);
     }
-  }
+  },
 );
 
 /**
@@ -63,7 +54,6 @@ router.post(
   handleValidationErrors,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      // Pass req, res, and next directly to the controller function
       await RewardController.redeemReward(req, res, next);
 
       res.status(200).json({
@@ -75,7 +65,7 @@ router.post(
       logger.error(`Error redeeming reward for user ${req.user?.id}: ${errorMessage}`);
       next(error);
     }
-  }
+  },
 );
 
 /**
@@ -100,7 +90,6 @@ router.post(
   handleValidationErrors,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      // Pass req, res, and next directly to the controller function
       await RewardController.createReward(req, res, next);
 
       res.status(201).json({
@@ -112,7 +101,7 @@ router.post(
       logger.error(`Error creating reward: ${errorMessage}`);
       next(error);
     }
-  }
+  },
 );
 
 export default router;

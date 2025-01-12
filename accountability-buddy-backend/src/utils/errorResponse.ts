@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import logger from "./winstonLogger"; // Replace with your logger utility
 
 /**
@@ -8,7 +8,7 @@ class ErrorResponse extends Error {
   statusCode: number;
   isOperational: boolean;
 
-  constructor(message: string, statusCode: number = 500) {
+  constructor(message: string, statusCode = 500) {
     super(message); // Call the parent class constructor (Error)
     this.statusCode = statusCode; // Default to 500 if no statusCode is provided
     this.isOperational = true; // Mark the error as operational (to distinguish from programming errors)
@@ -27,7 +27,7 @@ const errorHandler = (
   err: Error & { statusCode?: number; code?: number; value?: string; errors?: Record<string, { message: string }> },
   req: Request,
   res: Response,
-  _next: NextFunction 
+  _next: NextFunction, 
 ): void => {
   let error: ErrorResponse | Error & { statusCode?: number } = { ...err };
   error.message = err.message;

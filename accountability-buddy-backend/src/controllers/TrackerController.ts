@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import Tracker from "../models/Tracker"; // Database model for tracker
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -13,7 +13,7 @@ export const getAllTrackers = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id;
 
@@ -25,7 +25,7 @@ export const getAllTrackers = catchAsync(
     const trackers = await Tracker.find({ user: userId }).sort({ createdAt: -1 });
 
     sendResponse(res, 200, true, "Trackers fetched successfully", trackers);
-  }
+  },
 );
 
 /**
@@ -37,7 +37,7 @@ export const createTracker = catchAsync(
   async (
     req: Request<{}, {}, { name: string }>,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id;
     const { name } = req.body;
@@ -55,7 +55,7 @@ export const createTracker = catchAsync(
     const newTracker = await Tracker.create({ user: userId, name, progress: 0 });
 
     sendResponse(res, 201, true, "Tracker created successfully", newTracker);
-  }
+  },
 );
 
 /**
@@ -67,7 +67,7 @@ export const updateTracker = catchAsync(
   async (
     req: Request<{ id: string }, {}, { progress: number }>,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id;
     const { id } = req.params;
@@ -86,7 +86,7 @@ export const updateTracker = catchAsync(
     const updatedTracker = await Tracker.findOneAndUpdate(
       { _id: id, user: userId },
       { progress },
-      { new: true } // Return the updated document
+      { new: true }, // Return the updated document
     );
 
     if (!updatedTracker) {
@@ -95,7 +95,7 @@ export const updateTracker = catchAsync(
     }
 
     sendResponse(res, 200, true, "Tracker updated successfully", updatedTracker);
-  }
+  },
 );
 
 /**
@@ -107,7 +107,7 @@ export const deleteTracker = catchAsync(
   async (
     req: Request<{ id: string }>,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id;
     const { id } = req.params;
@@ -125,7 +125,7 @@ export const deleteTracker = catchAsync(
     }
 
     sendResponse(res, 200, true, "Tracker deleted successfully");
-  }
+  },
 );
 
 /**
@@ -137,7 +137,7 @@ export const getTrackingData = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly define empty generics
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id; // Extract user ID from request
 
@@ -156,7 +156,7 @@ export const getTrackingData = catchAsync(
 
     // Always return a resolved Promise to conform to the expected return type
     return;
-  }
+  },
 );
 
 
@@ -170,7 +170,7 @@ export const addTrackingData = catchAsync(
   async (
     req: Request<{}, {}, Record<string, any>>, // Explicitly define request generics
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     // Extract user ID from the authenticated request
     const userId = req.user?.id;
@@ -195,7 +195,7 @@ export const addTrackingData = catchAsync(
 
     // Explicitly return to ensure the function conforms to Promise<void>
     return;
-  }
+  },
 );
 
 
@@ -208,7 +208,7 @@ export const deleteTrackingData = catchAsync(
   async (
     req: Request<{ id: string }>,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): Promise<void> => {
     const userId = req.user?.id;
     const { id } = req.params;
@@ -224,5 +224,5 @@ export const deleteTrackingData = catchAsync(
     }
 
     sendResponse(res, 200, true, "Tracking data deleted successfully.");
-  }
+  },
 );

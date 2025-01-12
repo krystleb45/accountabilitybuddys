@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import type { Document, Model, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define TypeScript interfaces
 interface IMilestone {
@@ -94,7 +95,7 @@ const CollaborationGoalSchema: Schema<ICollaborationGoal> = new Schema(
       default: "private",
     },
   },
-  { timestamps: true } // Automatically create `createdAt` and `updatedAt` fields
+  { timestamps: true }, // Automatically create `createdAt` and `updatedAt` fields
 );
 
 // Middleware to add the creator as a default participant
@@ -120,7 +121,7 @@ CollaborationGoalSchema.methods.updateProgress = async function (newProgress: nu
 // Static method to add participants
 CollaborationGoalSchema.statics.addParticipant = async function (
   goalId: string,
-  userId: Types.ObjectId
+  userId: Types.ObjectId,
 ): Promise<ICollaborationGoal> {
   const goal = await this.findById(goalId);
   if (!goal) throw new Error("Collaboration goal not found");
@@ -135,7 +136,7 @@ CollaborationGoalSchema.statics.addParticipant = async function (
 // Static method to update milestone completion
 CollaborationGoalSchema.statics.completeMilestone = async function (
   goalId: string,
-  milestoneIndex: number
+  milestoneIndex: number,
 ): Promise<ICollaborationGoal> {
   const goal = await this.findById(goalId);
   if (!goal) throw new Error("Collaboration goal not found");
@@ -156,7 +157,7 @@ CollaborationGoalSchema.virtual("participantCount").get(function (): number {
 // Export the CollaborationGoal model
 const CollaborationGoal = mongoose.model<ICollaborationGoal, ICollaborationGoalModel>(
   "CollaborationGoal",
-  CollaborationGoalSchema
+  CollaborationGoalSchema,
 );
 
 export default CollaborationGoal;

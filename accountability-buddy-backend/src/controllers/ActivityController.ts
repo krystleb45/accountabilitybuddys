@@ -1,4 +1,4 @@
-import { Request, Response  } from "express";
+import type { Request, Response  } from "express";
 import UserActivity from "../models/UserActivity";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
@@ -29,7 +29,7 @@ const sanitizeInput = (input: any): any => {
 export const logActivity = catchAsync(
   async (
     req: Request<{}, any, { activityType: string; details: string }>,
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const { activityType, details } = sanitizeInput(req.body);
     const userId = req.user?.id;
@@ -53,7 +53,7 @@ export const logActivity = catchAsync(
     sendResponse(res, 201, true, "Activity logged successfully", {
       activity: newActivity,
     });
-  }
+  },
 );
 
 /**
@@ -64,7 +64,7 @@ export const logActivity = catchAsync(
 export const getUserActivities = catchAsync(
   async (
     req: Request<{}, {}, {}, {}>, // Explicitly define generics
-    res: Response
+    res: Response,
   ): Promise<void> => {
     const userId = req.user?.id;
 
@@ -85,7 +85,7 @@ export const getUserActivities = catchAsync(
     sendResponse(res, 200, true, "User activities fetched successfully", {
       activities,
     });
-  }
+  },
 );
 
 export default {

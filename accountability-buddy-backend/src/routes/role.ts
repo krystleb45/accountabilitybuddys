@@ -1,5 +1,7 @@
-import express, { Router, Request, Response } from "express";
-import Role, { IRole } from "../models/Role"; // Corrected model import path
+import type { Router, Request, Response } from "express";
+import express from "express";
+import type { IRole } from "../models/Role";
+import Role from "../models/Role"; // Corrected model import path
 import { roleBasedAccessControl } from "../middleware/roleBasedAccessControl"; // Corrected middleware import path
 import authMiddleware from "../middleware/authMiddleware"; // Corrected middleware import path
 import rateLimit from "express-rate-limit";
@@ -59,7 +61,7 @@ router.post(
         error: errorMessage,
       });
     }
-  }
+  },
 );
 
 

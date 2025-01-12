@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 import sanitizeFilename from "sanitize-filename";
 import { execSync } from "child_process";
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import logger from "../utils/winstonLogger";
@@ -42,7 +42,7 @@ const scanFileForVirus = (filePath: string): boolean => {
 export const uploadFile = catchAsync(async (
   req: Request<Record<string, any>, any, any, Record<string, any>> & { file?: Express.Multer.File },
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): Promise<void> => {
   req.params = sanitizeInput(req.params);
   req.body = sanitizeInput(req.body);
@@ -72,7 +72,7 @@ export const uploadFile = catchAsync(async (
 export const uploadMultipleFiles = catchAsync(async (
   req: Request<Record<string, any>, any, any, Record<string, any>> & { files?: Express.Multer.File[] },
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): Promise<void> => {
   req.params = sanitizeInput(req.params);
   req.body = sanitizeInput(req.body);
@@ -105,7 +105,7 @@ export const uploadMultipleFiles = catchAsync(async (
 export const saveFileMetadata = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const { originalname, mimetype, size, filename } = req.file as Express.Multer.File;
@@ -130,7 +130,7 @@ export const saveFileMetadata = async (
 export const downloadFile = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const { fileId } = req.params;
@@ -164,7 +164,7 @@ export const downloadFile = async (
 export const deleteFile = catchAsync(async (
   req: Request<Record<string, any>, any, any, Record<string, any>>,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): Promise<void> => {
   req.params = sanitizeInput(req.params);
   const filename = sanitizeFilename(req.params.filename) || "unknown-file";

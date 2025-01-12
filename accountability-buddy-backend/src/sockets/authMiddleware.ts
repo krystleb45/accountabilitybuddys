@@ -1,5 +1,6 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
-import { Socket } from "socket.io";
+import type { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import type { Socket } from "socket.io";
 
 /**
  * Custom type to extend the socket object with user information.
@@ -16,7 +17,7 @@ interface AuthenticatedSocket extends Socket {
  */
 const socketAuthMiddleware = (
   socket: AuthenticatedSocket,
-  next: (err?: Error) => void
+  next: (err?: Error) => void,
 ): void => {
   try {
     // Extract token from query params or headers

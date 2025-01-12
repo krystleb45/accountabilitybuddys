@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import sanitize from "mongo-sanitize";
 import logger from "../utils/winstonLogger"; // Optional: for logging
 
@@ -52,7 +53,7 @@ const ChatSchema: Schema<IChat> = new Schema<IChat>(
   },
   {
     timestamps: true, // Automatically create `createdAt` and `updatedAt` fields
-  }
+  },
 );
 
 // Add index for sorting and querying by date
@@ -67,7 +68,7 @@ ChatSchema.pre<IChat>("save", function (next: (err?: Error) => void): void {
 // Post-save hook for logging message creation (Optional)
 ChatSchema.post<IChat>("save", function (doc: IChat): void {
   logger.info(
-    `New chat message created by user ${doc.sender} in group ${doc.group}: ${doc.message}`
+    `New chat message created by user ${doc.sender} in group ${doc.group}: ${doc.message}`,
   );
 });
 
@@ -76,7 +77,7 @@ ChatSchema.methods.softDelete = async function (): Promise<void> {
   this.deleted = true;
   await this.save();
   logger.info(
-    `Chat message soft-deleted by user ${this.sender} in group ${this.group}`
+    `Chat message soft-deleted by user ${this.sender} in group ${this.group}`,
   );
 };
 
@@ -91,7 +92,7 @@ ChatSchema.methods.editMessage = async function (newMessage: string): Promise<vo
   this.editedAt = new Date();
   await this.save();
   logger.info(
-    `Chat message edited by user ${this.sender} in group ${this.group}: ${this.message}`
+    `Chat message edited by user ${this.sender} in group ${this.group}: ${this.message}`,
   );
 };
 

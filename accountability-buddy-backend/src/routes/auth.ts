@@ -1,4 +1,5 @@
-import express, { Request, Response, NextFunction, Router } from "express";
+import type { Request, Response, NextFunction, Router } from "express";
+import express from "express";
 import { check, validationResult } from "express-validator";
 
 import { login, register, refreshToken } from "../../src/controllers/authController";
@@ -11,14 +12,14 @@ const router: Router = express.Router();
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10, // Limit each IP to 10 requests per windowMs
-  message: "Too many authentication attempts. Please try again later."
+  message: "Too many authentication attempts. Please try again later.",
 });
 
 /**
  * Utility function to handle errors consistently
  */
 const handleRouteErrors = (
-  handler: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  handler: (req: Request, res: Response, next: NextFunction) => Promise<void>,
 ): ((req: Request, res: Response, next: NextFunction) => Promise<void>) => {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -40,7 +41,7 @@ router.post(
   authLimiter,
   [
     check("email", "Valid email is required").isEmail(),
-    check("password", "Password is required").notEmpty()
+    check("password", "Password is required").notEmpty(),
   ],
   handleRouteErrors(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const errors = validationResult(req);
@@ -51,7 +52,7 @@ router.post(
 
     // Pass the entire req, res, and next to the controller function
     await login(req, res, next); // FIXED: Now properly passes 3 arguments
-  })
+  }),
 );
 
 
@@ -79,7 +80,7 @@ router.post(
 
     // Call the register function with req, res, and next
     await register(req, res, next); // FIXED: Pass req, res, and next instead of sanitizedBody
-  })
+  }),
 );
 
 
@@ -99,7 +100,7 @@ router.post(
 
     // Call the refreshToken function with all required arguments
     await refreshToken(req, res, next); // FIXED: Pass req, res, and next
-  })
+  }),
 );
 
 

@@ -1,4 +1,5 @@
-import express, { Router, Response, NextFunction, Request, RequestHandler } from "express";
+import type { Router, Response, NextFunction, Request, RequestHandler } from "express";
+import express from "express";
 import { check, validationResult } from "express-validator";
 import rateLimit from "express-rate-limit";
 import authMiddleware from "../middleware/authMiddleware";
@@ -46,7 +47,7 @@ router.get(
   isAdmin,
   handleRouteErrors(async (req: Request, res: Response, next: NextFunction) => {
     await AdminController.getUserAnalytics(req, res, next);
-  })
+  }),
 );
 
 /**
@@ -60,7 +61,7 @@ router.get(
   isAdmin,
   handleRouteErrors(async (req: Request, res: Response, next: NextFunction) => {
     await AnalyticsController.getGlobalAnalytics(req, res, next);
-  })
+  }),
 );
 
 /**
@@ -74,7 +75,7 @@ router.get(
   isAdmin,
   handleRouteErrors(async (req: Request, res: Response, next: NextFunction) => {
     await AnalyticsController.getGlobalAnalytics(req, res, next);
-  })
+  }),
 );
 
 /**
@@ -88,7 +89,7 @@ router.get(
   isAdmin,
   handleRouteErrors(async (req: Request, res: Response, next: NextFunction) => {
     await AdminController.getFinancialAnalytics(req, res, next);
-  })
+  }),
 );
 
 /**
@@ -116,7 +117,7 @@ router.post(
     const { startDate, endDate, metric } = req.body;
     const analytics = await AnalyticsController.getCustomAnalytics(startDate, endDate, metric);
     res.status(200).json({ success: true, data: analytics });
-  })
+  }),
 );
 
 export default router;

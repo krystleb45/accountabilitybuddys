@@ -1,28 +1,14 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import type { Router, Request, Response, NextFunction } from "express";
+import express from "express";
+import { check } from "express-validator";
 import authMiddleware from "../middleware/authMiddleware"; // Correct middleware import path
 import * as ProgressController from "../controllers/ProgressController"; // Corrected controller import path
 import logger from "../utils/winstonLogger"; // Import logger utility
+import handleValidationErrors from "../middleware/handleValidationErrors"; // Adjust the path
+
 
 const router: Router = express.Router();
 
-/**
- * Middleware to handle validation errors.
- */
-const handleValidationErrors = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Response | void => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    // Return the response directly with proper type
-    return res.status(400).json({ success: false, errors: errors.array() });
-  }
-
-  next(); // Continue to the next middleware if no errors
-};
 
 
 /**
@@ -49,11 +35,11 @@ router.get(
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(
-        `Error fetching progress for user ${req.user?.id}: ${errorMessage}`
+        `Error fetching progress for user ${req.user?.id}: ${errorMessage}`,
       );
       next(error); // Pass error to global error handler
     }
-  }
+  },
 );
 
 /**
@@ -83,7 +69,7 @@ router.put(
       const updatedProgress = await ProgressController.updateProgress(
         req,
         res,
-        next
+        next,
       );
 
       res.status(200).json({
@@ -95,11 +81,11 @@ router.put(
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(
-        `Error updating progress for user ${req.user?.id}: ${errorMessage}`
+        `Error updating progress for user ${req.user?.id}: ${errorMessage}`,
       );
       next(error); // Pass error to global error handler
     }
-  }
+  },
 );
 
 /**
@@ -122,7 +108,7 @@ router.delete(
       const resetResult = await ProgressController.resetProgress(
         req,
         res,
-        next
+        next,
       );
 
       res.status(200).json({
@@ -134,11 +120,11 @@ router.delete(
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";
       logger.error(
-        `Error resetting progress for user ${req.user?.id}: ${errorMessage}`
+        `Error resetting progress for user ${req.user?.id}: ${errorMessage}`,
       );
       next(error); // Pass error to global error handler
     }
-  }
+  },
 );
 
 export default router;

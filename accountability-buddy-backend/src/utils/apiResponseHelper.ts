@@ -1,4 +1,4 @@
-import { Response } from "express";
+import type { Response } from "express";
 
 interface ErrorDetail {
   field: string;
@@ -17,9 +17,9 @@ interface ApiResponse<T = Record<string, unknown>> {
  */
 export const successResponse = <T>(
   res: Response,
-  message: string = "Operation successful",
+  message = "Operation successful",
   data: T = {} as T,
-  statusCode: number = 200,
+  statusCode = 200,
 ): Response<ApiResponse<T>> => {
   return res.status(statusCode).json({
     success: true,
@@ -33,8 +33,8 @@ export const successResponse = <T>(
  */
 export const errorResponse = (
   res: Response,
-  message: string = "Operation failed",
-  statusCode: number = 400,
+  message = "Operation failed",
+  statusCode = 400,
   errors: ErrorDetail[] = [],
 ): Response<ApiResponse<null>> => {
   return res.status(statusCode).json({
@@ -50,8 +50,8 @@ export const errorResponse = (
 export const validationErrorResponse = (
   res: Response,
   errors: ErrorDetail[] = [],
-  message: string = "Validation failed",
-  statusCode: number = 422,
+  message = "Validation failed",
+  statusCode = 422,
 ): Response<ApiResponse<null>> => {
   return res.status(statusCode).json({
     success: false,
@@ -65,7 +65,7 @@ export const validationErrorResponse = (
  */
 export const unauthorizedResponse = (
   res: Response,
-  message: string = "Unauthorized access",
+  message = "Unauthorized access",
 ): Response<ApiResponse<null>> => {
   return res.status(401).json({
     success: false,
@@ -78,7 +78,7 @@ export const unauthorizedResponse = (
  */
 export const forbiddenResponse = (
   res: Response,
-  message: string = "Access forbidden",
+  message = "Access forbidden",
 ): Response<ApiResponse<null>> => {
   return res.status(403).json({
     success: false,
@@ -91,7 +91,7 @@ export const forbiddenResponse = (
  */
 export const notFoundResponse = (
   res: Response,
-  message: string = "Resource not found",
+  message = "Resource not found",
 ): Response<ApiResponse<null>> => {
   return res.status(404).json({
     success: false,
@@ -104,8 +104,8 @@ export const notFoundResponse = (
  */
 export const serverErrorResponse = (
   res: Response,
-  message: string = "Internal server error",
-  statusCode: number = 500,
+  message = "Internal server error",
+  statusCode = 500,
 ): Response<ApiResponse<null>> => {
   return res.status(statusCode).json({
     success: false,
