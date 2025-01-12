@@ -1,7 +1,41 @@
 import { Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 
-// Validation for creating a task
+/**
+ * Middleware to handle validation results and send structured errors.
+ */
+export const validationMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    // Format validation errors into a structured response
+    const formattedErrors = errors.array().map((error) => {
+      const field = "param" in error ? error.param : "unknown";
+      return {
+        field,
+        message: error.msg,
+      };
+    });
+
+    res.status(400).json({
+      success: false,
+      message: "Validation failed.",
+      errors: formattedErrors,
+    });
+
+    return; // Terminate middleware execution
+  }
+
+  next(); // Proceed to the next middleware
+};
+
+/**
+ * Validation for creating a task.
+ */
 export const createTaskValidation = [
   check("title")
     .notEmpty()
@@ -40,10 +74,12 @@ export const createTaskValidation = [
     .isIn(["pending", "in-progress", "completed"])
     .withMessage("Status must be one of: pending, in-progress, completed."),
 
-  validate,
+  validationMiddleware, // Attach reusable validation middleware
 ];
 
-// Validation for updating a task
+/**
+ * Validation for updating a task.
+ */
 export const updateTaskValidation = [
   check("taskId")
     .notEmpty()
@@ -87,10 +123,12 @@ export const updateTaskValidation = [
     .isIn(["pending", "in-progress", "completed"])
     .withMessage("Status must be one of: pending, in-progress, completed."),
 
-  validate,
+  validationMiddleware, // Attach reusable validation middleware
 ];
 
-// Validation for deleting a task
+/**
+ * Validation for deleting a task.
+ */
 export const deleteTaskValidation = [
   check("taskId")
     .notEmpty()
@@ -98,29 +136,5 @@ export const deleteTaskValidation = [
     .isMongoId()
     .withMessage("Task ID must be a valid Mongo ID"),
 
-  validate,
+  validationMiddleware, // Attach reusable validation middleware
 ];
-
-// Reusable validation middleware handler
-export const validate = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation failed",
-        errors: errors.array().map((error) => ({
-          field: error.param,
-          message: error.msg,
-        })),
-      });
-    }
-    next();
-  } catch (error) {
-    next(error);
-  }
-};

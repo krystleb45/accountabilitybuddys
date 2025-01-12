@@ -1,11 +1,49 @@
 import { Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 
-// Validation for creating a role
+/**
+ * Middleware to handle validation results and send structured errors.
+ */
+export const validationMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    // Format validation errors into a structured response
+    const formattedErrors = errors.array().map((error) => {
+      if ("param" in error && typeof error.param === "string") {
+        return {
+          field: error.param,
+          message: error.msg,
+        };
+      }
+      return {
+        field: "unknown",
+        message: error.msg,
+      };
+    });
+
+    res.status(400).json({
+      success: false,
+      message: "Validation failed",
+      errors: formattedErrors,
+    });
+
+    return; // Terminate middleware execution
+  }
+
+  next(); // Proceed to the next middleware
+};
+
+/**
+ * Validation for creating a role.
+ */
 export const createRoleValidation = [
   check("name")
-    .not()
-    .isEmpty()
+    .notEmpty()
     .withMessage("Role name is required.")
     .trim()
     .isLength({ min: 3, max: 50 })
@@ -22,14 +60,15 @@ export const createRoleValidation = [
     )
     .withMessage("Each permission must be a valid string."),
 
-  validate,
+  validationMiddleware, // Apply the reusable validation middleware
 ];
 
-// Validation for updating a role
+/**
+ * Validation for updating a role.
+ */
 export const updateRoleValidation = [
   check("roleId")
-    .not()
-    .isEmpty()
+    .notEmpty()
     .withMessage("Role ID is required.")
     .isMongoId()
     .withMessage("Role ID must be a valid Mongo ID"),
@@ -52,44 +91,24 @@ export const updateRoleValidation = [
     )
     .withMessage("Each permission must be a valid string."),
 
-  validate,
+  validationMiddleware, // Apply the reusable validation middleware
 ];
 
-// Validation for assigning a role to a user
+/**
+ * Validation for assigning a role to a user.
+ */
 export const assignRoleValidation = [
   check("userId")
-    .not()
-    .isEmpty()
+    .notEmpty()
     .withMessage("User ID is required.")
     .isMongoId()
     .withMessage("User ID must be a valid Mongo ID"),
 
   check("roleId")
-    .not()
-    .isEmpty()
+    .notEmpty()
     .withMessage("Role ID is required.")
     .isMongoId()
     .withMessage("Role ID must be a valid Mongo ID"),
 
-  validate,
+  validationMiddleware, // Apply the reusable validation middleware
 ];
-
-// Reusable validation middleware handler
-export const validate = (req: Request, res: Response, next: NextFunction): void => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation failed",
-        errors: errors.array().map((error) => ({
-          field: error.param,
-          message: error.msg,
-        })),
-      });
-    }
-    next();
-  } catch (error) {
-    next(error);
-  }
-};

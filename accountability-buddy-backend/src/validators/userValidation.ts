@@ -1,6 +1,4 @@
-import { Request, Response, NextFunction } from "express";
-import { check, validationResult, ValidationChain } from "express-validator";
-import bcrypt from "bcryptjs";
+import { check, ValidationChain } from "express-validator";
 
 /**
  * Validation for registering a new user.
@@ -14,7 +12,7 @@ export const registerUserValidation: ValidationChain[] = [
     .withMessage("Username must be between 3 and 30 characters.")
     .matches(/^[a-zA-Z0-9_-]+$/)
     .withMessage("Username can only contain letters, numbers, underscores, and dashes.")
-    .escape(), // Sanitize to prevent XSS
+    .escape(),
 
   check("email")
     .notEmpty()
@@ -22,7 +20,7 @@ export const registerUserValidation: ValidationChain[] = [
     .trim()
     .isEmail()
     .withMessage("Please provide a valid email address.")
-    .normalizeEmail(), // Normalize email input
+    .normalizeEmail(),
 
   check("password")
     .notEmpty()
@@ -34,8 +32,6 @@ export const registerUserValidation: ValidationChain[] = [
     .withMessage(
       "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
     ),
-
-  validate,
 ];
 
 /**
@@ -49,14 +45,14 @@ export const updateUserProfileValidation: ValidationChain[] = [
     .withMessage("Username must be between 3 and 30 characters.")
     .matches(/^[a-zA-Z0-9_-]+$/)
     .withMessage("Username can only contain letters, numbers, underscores, and dashes.")
-    .escape(), // Sanitize to prevent XSS
+    .escape(),
 
   check("email")
     .optional()
     .trim()
     .isEmail()
     .withMessage("Please provide a valid email address.")
-    .normalizeEmail(), // Normalize email input
+    .normalizeEmail(),
 
   check("password")
     .optional()
@@ -67,18 +63,13 @@ export const updateUserProfileValidation: ValidationChain[] = [
     .withMessage(
       "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
     ),
-
-  validate,
 ];
 
 /**
  * Validation for changing the user password.
  */
-export const changePasswordValidation = [
-  check("currentPassword")
-    .notEmpty()
-    .withMessage("Current password is required."),
-
+export const changePasswordValidation: ValidationChain[] = [
+  check("currentPassword").notEmpty().withMessage("Current password is required."),
   check("newPassword")
     .notEmpty()
     .withMessage("New password is required.")
@@ -88,72 +79,11 @@ export const changePasswordValidation = [
     .withMessage(
       "New password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
     ),
-
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          success: false,
-          errors: errors.array(),
-        });
-      }
-
-      const { currentPassword, newPassword } = req.body;
-      const user = req.user; // Assume req.user is available (attached by auth middleware)
-
-      // Validate if current password matches the user's password
-      const isMatch = await bcrypt.compare(currentPassword, user.password);
-      if (!isMatch) {
-        return res.status(400).json({
-          success: false,
-          message: "Current password is incorrect.",
-        });
-      }
-
-      // Ensure new password is different from the current password
-      if (currentPassword === newPassword) {
-        return res.status(400).json({
-          success: false,
-          message: "New password must be different from the current password.",
-        });
-      }
-
-      next();
-    } catch (error) {
-      next(error);
-    }
-  },
 ];
 
 /**
  * Validation for deleting a user account.
  */
 export const deleteUserAccountValidation: ValidationChain[] = [
-  check("password")
-    .notEmpty()
-    .withMessage("Password is required to delete the account."),
-  validate,
+  check("password").notEmpty().withMessage("Password is required to delete the account."),
 ];
-
-/**
- * Reusable validation middleware handler.
- */
-export const validate = (req: Request, res: Response, next: NextFunction): void => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation failed.",
-        errors: errors.array().map((error) => ({
-          field: error.param,
-          message: error.msg,
-        })),
-      });
-    }
-    next();
-  } catch (error) {
-    next(error);
-  }
-};

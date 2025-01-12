@@ -21,6 +21,7 @@ export interface IUser extends Document {
   _id: Types.ObjectId;
   firstName?: string;
   lastName?: string;
+  name?: string; // Add this field
   username: string;
   email: string;
   password: string;
@@ -32,16 +33,18 @@ export interface IUser extends Document {
   friends: Types.ObjectId[];
   friendRequests: Types.ObjectId[];
   points?: number;
-  rewards: Types.ObjectId[]; // Rewards stored as ObjectId[]
+  rewards: Types.ObjectId[];
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   subscriptions?: Types.ObjectId[];
   settings?: UserSettings;
   twoFactorSecret?: string;
+  stripeCustomerId?: string;
 
   comparePassword(candidatePassword: string): Promise<boolean>;
   generateResetToken(): string;
 }
+
 
 // Define User Schema
 const UserSchema: Schema<IUser> = new Schema(
@@ -63,6 +66,7 @@ const UserSchema: Schema<IUser> = new Schema(
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
     subscriptions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subscription" }],
+    stripeCustomerId: { type: String }, // Added stripeCustomerId field
     settings: {
       notifications: {
         email: { type: Boolean, default: true },

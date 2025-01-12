@@ -26,115 +26,166 @@ interface FetchChatHistoryData {
 
 const chatSocket = (io: Server, socket: Socket): void => {
   /**
-   * @desc  User joins a chat room (group chat or direct message room)
+   * Handle user joining a chat room
    */
-  socket.on("joinRoom", async ({ roomId, userId }: JoinRoomData) => {
+  socket.on("joinRoom", async (data: JoinRoomData) => {
     try {
+      const { roomId, userId } = data;
+  
       if (!roomId || !userId) {
-        return socket.emit("error", "Room ID and User ID are required.");
+        socket.emit("error", "Room ID and User ID are required.");
+        return; // Exit early if validation fails
       }
-
+  
+      const user = await User.findById(userId);
+      if (!user) {
+        socket.emit("error", "User not found.");
+        return; // Exit early if user is not found
+      }
+  
+      const room = await Group.findById(roomId);
+      if (!room) {
+        socket.emit("error", "Room not found.");
+        return; // Exit early if room is not found
+      }
+  
       socket.join(roomId);
       logger.info(`User ${userId} joined room ${roomId}`);
-
-      // Notify others in the room that a user has joined
-      socket.to(roomId).emit("userJoined", { userId, roomId });
+  
+      socket.to(roomId).emit("userJoined", { userId, username: user.username, roomId });
+      return; // Explicitly return at the end of the successful path
     } catch (error) {
       logger.error(`Error joining room: ${(error as Error).message}`);
       socket.emit("error", "Unable to join room.");
+      return; // Explicitly return from the catch block
     }
   });
+  
 
   /**
-   * @desc  User leaves a chat room
+   * Handle user leaving a chat room
    */
-  socket.on("leaveRoom", ({ roomId, userId }: LeaveRoomData) => {
+  socket.on("leaveRoom", async (data: LeaveRoomData) => {
     try {
+      const { roomId, userId } = data;
+  
       if (!roomId || !userId) {
-        return socket.emit("error", "Room ID and User ID are required.");
+        socket.emit("error", "Room ID and User ID are required.");
+        return; // Exit early if validation fails
       }
-
+  
+      const user = await User.findById(userId);
+      if (!user) {
+        socket.emit("error", "User not found.");
+        return; // Exit early if user is not found
+      }
+  
+      const room = await Group.findById(roomId);
+      if (!room) {
+        socket.emit("error", "Room not found.");
+        return; // Exit early if room is not found
+      }
+  
       socket.leave(roomId);
       logger.info(`User ${userId} left room ${roomId}`);
-
-      // Notify others in the room that a user has left
-      socket.to(roomId).emit("userLeft", { userId, roomId });
+  
+      // Notify others in the room that the user has left
+      socket.to(roomId).emit("userLeft", { userId, username: user.username, roomId });
+      return; // Explicitly return after successfully handling the event
     } catch (error) {
       logger.error(`Error leaving room: ${(error as Error).message}`);
       socket.emit("error", "Unable to leave room.");
+      return; // Explicitly return from the catch block
     }
   });
+  
 
   /**
-   * @desc  Send a new chat message
+   * Handle sending a message
    */
-  socket.on("sendMessage", async ({ roomId, userId, message }: SendMessageData) => {
+  socket.on("sendMessage", async (data: SendMessageData) => {
     try {
+      const { roomId, userId, message } = data;
+  
       if (!message || !roomId || !userId) {
-        return socket.emit("error", "Message content, room, and user must be provided.");
+        socket.emit("error", "Message, Room ID, and User ID are required.");
+        return; // Exit early if validation fails
       }
-
+  
       const user = await User.findById(userId);
       if (!user) {
-        return socket.emit("error", "User not found.");
+        socket.emit("error", "User not found.");
+        return; // Exit early if user is not found
       }
-
+  
       const room = await Group.findById(roomId);
       if (!room) {
-        return socket.emit("error", "Room not found.");
+        socket.emit("error", "Room not found.");
+        return; // Exit early if room is not found
       }
-
-      const newMessage = new Chat({
+  
+      const newMessage = await Chat.create({
         message,
         sender: userId,
         group: roomId,
         createdAt: new Date(),
       });
-
-      await newMessage.save();
-
+  
       io.to(roomId).emit("newMessage", {
         message: newMessage.message,
-        sender: {
-          id: user._id,
-          username: user.username,
-        },
+        sender: { id: user._id, username: user.username },
         roomId,
         createdAt: newMessage.createdAt,
       });
-
+  
       logger.info(`Message sent by user ${user.username} in room ${roomId}`);
+      return; // Explicitly return at the end of the successful path
     } catch (error) {
       logger.error(`Error sending message: ${(error as Error).message}`);
       socket.emit("error", "Unable to send message.");
+      return; // Explicitly return from the catch block
     }
   });
+  
 
   /**
-   * @desc  Fetch chat history for a specific room
+   * Fetch chat history
    */
-  socket.on("fetchChatHistory", async ({ roomId }: FetchChatHistoryData) => {
+  socket.on("fetchChatHistory", async (data: FetchChatHistoryData) => {
     try {
+      const { roomId } = data;
+  
       if (!roomId) {
-        return socket.emit("error", "Room ID is required.");
+        socket.emit("error", "Room ID is required.");
+        return; // Exit early if validation fails
       }
-
+  
+      const room = await Group.findById(roomId);
+      if (!room) {
+        socket.emit("error", "Room not found.");
+        return; // Exit early if room is not found
+      }
+  
       const chatHistory = await Chat.find({ group: roomId })
         .populate("sender", "username")
         .sort({ createdAt: 1 });
-
+  
       socket.emit("chatHistory", chatHistory);
+      logger.info(`Fetched chat history for room ${roomId}`);
+      return; // Explicitly return after successfully handling the event
     } catch (error) {
       logger.error(`Error fetching chat history: ${(error as Error).message}`);
       socket.emit("error", "Unable to fetch chat history.");
+      return; // Explicitly return from the catch block
     }
   });
+  
 
   /**
-   * @desc  Handle user disconnection
+   * Handle user disconnection
    */
   socket.on("disconnect", () => {
-    logger.info("A user disconnected");
+    logger.info("A user disconnected.");
   });
 };
 

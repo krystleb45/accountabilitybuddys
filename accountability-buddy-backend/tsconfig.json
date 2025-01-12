@@ -1,52 +1,56 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "lib": ["ESNext", "DOM"],
-    "strict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
-    ],
+    "target": "ESNext", // Use latest ECMAScript features
+    "module": "CommonJS", // Use CommonJS for compatibility with Node.js
+    "moduleResolution": "node", // Resolve modules in Node.js style
+    "lib": ["ESNext", "DOM"], // Include latest ESNext features and DOM types
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Allow interoperability between CommonJS and ES modules
+    "forceConsistentCasingInFileNames": true, // Ensure consistent casing in imports
+    "skipLibCheck": true, // Skip type checks for declaration files
+    "outDir": "./dist", // Output directory for compiled files
+    "rootDir": "./src", // Root directory for input files
+    "resolveJsonModule": true, // Allow importing JSON files as modules
+    "allowSyntheticDefaultImports": true, // Allow default imports for modules without defaults
+    "typeRoots": ["./node_modules/@types", "./src/types"], // Specify type definition roots
     "types": [
       "node",
       "express",
       "cors",
-      "jsonwebtoken"
+      "jsonwebtoken",
+      "jest" // Include Jest for testing
     ],
-    "strictPropertyInitialization": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "isolatedModules": true,
-    "allowJs": false,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "incremental": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true
+    "strictPropertyInitialization": true, // Require property initialization in classes
+    "noUnusedLocals": true, // Report unused local variables
+    "noUnusedParameters": true, // Report unused function parameters
+    "noImplicitReturns": true, // Ensure functions have explicit return statements
+    "noFallthroughCasesInSwitch": true, // Prevent fallthrough in switch statements
+    "isolatedModules": true, // Ensure each file can be compiled in isolation
+    "allowJs": false, // Disallow JavaScript files in the project
+    "declaration": true, // Generate declaration files for compiled code
+    "declarationMap": true, // Generate source maps for declaration files
+    "sourceMap": true, // Generate source maps for debugging
+    "incremental": true, // Enable incremental compilation for faster builds
+    "noImplicitAny": true, // Disallow implicit `any` types
+    "strictNullChecks": true, // Enforce strict null checks
+    "baseUrl": "./", // Base directory for non-relative module imports
+    "paths": {
+      "@src/*": ["src/*"], // Alias for the src directory
+      "@test/*": ["src/test/*"] // Alias for the test directory
+    }
   },
   "include": [
-    "src/**/*",
-    "./src/types/**/*.d.ts"
+    "src/**/*", // Include all files in src
+    "./src/types/**/*.d.ts", // Include custom type definitions
+    "src/test/**/*.ts" // Include test files for ESLint and Jest compatibility
   ],
   "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    ".vscode",
-    ".env",
-    "coverage"
+    "node_modules", // Exclude dependencies
+    "dist", // Exclude compiled files
+    ".vscode", // Exclude VSCode configuration files
+    ".env", // Exclude environment files
+    "coverage", // Exclude test coverage reports
+    "**/*.test.js", // Exclude compiled test files
+    "**/*.spec.js" // Exclude compiled spec files
   ]
 }

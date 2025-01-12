@@ -17,7 +17,12 @@ const createSocketRateLimiter = (
   eventName: string
 ) => {
   return async (socket: Socket, next: (err?: Error) => void): Promise<void> => {
-    const userId = socket.user?.id as string; // Ensure `socket.user.id` is available and is a string
+    const userId = socket.data.user?.id as string; // Retrieve the user ID from socket data
+    if (!userId) {
+      logger.error(`Rate limiter error: Missing user ID for event ${eventName}`);
+      return next(new Error("Authentication error. User ID is missing."));
+    }
+
     const rateLimiterKey = `ws_rate_limit:${eventName}:${userId}`;
 
     try {
@@ -26,13 +31,15 @@ const createSocketRateLimiter = (
 
       // Set expiration for the rate limiter key if it's a new counter
       if (requests === 1) {
-        await redisClient.expire(rateLimiterKey, windowMs / 1000); // Convert ms to seconds
+        await redisClient.expire(rateLimiterKey, Math.ceil(windowMs / 1000)); // Convert ms to seconds
       }
 
       // Check if the user has exceeded the max request limit
       if (requests > maxRequests) {
         logger.warn(`Rate limit exceeded for user ${userId} on event ${eventName}`);
-        return next(new Error(`Rate limit exceeded for ${eventName}. Please wait before trying again.`));
+        return next(
+          new Error(`Rate limit exceeded for ${eventName}. Please wait before trying again.`)
+        );
       }
 
       next(); // Proceed to the next middleware or event handler

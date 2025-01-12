@@ -1,12 +1,9 @@
 import rateLimit, { Options, RateLimitRequestHandler } from "express-rate-limit";
-import RedisStore from "rate-limit-redis";
+import RedisStore, { RedisReply } from "rate-limit-redis";
 import redisClient from "../config/redisClient"; // Ensure this points to your Redis client configuration
 import { Request, Response } from "express";
 import logger from "./winstonLogger"; // Replace with your logger utility
 
-// Define types for Redis arguments
-type RedisCommandArgument = string | Buffer;
-type RedisCommandArguments = Array<RedisCommandArgument>;
 
 /**
  * @desc    Creates a rate limiter with configurable limits, IP-based throttling, and optional Redis-backed storage.
@@ -29,9 +26,9 @@ const createRateLimiter = (
       success: false,
       message,
     },
-    headers: true, // Include rate limit info in response headers
-    skipFailedRequests: false, // Count failed requests to prevent abuse
-    keyGenerator: (req: Request): string => req.ip || "unknown-client", // Ensure keyGenerator always returns a string
+    headers: true,
+    skipFailedRequests: false,
+    keyGenerator: (req: Request): string => req.ip || "unknown-client",
     handler: (req: Request, res: Response) => {
       logger.warn("Rate limit exceeded", {
         ip: req.ip,
@@ -43,27 +40,32 @@ const createRateLimiter = (
         message,
       });
     },
-    standardHeaders: true, // Include `RateLimit-*` headers in responses
-    legacyHeaders: false, // Disable deprecated `X-RateLimit-*` headers
+    standardHeaders: true,
+    legacyHeaders: false,
   };
 
   // If Redis is enabled, configure RedisStore
   if (useRedis) {
     options.store = new RedisStore({
-      sendCommand: async (command: string, args: RedisCommandArguments): Promise<string | null> => {
+      sendCommand: async (...args: string[]): Promise<RedisReply> => {
         try {
-          const response = await redisClient.sendCommand([command, ...args]);
-          logger.debug("Redis command executed", { command, args, response });
-          return response ? response.toString() : null;
+          // Send the command with all arguments to Redis
+          const response = await redisClient.sendCommand(args);
+  
+          // Convert `null` to an empty string or another valid RedisReply
+          const safeResponse: RedisReply = response === null ? "" : (response as RedisReply);
+  
+          logger.debug("Redis command executed", { args, response: safeResponse });
+          return safeResponse;
         } catch (error: unknown) {
           const errorMessage = error instanceof Error ? error.message : "Unknown error";
-          logger.error("Error in sendCommand", { command, args, error: errorMessage });
+          logger.error("Error in sendCommand", { args, error: errorMessage });
           throw error;
         }
       },
     });
   }
-
+  
   return rateLimit(options);
 };
 

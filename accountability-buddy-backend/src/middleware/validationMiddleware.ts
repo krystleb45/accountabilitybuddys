@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { validationResult, ValidationChain, ValidationError } from "express-validator";
+import { validationResult, ValidationChain } from "express-validator";
 import logger from "../utils/winstonLogger";
 
 /**
@@ -7,11 +7,11 @@ import logger from "../utils/winstonLogger";
  * @param {ValidationChain[]} validations - Array of validation chains to run before proceeding
  * @returns Middleware function to validate requests
  */
-const validationMiddleware = (validations: ValidationChain[] = []) => {
+const validationMiddleware = (validations: ValidationChain[] = []): ((req: Request, res: Response, next: NextFunction) => Promise<void>) => {
   return async (
     req: Request,
     res: Response,
-    next: NextFunction,
+    next: NextFunction
   ): Promise<void> => {
     try {
       // Run all validations
@@ -22,28 +22,43 @@ const validationMiddleware = (validations: ValidationChain[] = []) => {
       // Check for validation errors
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        const errorDetails = errors.array().map((err: ValidationError) => ({
-          field: "param" in err ? err.param : "unknown",
-          message: err.msg,
-        }));
+        // Map validation errors into a structured format
+        const errorDetails = errors.array().map((err) => {
+          // Type guard to ensure `err` has `param` and `msg` properties
+          if ("param" in err && typeof err.param === "string") {
+            return {
+              field: err.param,
+              message: err.msg,
+            };
+          }
+          return {
+            field: "unknown",
+            message: err.msg,
+          };
+        });
 
-        // Log validation errors
+        // Log validation errors for debugging
         logger.warn("Validation failed", { errors: errorDetails });
 
         // Send structured error response
         res.status(400).json({
-          status: "fail",
+          success: false,
           message: "Validation error",
           errors: errorDetails,
         });
-        return;
+
+        return; // Ensure the function ends after sending a response
       }
 
-      next();
+      next(); // Proceed to the next middleware
     } catch (error) {
-      // Handle unexpected errors
+      // Log and handle unexpected errors
       logger.error("Unexpected error during validation", { error });
-      res.status(500).json({ message: "Internal server error during validation." });
+
+      res.status(500).json({
+        success: false,
+        message: "Internal server error during validation.",
+      });
     }
   };
 };

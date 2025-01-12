@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import Role from "../models/Role";
-import logger from "../utils/winstonLogger"; // Use logger utility
+import logger from "../utils/winstonLogger"; // Logger utility
 
 export const AuthService = {
   /**
@@ -80,6 +80,41 @@ export const AuthService = {
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       logger.error(`Error verifying token: ${errorMessage}`);
       throw new Error("Token verification failed.");
+    }
+  },
+
+  /**
+   * @desc    Verifies a JWT token for socket connections.
+   * @param   token - The JWT token to verify.
+   * @returns Decoded user information if the token is valid.
+   */
+  verifySocketToken(token: string): { user: { id: string; username: string } } {
+    try {
+      const secretKey = process.env.JWT_SECRET;
+      if (!secretKey) {
+        logger.error("JWT_SECRET is not defined in environment variables.");
+        throw new Error("JWT_SECRET is not defined.");
+      }
+
+      const decoded = jwt.verify(token, secretKey) as JwtPayload & {
+        userId: string;
+        username: string;
+      };
+
+      if (!decoded || !decoded.userId || !decoded.username) {
+        throw new Error("Invalid token payload.");
+      }
+
+      return {
+        user: {
+          id: decoded.userId,
+          username: decoded.username,
+        },
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      logger.error(`Error verifying socket token: ${errorMessage}`);
+      throw new Error("Socket token verification failed.");
     }
   },
 };

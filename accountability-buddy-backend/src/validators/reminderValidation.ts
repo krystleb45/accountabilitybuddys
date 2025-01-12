@@ -1,20 +1,57 @@
 import { Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 
-// Validation for creating or updating a reminder
+/**
+ * Middleware to handle validation results and send structured errors.
+ */
+export const validationMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    // Format validation errors into a structured response
+    const formattedErrors = errors.array().map((error) => {
+      if ("param" in error && typeof error.param === "string") {
+        return {
+          field: error.param,
+          message: error.msg,
+        };
+      }
+      return {
+        field: "unknown",
+        message: error.msg,
+      };
+    });
+
+    res.status(400).json({
+      success: false,
+      message: "Validation failed",
+      errors: formattedErrors,
+    });
+
+    return; // Terminate middleware execution
+  }
+
+  next(); // Proceed to the next middleware
+};
+
+/**
+ * Validation for creating or updating a reminder.
+ */
 export const validateReminder = [
   // Validate goal ID to ensure it's a valid MongoDB ObjectId
   check("goalId")
-    .not()
-    .isEmpty()
+    .notEmpty()
     .withMessage("Goal ID is required.")
     .isMongoId()
     .withMessage("Goal ID must be a valid Mongo ID"),
 
   // Validate message to ensure it's not empty and has a reasonable length
   check("message")
-    .not()
-    .isEmpty()
+    .notEmpty()
     .withMessage("Message is required.")
     .trim()
     .escape() // Sanitize input to prevent XSS attacks
@@ -23,8 +60,7 @@ export const validateReminder = [
 
   // Validate that the reminder date is a valid ISO 8601 date and in the future
   check("remindAt")
-    .not()
-    .isEmpty()
+    .notEmpty()
     .withMessage("Reminder date is required.")
     .isISO8601()
     .withMessage("Reminder date must be a valid ISO 8601 date")
@@ -36,25 +72,5 @@ export const validateReminder = [
       return true;
     }),
 
-  validate,
+  validationMiddleware, // Apply the validation middleware
 ];
-
-// Reusable validation middleware handler
-export const validate = (req: Request, res: Response, next: NextFunction): void => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation failed",
-        errors: errors.array().map((error) => ({
-          field: error.param,
-          message: error.msg,
-        })),
-      });
-    }
-    next();
-  } catch (error) {
-    next(error);
-  }
-};

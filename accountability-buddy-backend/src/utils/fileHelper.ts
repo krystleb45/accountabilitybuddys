@@ -6,17 +6,31 @@ import multer from "multer";
 const allowedFileTypes = ["image/jpeg", "image/png", "application/pdf"];
 
 /**
+ * @desc    Ensures a directory exists, creates it if it doesn't.
+ * @param   {string} dirPath - The path of the directory to ensure.
+ */
+export const ensureDirectoryExists = (dirPath: string): void => {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+};
+
+/**
  * @desc    Multer setup for file uploads with validation, file size limit, and destination folder.
  * @returns {multer.Multer} - Multer upload configuration.
  */
 export const upload = multer({
   storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      const uploadDir = path.join(__dirname, "../uploads");
-      ensureDirectoryExists(uploadDir); // Ensure the upload directory exists
-      cb(null, uploadDir);
+    destination: (_req, _file, cb) => {
+      try {
+        const uploadDir = path.join(__dirname, "../uploads");
+        ensureDirectoryExists(uploadDir); // Ensure the upload directory exists
+        cb(null, uploadDir);
+      } catch (error) {
+        cb(error as Error, "");
+      }
     },
-    filename: (req, file, cb) => {
+    filename: (_req, file, cb) => {
       const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
       cb(
         null,
@@ -25,11 +39,11 @@ export const upload = multer({
     },
   }),
   limits: { fileSize: 2 * 1024 * 1024 }, // 2MB file size limit
-  fileFilter: (req, file, cb) => {
+  fileFilter: (_req, file, cb) => {
     if (allowedFileTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error("Invalid file type. Only JPEG, PNG, and PDF are allowed."));
+      cb(new multer.MulterError("LIMIT_UNEXPECTED_FILE", file.fieldname));
     }
   },
 });
@@ -55,16 +69,6 @@ export const deleteFile = async (filePath: string): Promise<void> => {
 export const validateFileExtension = (filename: string): boolean => {
   const ext = path.extname(filename).toLowerCase();
   return [".jpeg", ".jpg", ".png", ".pdf"].includes(ext);
-};
-
-/**
- * @desc    Ensures a directory exists, creates it if it doesn't.
- * @param   {string} dirPath - The path of the directory to ensure.
- */
-export const ensureDirectoryExists = (dirPath: string): void => {
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
 };
 
 /**

@@ -35,8 +35,11 @@ NotificationSchema.virtual("isExpired").get(function (this: INotification) {
   return this.expiresAt ? new Date() > new Date(this.expiresAt) : false;
 });
 
+// Export the Notification model and type
 const Notification: Model<INotification> = mongoose.model<INotification>(
   "Notification",
   NotificationSchema,
 );
+
 export default Notification;
+export type NotificationDocument = INotification;

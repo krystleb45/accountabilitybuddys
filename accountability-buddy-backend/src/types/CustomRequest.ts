@@ -21,6 +21,8 @@ export interface MilitaryRequest extends Request {
   user?: {
     id: string;
     email?: string; // Optional email field
+    role: "user" | "admin" | "moderator"; // Role is required
+    isAdmin?: boolean; // Optional isAdmin field
   };
   militaryUser?: IMilitaryUser; // Add military user property
 }

@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, Express } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -9,89 +9,85 @@ import compression from "compression";
 import mongoSanitize from "express-mongo-sanitize";
 import xssClean from "xss-clean";
 import hpp from "hpp";
-import bodyParser from "body-parser"; // Added for Stripe rawBody
+import bodyParser from "body-parser";
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/user";
 import newsletterRoutes from "./routes/newsletter";
-import paymentRoutes from "./routes/payment"; // Added payment routes for Stripe
+import paymentRoutes from "./routes/payment";
 import { errorHandler } from "./middleware/errorHandler";
-import logger from "./utils/winstonLogger"; // Use Winston logger
+import logger from "./utils/winstonLogger";
 
 // Load environment variables
 dotenv.config();
 
 // Initialize the app
-const app = express();
+const app: Express = express();
 
-// Middleware for raw body parsing (needed for Stripe webhooks)
+// Middleware for raw body parsing (Stripe webhooks)
 app.post(
   "/api/payments/webhook",
-  bodyParser.raw({ type: "application/json" }), // Use raw body for Stripe
+  bodyParser.raw({ type: "application/json" }),
   (req, _res, next) => {
-    (req as any).rawBody = req.body; // Explicitly set rawBody to avoid TypeScript errors
+    (req as any).rawBody = req.body; // Explicitly add rawBody for Stripe
     next();
   }
 );
 
-// Middleware to parse JSON requests (for other routes)
-app.use(express.json({ limit: "10kb" })); // Limit body size to prevent payload attacks
+// Middleware to parse JSON requests
+app.use(express.json({ limit: "10kb" })); // Limit body size
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
 
 // Rate limiting middleware
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per window
+  max: 100, // Limit each IP to 100 requests
   message: "Too many requests from this IP, please try again later.",
-  standardHeaders: true, // Return rate limit info in headers
-  legacyHeaders: false, // Disable deprecated rate limit headers
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 app.use(limiter);
 
 // Security Middleware
 app.use(
   helmet({
-    contentSecurityPolicy: false, // Disable CSP for flexibility (adjust as needed)
+    contentSecurityPolicy: false, // Disable CSP for flexibility
   })
 );
 app.use(
   cors({
-    origin: process.env.ALLOWED_ORIGINS || "*", // Allow cross-origin requests
+    origin: process.env.ALLOWED_ORIGINS?.split(",") || "*", // Allow multiple origins
     credentials: true, // Allow credentials
   })
 );
-app.use(mongoSanitize()); // Sanitize inputs to prevent NoSQL injection
+app.use(mongoSanitize()); // Prevent NoSQL injection
 app.use(xssClean()); // Prevent XSS attacks
 app.use(hpp()); // Prevent HTTP parameter pollution
 
-// Logging Middleware
+// Logging Middleware (Morgan + Winston)
 app.use(
   morgan("dev", {
     stream: {
-      write: (message) => logger.info(message.trim()), // Integrate Morgan with Winston
+      write: (message: string) => logger.info(message.trim()),
     },
   })
 );
 
 // Compression Middleware
-app.use(compression()); // Compress responses for better performance
+app.use(compression());
 
-// Connect to MongoDB
 mongoose
-  .connect(process.env.MONGO_URI || "", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => logger.info("MongoDB connected"))
+  .connect(process.env.MONGO_URI || "")
+  .then(() => logger.info("MongoDB connected successfully"))
   .catch((err) => {
     logger.error(`MongoDB connection error: ${err}`);
-    process.exit(1); // Exit if unable to connect
+    process.exit(1); // Exit process on DB connection failure
   });
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/newsletter", newsletterRoutes);
-app.use("/api/payments", paymentRoutes); // Added payments route
+app.use("/api/payments", paymentRoutes);
 
 // Health Check Endpoint
 app.get("/health", (_req: Request, res: Response) => {
@@ -107,12 +103,12 @@ app.use((_req: Request, res: Response) => {
 app.use(errorHandler);
 
 // Handle Unhandled Promise Rejections & Uncaught Exceptions
-process.on("unhandledRejection", (reason, promise) => {
+process.on("unhandledRejection", (reason: any, promise) => {
   logger.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`);
   process.exit(1);
 });
 
-process.on("uncaughtException", (error) => {
+process.on("uncaughtException", (error: Error) => {
   logger.error(`Uncaught Exception: ${error.message}`);
   process.exit(1);
 });
@@ -120,7 +116,7 @@ process.on("uncaughtException", (error) => {
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  logger.info(`Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`);
 });
 
 export default app;

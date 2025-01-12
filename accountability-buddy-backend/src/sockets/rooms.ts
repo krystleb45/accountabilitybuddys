@@ -1,6 +1,8 @@
 import { Server, Socket } from "socket.io";
 import Room from "../models/Room"; // Room model for database operations
 import logger from "../utils/winstonLogger"; // Logger for tracking room events
+import mongoose from "mongoose";
+
 
 interface RoomData {
   roomId?: string;
@@ -15,20 +17,25 @@ interface RoomData {
  * @param   socket - The socket object representing the client's connection.
  */
 const roomSocket = (io: Server, socket: Socket): void => {
-  const userId = socket.user?.id; // Ensure user ID is available from the socket authentication
+  const userId = socket.data.user?.id as string; // Ensure user ID is retrieved properly
+  if (!userId) {
+    logger.error("Socket connection attempted without a valid user ID.");
+    socket.emit("error", { msg: "Authentication error: User ID is missing or invalid." });
+    return;
+  }
 
   /**
    * @desc    Creates a new room.
-   * @param   roomData - The room details including name, description, and type.
    */
   socket.on("createRoom", async (roomData: RoomData) => {
     try {
       const { name, description, isPrivate } = roomData;
 
       if (!name || typeof name !== "string" || name.length < 3) {
-        return socket.emit("error", {
+        socket.emit("error", {
           msg: "Room name is required and must be at least 3 characters long.",
         });
+        return;
       }
 
       const newRoom = await Room.create({
@@ -50,26 +57,29 @@ const roomSocket = (io: Server, socket: Socket): void => {
 
   /**
    * @desc    Joins an existing room.
-   * @param   roomData - The room details including roomId.
    */
   socket.on("joinRoom", async (roomData: RoomData) => {
     try {
       const { roomId } = roomData;
-
+  
       if (!roomId) {
-        return socket.emit("error", { msg: "Room ID is required to join a room." });
+        socket.emit("error", { msg: "Room ID is required to join a room." });
+        return;
       }
-
+  
       const room = await Room.findById(roomId);
       if (!room) {
-        return socket.emit("error", { msg: "Room not found." });
+        socket.emit("error", { msg: "Room not found." });
+        return;
       }
-
-      if (!room.members.includes(userId)) {
-        room.members.push(userId);
+  
+      const userObjectId = new mongoose.Types.ObjectId(userId); // Convert userId to ObjectId
+  
+      if (!room.members.some((member) => member.equals(userObjectId))) { // Use `.equals()` for ObjectId comparison
+        room.members.push(userObjectId); // Push as ObjectId
         await room.save();
       }
-
+  
       socket.join(roomId);
       logger.info(`User ${userId} joined room ${roomId}`);
       socket.to(roomId).emit("userJoinedRoom", { userId, roomId });
@@ -82,19 +92,20 @@ const roomSocket = (io: Server, socket: Socket): void => {
 
   /**
    * @desc    Leaves a room.
-   * @param   roomData - The room details including roomId.
    */
   socket.on("leaveRoom", async (roomData: RoomData) => {
     try {
       const { roomId } = roomData;
 
       if (!roomId) {
-        return socket.emit("error", { msg: "Room ID is required to leave a room." });
+        socket.emit("error", { msg: "Room ID is required to leave a room." });
+        return;
       }
 
       const room = await Room.findById(roomId);
       if (!room) {
-        return socket.emit("error", { msg: "Room not found." });
+        socket.emit("error", { msg: "Room not found." });
+        return;
       }
 
       room.members = room.members.filter((member) => member.toString() !== userId);

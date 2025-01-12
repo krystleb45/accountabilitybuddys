@@ -1,4 +1,4 @@
-import { createLogger, format, transports } from "winston";
+import { createLogger, format, transports, Logger } from "winston";
 import * as path from "path";
 import * as fs from "fs";
 import "winston-daily-rotate-file";
@@ -20,12 +20,12 @@ const customLogFormat = format.printf(({ timestamp, level, message, stack }) => 
 });
 
 // Create the logger instance
-const logger = createLogger({
+const logger: Logger = createLogger({
   level: logLevel,
   format: format.combine(
     format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), // Standardized timestamp
     format.errors({ stack: true }), // Capture stack trace
-    customLogFormat,
+    customLogFormat
   ),
   transports: [
     // Daily rotating error logs
@@ -48,6 +48,13 @@ const logger = createLogger({
   ],
 });
 
+// Add custom `logStructured` method
+logger.logStructured = (infoObject: object): Logger => {
+  logger.info(infoObject); // Log the structured object
+  return logger;
+};
+
+
 // Add console transport for development environments
 if (process.env.NODE_ENV !== "production") {
   logger.add(
@@ -55,19 +62,19 @@ if (process.env.NODE_ENV !== "production") {
       format: format.combine(
         format.colorize(),
         format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        format.simple(),
+        format.simple()
       ),
-    }),
+    })
   );
 }
 
 // Handle uncaught exceptions and rejections
 logger.exceptions.handle(
-  new transports.File({ filename: path.join(logDir, "exceptions.log") }),
+  new transports.File({ filename: path.join(logDir, "exceptions.log") })
 );
 
 logger.rejections.handle(
-  new transports.File({ filename: path.join(logDir, "rejections.log") }),
+  new transports.File({ filename: path.join(logDir, "rejections.log") })
 );
 
 // Handle logger errors

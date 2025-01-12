@@ -1,5 +1,46 @@
 import { Request, Response, NextFunction } from "express";
-import { check, validationResult } from "express-validator";
+import { validationResult, check } from "express-validator";
+
+interface CustomValidationError {
+  field: string;
+  message: string;
+}
+
+/**
+ * @desc Reusable validation middleware to handle validation errors.
+ * @param {Request} req - The incoming request object.
+ * @param {Response} res - The outgoing response object.
+ * @param {NextFunction} next - The next middleware function.
+ */
+export const authValidationMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const formattedErrors: CustomValidationError[] = errors.array().map((error) => {
+      if ("param" in error && typeof error.param === "string") {
+        return {
+          field: error.param,
+          message: error.msg,
+        };
+      }
+      return {
+        field: "unknown",
+        message: error.msg,
+      };
+    });
+
+    res.status(400).json({
+      success: false,
+      errors: formattedErrors,
+    });
+    return;
+  }
+
+  next();
+};
 
 // Common password validation rule for reuse
 const passwordRule = [
@@ -15,8 +56,8 @@ const passwordRule = [
 // Validation rules for user registration
 export const registerValidation = [
   check("username")
-    .not()
-    .isEmpty()
+    .trim()
+    .notEmpty()
     .withMessage("Username is required")
     .isLength({ min: 3, max: 20 })
     .withMessage("Username must be between 3 and 20 characters")
@@ -27,22 +68,19 @@ export const registerValidation = [
   check("email")
     .isEmail()
     .withMessage("Please provide a valid email address")
-    .normalizeEmail(), // Normalizes email input
+    .normalizeEmail(),
   ...passwordRule,
-  validate,
+  authValidationMiddleware,
 ];
 
 // Validation rules for user login
 export const loginValidation = [
   check("email")
     .isEmail()
-    .withMessage("Please provide a valid email")
+    .withMessage("Please provide a valid email address")
     .normalizeEmail(),
-  check("password")
-    .not()
-    .isEmpty()
-    .withMessage("Password is required"),
-  validate,
+  check("password").notEmpty().withMessage("Password is required"),
+  authValidationMiddleware,
 ];
 
 // Validation rules for password reset request
@@ -51,31 +89,8 @@ export const forgotPasswordValidation = [
     .isEmail()
     .withMessage("Please provide a valid email address")
     .normalizeEmail(),
-  validate,
+  authValidationMiddleware,
 ];
 
 // Validation rules for resetting the password
-export const resetPasswordValidation = [...passwordRule, validate];
-
-// Reusable validation middleware handler
-export const validate = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        errors: errors.array().map((error) => ({
-          field: error.param,
-          message: error.msg,
-        })),
-      });
-    }
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
+export const resetPasswordValidation = [...passwordRule, authValidationMiddleware];

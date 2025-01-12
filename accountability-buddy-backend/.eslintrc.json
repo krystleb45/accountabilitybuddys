@@ -1,37 +1,71 @@
 {
-    "env": {
-      "browser": true,
-      "es2021": true,
-      "node": true
-    },
-    "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:prettier/recommended"
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module",
+    "project": "./tsconfig.eslint.json", // ESLint-specific tsconfig for TypeScript
+    "tsconfigRootDir": "./"
+  },
+  "plugins": ["@typescript-eslint", "prettier"],
+  "rules": {
+    "prettier/prettier": [
+      "warn",
+      {
+        "singleQuote": true, // Ensure single quotes
+        "semi": true,       // Ensure semicolons
+        "tabWidth": 2       // Set indentation width
+      }
     ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "ecmaVersion": 2021,
-      "sourceType": "module",
-      "project": "./tsconfig.json",
-      "tsconfigRootDir": "./"
-    },
-    "plugins": ["@typescript-eslint", "prettier"],
-    "rules": {
-      "prettier/prettier": ["warn"], // Ensures Prettier rules are applied with warnings
-      "no-console": ["warn"], // Warns on console.log usage
-      "no-unused-vars": "off", // Disable default rule
-      "@typescript-eslint/no-unused-vars": ["warn", { "args": "none" }], // Use TS-specific rule
-      "@typescript-eslint/explicit-function-return-type": "off", // Allows inferred return types
-      "@typescript-eslint/no-explicit-any": ["warn", { "ignoreOnAnyMember": true }],
-      "@typescript-eslint/no-non-null-assertion": "off", // Allows non-null assertions
-      "@typescript-eslint/ban-ts-comment": "off" // Allows @ts-ignore comments
-    },
-    "ignorePatterns": [
-      "node_modules/",
-      "dist/",
-      "types/**/*.d.ts",
-      "*.config.js"
+    "no-console": ["warn", { "allow": ["warn", "error"] }], // Allow console.warn and console.error
+    "no-unused-vars": "off", // Disable default rule in favor of TS-specific rule
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "args": "none", "ignoreRestSiblings": true }
+    ],
+    "@typescript-eslint/explicit-function-return-type": "off", // Allow inferred return types
+    "@typescript-eslint/no-explicit-any": [
+      "warn",
+      { "ignoreRestArgs": true }
+    ], // Warn on `any` with flexibility for function rest args
+    "@typescript-eslint/no-non-null-assertion": "off", // Allow non-null assertions (!)
+    "@typescript-eslint/ban-ts-comment": [
+      "warn",
+      {
+        "ts-ignore": "allow-with-description" // Require a description with `@ts-ignore`
+      }
+    ],
+    "@typescript-eslint/no-floating-promises": "error", // Prevent unhandled promises
+    "@typescript-eslint/consistent-type-imports": "warn", // Enforce consistent type imports
+    "@typescript-eslint/array-type": [
+      "warn",
+      { "default": "array-simple" } // Prefer simple array types like `string[]`
+    ],
+    "@typescript-eslint/no-inferrable-types": "warn", // Warn on explicit types that can be inferred
+    "sort-imports": [
+      "warn",
+      {
+        "ignoreDeclarationSort": true, // Only sort within import statements
+        "ignoreCase": true
+      }
     ]
-  }
-  
+  },
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "coverage/",
+    "types/**/*.d.ts",
+    "*.config.js",
+    "*.config.cjs",
+    "*.config.mjs"
+  ]
+}

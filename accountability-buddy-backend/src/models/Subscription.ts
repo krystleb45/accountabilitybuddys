@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface ISubscription extends Document {
-  isActive: unknown;
+  isActive: boolean; // Changed from `unknown` to `boolean` for clarity
   user: mongoose.Types.ObjectId;
   status:
     | "trial"
@@ -12,12 +12,15 @@ export interface ISubscription extends Document {
     | "canceled"
     | "incomplete"
     | "incomplete_expired"
-    | "unpaid";
-  plan: "free-trial" | "basic" | "standard" | "premium";
+    | "unpaid"
+    | string; // Allow additional statuses
+  plan: "free-trial" | "basic" | "standard" | "premium" | string; // Allow custom plans
   trialEnd?: Date;
   subscriptionStart?: Date;
   subscriptionEnd?: Date;
   provider: "stripe" | "paypal";
+  stripeSubscriptionId?: string; // Added for Stripe integration
+  currentPeriodEnd?: Date; // Added for subscription period tracking
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -53,15 +56,23 @@ const SubscriptionSchema: Schema<ISubscription> = new Schema(
       enum: ["stripe", "paypal"],
       required: true,
     },
+    stripeSubscriptionId: { type: String }, // Added for Stripe subscription ID
+    currentPeriodEnd: { type: Date }, // Added for subscription period tracking
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
+// Pre-save hook to update the subscription status if expired
 SubscriptionSchema.pre<ISubscription>("save", function (next) {
   try {
+    // Mark subscription as expired if the end date is in the past
     if (this.subscriptionEnd && new Date(this.subscriptionEnd) < new Date()) {
       this.status = "expired";
     }
+
+    // Automatically set `isActive` based on status
+    this.isActive = this.status === "active" || this.status === "trial";
+
     next();
   } catch (error) {
     // Cast error to Error
@@ -72,7 +83,7 @@ SubscriptionSchema.pre<ISubscription>("save", function (next) {
 
 const Subscription: Model<ISubscription> = mongoose.model<ISubscription>(
   "Subscription",
-  SubscriptionSchema,
+  SubscriptionSchema
 );
 
 export default Subscription;

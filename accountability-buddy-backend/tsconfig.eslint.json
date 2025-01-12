@@ -1,10 +1,20 @@
 {
-    "extends": "./tsconfig.json",
-    "include": [
-      "src/**/*.ts",
-      "tests/**/*.ts",
-      ".eslintrc.js",
-      "jest.config.js"
-    ]
-  }
-  
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/**/*.ts", // Include all TypeScript files in src
+    "src/tests/**/*.ts", // Include tests in the specified folder
+    ".eslintrc.js", // Include ESLint configuration file
+    "jest.config.js" // Include Jest configuration file
+  ],
+  "compilerOptions": {
+    "types": ["jest"], // Add Jest types for testing
+    "allowJs": true, // Allow JavaScript files for linting, if any
+    "noEmit": true // Prevent emitting compiled output during linting
+  },
+  "exclude": [
+    "node_modules", // Exclude dependencies
+    "dist", // Exclude compiled files
+    "coverage", // Exclude coverage reports
+    "build" // Exclude build folder (if applicable)
+  ]
+}
