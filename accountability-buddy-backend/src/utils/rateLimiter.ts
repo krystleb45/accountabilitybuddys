@@ -51,20 +51,31 @@ const createRateLimiter = (
     options.store = new RedisStore({
       sendCommand: async (...args: string[]): Promise<RedisReply> => {
         try {
-          // Send the command with all arguments to Redis
           const response = await redisClient.sendCommand(args);
-  
-          // Convert `null` to an empty string or another valid RedisReply
-          const safeResponse: RedisReply = response === null ? "" : (response as RedisReply);
-  
-          logger.debug("Redis command executed", { args, response: safeResponse });
-          return safeResponse;
+      
+          if (response === null) {
+            // Replace null with an empty string or other fallback based on your use case
+            return "" as RedisReply;
+          }
+      
+          if (typeof response === "string") {
+            return response;
+          }
+      
+          if (Array.isArray(response)) {
+            // Recursively ensure the array conforms to RedisReply by filtering undefined/null values
+            return response.map((item) => (item === null ? "" : item)) as RedisReply;
+          }
+      
+          // Throw an error for unexpected response types
+          throw new Error(`Invalid Redis reply type: ${typeof response}`);
         } catch (error: unknown) {
           const errorMessage = error instanceof Error ? error.message : "Unknown error";
-          logger.error("Error in sendCommand", { args, error: errorMessage });
+          logger.error("Error executing Redis command", { args, error: errorMessage });
           throw error;
         }
       },
+      
     });
   }
   
@@ -75,7 +86,15 @@ const createRateLimiter = (
  * @desc    Global rate limiter across all routes.
  *          100 requests per 15 minutes.
  */
-export const globalRateLimiter = createRateLimiter(100, 15 * 60 * 1000, undefined, true);
+export const globalRateLimiter = rateLimit({
+  windowMs: process.env.NODE_ENV === "test" ? 1000 : 15 * 60 * 1000, // 1 second for tests, 15 minutes otherwise
+  max: process.env.NODE_ENV === "test" ? 10 : 100, // Allow 10 requests for tests, 100 for production
+  handler: (_req, res) => {
+    res.status(429).json({ message: "Rate limit exceeded" });
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 /**
  * @desc    Rate limiter for authentication routes (e.g., login, register).

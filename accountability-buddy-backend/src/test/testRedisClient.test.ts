@@ -1,25 +1,25 @@
 import { createClient } from "@redis/client";
-import logger from "../utils/winstonLogger"; // Logger utility for consistent logging
+import logger from "../utils/winstonLogger";
 
-const testRedis = async (): Promise<void> => {
-  const redisClient = createClient();
-  await redisClient.connect();
+describe("Redis Client Tests", () => {
+  it("should connect to Redis and respond to PING", async () => {
+    const redisClient = createClient();
+    await redisClient.connect();
 
-  try {
-    // Send a simple command to Redis
-    const response = await redisClient.sendCommand(["PING"]);
-    logger.info(`PING response: ${response}`);
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-    logger.error(`Error in testRedis: ${errorMessage}`);
-  } finally {
-    await redisClient.quit();
-    logger.info("Redis client disconnected successfully.");
-  }
-};
+    try {
+      // Send a PING command to Redis
+      const response = await redisClient.sendCommand(["PING"]);
+      logger.info(`PING response: ${response}`);
 
-// Execute the test
-testRedis().catch((error: unknown) => {
-  const errorMessage = error instanceof Error ? error.message : "Unexpected error during testRedis execution";
-  logger.error(`Unhandled error: ${errorMessage}`);
+      // Assert the expected response
+      expect(response).toBe("PONG");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      logger.error(`Error in Redis test: ${errorMessage}`);
+      throw error; // Re-throw to fail the test in case of an error
+    } finally {
+      await redisClient.quit();
+      logger.info("Redis client disconnected successfully.");
+    }
+  });
 });

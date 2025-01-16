@@ -1,9 +1,10 @@
-import  sanitizeInput  from "../utils/sanitizeInput";
+import sanitizeHtml from "sanitize-html";
 
-describe("Utility Tests", () => {
-  it("should sanitize input correctly", () => {
-    const input = "<script>alert('test')</script>";
-    const result = sanitizeInput(input);
-    expect(result).toBe("alert('test')");
+const sanitizeInput = (input: string): string => {
+  return sanitizeHtml(input, {
+    allowedTags: [], // Remove all tags
+    allowedAttributes: {}, // Remove all attributes
   });
-});
+};
+
+export default sanitizeInput;

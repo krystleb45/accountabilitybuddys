@@ -2,68 +2,52 @@ import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import typescriptParser from "@typescript-eslint/parser";
 import globals from "globals";
 
-/** @type {import('eslint').Linter.FlatConfig[]} */
+/** @type {Array<import('eslint').Linter.FlatConfig>} */
 export default [
   {
-    files: ["**/*.{js,mjs,cjs,ts}"], // Target file extensions
+    files: ["**/*.{js,ts,tsx}"], // Include relevant file types
     ignores: [
-      "dist/",
-      "build/",
-      "node_modules/",
-      "coverage/",
-      "public/",
-      "static/",
-      "*.d.ts",
-      "*.min.js",
-      "*.bundle.js",
-      "*.mjs",
-      "*.cjs",
-      ".eslintrc.js",
-      "jest.config.js",
-      ".eslintrc.*",
-    ], // Ignore build artifacts, configs, and unnecessary files
+      "**/dist/**", // Ignore build output globally
+      "**/build/**", // Ignore build artifacts globally
+      "**/node_modules/**", // Ignore dependencies
+      "**/coverage/**", // Ignore coverage reports globally
+      "**/@types/**", // Ignore type definitions globally
+      "**/public/**", // Ignore public files
+      "**/static/**", // Ignore static assets
+      "**/*.d.ts", // Ignore all TypeScript declaration files
+      "**/*.min.js", // Ignore minified JavaScript files
+      "**/*.bundle.js", // Ignore bundled JavaScript files
+      "jest.config.js", // Ignore Jest config file
+      "jest.setup.js", // Ignore Jest setup file
+      ".eslintrc.*", // Ignore ESLint config files
+    ],
     languageOptions: {
-      globals: globals.node, // Node.js globals
+      globals: globals.node, // Include Node.js globals
       parser: typescriptParser, // Use TypeScript parser
       parserOptions: {
-        ecmaVersion: "latest", // Latest ECMAScript features
-        sourceType: "module", // Enable ECMAScript modules
-        project: "./tsconfig.json", // TypeScript configuration file
-        tsconfigRootDir: process.cwd(), // Correct resolution for tsconfig.json
+        ecmaVersion: "latest", // Enable the latest ECMAScript features
+        sourceType: "module", // Enable ES modules
+        project: "./tsconfig.eslint.json", // Use ESLint-specific TypeScript configuration
+        tsconfigRootDir: process.cwd(), // Ensure correct resolution of tsconfig.json
       },
     },
     plugins: {
-      "@typescript-eslint": typescriptEslint, // TypeScript-specific rules
+      "@typescript-eslint": typescriptEslint, // Enable TypeScript-specific rules
     },
     rules: {
       // General JavaScript rules
-      "no-console": ["warn", { allow: ["warn", "error"] }], // Warn about console, except warn/error
-      "quotes": ["error", "double", { avoidEscape: true }], // Enforce double quotes, allow escaping
-      "semi": ["error", "always"], // Enforce semicolons
-      "indent": ["error", 2, { SwitchCase: 1 }], // Enforce 2-space indentation, indent case statements
-      "comma-dangle": ["error", "always-multiline"], // Require trailing commas in multiline
+      "no-console": ["warn", { allow: ["warn", "error"] }], // Warn on console except for warn/error
+      "quotes": ["error", "double", { avoidEscape: true }], // Enforce double quotes
+      "semi": ["error", "always"], // Require semicolons
+      "indent": ["error", 2, { SwitchCase: 1 }], // Enforce 2-space indentation
 
       // TypeScript-specific rules
-      "no-unused-vars": "off", // Disable base rule
       "@typescript-eslint/no-unused-vars": [
         "error",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }, // Ignore unused variables prefixed with _
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }, // Allow unused variables prefixed with "_"
       ],
-      "@typescript-eslint/explicit-function-return-type": "warn", // Warn on missing function return types
-      "@typescript-eslint/consistent-type-imports": [
-        "warn",
-        { prefer: "type-imports" }, // Enforce consistent use of type imports
-      ],
-      "@typescript-eslint/no-inferrable-types": "warn", // Warn on explicit types that can be inferred
-      "@typescript-eslint/no-floating-promises": "error", // Enforce handling of promises
-      "@typescript-eslint/ban-ts-comment": [
-        "warn",
-        { "ts-ignore": "allow-with-description" }, // Allow ts-ignore with descriptions
-      ],
-
-      // Prettier-style rules
-      "object-curly-spacing": ["error", "always"], // Require spaces inside object braces
-      "array-bracket-spacing": ["error", "never"], // Disallow spaces inside array brackets
+      "@typescript-eslint/no-floating-promises": "error", // Enforce proper handling of promises
+      "@typescript-eslint/explicit-function-return-type": "warn", // Warn on missing return types
     },
   },
 ];

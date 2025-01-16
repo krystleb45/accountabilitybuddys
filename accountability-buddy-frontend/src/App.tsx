@@ -5,9 +5,9 @@ import { Button, CircularProgress } from "@mui/material";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { UserProvider, useUser } from "./context/UserContext"; // Wrap app with UserProvider and useUser hook
+import { UserProvider, useUser } from "./context/data/UserContext"; // Wrap app with UserProvider and useUser hook
 import createAppTheme from "./config/themeConfig";
-import Gamification from "./components/Gamification";
+import Gamification from "./components/Gamification/Gamification";
 import PremiumFeatures from "./components/PremiumFeatures";
 import MilitarySupport from './MilitarySupport';
 import "./App.css";

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import type { Request, Response, NextFunction } from "express";
 import type { IBadge, BadgeLevel } from "../models/Badge";
 import Badge from "../models/Badge";
@@ -7,7 +7,6 @@ import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import logger from "../utils/winstonLogger";
 import sanitize from "mongo-sanitize";
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { AuthenticatedRequest } from "@src/middleware/authMiddleware";
 
 // Badge levels configuration
@@ -167,18 +166,32 @@ export const getUserBadges = catchAsync(
     });
   },
 );
+/**
+ * Function to get the user's badge showcase.
+ * @param _req - Authenticated request object
+ * @param _res - Express response object
+ * @param _next - Next middleware function
+ * @throws {Error} Throws a "Function not implemented" error
+ */
 export function getUserBadgeShowcase(
   _req: AuthenticatedRequest,
   _res: Response<any, Record<string, any>>,
   _next: NextFunction,
-) {
+): void {
   throw new Error("Function not implemented.");
 }
 
+/**
+ * Function to upgrade a badge level.
+ * @param _req - Authenticated request object
+ * @param _res - Express response object
+ * @param _next - Next middleware function
+ * @throws {Error} Throws a "Function not implemented" error
+ */
 export function upgradeBadgeLevel(
   _req: AuthenticatedRequest,
   _res: Response<any, Record<string, any>>,
   _next: NextFunction,
-) {
+): void {
   throw new Error("Function not implemented.");
 }

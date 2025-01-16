@@ -12,9 +12,11 @@ describe("Error Handling Tests", () => {
     const next = jest.fn();
 
     errorHandler(err, req, res, next);
+
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
-      error: "Internal Server Error",
+      message: "An unexpected error occurred.",
+      success: false,
     });
   });
 });

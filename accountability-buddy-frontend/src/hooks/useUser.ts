@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import UserContext from "../context/UserContext";
+import UserContext from "../context/data/UserContext";
 import { User } from "../../src/types/User"; // Import centralized User type
 
 const useUser = (): {

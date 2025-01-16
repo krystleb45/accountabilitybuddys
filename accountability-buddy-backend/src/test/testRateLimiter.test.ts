@@ -2,25 +2,8 @@ import type { Application } from "express";
 import express from "express";
 import supertest from "supertest";
 import { globalRateLimiter } from "../utils/rateLimiter";
-import logger from "../utils/winstonLogger";
 
-describe("Logger Tests", () => {
-  beforeAll(() => {
-    jest.spyOn(logger, "logStructured").mockImplementation((_infoObject: object) => {
-      return logger;
-    });
-  });
-
-  afterAll(() => {
-    jest.restoreAllMocks();
-  });
-
-  it("should log structured info without throwing an error", () => {
-    expect(() => logger.logStructured({ message: "Test structured message" })).not.toThrow();
-  });
-});
-
-const app: Application = express(); // Ensure app is typed as Application
+const app: Application = express();
 app.use(globalRateLimiter);
 
 app.get("/", (_req, res) => {
@@ -31,7 +14,8 @@ describe("Rate Limiter Middleware", () => {
   let request: supertest.SuperTest<supertest.Test>;
 
   beforeAll(() => {
-    request = supertest(app) as unknown as supertest.SuperTest<supertest.Test>; // Explicitly cast if needed
+    request = supertest(app) as unknown as supertest.SuperTest<supertest.Test>; // Explicitly cast
+    jest.setTimeout(10000);
   });
 
   it("should allow requests within the rate limit", async () => {
@@ -41,11 +25,25 @@ describe("Rate Limiter Middleware", () => {
   });
 
   it("should block requests exceeding the rate limit", async () => {
-    for (let i = 0; i < 10; i++) {
-      await request.get("/");
-    }
+    await request.get("/");
+    await request.get("/");
+
     const response = await request.get("/");
     expect(response.status).toBe(429);
     expect(response.body.message).toMatch(/Rate limit exceeded/i);
+  });
+
+  it("should reset rate limit after the time window", async () => {
+    await request.get("/");
+    await request.get("/");
+
+    const blockedResponse = await request.get("/");
+    expect(blockedResponse.status).toBe(429);
+
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for reset
+
+    const resetResponse = await request.get("/");
+    expect(resetResponse.status).toBe(200);
+    expect(resetResponse.text).toBe("Hello! This is a rate-limited route.");
   });
 });

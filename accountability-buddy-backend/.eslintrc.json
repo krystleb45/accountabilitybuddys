@@ -2,7 +2,8 @@
   "env": {
     "browser": true,
     "es2021": true,
-    "node": true
+    "node": true,
+    "jest": true
   },
   "extends": [
     "eslint:recommended",
@@ -13,7 +14,7 @@
   "parserOptions": {
     "ecmaVersion": 2021,
     "sourceType": "module",
-    "project": "./tsconfig.eslint.json", // ESLint-specific tsconfig for TypeScript
+    "project": "./tsconfig.eslint.json",
     "tsconfigRootDir": "./"
   },
   "plugins": ["@typescript-eslint", "prettier"],
@@ -67,6 +68,8 @@
     "@types/**/*.d.ts",
     "*.config.js",
     "*.config.cjs",
-    "*.config.mjs"
+    "*.config.mjs",
+    "*.json",
+    "jest.setup.js" // Exclude jest.setup.js from linting
   ]
 }

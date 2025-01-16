@@ -19,6 +19,8 @@
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.1.6",
     "@reduxjs/toolkit": "^2.5.0",
+    "@stripe/react-stripe-js": "^3.1.1",
+    "@stripe/stripe-js": "^5.5.0",
     "axios": "^1.7.9",
     "babel-loader": "^9.2.1",
     "chart.js": "^4.4.6",

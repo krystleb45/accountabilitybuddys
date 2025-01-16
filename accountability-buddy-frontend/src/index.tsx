@@ -4,9 +4,9 @@ import App from "./App";
 import "./index.css";
 import { HelmetProvider } from "react-helmet-async";
 import * as serviceWorkerRegistration from "./services/serviceWorkerRegistration";
-import ThemeProvider from "./context/ThemeContext";
-import { LanguageProvider } from "./context/LanguageContext";
-import { UserProvider } from "./context/UserContext";
+import ThemeProvider from "./context/ui/ThemeContext";
+import { LanguageProvider } from "./context/settings/LanguageContext";
+import { UserProvider } from "./context/data/UserContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 

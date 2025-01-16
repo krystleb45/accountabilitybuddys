@@ -13,13 +13,7 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    "types": [
-      "node",
-      "express",
-      "cors",
-      "jsonwebtoken",
-      "jest"
-    ],
+    "types": ["node", "express", "cors", "jsonwebtoken", "jest"],
     "strictPropertyInitialization": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -40,20 +34,27 @@
     }
   },
   "include": [
-    "src/**/*",
-    "./src/types/**/*.d.ts",
-    "src/test/**/*.ts",
-    "src/global.d.ts",
-    "./@types/**/*.d.ts" // Include custom global types and cors types
+    "src/**/*", // All files in src directory
+    "src/types/**/*.d.ts", // Custom types
+    "src/test/**/*.ts", // Test files
+    "src/global.d.ts", // Global types
+    "@types/**/*.d.ts", // Global types from custom folders
+    "jest.setup.ts", // Jest setup file (TypeScript)
+    "jest.config.js" // Jest configuration file
   ],
   "exclude": [
-    "node_modules",
-    "dist",
-    ".vscode",
-    ".env",
-    "coverage",
-    "**/*.test.js",
-    "**/*.spec.js"
+    "node_modules", // Dependencies
+    "dist", // Build folder
+    "coverage", // Coverage reports
+    ".vscode", // IDE settings
+    ".env", // Environment variables
+    "**/*.test.js", // JavaScript test files
+    "**/*.spec.js", // JavaScript spec files
+    "build", // Build folder, if applicable
+    "*.mjs", // Exclude .mjs files
+    "*.cjs", // Exclude .cjs files
+    "build/" // Ignore build artifacts
+  
   ],
   "ts-node": {
     "transpileOnly": true, // Speeds up ts-node by skipping type checks
