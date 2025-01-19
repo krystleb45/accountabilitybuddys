@@ -1,5 +1,7 @@
-import React from 'react';
-import { useRouter } from 'next/router';
+"use client"; // Ensure it's a Client Component
+
+import React from "react";
+import { useRouter } from "next/router";
 
 const ErrorPage: React.FC = () => {
   const router = useRouter();
@@ -13,7 +15,7 @@ const ErrorPage: React.FC = () => {
         Please try again or go back to the homepage.
       </p>
       <button
-        onClick={() => router.push('/')}
+        onClick={() => router.push("/")}
         className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-all"
         aria-label="Go to Homepage"
       >

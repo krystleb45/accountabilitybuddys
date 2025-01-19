@@ -1,15 +1,20 @@
+"use client";
+
 import React from "react";
 
 const PrivacyPolicyPage: React.FC = () => {
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       {/* Header */}
       <header className="text-center mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-800">Privacy Policy</h1>
+        <h1 className="text-4xl font-bold text-gray-800">Privacy Policy</h1>
+        <p className="text-lg text-gray-600">
+          Learn how we handle your personal information.
+        </p>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+      <main className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
         <section aria-labelledby="intro">
           <h2 id="intro" className="text-xl font-semibold text-gray-800 mb-4">
             Introduction
@@ -59,7 +64,7 @@ const PrivacyPolicyPage: React.FC = () => {
           <h2 id="contact-info" className="text-xl font-semibold text-gray-800 mb-4">
             Contact Information
           </h2>
-          <p className="text-gray-700 mb-4">
+          <p className="text-gray-700">
             If you have any questions about this Privacy Policy, please contact
             us at{" "}
             <a

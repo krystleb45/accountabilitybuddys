@@ -1,12 +1,24 @@
 {
-  "username": "testuser",
-  "email": "testuser@example.com",
-  "password": "password123",
-  "invalidUsername": "invaliduser",
-  "invalidEmail": "invalid@example.com",
-  "invalidPassword": "wrongpassword",
-  "friendUsername": "frienduser",
-  "profilePic": "profile-pic.jpg",
-  "analyticsStartDate": "2024-01-01",
-  "analyticsEndDate": "2024-12-31"
+  "user": {
+    "username": "testuser",
+    "email": "testuser@example.com",
+    "password": "password123",
+    "profilePic": "profile-pic.jpg"
+  },
+  "invalidCredentials": {
+    "username": "invaliduser",
+    "email": "invalid@example.com",
+    "password": "wrongpassword"
+  },
+  "friend": {
+    "username": "frienduser"
+  },
+  "analytics": {
+    "startDate": "2024-01-01",
+    "endDate": "2024-12-31"
+  },
+  "settings": {
+    "theme": "light",
+    "notifications": true
+  }
 }

@@ -25,4 +25,11 @@ module.exports = defineConfig({
       openMode: 0, // No retries in interactive mode
     },
   },
+
+  component: {
+    devServer: {
+      framework: "next",
+      bundler: "webpack",
+    },
+  },
 });

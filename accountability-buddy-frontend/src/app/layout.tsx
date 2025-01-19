@@ -2,20 +2,22 @@
 import './globals.css';
 import { ReactNode } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 
 type LayoutProps = {
   children: ReactNode;
+  pageTitle?: string;
 };
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children, pageTitle }: LayoutProps) => {
   return (
     <html lang="en">
-      <head>
+      <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" />
-        <title>Accountability Buddy</title>
-      </head>
+        <title>{pageTitle || 'Accountability Buddy'}</title>
+      </Head>
       <body className="bg-gradient-to-br from-gray-100 to-blue-50 min-h-screen flex flex-col">
         {/* Header with Navigation */}
         <header className="bg-white shadow-md py-4">
@@ -27,7 +29,7 @@ const Layout = ({ children }: LayoutProps) => {
             </h1>
             <ul className="flex gap-6">
               <li>
-                <Link href="/" className="text-gray-700 hover:text-blue-600 transition-colors">
+                <Link href="/" aria-current="page" className="text-gray-700 hover:text-blue-600 transition-colors">
                   Home
                 </Link>
               </li>

@@ -1,55 +1,76 @@
-/* src/styles/components/Button.css */
-
 /* Base button styles */
 .button {
-    display: inline-block; /* Allows padding and margin to work properly */
-    padding: 10px 15px; /* Top/bottom and left/right padding */
-    font-size: 1rem; /* Base font size */
-    font-weight: bold; /* Bold text */
-    color: #ffffff; /* Text color */
-    background-color: var(--primary-color); /* Background color using a CSS variable */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover effects */
-  }
-  
-  /* Hover effect */
-  .button:hover {
-    background-color: var(--secondary-color); /* Change background on hover */
-    transform: scale(1.05); /* Slightly enlarge button on hover */
-  }
-  
-  /* Active state effect */
-  .button:active {
-    transform: scale(0.95); /* Slightly shrink button when pressed */
-  }
-  
-  /* Disabled state styles */
-  .button:disabled {
-    background-color: #ccc; /* Grey background for disabled state */
-    color: #666; /* Darker grey text for disabled state */
-    cursor: not-allowed; /* Not-allowed cursor */
-  }
-  
-  /* Variants for different button types */
-  .button-primary {
-    background-color: var(--primary-color);
-  }
-  
-  .button-secondary {
-    background-color: var(--secondary-color);
-  }
-  
-  /* Example of adding outline styles */
-  .button-outline {
-    background-color: transparent; /* No background */
-    border: 2px solid var(--primary-color); /* Border color */
-    color: var(--primary-color); /* Text color */
-  }
-  
-  .button-outline:hover {
-    background-color: var(--primary-color); /* Change background on hover */
-    color: white; /* Change text color on hover */
-  }
-  
+  display: inline-block; /* Allows padding and margin to work properly */
+  padding: 10px 15px; /* Top/bottom and left/right padding */
+  font-size: 1rem; /* Base font size */
+  font-weight: bold; /* Bold text */
+  color: #ffffff; /* Text color */
+  background-color: var(--primary-color); /* Background color using a CSS variable */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover effects */
+}
+
+/* Hover effect */
+.button:hover {
+  background-color: var(--secondary-color); /* Change background on hover */
+  transform: scale(1.05); /* Slightly enlarge button on hover */
+}
+
+/* Active state effect */
+.button:active {
+  transform: scale(0.95); /* Slightly shrink button when pressed */
+}
+
+/* Disabled state styles */
+.button:disabled {
+  background-color: #ccc; /* Grey background for disabled state */
+  color: #666; /* Darker grey text for disabled state */
+  cursor: not-allowed; /* Not-allowed cursor */
+}
+
+/* Primary button variant */
+.button-primary {
+  background-color: var(--primary-color);
+}
+
+/* Secondary button variant */
+.button-secondary {
+  background-color: var(--secondary-color);
+}
+
+/* Outline button variant */
+.button-outline {
+  background-color: transparent; /* No background */
+  border: 2px solid var(--primary-color); /* Border color */
+  color: var(--primary-color); /* Text color */
+}
+
+.button-outline:hover {
+  background-color: var(--primary-color); /* Change background on hover */
+  color: white; /* Change text color on hover */
+}
+
+/* Accessibility improvements */
+.button:focus {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+/* Additional sizes for buttons */
+.button-small {
+  padding: 5px 10px;
+  font-size: 0.8rem;
+}
+
+.button-large {
+  padding: 15px 20px;
+  font-size: 1.2rem;
+}
+
+/* Full-width button */
+.button-fullwidth {
+  width: 100%;
+  text-align: center;
+}

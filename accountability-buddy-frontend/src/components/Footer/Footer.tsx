@@ -1,58 +1,54 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Footer.css"; // Import the CSS file for footer styling
-import NewsletterSignup from "./NewsletterSignup"; // Importing the newsletter component
+import styles from "./Footer.module.css"; // Import CSS module for styling
+import { getCurrentYear, generateFooterLinks } from "./FooterUtils";
+import NewsletterSignup from "src/components/Forms/NewsletterSignup"; // Importing the newsletter component
 
-const Footer = () => {
-  const currentYear = new Date().getFullYear();
+const Footer: React.FC = () => {
+  const currentYear = getCurrentYear(); // Dynamically fetch current year
+  const footerLinks = generateFooterLinks(); // Generate footer links dynamically
 
   return (
-    <footer className="footer" role="contentinfo" aria-label="Footer">
-      <div className="container">
-        <div className="leftSection">
-          <p>&copy; {currentYear} Your Company Name. All rights reserved.</p>
+    <footer className={styles["footer-container"]} role="contentinfo" aria-label="Footer">
+      <div className={styles["container"]}>
+        {/* Left Section: Copyright */}
+        <div className={styles["left-section"]}>
+          <p>&copy; {currentYear} Accountability Buddy. All rights reserved.</p>
         </div>
 
-        <div className="rightSection">
+        {/* Right Section: Links, Newsletter, and Back to Top */}
+        <div className={styles["right-section"]}>
           {/* Newsletter Signup Form */}
           <NewsletterSignup />
 
           {/* Navigation Links */}
           <nav aria-label="Footer Navigation">
-            <ul className="linkList">
-              <li>
-                <Link to="/terms-of-service" className="link" aria-label="Terms of Service">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy-policy" className="link" aria-label="Privacy Policy">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="link" aria-label="Contact Us">
-                  Contact
-                </Link>
-              </li>
+            <ul className={styles["footer-links"]}>
+              {footerLinks.map((link) => (
+                <li key={link.name}>
+                  <Link to={link.url} className={styles["link"]} aria-label={link.name}>
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
               <li>
                 <a
                   href="https://twitter.com/yourprofile"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Follow us on Twitter"
+                  className={styles["social-link"]}
                 >
                   <i className="fab fa-twitter" aria-hidden="true"></i> Twitter
                 </a>
               </li>
-              {/* Add more social media links as needed */}
             </ul>
           </nav>
 
           {/* "Back to Top" Button */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="backToTopButton"
+            className={styles["back-to-top-button"]}
             aria-label="Scroll back to top"
           >
             Back to Top

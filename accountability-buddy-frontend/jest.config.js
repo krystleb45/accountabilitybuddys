@@ -1,5 +1,8 @@
 const nextJest = require("next/jest");
 
+// Debugging: Add a log to confirm Jest config is being loaded
+//console.log('Jest config loaded');
+
 // Create a Next.js-specific Jest configuration
 const createJestConfig = nextJest({
   dir: "./", // The root directory of your Next.js project
@@ -20,7 +23,7 @@ const customJestConfig = {
   testEnvironment: "jest-environment-jsdom",
 
   // Files to set up the testing environment
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  setupFilesAfterEnv: ["<rootDir>/src/tests/setupTests.tsx"], // Updated path to setupTests.tsx
 
   // Aliases to support module imports
   moduleNameMapper: {
@@ -29,6 +32,7 @@ const customJestConfig = {
     "^@services/(.*)$": "<rootDir>/src/services/$1",
     "^@utils/(.*)$": "<rootDir>/src/utils/$1",
     "^@/(.*)$": "<rootDir>/src/$1",
+    '^.+\\.module\\.css$': 'identity-obj-proxy',
   },
 
   // Enable test coverage collection
@@ -65,7 +69,12 @@ const customJestConfig = {
       statements: 80,
     },
   },
+
+  // Watch ignore patterns (optional)
+  watchPathIgnorePatterns: ["<rootDir>/node_modules/"],
+
+  // Add extensions for TypeScript module resolution (optional)
+  moduleDirectories: ["node_modules", "<rootDir>/src"],
 };
 
-// Export the complete configuration
 module.exports = createJestConfig(customJestConfig);

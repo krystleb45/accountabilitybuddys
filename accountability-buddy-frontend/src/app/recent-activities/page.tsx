@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link"; // Import Link from Next.js
 
-// Activity Item component
+// Activity Item Component
 const ActivityItem = ({
   activity,
 }: {
@@ -29,26 +29,10 @@ const RecentActivitiesPage: React.FC = () => {
 
   // Mocked recent activities data
   const activities = [
-    {
-      description: "Completed goal 'Finish project proposal'",
-      date: "Today",
-      type: "completed",
-    },
-    {
-      description: "Created task 'Review team feedback'",
-      date: "Yesterday",
-      type: "created",
-    },
-    {
-      description: "Completed task 'Update website content'",
-      date: "2 days ago",
-      type: "completed",
-    },
-    {
-      description: "Created goal 'Launch marketing campaign'",
-      date: "Last week",
-      type: "created",
-    },
+    { description: "Completed goal 'Finish project proposal'", date: "Today", type: "completed" },
+    { description: "Created task 'Review team feedback'", date: "Yesterday", type: "created" },
+    { description: "Completed task 'Update website content'", date: "2 days ago", type: "completed" },
+    { description: "Created goal 'Launch marketing campaign'", date: "Last week", type: "created" },
   ];
 
   // Filter activities based on the selected filter
@@ -65,14 +49,10 @@ const RecentActivitiesPage: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-800">Recent Activities</h1>
         <nav className="flex gap-4">
           <Link href="/dashboard">
-            <a className="text-blue-600 font-semibold hover:underline" aria-label="Go to Dashboard">
-              Dashboard
-            </a>
+            <a className="text-blue-600 font-semibold hover:underline">Dashboard</a>
           </Link>
           <Link href="/profile">
-            <a className="text-blue-600 font-semibold hover:underline" aria-label="Go to Profile">
-              Profile
-            </a>
+            <a className="text-blue-600 font-semibold hover:underline">Profile</a>
           </Link>
         </nav>
       </header>

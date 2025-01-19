@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAuthHeader } from "../services/authService"; // Import the helper function for auth headers
+import { getAuthHeader } from "../../services/authService"; // Import the helper function for auth headers
 
 const API_URL = "https://accountabilitybuddys.com/api/analytics";
 

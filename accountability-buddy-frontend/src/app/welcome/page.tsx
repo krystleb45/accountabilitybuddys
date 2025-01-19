@@ -1,7 +1,7 @@
-"use client"; // Mark as Client Component
+"use client";
 
-import React from 'react';
-import Link from 'next/link'; // Import Link from Next.js
+import React from "react";
+import Link from "next/link";
 
 const WelcomePage: React.FC = () => {
   return (
@@ -9,17 +9,16 @@ const WelcomePage: React.FC = () => {
       <div className="bg-white p-10 rounded-lg shadow-lg text-center max-w-lg w-full">
         <h1 className="text-4xl font-bold text-gray-800 mb-6">Welcome!</h1>
         <p className="text-lg text-gray-600 mb-8">
-          We're excited to have you on board. Accountability Buddy is here to help you achieve your personal and professional goals while connecting you with a supportive community.
+          We're excited to have you on board...
         </p>
-
         <div className="flex flex-col gap-4">
           <Link href="/register">
-            <a className="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+            <a className="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700">
               Get Started
             </a>
           </Link>
           <Link href="/login">
-            <a className="bg-gray-200 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+            <a className="bg-gray-200 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300">
               Already Have an Account? Log In
             </a>
           </Link>

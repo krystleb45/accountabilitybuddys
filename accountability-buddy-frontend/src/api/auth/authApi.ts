@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setToken, removeToken } from "../services/authService"; // Ensure token management is handled
+import { setToken, removeToken } from "../../services/authService"; // Ensure token management is handled
 
 const API_URL = process.env.REACT_APP_API_URL || "https://api.example.com/auth";
 

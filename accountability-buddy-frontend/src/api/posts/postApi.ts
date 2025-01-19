@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAuthHeader } from "../services/authService"; // Helper to get the Authorization header
+import { getAuthHeader } from "src/services/authService"; // Helper to get the Authorization header
 
 const API_URL = process.env.REACT_APP_API_URL || "https://api.example.com/users";
 

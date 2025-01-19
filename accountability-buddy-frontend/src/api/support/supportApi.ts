@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAuthHeader } from "../services/authService"; // Ensure token is included in requests
+import { getAuthHeader } from "src/services/authService"; // Ensure token is included in requests
 
 const API_URL = process.env.REACT_APP_API_URL || "https://api.example.com/users";
 

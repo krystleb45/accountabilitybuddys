@@ -1,173 +1,88 @@
-"use client"; // Mark as Client Component
-
-import React, { useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/router"; // Use Next.js router
-import Link from "next/link"; // Import Link from Next.js
-
-// Define the types for form data
-interface FormData {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Register: React.FC = () => {
-  const router = useRouter(); // Next.js router for navigation
-  const [formData, setFormData] = useState<FormData>({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [error, setError] = useState<string>(""); // Specify the type for error state
-  const [loading, setLoading] = useState<boolean>(false); // Loading state for form submission
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const { username, email, password, confirmPassword } = formData;
-
-  // Handle input changes
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // Validate email format
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  // Validate the form data
-  const validateForm = (): boolean => {
-    if (!validateEmail(email)) {
-      setError("Please enter a valid email.");
-      return false;
-    }
-
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
-      return false;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return false;
-    }
-
-    return true;
-  };
-
-  // Handle form submission
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setLoading(true); // Start loading
+    setError('');
+    setSuccess('');
 
-    // Client-side validation
-    if (!validateForm()) {
-      setLoading(false);
+    if (!email || !password || !confirmPassword) {
+      setError('All fields are required');
       return;
     }
 
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`, // Use environment variable for API URL
-        { username, email, password } // Only send necessary data
-      );
-      if (res.data.token) {
-        // Assume setToken is a valid function
-        // setToken(res.data.token);
-        router.push("/dashboard"); // Use Next.js router for navigation
+      const response = await axios.post('/api/auth/register', { email, password });
+      if (response.data.success) {
+        setSuccess('Account created successfully! Redirecting to login...');
+        setTimeout(() => navigate('/login'), 3000); // Redirect to login after 3 seconds
       } else {
-        setError("Registration successful, but no token received.");
+        setError(response.data.message || 'Failed to register.');
       }
-    } catch (err: any) { // Adding type 'any' for the error object
-      setError(
-        err.response
-          ? err.response.data.msg
-          : "Something went wrong. Please try again."
-      );
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'An error occurred. Please try again later.');
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
   return (
-    <div>
+    <div className="register-container">
       <h2>Register</h2>
-      <form onSubmit={onSubmit} aria-live="assertive">
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={username}
-            onChange={onChange}
-            placeholder="Username"
-            required
-            aria-label="Username"
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={onChange}
-            placeholder="Email"
-            required
-            aria-label="Email"
-          />
-          {error.includes("email") && (
-            <p style={{ color: "red" }}>{error}</p>
-          )}
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={onChange}
-            placeholder="Password"
-            required
-            aria-label="Password"
-          />
-          {error.includes("Password") && (
-            <p style={{ color: "red" }}>{error}</p>
-          )}
-        </div>
-        <div>
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={confirmPassword}
-            onChange={onChange}
-            placeholder="Confirm Password"
-            required
-            aria-label="Confirm Password"
-          />
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
+      <form onSubmit={handleSubmit} className="register-form">
+        <label htmlFor="email">Email Address:</label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+        />
+
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
+        />
+
+        <label htmlFor="confirmPassword">Confirm Password:</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirm your password"
+        />
+
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
+
+        <button type="submit" className="submit-button" disabled={loading}>
+          {loading ? 'Registering...' : 'Register'}
         </button>
       </form>
 
-      {error && (
-        <p style={{ color: "red" }} role="alert" aria-live="assertive">
-          {error}
-        </p>
-      )}
-
-      <p>
-        Already have an account? <Link href="/login">Login here</Link>
+      <p className="redirect-message">
+        Already have an account? <a href="/login">Login here</a>
       </p>
     </div>
   );

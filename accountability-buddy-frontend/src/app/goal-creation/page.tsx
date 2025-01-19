@@ -17,8 +17,8 @@ const GoalCreationPage: React.FC = () => {
     deadline: "",
     category: "",
   });
-  const [submitted, setSubmitted] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -135,7 +135,6 @@ const GoalCreationPage: React.FC = () => {
           </div>
         )}
 
-        {/* Back to Dashboard Link */}
         <div className="mt-6 text-center">
           <Link href="/dashboard">
             <span className="text-blue-600 hover:underline">

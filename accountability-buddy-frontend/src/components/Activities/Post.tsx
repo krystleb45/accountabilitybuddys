@@ -1,46 +1,21 @@
-// Post.tsx
-import React from "react";
+import React from 'react';
 
 interface PostProps {
-  post: {
-    id: string;
-    content: string;
-    likes: number;
-    comments: { id: string; text: string }[];
-  };
-  onLike: () => void;
-  onUnlike: () => void;
-  onAddComment: (commentText: string) => void;
+  id: string;
+  title: string;
+  content: string;
+  author: string;
+  timestamp: string;
 }
 
-const Post: React.FC<PostProps> = ({ post, onLike, onUnlike, onAddComment }) => {
-  const [commentText, setCommentText] = React.useState<string>("");
-
-  const handleAddComment = () => {
-    if (commentText.trim()) {
-      onAddComment(commentText);
-      setCommentText("");
-    }
-  };
-
+const Post: React.FC<PostProps> = ({ id, title, content, author, timestamp }) => {
   return (
-    <div className="post" role="article">
-      <p>{post.content}</p>
-      <p>Likes: {post.likes}</p>
-      <button onClick={onLike}>Like</button>
-      <button onClick={onUnlike}>Unlike</button>
-      <div className="comments">
-        <h4>Comments</h4>
-        {post.comments.map((comment) => (
-          <p key={comment.id}>{comment.text}</p>
-        ))}
-        <input
-          type="text"
-          value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
-          placeholder="Add a comment"
-        />
-        <button onClick={handleAddComment}>Comment</button>
+    <div className="post-container" id={`post-${id}`}>
+      <h2 className="post-title">{title}</h2>
+      <p className="post-content">{content}</p>
+      <div className="post-footer">
+        <span className="post-author">By: {author}</span>
+        <span className="post-timestamp">{new Date(timestamp).toLocaleString()}</span>
       </div>
     </div>
   );

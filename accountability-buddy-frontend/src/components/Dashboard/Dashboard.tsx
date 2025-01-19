@@ -1,5 +1,5 @@
 import React from "react";
-import "./Dashboard.css"; // Optional CSS for styling
+import styles from "./Dashboard.module.css"; // Use CSS module for styling
 
 interface UserStats {
   totalGoals: number;
@@ -15,26 +15,31 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ userStats, recentActivities, onAction }) => {
   return (
-    <div className="dashboard" role="region" aria-live="polite">
-      <h2>Welcome to Your Dashboard</h2>
+    <div className={styles["dashboard-container"]} role="region" aria-live="polite">
+      <h1 className={styles["dashboard-header"]}>Welcome to Your Dashboard</h1>
 
-      {/* User Statistics */}
-      <section className="user-stats">
-        <h3>User Statistics</h3>
-        <ul>
+      {/* User Statistics Section */}
+      <section className={styles["user-stats"]} aria-labelledby="user-stats-title">
+        <h2 id="user-stats-title" className={styles["section-header"]}>User Statistics</h2>
+        <ul className={styles["stats-list"]}>
           <li>Total Goals: {userStats.totalGoals}</li>
           <li>Completed Goals: {userStats.completedGoals}</li>
           <li>Collaborations: {userStats.collaborations}</li>
         </ul>
       </section>
 
-      {/* Recent Activities */}
-      <section className="recent-activities">
-        <h3>Recent Activities</h3>
-        <ul>
+      {/* Recent Activities Section */}
+      <section
+        className={styles["recent-activities"]}
+        aria-labelledby="recent-activities-title"
+      >
+        <h2 id="recent-activities-title" className={styles["section-header"]}>Recent Activities</h2>
+        <ul className={styles["activities-list"]}>
           {recentActivities.length > 0 ? (
             recentActivities.map((activity, index) => (
-              <li key={index}>{activity}</li>
+              <li key={index} className={styles["activity-item"]}>
+                {activity}
+              </li>
             ))
           ) : (
             <p>No recent activities found.</p>
@@ -42,8 +47,16 @@ const Dashboard: React.FC<DashboardProps> = ({ userStats, recentActivities, onAc
         </ul>
       </section>
 
-      {/* Example action button */}
-      <button onClick={() => onAction("exampleAction")}>Perform Action</button>
+      {/* Action Button */}
+      <div className={styles["action-container"]}>
+        <button
+          onClick={() => onAction("exampleAction")}
+          className={styles["dashboard-button"]}
+          aria-label="Perform example action"
+        >
+          Perform Action
+        </button>
+      </div>
     </div>
   );
 };

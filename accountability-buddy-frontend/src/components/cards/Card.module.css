@@ -1,59 +1,80 @@
-/* src/styles/components/Card.css */
+/* Card.module.css */
 
 /* Card container styles */
 .card {
-    background-color: white; /* Background color for the card */
-    border: 1px solid #ddd; /* Light grey border */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    padding: 16px; /* Inner padding */
-    margin: 16px 0; /* Space between cards */
-    transition: box-shadow 0.3s ease; /* Smooth transition for shadow on hover */
+  background-color: white; /* Background color for the card */
+  border: 1px solid #ddd; /* Light grey border */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 16px; /* Inner padding */
+  margin: 16px 0; /* Space between cards */
+  transition: box-shadow 0.3s ease, transform 0.2s ease; /* Smooth transitions for shadow and scaling */
+  display: flex;
+  flex-direction: column; /* Ensures vertical alignment of content */
+}
+
+/* Card hover effect */
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+  transform: scale(1.02); /* Slightly enlarge card on hover */
+}
+
+/* Elevated card styles */
+.card.elevated {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* More prominent shadow for elevated cards */
+}
+
+/* Card title styles */
+.card-title {
+  font-size: 1.5rem; /* Title font size */
+  margin-bottom: 8px; /* Space below title */
+  color: var(--primary-color); /* Use primary color for title */
+  font-weight: bold; /* Bold text for emphasis */
+}
+
+/* Card content styles */
+.card-content {
+  font-size: 1rem; /* Content font size */
+  color: #333; /* Darker text for readability */
+  line-height: 1.5; /* Spacing between lines */
+  flex-grow: 1; /* Ensures content takes available space */
+}
+
+/* Card footer styles */
+.card-footer {
+  display: flex; /* Flexbox for footer alignment */
+  justify-content: space-between; /* Space between footer items */
+  align-items: center; /* Vertically center footer items */
+  margin-top: 12px; /* Space above footer */
+}
+
+/* Button inside the card */
+.card-footer .button {
+  background-color: var(--primary-color); /* Button color */
+  color: white; /* Button text color */
+  padding: 8px 12px; /* Padding for button */
+  border-radius: 5px; /* Rounded corners for button */
+  cursor: pointer; /* Pointer cursor on hover */
+  border: none; /* Remove default button border */
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.card-footer .button:hover {
+  background-color: var(--secondary-color); /* Change button color on hover */
+}
+
+/* Bordered card styles */
+.card.bordered {
+  border: 2px solid var(--primary-color); /* Stronger border for bordered cards */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card {
+    padding: 12px; /* Less padding on smaller screens */
   }
-  
-  /* Card hover effect */
-  .card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
-  }
-  
-  /* Card title styles */
+
   .card-title {
-    font-size: 1.5rem; /* Title font size */
-    margin-bottom: 8px; /* Space below title */
-    color: var(--primary-color); /* Use primary color for title */
+    font-size: 1.25rem; /* Smaller title font size */
   }
-  
-  /* Card content styles */
-  .card-content {
-    font-size: 1rem; /* Content font size */
-    color: #333; /* Darker text for readability */
-    line-height: 1.5; /* Spacing between lines */
-  }
-  
-  /* Card footer styles */
-  .card-footer {
-    display: flex; /* Flexbox for footer alignment */
-    justify-content: space-between; /* Space between footer items */
-    margin-top: 12px; /* Space above footer */
-  }
-  
-  /* Button inside the card */
-  .card-footer .button {
-    background-color: var(--primary-color); /* Button color */
-    color: white; /* Button text color */
-    padding: 8px 12px; /* Padding for button */
-    border-radius: 5px; /* Rounded corners for button */
-    cursor: pointer; /* Pointer cursor on hover */
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .card {
-      padding: 12px; /* Less padding on smaller screens */
-    }
-    
-    .card-title {
-      font-size: 1.25rem; /* Smaller title font size */
-    }
-  }
-  
+}

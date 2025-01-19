@@ -1,10 +1,13 @@
 import axios from "axios";
-import { getAuthHeader } from "./authApi"; // Ensure that the authorization token is included in requests
+import { getAuthHeader } from "../auth/authApi"; // Ensure that the authorization token is included in requests
 
 const API_URL = "/api/collaboration-goals";
 
 // Define the shape of the goal data
 interface CollaborationGoal {
+  status: string;
+  dueDate: Date;
+  assignedUsers: never[];
   id: string;
   title: string;
   description: string;

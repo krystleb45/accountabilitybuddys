@@ -1,10 +1,14 @@
-import "@testing-library/jest-dom/extend-expect"; // For extended assertions with Jest-DOM
-import fetchMock from "jest-fetch-mock"; // Import fetchMock
+// Import Jest DOM matchers for extended assertions
+import '@testing-library/jest-dom';
 
-// Enable the fetch mock globally
+// Enable Fetch Mock for API requests
+import fetchMock from 'jest-fetch-mock';
 fetchMock.enableMocks();
 
-// Polyfill for MutationObserver
+//console.log("setupTests.tsx is loaded");
+
+
+// Polyfill: MutationObserver
 global.MutationObserver = class {
   constructor(callback: MutationObserverCallback) {}
   disconnect() {}
@@ -14,22 +18,26 @@ global.MutationObserver = class {
   }
 };
 
-// Polyfill for IntersectionObserver
-global.IntersectionObserver = class {
+// Polyfill: IntersectionObserver
+global.IntersectionObserver = class IntersectionObserver {
   root: Element | Document | null = null;
   rootMargin: string = '';
   thresholds: ReadonlyArray<number> = [];
 
-  constructor(callback: IntersectionObserverCallback) {}
+  constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {}
+
   disconnect() {}
+
   observe(element: Element) {}
+
   unobserve(element: Element) {}
+
   takeRecords(): IntersectionObserverEntry[] {
     return [];
   }
 };
 
-// Polyfill for ResizeObserver
+// Polyfill: ResizeObserver
 global.ResizeObserver = class {
   constructor(callback: ResizeObserverCallback) {}
   disconnect() {}
@@ -37,23 +45,23 @@ global.ResizeObserver = class {
   unobserve(element: Element) {}
 };
 
-// Set up global fetch mock defaults
+// Global setup for fetch mocks
 beforeAll(() => {
-  global.fetch = fetchMock as unknown as typeof fetch; // Cast fetchMock for TypeScript compatibility
+  global.fetch = fetchMock as unknown as typeof fetch;
 });
 
-// Reset fetch mock after each test to prevent carryover
+// Reset fetch mocks after each test
 afterEach(() => {
   fetchMock.resetMocks();
 });
 
-// Mock console warnings and errors to keep the test output clean
+// Suppress console errors and warnings during tests
 beforeAll(() => {
-  jest.spyOn(console, "error").mockImplementation(() => {});
-  jest.spyOn(console, "warn").mockImplementation(() => {});
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-// Restore all mocks after all tests
+// Restore mocks after all tests
 afterAll(() => {
   jest.restoreAllMocks();
 });

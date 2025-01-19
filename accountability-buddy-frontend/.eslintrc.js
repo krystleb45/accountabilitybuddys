@@ -6,11 +6,12 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
-    "next/core-web-vitals", // Essential Next.js rules
-    "plugin:react/recommended", // React-specific linting rules
-    "plugin:@typescript-eslint/recommended", // TypeScript-specific linting rules
-    "plugin:jsx-a11y/recommended", // Accessibility rules
-    "plugin:prettier/recommended", // Integrates Prettier with ESLint
+    "next/core-web-vitals",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended",
+    "plugin:storybook/recommended"
   ],
   parser: "@typescript-eslint/parser", // Specifies the ESLint parser for TypeScript
   parserOptions: {

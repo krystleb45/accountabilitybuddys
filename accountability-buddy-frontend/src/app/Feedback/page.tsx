@@ -1,139 +1,72 @@
-"use client";
+"use client"; // Ensure it's a Client Component
 
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
 
 const FeedbackPage: React.FC = () => {
-  const [formData, setFormData] = useState({
-    category: 'General',
-    message: '',
-    contactInfo: '',
-  });
-  const [error, setError] = useState<string>('');
-  const [successMessage, setSuccessMessage] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
+  const [name, setName] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
-  const { category, message, contactInfo } = formData;
-
-  // Handle form input changes
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  // Validate the form
-  const validateForm = (): boolean => {
-    if (!message) {
-      setError('Feedback message is required.');
-      return false;
-    }
-    return true;
-  };
-
-  // Handle form submission
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccessMessage('');
-
-    // Validate form before submission
-    if (!validateForm()) return;
-
-    setLoading(true);
-    try {
-      const response = await axios.post('/api/feedback', formData);
-      if (response.data.success) {
-        setSuccessMessage('Thank you for your feedback!');
-        setFormData({ category: 'General', message: '', contactInfo: '' });
-      } else {
-        setError('Failed to submit feedback. Please try again.');
-      }
-    } catch (err) {
-      console.error('Feedback submission error:', err);
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    // Simulate API submission (replace with actual API logic)
+    setSubmitted(true);
+    setName("");
+    setFeedback("");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Feedback</h1>
-        <p className="text-gray-600 mb-6">We value your feedback. Let us know how we can improve.</p>
+    <div className="min-h-screen p-8 bg-gray-100 flex flex-col items-center">
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">Feedback</h1>
+      <p className="text-lg text-gray-600 mb-6 text-center max-w-md">
+        We value your feedback! Let us know how we can improve your experience.
+      </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="form-group">
-            <label htmlFor="category" className="block text-gray-700 font-medium mb-2">
-              Category:
-            </label>
-            <select
-              id="category"
-              name="category"
-              value={category}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-            >
-              <option value="General">General</option>
-              <option value="Feature Request">Feature Request</option>
-              <option value="Bug Report">Bug Report</option>
-              <option value="Other">Other</option>
-            </select>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
+      >
+        {submitted && (
+          <div className="mb-4 text-green-600 text-center">
+            Thank you for your feedback!
           </div>
-
-          <div className="form-group">
-            <label htmlFor="message" className="block text-gray-700 font-medium mb-2">
-              Message:
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={message}
-              onChange={handleChange}
-              required
-              rows={5}
-              className="w-full p-2 border rounded"
-              placeholder="Enter your feedback here"
-            ></textarea>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="contactInfo" className="block text-gray-700 font-medium mb-2">
-              Contact Info (Optional):
-            </label>
-            <input
-              type="text"
-              id="contactInfo"
-              name="contactInfo"
-              value={contactInfo}
-              onChange={handleChange}
-              placeholder="Email or phone number"
-              className="w-full p-2 border rounded"
-            />
-          </div>
-
-          {error && (
-            <div className="text-red-600" role="alert">
-              {error}
-            </div>
-          )}
-
-          {successMessage && (
-            <div className="text-green-600" role="alert">
-              {successMessage}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 rounded text-white font-bold transition-colors ${
-              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-            }`}
+        )}
+        <div className="mb-4">
+          <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
+            Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+            required
+          />
+        </div>
+        <div className="mb-6">
+          <label
+            htmlFor="feedback"
+            className="block text-gray-700 font-medium mb-2"
           >
-            {loading ? 'Submitting...' : 'Submit Feedback'}
-          </button>
-        </form>
-      </div>
+            Feedback
+          </label>
+          <textarea
+            id="feedback"
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+            rows={5}
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors"
+        >
+          Submit Feedback
+        </button>
+      </form>
     </div>
   );
 };

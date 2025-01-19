@@ -1,30 +1,56 @@
-import React from 'react';
+"use client"; // Ensure it's a Client Component
+
+import React from "react";
 
 const AboutUsPage: React.FC = () => {
   return (
-    <div className="about-us-container p-10 max-w-4xl mx-auto bg-gray-100 rounded-lg text-center">
-      <h1 className="text-4xl font-bold mb-6 text-gray-800">About Us</h1>
-      <p className="text-lg mb-6 text-gray-700">
-        Welcome to the About Us page! Accountability Buddy is dedicated to helping individuals
-        achieve their goals through personalized support, goal tracking, and community interaction.
-        Our mission is to create an environment where progress is celebrated, and accountability is encouraged.
-      </p>
-      
-      <section className="my-10">
-        <h2 className="text-3xl font-semibold mb-4 text-blue-600">Our Mission</h2>
-        <p className="text-lg text-gray-700">
-          We strive to empower users to stay focused on their goals, whether personal, professional, or health-related.
-          By fostering a supportive community and providing tools for better accountability, we make the journey more enjoyable and successful.
-        </p>
-      </section>
-      
-      <section className="my-10">
-        <h2 className="text-3xl font-semibold mb-4 text-blue-600">Our Team</h2>
-        <p className="text-lg text-gray-700">
-          Our team is a group of passionate developers, designers, and goal-oriented individuals committed
-          to delivering a seamless and motivating experience for our users.
-        </p>
-      </section>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <header className="mb-8">
+          <h1 className="text-4xl font-extrabold text-gray-800 text-center mb-4">
+            About Accountability Buddy
+          </h1>
+          <p className="text-lg text-gray-600 text-center">
+            Empowering individuals to achieve their goals through accountability and community.
+          </p>
+        </header>
+
+        {/* Main Content */}
+        <main>
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-700 mb-4">Our Mission</h2>
+            <p className="text-gray-600 leading-relaxed">
+              At Accountability Buddy, we believe in the power of support and consistency.
+              Our mission is to help individuals achieve their personal and professional goals by
+              providing a platform that encourages accountability and fosters a sense of community.
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-700 mb-4">What We Offer</h2>
+            <ul className="list-disc list-inside text-gray-600">
+              <li>Goal tracking and progress analytics</li>
+              <li>Personalized recommendations for accountability groups</li>
+              <li>Engaging leaderboards and rewards</li>
+              <li>Private and group chatrooms for support</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-gray-700 mb-4">Join Us</h2>
+            <p className="text-gray-600">
+              Join our growing community of goal-oriented individuals and start your accountability journey today.
+              Together, we can achieve great things!
+            </p>
+          </section>
+        </main>
+
+        {/* Footer */}
+        <footer className="mt-12 text-center text-gray-600">
+          &copy; {new Date().getFullYear()} Accountability Buddy. All rights reserved.
+        </footer>
+      </div>
     </div>
   );
 };

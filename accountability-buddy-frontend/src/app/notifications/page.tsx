@@ -56,22 +56,30 @@ const NotificationsPage: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-800">Notifications</h1>
         <nav className="flex gap-4">
           <Link href="/dashboard">
-            <span className="text-blue-600 font-semibold hover:underline">Dashboard</span>
+            <span className="text-blue-600 font-semibold hover:underline">
+              Dashboard
+            </span>
           </Link>
           <Link href="/profile">
-            <span className="text-blue-600 font-semibold hover:underline">Profile</span>
+            <span className="text-blue-600 font-semibold hover:underline">
+              Profile
+            </span>
           </Link>
         </nav>
       </header>
 
       {/* Filter Options */}
       <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-        <h2 className="text-xl font-semibold mb-2 text-gray-800">Filter Notifications</h2>
+        <h2 className="text-xl font-semibold mb-2 text-gray-800">
+          Filter Notifications
+        </h2>
         <div className="flex gap-4">
           <button
             onClick={() => setFilter("all")}
             className={`py-2 px-4 rounded-lg transition-colors ${
-              filter === "all" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
+              filter === "all"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-700"
             }`}
             aria-label="Show all notifications"
           >
@@ -80,7 +88,9 @@ const NotificationsPage: React.FC = () => {
           <button
             onClick={() => setFilter("unread")}
             className={`py-2 px-4 rounded-lg transition-colors ${
-              filter === "unread" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
+              filter === "unread"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-700"
             }`}
             aria-label="Show unread notifications"
           >
@@ -89,7 +99,9 @@ const NotificationsPage: React.FC = () => {
           <button
             onClick={() => setFilter("read")}
             className={`py-2 px-4 rounded-lg transition-colors ${
-              filter === "read" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
+              filter === "read"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-700"
             }`}
             aria-label="Show read notifications"
           >
@@ -100,7 +112,9 @@ const NotificationsPage: React.FC = () => {
 
       {/* Notifications List */}
       <main className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Your Notifications</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+          Your Notifications
+        </h2>
         {filteredNotifications.length > 0 ? (
           filteredNotifications.map((notification, index) => (
             <NotificationItem key={index} notification={notification} />

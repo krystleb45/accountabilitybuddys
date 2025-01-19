@@ -1,20 +1,20 @@
-"use client";
+"use client"; // Ensure it's a Client Component
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const ContactSupportPage: React.FC = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Simulate form submission (replace with actual API call)
     setSuccess(true);
-    setName('');
-    setEmail('');
-    setMessage('');
+    setName("");
+    setEmail("");
+    setMessage("");
   };
 
   return (
@@ -24,7 +24,10 @@ const ContactSupportPage: React.FC = () => {
         If you need help, please reach out to us using the form below. We’re here to assist you with any questions or concerns.
       </p>
 
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
+      >
         {success && (
           <div className="mb-4 text-green-600 text-center">
             Your message has been sent successfully!
@@ -59,7 +62,10 @@ const ContactSupportPage: React.FC = () => {
         </div>
 
         <div className="mb-6">
-          <label htmlFor="message" className="block text-gray-700 font-medium mb-2">
+          <label
+            htmlFor="message"
+            className="block text-gray-700 font-medium mb-2"
+          >
             Message
           </label>
           <textarea

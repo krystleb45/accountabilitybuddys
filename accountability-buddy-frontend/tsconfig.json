@@ -1,34 +1,42 @@
 {
   "compilerOptions": {
-    "target": "esnext", 
-    "lib": ["dom", "dom.iterable", "esnext"], 
+    "target": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "esModuleInterop": true,
-    "module": "esnext", 
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    "jsx": "react-jsx", 
+    "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
     "noEmit": true,
     "isolatedModules": true,
     "incremental": true,
-    "forceConsistentCasingInFileNames": true, 
-    "noImplicitAny": false, 
-    "strictNullChecks": true
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "types": ["jest", "@testing-library/jest-dom", "cypress"],
+    "baseUrl": ".", // Sets the base URL for module resolution
+    "paths": {
+      "@/*": ["src/*"],
+      "cypress/*": ["cypress/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "src/**/*",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "cypress/**/*.ts",
+    "src/**/*.test.{ts,tsx}" // Ensure Jest test files are included
   ],
   "exclude": [
     "node_modules",
-    "src/**/*.test.{ts,tsx,js,jsx}",
+    "cypress/**/*.js", // Exclude compiled JS in Cypress folder
     "src/**/__mocks__/*",
     "src/**/config/*.js"
   ]

@@ -1,0 +1,92 @@
+/* Dashboard.module.css */
+
+/* Container for the dashboard */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 1fr; /* Default to single column */
+    gap: 16px; /* Space between grid items */
+    padding: 24px; /* Inner padding */
+    background-color: #f8f9fa; /* Light background */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    max-width: 1200px; /* Restrict maximum width */
+    margin: 0 auto; /* Center the dashboard */
+  }
+  
+  /* Header styles */
+  .dashboard-header {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color, #007bff); /* Primary color or fallback */
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  
+  /* Section container */
+  .dashboard-section {
+    background-color: white; /* Card-like sections */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  
+  .dashboard-section:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+  
+  /* Section header */
+  .section-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 12px;
+  }
+  
+  /* Section content */
+  .section-content {
+    font-size: 1rem;
+    color: #555; /* Muted text color */
+    line-height: 1.6; /* Better readability */
+  }
+  
+  /* Responsive Design */
+  @media (min-width: 768px) {
+    .dashboard-container {
+      grid-template-columns: repeat(2, 1fr); /* Two columns for medium screens */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .dashboard-container {
+      grid-template-columns: repeat(3, 1fr); /* Three columns for large screens */
+    }
+  }
+  
+  /* Button styles */
+  .dashboard-button {
+    padding: 10px 20px;
+    background-color: var(--primary-color, #007bff); /* Primary color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .dashboard-button:hover {
+    background-color: var(--primary-dark, #0056b3); /* Darker shade on hover */
+    transform: scale(1.05);
+  }
+  
+  /* Footer styles */
+  .dashboard-footer {
+    margin-top: 24px;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #888;
+  }
+  

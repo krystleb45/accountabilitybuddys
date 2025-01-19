@@ -1,0 +1,1435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="57" failures="47" errors="0" time="5.448">
+  <testsuite name="Utility Functions" errors="0" failures="4" skipped="0" timestamp="2025-01-18T21:06:47" time="1.034" tests="7">
+    <testcase classname="Utility Functions formatCurrency formats number as USD currency" name="Utility Functions formatCurrency formats number as USD currency" time="0.024">
+    </testcase>
+    <testcase classname="Utility Functions formatCurrency handles invalid inputs gracefully" name="Utility Functions formatCurrency handles invalid inputs gracefully" time="0.001">
+      <failure>Error: Invalid amount provided for currency formatting.
+    at formatCurrency (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\src\utils\utility-functions.ts:10:13)
+    at Object.&lt;anonymous&gt; (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\utils\UtilityFunctions.test.ts:13:28)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Utility Functions debounce calls the function after the specified delay" name="Utility Functions debounce calls the function after the specified delay" time="0.002">
+    </testcase>
+    <testcase classname="Utility Functions debounce does not call the function before the delay" name="Utility Functions debounce does not call the function before the delay" time="0">
+    </testcase>
+    <testcase classname="Utility Functions fetchData fetches data successfully" name="Utility Functions fetchData fetches data successfully" time="0.003">
+      <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: &quot;/api/data&quot;
+Received: &quot;/api/data&quot;, {&quot;headers&quot;: {&quot;Content-Type&quot;: &quot;application/json&quot;}}
+
+Number of calls: 1
+    at Object.toHaveBeenCalledWith (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\utils\UtilityFunctions.test.ts:66:21)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Utility Functions fetchData handles fetch errors" name="Utility Functions fetchData handles fetch errors" time="0.011">
+      <failure>Error: expect(received).rejects.toThrow(expected)
+
+Expected substring: &quot;Fetch error: 404 Not Found&quot;
+Received message:   &quot;Error fetching data: Failed to fetch data: 404 Not Found&quot;
+
+      55 |       return await response.json();
+      56 |     } catch (error) {
+    &gt; 57 |       throw new Error(`Error fetching data: ${(error as Error).message}`);
+         |             ^
+      58 |     }
+      59 |   };
+      60 |   
+
+      at fetchData (src/utils/utility-functions.ts:57:13)
+      at Object.&lt;anonymous&gt; (__tests__/utils/UtilityFunctions.test.ts:76:7)
+    at Object.toThrow (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\expect\build\index.js:218:22)
+    at Object.toThrow (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\utils\UtilityFunctions.test.ts:76:55)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Utility Functions fetchData handles network errors" name="Utility Functions fetchData handles network errors" time="0.002">
+      <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: &quot;/api/fail&quot;
+Received: &quot;/api/fail&quot;, {&quot;headers&quot;: {&quot;Content-Type&quot;: &quot;application/json&quot;}}
+
+Number of calls: 1
+    at Object.toHaveBeenCalledWith (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\utils\UtilityFunctions.test.ts:86:21)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Error Handling" errors="0" failures="3" skipped="0" timestamp="2025-01-18T21:06:47" time="1.027" tests="3">
+    <testcase classname="Error Handling displays 404 error page for non-existent routes" name="Error Handling displays 404 error page for non-existent routes" time="0.007">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\errors\error-handling.spec.ts:8:7)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Error Handling displays a network error message when API call fails" name="Error Handling displays a network error message when API call fails" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\errors\error-handling.spec.ts:8:7)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Error Handling displays a friendly message for network disconnection" name="Error Handling displays a friendly message for network disconnection" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\errors\error-handling.spec.ts:8:7)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Login Flow" errors="0" failures="6" skipped="0" timestamp="2025-01-18T21:06:47" time="1.015" tests="6">
+    <testcase classname="Login Flow displays the login form" name="Login Flow displays the login form" time="0.007">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\login.spec.ts:4:7)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Login Flow shows error messages for empty form submission" name="Login Flow shows error messages for empty form submission" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\login.spec.ts:4:7)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Login Flow shows error message for invalid email format" name="Login Flow shows error message for invalid email format" time="0.001">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\login.spec.ts:4:7)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Login Flow logs in successfully with valid credentials" name="Login Flow logs in successfully with valid credentials" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\login.spec.ts:4:7)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Login Flow shows error for invalid login credentials" name="Login Flow shows error for invalid login credentials" time="0.001">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\login.spec.ts:4:7)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Login Flow keeps the user logged in after page refresh" name="Login Flow keeps the user logged in after page refresh" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\login.spec.ts:4:7)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Sample Component Test" errors="0" failures="1" skipped="0" timestamp="2025-01-18T21:06:47" time="1.027" tests="1">
+    <testcase classname="Sample Component Test renders the component correctly" name="Sample Component Test renders the component correctly" time="0.007">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\component\SampleComponent.spec.tsx:8:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Navigation Functionality" errors="0" failures="4" skipped="0" timestamp="2025-01-18T21:06:47" time="1.02" tests="4">
+    <testcase classname="Navigation Functionality should navigate to the dashboard page" name="Navigation Functionality should navigate to the dashboard page" time="0.007">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\navigation\navigation.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Navigation Functionality should navigate to the profile page" name="Navigation Functionality should navigate to the profile page" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\navigation\navigation.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Navigation Functionality should navigate to the settings page" name="Navigation Functionality should navigate to the settings page" time="0.001">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\navigation\navigation.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Navigation Functionality should logout and redirect to the login page" name="Navigation Functionality should logout and redirect to the login page" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\navigation\navigation.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Authentication Flow" errors="0" failures="5" skipped="0" timestamp="2025-01-18T21:06:47" time="1.024" tests="5">
+    <testcase classname="Authentication Flow should load the authentication page" name="Authentication Flow should load the authentication page" time="0.007">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\auth.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Authentication Flow should handle successful login" name="Authentication Flow should handle successful login" time="0.001">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\auth.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Authentication Flow should display an error for invalid login" name="Authentication Flow should display an error for invalid login" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\auth.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Authentication Flow should navigate to the registration page" name="Authentication Flow should navigate to the registration page" time="0.001">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\auth.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Authentication Flow should navigate to forgot password page" name="Authentication Flow should navigate to forgot password page" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\auth.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="User Registration" errors="0" failures="4" skipped="0" timestamp="2025-01-18T21:06:47" time="0.982" tests="4">
+    <testcase classname="User Registration should load the registration page" name="User Registration should load the registration page" time="0.008">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\registration.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="User Registration should register a new user successfully" name="User Registration should register a new user successfully" time="0.001">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\registration.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="User Registration should display an error for mismatched passwords" name="User Registration should display an error for mismatched passwords" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\registration.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="User Registration should display an error for an existing username" name="User Registration should display an error for an existing username" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\registration.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Error Pages" errors="0" failures="3" skipped="0" timestamp="2025-01-18T21:06:47" time="1.018" tests="3">
+    <testcase classname="Error Pages should display a 404 page for non-existent routes" name="Error Pages should display a 404 page for non-existent routes" time="0.017">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\errors\error-page.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Error Pages should handle server errors gracefully (500 Internal Server Error)" name="Error Pages should handle server errors gracefully (500 Internal Server Error)" time="0.001">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\errors\error-page.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Error Pages should redirect to a custom error page on major failures" name="Error Pages should redirect to a custom error page on major failures" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\errors\error-page.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Settings Management" errors="0" failures="2" skipped="0" timestamp="2025-01-18T21:06:47" time="1.013" tests="2">
+    <testcase classname="Settings Management should load the settings page" name="Settings Management should load the settings page" time="0.01">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\settings\setting.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Settings Management should update user preferences" name="Settings Management should update user preferences" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\settings\setting.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Login Functionality" errors="0" failures="4" skipped="0" timestamp="2025-01-18T21:06:47" time="1.015" tests="4">
+    <testcase classname="Login Functionality should display the login page" name="Login Functionality should display the login page" time="0.016">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\login.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Login Functionality should login successfully with valid credentials" name="Login Functionality should login successfully with valid credentials" time="0.001">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\login.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Login Functionality should display an error message with invalid credentials" name="Login Functionality should display an error message with invalid credentials" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\login.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Login Functionality should disable the login button when fields are empty" name="Login Functionality should disable the login button when fields are empty" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\login.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Forgot Password Flow" errors="0" failures="4" skipped="0" timestamp="2025-01-18T21:06:47" time="1" tests="4">
+    <testcase classname="Forgot Password Flow should display the forgot password page" name="Forgot Password Flow should display the forgot password page" time="0.008">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\forgot-password.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Forgot Password Flow should send a password reset email for a valid user" name="Forgot Password Flow should send a password reset email for a valid user" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\forgot-password.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Forgot Password Flow should show an error for an unregistered email" name="Forgot Password Flow should show an error for an unregistered email" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\forgot-password.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Forgot Password Flow should navigate back to the login page" name="Forgot Password Flow should navigate back to the login page" time="0">
+      <failure>ReferenceError: cy is not defined
+    at Object.cy (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\cypress\integration\authentications\forgot-password.spec.ts:5:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusHook (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:281:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:246:5)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="1" skipped="0" timestamp="2025-01-18T21:06:47" time="1.333" tests="2">
+    <testcase classname=" renders Feed component with posts" name=" renders Feed component with posts" time="0.166">
+      <failure>TestingLibraryElementError: Unable to find an accessible element with the role &quot;article&quot;
+
+Here are the accessible roles:
+
+  heading:
+
+  Name &quot;Achieving Goals with Accountability&quot;:
+  &lt;h2
+    class=&quot;post-title&quot;
+  /&gt;
+
+  Name &quot;The Power of Collaboration&quot;:
+  &lt;h2
+    class=&quot;post-title&quot;
+  /&gt;
+
+  --------------------------------------------------
+  paragraph:
+
+  Name &quot;&quot;:
+  &lt;p
+    class=&quot;post-content&quot;
+  /&gt;
+
+  Name &quot;&quot;:
+  &lt;p
+    class=&quot;post-content&quot;
+  /&gt;
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;feed-container&quot;
+    &gt;
+      &lt;div
+        class=&quot;post-container&quot;
+        id=&quot;post-1&quot;
+      &gt;
+        &lt;h2
+          class=&quot;post-title&quot;
+        &gt;
+          Achieving Goals with Accountability
+        &lt;/h2&gt;
+        &lt;p
+          class=&quot;post-content&quot;
+        &gt;
+          Learn how to set achievable goals and stay accountable with our tips.
+        &lt;/p&gt;
+        &lt;div
+          class=&quot;post-footer&quot;
+        &gt;
+          &lt;span
+            class=&quot;post-author&quot;
+          &gt;
+            By: 
+            John Doe
+          &lt;/span&gt;
+          &lt;span
+            class=&quot;post-timestamp&quot;
+          &gt;
+            1/16/2025, 7:34:56 AM
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;post-container&quot;
+        id=&quot;post-2&quot;
+      &gt;
+        &lt;h2
+          class=&quot;post-title&quot;
+        &gt;
+          The Power of Collaboration
+        &lt;/h2&gt;
+        &lt;p
+          class=&quot;post-content&quot;
+        &gt;
+          Collaborating with others can help you achieve your goals faster.
+        &lt;/p&gt;
+        &lt;div
+          class=&quot;post-footer&quot;
+        &gt;
+          &lt;span
+            class=&quot;post-author&quot;
+          &gt;
+            By: 
+            Jane Smith
+          &lt;/span&gt;
+          &lt;span
+            class=&quot;post-timestamp&quot;
+          &gt;
+            1/16/2025, 8:34:56 AM
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+    at Object.getElementError (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\dom\dist\config.js:37:19)
+    at C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\dom\dist\query-helpers.js:76:38
+    at C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\dom\dist\query-helpers.js:109:15
+    at Object.getAllByRole (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\src\components\Activities\Feed.test.tsx:10:31)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname=" renders Feed component with empty state" name=" renders Feed component with empty state" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="StripeCheckoutForm Component" errors="0" failures="3" skipped="0" timestamp="2025-01-18T21:06:47" time="1.297" tests="3">
+    <testcase classname="StripeCheckoutForm Component renders the form" name="StripeCheckoutForm Component renders the form" time="0.044">
+      <failure>Error: Invalid prop `stripe` supplied to `Elements`. We recommend using the `loadStripe` utility from `@stripe/stripe-js`. See https://stripe.com/docs/stripe-js/react#elements-props-stripe for details.
+    at validateStripe (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@stripe\react-stripe-js\dist\react-stripe.js:296:9)
+    at parseStripeProp (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@stripe\react-stripe-js\dist\react-stripe.js:311:16)
+    at C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@stripe\react-stripe-js\dist\react-stripe.js:367:12
+    at mountMemo (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:16406:19)
+    at Object.useMemo (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:16851:16)
+    at Object.useMemo (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react\cjs\react.development.js:1650:21)
+    at Elements (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@stripe\react-stripe-js\dist\react-stripe.js:366:22)
+    at renderWithHooks (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at beginWork$1 (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:27465:14)
+    at performUnitOfWork (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:26599:12)
+    at workLoopSync (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:26505:5)
+    at renderRootSync (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:25889:20)
+    at performConcurrentWorkOnRoot (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:25789:22)
+    at flushActQueue (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react\cjs\react.development.js:2667:24)
+    at act (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react\cjs\react.development.js:2582:11)
+    at C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\react\dist\act-compat.js:47:25
+    at renderRoot (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\react\dist\pure.js:188:26)
+    at render (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\react\dist\pure.js:287:10)
+    at renderComponent (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\components\StripeCheckout.test.tsx:19:11)
+    at Object.renderComponent (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\components\StripeCheckout.test.tsx:30:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="StripeCheckoutForm Component handles successful payment" name="StripeCheckoutForm Component handles successful payment" time="0.005">
+      <failure>Error: Invalid prop `stripe` supplied to `Elements`. We recommend using the `loadStripe` utility from `@stripe/stripe-js`. See https://stripe.com/docs/stripe-js/react#elements-props-stripe for details.
+    at validateStripe (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@stripe\react-stripe-js\dist\react-stripe.js:296:9)
+    at parseStripeProp (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@stripe\react-stripe-js\dist\react-stripe.js:311:16)
+    at C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@stripe\react-stripe-js\dist\react-stripe.js:367:12
+    at mountMemo (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:16406:19)
+    at Object.useMemo (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:16851:16)
+    at Object.useMemo (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react\cjs\react.development.js:1650:21)
+    at Elements (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@stripe\react-stripe-js\dist\react-stripe.js:366:22)
+    at renderWithHooks (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at beginWork$1 (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:27465:14)
+    at performUnitOfWork (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:26599:12)
+    at workLoopSync (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:26505:5)
+    at renderRootSync (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:25889:20)
+    at performConcurrentWorkOnRoot (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:25789:22)
+    at flushActQueue (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react\cjs\react.development.js:2667:24)
+    at act (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react\cjs\react.development.js:2582:11)
+    at C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\react\dist\act-compat.js:47:25
+    at renderRoot (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\react\dist\pure.js:188:26)
+    at render (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\react\dist\pure.js:287:10)
+    at renderComponent (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\components\StripeCheckout.test.tsx:19:11)
+    at Object.renderComponent (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\components\StripeCheckout.test.tsx:40:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="StripeCheckoutForm Component handles payment errors" name="StripeCheckoutForm Component handles payment errors" time="0.004">
+      <failure>Error: Invalid prop `stripe` supplied to `Elements`. We recommend using the `loadStripe` utility from `@stripe/stripe-js`. See https://stripe.com/docs/stripe-js/react#elements-props-stripe for details.
+    at validateStripe (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@stripe\react-stripe-js\dist\react-stripe.js:296:9)
+    at parseStripeProp (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@stripe\react-stripe-js\dist\react-stripe.js:311:16)
+    at C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@stripe\react-stripe-js\dist\react-stripe.js:367:12
+    at mountMemo (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:16406:19)
+    at Object.useMemo (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:16851:16)
+    at Object.useMemo (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react\cjs\react.development.js:1650:21)
+    at Elements (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@stripe\react-stripe-js\dist\react-stripe.js:366:22)
+    at renderWithHooks (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at beginWork$1 (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:27465:14)
+    at performUnitOfWork (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:26599:12)
+    at workLoopSync (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:26505:5)
+    at renderRootSync (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:25889:20)
+    at performConcurrentWorkOnRoot (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react-dom\cjs\react-dom.development.js:25789:22)
+    at flushActQueue (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react\cjs\react.development.js:2667:24)
+    at act (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\react\cjs\react.development.js:2582:11)
+    at C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\react\dist\act-compat.js:47:25
+    at renderRoot (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\react\dist\pure.js:188:26)
+    at render (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\react\dist\pure.js:287:10)
+    at renderComponent (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\components\StripeCheckout.test.tsx:19:11)
+    at Object.renderComponent (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\components\StripeCheckout.test.tsx:67:5)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="SimpleComponent" errors="0" failures="0" skipped="0" timestamp="2025-01-18T21:06:47" time="1.193" tests="3">
+    <testcase classname="SimpleComponent renders with default message" name="SimpleComponent renders with default message" time="0.031">
+    </testcase>
+    <testcase classname="SimpleComponent renders with a custom message" name="SimpleComponent renders with a custom message" time="0.033">
+    </testcase>
+    <testcase classname="SimpleComponent updates content dynamically" name="SimpleComponent updates content dynamically" time="0.005">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2025-01-18T21:06:48" time="0.359" tests="2">
+    <testcase classname=" renders badges correctly" name=" renders badges correctly" time="0.057">
+    </testcase>
+    <testcase classname=" renders empty state when no badges" name=" renders empty state when no badges" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="AdminManagementPage" errors="0" failures="3" skipped="0" timestamp="2025-01-18T21:06:47" time="4.254" tests="4">
+    <testcase classname="AdminManagementPage renders the Admin Management page correctly" name="AdminManagementPage renders the Admin Management page correctly" time="0.043">
+    </testcase>
+    <testcase classname="AdminManagementPage displays admin users like Alice and Bob" name="AdminManagementPage displays admin users like Alice and Bob" time="1.023">
+      <failure>Error: Unable to find an element with the text: /alice/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6&quot;
+    &gt;
+      &lt;header
+        class=&quot;mb-8&quot;
+      &gt;
+        &lt;h1
+          class=&quot;text-4xl font-extrabold text-gray-800 text-center&quot;
+        &gt;
+          Admin Management
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;text-lg text-gray-600 text-center&quot;
+        &gt;
+          Manage roles, permissions, and administrative settings with ease.
+        &lt;/p&gt;
+      &lt;/header&gt;
+      &lt;main
+        class=&quot;max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&quot;
+      &gt;
+        &lt;section
+          class=&quot;bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300&quot;
+        &gt;
+          &lt;h2
+            class=&quot;text-2xl font-semibold mb-4 text-gray-800&quot;
+          &gt;
+            User Roles
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;text-gray-600 mb-4&quot;
+          &gt;
+            Assign roles and manage user permissions across the platform.
+          &lt;/p&gt;
+          &lt;button
+            class=&quot;w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors&quot;
+          &gt;
+            Manage Roles
+          &lt;/button&gt;
+        &lt;/section&gt;
+        &lt;section
+          class=&quot;bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300&quot;
+        &gt;
+          &lt;h2
+            class=&quot;text-2xl font-semibold mb-4 text-gray-800&quot;
+          &gt;
+            Permissions
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;text-gray-600 mb-4&quot;
+          &gt;
+            Define what users can access and modify on the platform.
+          &lt;/p&gt;
+          &lt;button
+            class=&quot;w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors&quot;
+          &gt;
+            Manage Permissions
+          &lt;/button&gt;
+        &lt;/section&gt;
+        &lt;section
+          class=&quot;bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300&quot;
+        &gt;
+          &lt;h2
+            class=&quot;text-2xl font-semibold mb-4 text-gray-800&quot;
+          &gt;
+            System Settings
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;text-gray-600 mb-4&quot;
+          &gt;
+            Adjust global configurations for the platform.
+          &lt;/p&gt;
+          &lt;button
+            class=&quot;w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors&quot;
+          &gt;
+            Edit Settings
+          &lt;/button&gt;
+        &lt;/section&gt;
+      &lt;/main&gt;
+      &lt;footer
+        class=&quot;mt-12 text-center text-gray-600&quot;
+      &gt;
+        © 
+        2025
+         Accountability Buddy. All rights reserved.
+      &lt;/footer&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6&quot;
+    &gt;
+      &lt;header
+        class=&quot;mb-8&quot;
+      &gt;
+        &lt;h1
+          class=&quot;text-4xl font-extrabold text-gray-800 text-center&quot;
+        &gt;
+          Admin Management
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;text-lg text-gray-600 text-center&quot;
+        &gt;
+          Manage roles, permissions, and administrative settings with ease.
+        &lt;/p&gt;
+      &lt;/header&gt;
+      &lt;main
+        class=&quot;max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&quot;
+      &gt;
+        &lt;section
+          class=&quot;bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300&quot;
+        &gt;
+          &lt;h2
+            class=&quot;text-2xl font-semibold mb-4 text-gray-800&quot;
+          &gt;
+            User Roles
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;text-gray-600 mb-4&quot;
+          &gt;
+            Assign roles and manage user permissions across the platform.
+          &lt;/p&gt;
+          &lt;button
+            class=&quot;w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors&quot;
+          &gt;
+            Manage Roles
+          &lt;/button&gt;
+        &lt;/section&gt;
+        &lt;section
+          class=&quot;bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300&quot;
+        &gt;
+          &lt;h2
+            class=&quot;text-2xl font-semibold mb-4 text-gray-800&quot;
+          &gt;
+            Permissions
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;text-gray-600 mb-4&quot;
+          &gt;
+            Define what users can access and modify on the platform.
+          &lt;/p&gt;
+          &lt;button
+            class=&quot;w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors&quot;
+          &gt;
+            Manage Permissions
+          &lt;/button&gt;
+        &lt;/section&gt;
+        &lt;section
+          class=&quot;bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300&quot;
+        &gt;
+          &lt;h2
+            class=&quot;text-2xl font-semibold mb-4 text-gray-800&quot;
+          &gt;
+            System Settings
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;text-gray-600 mb-4&quot;
+          &gt;
+            Adjust global configurations for the platform.
+          &lt;/p&gt;
+          &lt;button
+            class=&quot;w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors&quot;
+          &gt;
+            Edit Settings
+          &lt;/button&gt;
+        &lt;/section&gt;
+      &lt;/main&gt;
+      &lt;footer
+        class=&quot;mt-12 text-center text-gray-600&quot;
+      &gt;
+        © 
+        2025
+         Accountability Buddy. All rights reserved.
+      &lt;/footer&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+    at waitForWrapper (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\dom\dist\wait-for.js:163:27)
+    at Object.&lt;anonymous&gt; (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\pages\AdminManagement.test.tsx:29:18)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="AdminManagementPage handles user role change successfully" name="AdminManagementPage handles user role change successfully" time="1.015">
+      <failure>Error: Unable to find an element with the text: /role updated successfully/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6&quot;
+    &gt;
+      &lt;header
+        class=&quot;mb-8&quot;
+      &gt;
+        &lt;h1
+          class=&quot;text-4xl font-extrabold text-gray-800 text-center&quot;
+        &gt;
+          Admin Management
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;text-lg text-gray-600 text-center&quot;
+        &gt;
+          Manage roles, permissions, and administrative settings with ease.
+        &lt;/p&gt;
+      &lt;/header&gt;
+      &lt;main
+        class=&quot;max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&quot;
+      &gt;
+        &lt;section
+          class=&quot;bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300&quot;
+        &gt;
+          &lt;h2
+            class=&quot;text-2xl font-semibold mb-4 text-gray-800&quot;
+          &gt;
+            User Roles
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;text-gray-600 mb-4&quot;
+          &gt;
+            Assign roles and manage user permissions across the platform.
+          &lt;/p&gt;
+          &lt;button
+            class=&quot;w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors&quot;
+          &gt;
+            Manage Roles
+          &lt;/button&gt;
+        &lt;/section&gt;
+        &lt;section
+          class=&quot;bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300&quot;
+        &gt;
+          &lt;h2
+            class=&quot;text-2xl font-semibold mb-4 text-gray-800&quot;
+          &gt;
+            Permissions
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;text-gray-600 mb-4&quot;
+          &gt;
+            Define what users can access and modify on the platform.
+          &lt;/p&gt;
+          &lt;button
+            class=&quot;w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors&quot;
+          &gt;
+            Manage Permissions
+          &lt;/button&gt;
+        &lt;/section&gt;
+        &lt;section
+          class=&quot;bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300&quot;
+        &gt;
+          &lt;h2
+            class=&quot;text-2xl font-semibold mb-4 text-gray-800&quot;
+          &gt;
+            System Settings
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;text-gray-600 mb-4&quot;
+          &gt;
+            Adjust global configurations for the platform.
+          &lt;/p&gt;
+          &lt;button
+            class=&quot;w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors&quot;
+          &gt;
+            Edit Settings
+          &lt;/button&gt;
+        &lt;/section&gt;
+      &lt;/main&gt;
+      &lt;footer
+        class=&quot;mt-12 text-center text-gray-600&quot;
+      &gt;
+        © 
+        2025
+         Accountability Buddy. All rights reserved.
+      &lt;/footer&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+    at waitForWrapper (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\dom\dist\wait-for.js:163:27)
+    at Object.&lt;anonymous&gt; (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\pages\AdminManagement.test.tsx:41:18)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:316:40)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="AdminManagementPage displays an error message when role update fails" name="AdminManagementPage displays an error message when role update fails" time="1.016">
+      <failure>Error: Unable to find an element with the text: /update failed/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6&quot;
+    &gt;
+      &lt;header
+        class=&quot;mb-8&quot;
+      &gt;
+        &lt;h1
+          class=&quot;text-4xl font-extrabold text-gray-800 text-center&quot;
+        &gt;
+          Admin Management
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;text-lg text-gray-600 text-center&quot;
+        &gt;
+          Manage roles, permissions, and administrative settings with ease.
+        &lt;/p&gt;
+      &lt;/header&gt;
+      &lt;main
+        class=&quot;max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&quot;
+      &gt;
+        &lt;section
+          class=&quot;bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300&quot;
+        &gt;
+          &lt;h2
+            class=&quot;text-2xl font-semibold mb-4 text-gray-800&quot;
+          &gt;
+            User Roles
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;text-gray-600 mb-4&quot;
+          &gt;
+            Assign roles and manage user permissions across the platform.
+          &lt;/p&gt;
+          &lt;button
+            class=&quot;w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors&quot;
+          &gt;
+            Manage Roles
+          &lt;/button&gt;
+        &lt;/section&gt;
+        &lt;section
+          class=&quot;bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300&quot;
+        &gt;
+          &lt;h2
+            class=&quot;text-2xl font-semibold mb-4 text-gray-800&quot;
+          &gt;
+            Permissions
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;text-gray-600 mb-4&quot;
+          &gt;
+            Define what users can access and modify on the platform.
+          &lt;/p&gt;
+          &lt;button
+            class=&quot;w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors&quot;
+          &gt;
+            Manage Permissions
+          &lt;/button&gt;
+        &lt;/section&gt;
+        &lt;section
+          class=&quot;bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300&quot;
+        &gt;
+          &lt;h2
+            class=&quot;text-2xl font-semibold mb-4 text-gray-800&quot;
+          &gt;
+            System Settings
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;text-gray-600 mb-4&quot;
+          &gt;
+            Adjust global configurations for the platform.
+          &lt;/p&gt;
+          &lt;button
+            class=&quot;w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors&quot;
+          &gt;
+            Edit Settings
+          &lt;/button&gt;
+        &lt;/section&gt;
+      &lt;/main&gt;
+      &lt;footer
+        class=&quot;mt-12 text-center text-gray-600&quot;
+      &gt;
+        © 
+        2025
+         Accountability Buddy. All rights reserved.
+      &lt;/footer&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+    at waitForWrapper (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\@testing-library\dom\dist\wait-for.js:163:27)
+    at Object.&lt;anonymous&gt; (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\__tests__\pages\AdminManagement.test.tsx:52:18)
+    at Promise.then.completed (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:316:40)
+    at _runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\kryst\OneDrive\Desktop\accountability-buddys\accountability-buddy-frontend\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

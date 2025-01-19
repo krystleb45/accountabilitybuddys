@@ -1,5 +1,5 @@
 import React from "react";
-import "./AnimatedButton.css";
+import styles from "./AnimatedButton.module.css";
 
 interface AnimatedButtonProps {
   label: string;
@@ -8,6 +8,7 @@ interface AnimatedButtonProps {
   size?: "small" | "medium" | "large";
   isLoading?: boolean;
   disabled?: boolean;
+  className?: string; // Allows additional custom styling
 }
 
 const AnimatedButton: React.FC<AnimatedButtonProps> = ({
@@ -17,16 +18,17 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   size = "medium",
   isLoading = false,
   disabled = false,
+  className = "",
 }) => {
   return (
     <button
-      className={`animated-button ${variant} ${size}`}
+      className={`${styles["animated-button"]} ${styles[variant]} ${styles[size]} ${className}`}
       onClick={onClick}
       disabled={isLoading || disabled}
       aria-label={label}
       aria-busy={isLoading}
     >
-      {isLoading ? <span className="spinner" /> : label}
+      {isLoading ? <span className={styles.spinner} /> : label}
     </button>
   );
 };

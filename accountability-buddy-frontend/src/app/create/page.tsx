@@ -1,71 +1,82 @@
-const fs = require('fs');
-const path = require('path');
+"use client"; // Ensure it's a Client Component
 
-// Define the pages to create
-const pages = [
-  'about-us',
-  'contact-support',
-  'dashboard',
-  'faq',
-  'group',
-  'privacy-policy',
-  'search',
-  'settings',
-  'subscription',
-  'welcome',
-  // Add more pages as needed
-];
+import React, { useState } from "react";
 
-// Base directory for the App Router
-const baseDir = path.join(__dirname, 'app');
+const CreatePage: React.FC = () => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [success, setSuccess] = useState(false);
 
-// Helper function to capitalize the first letter of a string
-const capitalizePageName = (page) => page.charAt(0).toUpperCase() + page.slice(1);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simulate form submission (replace with actual API call)
+    setSuccess(true);
+    setTitle("");
+    setDescription("");
+  };
 
-// Helper function to format the page title (replace hyphens with spaces and capitalize words)
-const formatPageTitle = (page) => 
-  page
-    .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-
-// Helper function to create the content of a page
-const generatePageContent = (page) => `
-import React from 'react';
-
-const ${capitalizePageName(page)}Page = () => {
   return (
-    <div>
-      <h1>${formatPageTitle(page)}</h1>
-      <p>Welcome to the ${formatPageTitle(page)} page!</p>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-6">
+      <div className="max-w-4xl mx-auto">
+        <header className="mb-8">
+          <h1 className="text-4xl font-extrabold text-gray-800 text-center">
+            Create New Goal
+          </h1>
+          <p className="text-lg text-gray-600 text-center">
+            Set your sights on success by creating and tracking your goals.
+          </p>
+        </header>
+
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg mx-auto"
+        >
+          {success && (
+            <div className="mb-4 text-green-600 text-center">
+              Your goal has been successfully created!
+            </div>
+          )}
+          <div className="mb-4">
+            <label htmlFor="title" className="block text-gray-700 font-medium mb-2">
+              Goal Title
+            </label>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+              required
+            />
+          </div>
+
+          <div className="mb-6">
+            <label
+              htmlFor="description"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Description
+            </label>
+            <textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={5}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors"
+          >
+            Create Goal
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
 
-export default ${capitalizePageName(page)}Page;
-`;
-
-// Create directories and page files
-pages.forEach((page) => {
-  const pageDir = path.join(baseDir, page);
-
-  try {
-    // Create the directory if it doesn't exist
-    if (!fs.existsSync(pageDir)) {
-      fs.mkdirSync(pageDir, { recursive: true });
-      console.log(`Created directory: ${pageDir}`);
-    }
-
-    // Create the page.tsx file with a default template
-    const pageFile = path.join(pageDir, 'page.tsx');
-    if (!fs.existsSync(pageFile)) {
-      const pageContent = generatePageContent(page);
-      fs.writeFileSync(pageFile, pageContent.trim());
-      console.log(`Created file: ${pageFile}`);
-    } else {
-      console.log(`File already exists: ${pageFile}`);
-    }
-  } catch (error) {
-    console.error(`Error creating page ${page}:`, error);
-  }
-});
+export default CreatePage;

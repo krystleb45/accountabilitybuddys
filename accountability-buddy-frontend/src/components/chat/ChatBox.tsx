@@ -1,47 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
+import React, { useState, useEffect } from "react";
+import io, { Socket } from "socket.io-client";
+import { ChatBoxProps, ChatMessage } from "./Chat.types";
 
-const socket = io('http://localhost:5000'); // Adjust URL for production
+const socket: typeof Socket = io("http://localhost:5000", {
+    autoConnect: false, // Prevents auto-connect on component mount
+  });
 
-const ChatBox: React.FC = () => {
-    const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState<string[]>([]);
+const ChatBox: React.FC<ChatBoxProps> = ({ onSendMessage, placeholder = "Type a message...", disabled = false }) => {
+  const [message, setMessage] = useState<string>("");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
-    useEffect(() => {
-        socket.on('receiveMessage', (data) => {
-            setMessages((prevMessages) => [...prevMessages, data]);
-        });
+  useEffect(() => {
+    socket.connect();
 
-        return () => {
-            socket.off('receiveMessage');
-        };
-    }, []);
+    // Listen for incoming messages
+    socket.on("receiveMessage", (data: ChatMessage) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
+    });
 
-    const sendMessage = () => {
-        if (message.trim()) {
-            socket.emit('sendMessage', message);
-            setMessages((prevMessages) => [...prevMessages, `You: ${message}`]);
-            setMessage('');
-        }
+    return () => {
+      socket.off("receiveMessage");
+      socket.disconnect(); // Disconnects socket when component unmounts
     };
+  }, []);
 
-    return (
-        <div className="chat-box">
-            <h2>Chatroom</h2>
-            <div className="messages">
-                {messages.map((msg, index) => (
-                    <div key={index}>{msg}</div>
-                ))}
-            </div>
-            <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type a message..."
-            />
-            <button onClick={sendMessage}>Send</button>
-        </div>
-    );
+  const sendMessage = () => {
+    if (message.trim()) {
+      const newMessage: ChatMessage = {
+        id: crypto.randomUUID(),
+        sender: "You",
+        content: message,
+        timestamp: new Date(),
+      };
+
+      socket.emit("sendMessage", newMessage);
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      setMessage("");
+      onSendMessage(message); // Trigger external callback if provided
+    }
+  };
+
+  return (
+    <div className="chat-box">
+      <h2>Chatroom</h2>
+      <div className="messages">
+        {messages.map((msg) => (
+          <div key={msg.id}>
+            <strong>{msg.sender}:</strong> {msg.content}
+          </div>
+        ))}
+      </div>
+      <input
+        type="text"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder={placeholder}
+        disabled={disabled}
+        aria-label="Type your message"
+      />
+      <button onClick={sendMessage} disabled={disabled || !message.trim()}>
+        Send
+      </button>
+    </div>
+  );
 };
 
 export default ChatBox;
