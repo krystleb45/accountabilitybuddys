@@ -1,21 +1,21 @@
-"use client"; // Ensure it's a Client Component
+'use client'; // Ensure it's a Client Component
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 const FaqPage: React.FC = () => {
   const faqs = [
     {
-      question: "What is Accountability Buddy?",
+      question: 'What is Accountability Buddy?',
       answer:
-        "Accountability Buddy is a tool designed to help individuals achieve their goals through personalized support, tracking, and community interaction.",
+        'Accountability Buddy is a tool designed to help individuals achieve their goals through personalized support, tracking, and community interaction.',
     },
     {
-      question: "How can I create a new task?",
+      question: 'How can I create a new task?',
       answer:
         'To create a new task, navigate to the "Tasks" section from your dashboard and click on "Add New Task". Fill in the task details and save it.',
     },
     {
-      question: "Can I update my profile information?",
+      question: 'Can I update my profile information?',
       answer:
         'Yes, you can update your profile information by visiting the "Profile Settings" page in your dashboard.',
     },

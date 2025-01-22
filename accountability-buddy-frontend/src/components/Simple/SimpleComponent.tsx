@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface SimpleComponentProps {
   message?: string;
@@ -6,17 +6,17 @@ interface SimpleComponentProps {
   id?: string; // Optional ID for DOM targeting
 }
 
-const SimpleComponent: React.FC<SimpleComponentProps> = ({ 
-  message = "Simple Component",
-  className = "",
-  id = "simple-component"
+const SimpleComponent: React.FC<SimpleComponentProps> = ({
+  message = 'Simple Component',
+  className = '',
+  id = 'simple-component',
 }) => {
   return (
-    <p 
+    <p
       id={id}
-      className={className} 
-      role="contentinfo" 
-      aria-live="polite" 
+      className={className}
+      role="contentinfo"
+      aria-live="polite"
       aria-atomic="true"
     >
       {message}

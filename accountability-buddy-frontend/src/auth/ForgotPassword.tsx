@@ -27,7 +27,10 @@ const ForgotPassword: React.FC = () => {
         setError(response.data.message || 'Failed to send reset link.');
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'An error occurred. Please try again later.');
+      setError(
+        err.response?.data?.message ||
+          'An error occurred. Please try again later.'
+      );
     }
   };
 

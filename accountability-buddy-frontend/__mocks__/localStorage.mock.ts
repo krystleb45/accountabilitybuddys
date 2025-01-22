@@ -21,7 +21,9 @@ const localStorageMock: LocalStorageMock = (() => {
      * @returns The value as a string, or null if the key does not exist.
      */
     getItem(key: string): string | null {
-      return Object.prototype.hasOwnProperty.call(store, key) ? store[key] : null;
+      return Object.prototype.hasOwnProperty.call(store, key)
+        ? store[key]
+        : null;
     },
 
     /**

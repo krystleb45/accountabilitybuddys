@@ -1,26 +1,27 @@
-"use client"; // Mark as a Client Component
+'use client'; // Mark as a Client Component
 
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.example.com";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.example.com';
 
 const ProfilePage: React.FC = () => {
   const [profile, setProfile] = useState<{ name: string; email: string }>({
-    name: "",
-    email: "",
+    name: '',
+    email: '',
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   useEffect(() => {
     const fetchProfile = async () => {
       setLoading(true);
-      setError("");
+      setError('');
       try {
-        const token = localStorage.getItem("authToken");
-        if (!token) throw new Error("No token found");
+        const token = localStorage.getItem('authToken');
+        if (!token) throw new Error('No token found');
 
         const response = await axios.get(`${API_URL}/user/profile`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -29,11 +30,11 @@ const ProfilePage: React.FC = () => {
         if (response.status === 200) {
           setProfile(response.data);
         } else {
-          setError("Failed to load profile.");
+          setError('Failed to load profile.');
         }
       } catch (err) {
-        console.error("Error fetching profile:", err);
-        setError("An error occurred while loading your profile.");
+        console.error('Error fetching profile:', err);
+        setError('An error occurred while loading your profile.');
       } finally {
         setLoading(false);
       }
@@ -45,25 +46,25 @@ const ProfilePage: React.FC = () => {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccessMessage("");
+    setError('');
+    setSuccessMessage('');
 
     try {
-      const token = localStorage.getItem("authToken");
-      if (!token) throw new Error("No token found");
+      const token = localStorage.getItem('authToken');
+      if (!token) throw new Error('No token found');
 
       const response = await axios.put(`${API_URL}/user/profile`, profile, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.status === 200) {
-        setSuccessMessage("Profile updated successfully!");
+        setSuccessMessage('Profile updated successfully!');
       } else {
-        setError("Profile update failed.");
+        setError('Profile update failed.');
       }
     } catch (err) {
-      console.error("Error updating profile:", err);
-      setError("An error occurred while updating your profile.");
+      console.error('Error updating profile:', err);
+      setError('An error occurred while updating your profile.');
     } finally {
       setLoading(false);
     }
@@ -79,20 +80,31 @@ const ProfilePage: React.FC = () => {
         {loading && <div className="text-center">Loading...</div>}
 
         {error && (
-          <div className="text-red-600 text-center mb-4" role="alert" aria-live="assertive">
+          <div
+            className="text-red-600 text-center mb-4"
+            role="alert"
+            aria-live="assertive"
+          >
             {error}
           </div>
         )}
 
         {successMessage && (
-          <div className="text-green-600 text-center mb-4" role="alert" aria-live="assertive">
+          <div
+            className="text-green-600 text-center mb-4"
+            role="alert"
+            aria-live="assertive"
+          >
             {successMessage}
           </div>
         )}
 
         <form onSubmit={handleUpdate} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-gray-700 font-medium mb-1">
+            <label
+              htmlFor="name"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Name:
             </label>
             <input
@@ -107,14 +119,19 @@ const ProfilePage: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-gray-700 font-medium mb-1">
+            <label
+              htmlFor="email"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Email:
             </label>
             <input
               type="email"
               id="email"
               value={profile.email}
-              onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+              onChange={(e) =>
+                setProfile({ ...profile, email: e.target.value })
+              }
               className="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
               placeholder="Your email"
               required
@@ -126,7 +143,7 @@ const ProfilePage: React.FC = () => {
             disabled={loading}
             className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            {loading ? "Updating..." : "Update Profile"}
+            {loading ? 'Updating...' : 'Update Profile'}
           </button>
         </form>
       </div>

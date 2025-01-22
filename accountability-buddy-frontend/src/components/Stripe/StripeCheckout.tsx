@@ -1,11 +1,16 @@
-import React from "react";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements, useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
-import "./StripeCheckout.css";
+import React from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+import {
+  Elements,
+  useStripe,
+  useElements,
+  CardElement,
+} from '@stripe/react-stripe-js';
+import './StripeCheckout.css';
 
 // Load Stripe public key from environment variables
 const stripePromise = loadStripe(
-  process.env.REACT_APP_STRIPE_PUBLIC_KEY || "pk_test_XXXXXXXXXXXXXXXXXXXX"
+  process.env.REACT_APP_STRIPE_PUBLIC_KEY || 'pk_test_XXXXXXXXXXXXXXXXXXXX'
 );
 
 interface StripeCheckoutFormProps {
@@ -29,7 +34,7 @@ const StripeCheckoutForm: React.FC<StripeCheckoutFormProps> = ({
     setLoading(true);
 
     if (!stripe || !elements) {
-      onError("Stripe is not initialized.");
+      onError('Stripe is not initialized.');
       setLoading(false);
       return;
     }
@@ -37,29 +42,27 @@ const StripeCheckoutForm: React.FC<StripeCheckoutFormProps> = ({
     const cardElement = elements.getElement(CardElement);
 
     if (!cardElement) {
-      onError("Card element not found.");
+      onError('Card element not found.');
       setLoading(false);
       return;
     }
 
     try {
       // Confirm card payment with the provided client secret
-      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
-        clientSecret,
-        {
+      const { error: stripeError, paymentIntent } =
+        await stripe.confirmCardPayment(clientSecret, {
           payment_method: { card: cardElement },
-        }
-      );
+        });
 
       if (stripeError) {
-        onError(stripeError.message || "Payment failed.");
-      } else if (paymentIntent?.status === "succeeded") {
+        onError(stripeError.message || 'Payment failed.');
+      } else if (paymentIntent?.status === 'succeeded') {
         onSuccess();
       } else {
-        onError("Payment did not succeed. Please try again.");
+        onError('Payment did not succeed. Please try again.');
       }
     } catch (error) {
-      onError("An unexpected error occurred.");
+      onError('An unexpected error occurred.');
     } finally {
       setLoading(false);
     }
@@ -71,19 +74,23 @@ const StripeCheckoutForm: React.FC<StripeCheckoutFormProps> = ({
         options={{
           style: {
             base: {
-              fontSize: "16px",
-              color: "#424770",
-              "::placeholder": {
-                color: "#aab7c4",
+              fontSize: '16px',
+              color: '#424770',
+              '::placeholder': {
+                color: '#aab7c4',
               },
             },
             invalid: {
-              color: "#9e2146",
+              color: '#9e2146',
             },
           },
         }}
       />
-      <button type="submit" disabled={!stripe || !clientSecret} className="stripe-checkout-button">
+      <button
+        type="submit"
+        disabled={!stripe || !clientSecret}
+        className="stripe-checkout-button"
+      >
         Pay Now
       </button>
     </form>

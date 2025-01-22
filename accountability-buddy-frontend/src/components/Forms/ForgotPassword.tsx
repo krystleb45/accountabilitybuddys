@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import axios from "axios";
-import styles from "./Forms.module.css"; // Import CSS module for styling
+import React, { useState } from 'react';
+import axios from 'axios';
+import styles from './Forms.module.css'; // Import CSS module for styling
 
 const ForgotPassword: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [email, setEmail] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
   // Function to validate the email address format
@@ -17,12 +17,12 @@ const ForgotPassword: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true); // Start loading
-    setMessage(""); // Clear previous message
-    setError(""); // Clear previous error
+    setMessage(''); // Clear previous message
+    setError(''); // Clear previous error
 
     // Validate email format
     if (!validateEmail(email)) {
-      setError("Please enter a valid email address.");
+      setError('Please enter a valid email address.');
       setLoading(false); // Stop loading since validation failed
       return;
     }
@@ -32,10 +32,14 @@ const ForgotPassword: React.FC = () => {
         `${process.env.REACT_APP_API_URL}/auth/forgot-password`,
         { email }
       );
-      setMessage(res.data.message || "Password reset instructions have been sent to your email.");
+      setMessage(
+        res.data.message ||
+          'Password reset instructions have been sent to your email.'
+      );
     } catch (err: any) {
       setError(
-        err.response?.data?.error || "Failed to send password reset instructions. Please try again."
+        err.response?.data?.error ||
+          'Failed to send password reset instructions. Please try again.'
       );
     } finally {
       setLoading(false); // Stop loading
@@ -43,12 +47,12 @@ const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className={styles["form-container"]}>
+    <div className={styles['form-container']}>
       <h2>Forgot Password</h2>
-      {message && <p className={styles["success-message"]}>{message}</p>}
-      {error && <p className={styles["error-message"]}>{error}</p>}
-      <form onSubmit={handleSubmit} className={styles["form"]}>
-        <label htmlFor="email" className={styles["label"]}>
+      {message && <p className={styles['success-message']}>{message}</p>}
+      {error && <p className={styles['error-message']}>{error}</p>}
+      <form onSubmit={handleSubmit} className={styles['form']}>
+        <label htmlFor="email" className={styles['label']}>
           Email Address
         </label>
         <input
@@ -57,12 +61,16 @@ const ForgotPassword: React.FC = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
-          className={styles["input"]}
+          className={styles['input']}
           aria-label="Email"
           required
         />
-        <button type="submit" disabled={loading} className={styles["submit-button"]}>
-          {loading ? "Sending..." : "Send Instructions"}
+        <button
+          type="submit"
+          disabled={loading}
+          className={styles['submit-button']}
+        >
+          {loading ? 'Sending...' : 'Send Instructions'}
         </button>
       </form>
     </div>

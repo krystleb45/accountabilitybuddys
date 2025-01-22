@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import "./Tasks.module.css";
+import React, { useState, useEffect } from 'react';
+import './Tasks.module.css';
 
 interface TaskFormProps {
   onSubmit: (task: {
@@ -21,27 +21,42 @@ interface TaskFormProps {
   onCancel?: () => void;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, initialValues, onCancel }) => {
-  const [name, setName] = useState<string>(initialValues?.name || "");
+const TaskForm: React.FC<TaskFormProps> = ({
+  onSubmit,
+  initialValues,
+  onCancel,
+}) => {
+  const [name, setName] = useState<string>(initialValues?.name || '');
   const [description, setDescription] = useState<string>(
-    initialValues?.description || ""
+    initialValues?.description || ''
   );
-  const [dueDate, setDueDate] = useState<string>(initialValues?.dueDate || "");
-  const [priority, setPriority] = useState<string>(initialValues?.priority || "medium");
-  const [status, setStatus] = useState<string>(initialValues?.status || "pending");
+  const [dueDate, setDueDate] = useState<string>(initialValues?.dueDate || '');
+  const [priority, setPriority] = useState<string>(
+    initialValues?.priority || 'medium'
+  );
+  const [status, setStatus] = useState<string>(
+    initialValues?.status || 'pending'
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ id: initialValues?.id, name, description, dueDate, priority, status });
+    onSubmit({
+      id: initialValues?.id,
+      name,
+      description,
+      dueDate,
+      priority,
+      status,
+    });
     resetForm();
   };
 
   const resetForm = () => {
-    setName("");
-    setDescription("");
-    setDueDate("");
-    setPriority("medium");
-    setStatus("pending");
+    setName('');
+    setDescription('');
+    setDueDate('');
+    setPriority('medium');
+    setStatus('pending');
   };
 
   useEffect(() => {
@@ -56,7 +71,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, initialValues, onCancel }
 
   return (
     <form onSubmit={handleSubmit} className="task-form">
-      <h3>{initialValues ? "Edit Task" : "Create Task"}</h3>
+      <h3>{initialValues ? 'Edit Task' : 'Create Task'}</h3>
 
       <div className="form-group">
         <label htmlFor="task-name">Task Name:</label>
@@ -116,7 +131,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, initialValues, onCancel }
 
       <div className="form-actions">
         <button type="submit" className="submit-button">
-          {initialValues ? "Update Task" : "Create Task"}
+          {initialValues ? 'Update Task' : 'Create Task'}
         </button>
         {onCancel && (
           <button type="button" className="cancel-button" onClick={onCancel}>

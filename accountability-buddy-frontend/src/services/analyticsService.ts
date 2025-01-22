@@ -20,8 +20,8 @@ const handleApiError = (error: any): never => {
   console.error('API Error:', error);
   throw new Error(
     error.response?.data?.message ||
-    error.message ||
-    'An unexpected error occurred. Please try again later.'
+      error.message ||
+      'An unexpected error occurred. Please try again later.'
   );
 };
 
@@ -77,7 +77,10 @@ const AnalyticsService = {
    * @param {string} endDate - The end date for the analytics data (YYYY-MM-DD).
    * @returns {Promise<any>} - The detailed analytics data for the specified timeframe.
    */
-  getDetailedAnalytics: async (startDate: string, endDate: string): Promise<any> => {
+  getDetailedAnalytics: async (
+    startDate: string,
+    endDate: string
+  ): Promise<any> => {
     try {
       const response = await apiClient.get('/detailed', {
         params: { startDate, endDate },

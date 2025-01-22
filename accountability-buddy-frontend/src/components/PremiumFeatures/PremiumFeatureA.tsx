@@ -1,5 +1,5 @@
-import React from "react";
-import "./PremiumFeatureA.module.css";
+import React from 'react';
+import './PremiumFeatureA.module.css';
 
 interface PremiumFeatureAProps {
   title: string;
@@ -17,7 +17,7 @@ const PremiumFeatureA: React.FC<PremiumFeatureAProps> = ({
   onDeactivate,
 }) => {
   return (
-    <div className={`premium-feature-a ${isActive ? "active" : "inactive"}`}>
+    <div className={`premium-feature-a ${isActive ? 'active' : 'inactive'}`}>
       <h3>{title}</h3>
       <p>{description}</p>
       {isActive ? (

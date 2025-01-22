@@ -65,7 +65,10 @@ describe('Task Management', () => {
     const updatedTaskName = 'Updated Task';
     cy.get('.task-item').first().as('taskToEdit');
     cy.get('@taskToEdit').find('button[aria-label="Edit Task"]').click();
-    cy.get('@taskToEdit').find('input[aria-label="Edit Task Name"]').clear().type(updatedTaskName);
+    cy.get('@taskToEdit')
+      .find('input[aria-label="Edit Task Name"]')
+      .clear()
+      .type(updatedTaskName);
     cy.get('@taskToEdit').find('button[aria-label="Save Task"]').click();
 
     // Verify the updated task name

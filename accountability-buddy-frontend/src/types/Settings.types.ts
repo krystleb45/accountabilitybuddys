@@ -3,7 +3,7 @@
  */
 export interface UserSettings {
   /** Theme preference: light or dark. */
-  theme: "light" | "dark";
+  theme: 'light' | 'dark';
 
   /** Indicates if notifications are enabled. */
   notificationsEnabled: boolean;

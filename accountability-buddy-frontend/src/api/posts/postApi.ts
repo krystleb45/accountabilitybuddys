@@ -1,7 +1,8 @@
-import axios from "axios";
-import { getAuthHeader } from "src/services/authService"; // Helper to get the Authorization header
+import axios from 'axios';
+import { getAuthHeader } from 'src/services/authService'; // Helper to get the Authorization header
 
-const API_URL = process.env.REACT_APP_API_URL || "https://api.example.com/users";
+const API_URL =
+  process.env.REACT_APP_API_URL || 'https://api.example.com/users';
 
 // Define the structure of a Post
 interface Post {
@@ -28,10 +29,11 @@ interface Comment {
 // Helper function to handle API errors
 const handleError = (error: any): never => {
   if (error.response && error.response.status === 401) {
-    throw new Error("Invalid credentials. Please try again.");
+    throw new Error('Invalid credentials. Please try again.');
   }
   throw new Error(
-    error.response?.data?.message || "An error occurred. Please try again later."
+    error.response?.data?.message ||
+      'An error occurred. Please try again later.'
   );
 };
 
@@ -49,7 +51,9 @@ export const fetchPosts = async (): Promise<Post[] | undefined> => {
 };
 
 // Fetch a specific post by ID
-export const fetchPostById = async (postId: string): Promise<Post | undefined> => {
+export const fetchPostById = async (
+  postId: string
+): Promise<Post | undefined> => {
   try {
     const response = await axios.get<Post>(`${API_URL}/${postId}`, {
       headers: getAuthHeader(),
@@ -62,7 +66,9 @@ export const fetchPostById = async (postId: string): Promise<Post | undefined> =
 };
 
 // Create a new post
-export const createPost = async (postData: Partial<Post>): Promise<Post | undefined> => {
+export const createPost = async (
+  postData: Partial<Post>
+): Promise<Post | undefined> => {
   try {
     const response = await axios.post<Post>(`${API_URL}`, postData, {
       headers: getAuthHeader(),
@@ -75,7 +81,10 @@ export const createPost = async (postData: Partial<Post>): Promise<Post | undefi
 };
 
 // Update an existing post
-export const updatePost = async (postId: string, postData: Partial<Post>): Promise<Post | undefined> => {
+export const updatePost = async (
+  postId: string,
+  postData: Partial<Post>
+): Promise<Post | undefined> => {
   try {
     const response = await axios.put<Post>(`${API_URL}/${postId}`, postData, {
       headers: getAuthHeader(),
@@ -88,11 +97,16 @@ export const updatePost = async (postId: string, postData: Partial<Post>): Promi
 };
 
 // Delete a post
-export const deletePost = async (postId: string): Promise<{ message: string } | undefined> => {
+export const deletePost = async (
+  postId: string
+): Promise<{ message: string } | undefined> => {
   try {
-    const response = await axios.delete<{ message: string }>(`${API_URL}/${postId}`, {
-      headers: getAuthHeader(),
-    });
+    const response = await axios.delete<{ message: string }>(
+      `${API_URL}/${postId}`,
+      {
+        headers: getAuthHeader(),
+      }
+    );
     return response.data;
   } catch (error: any) {
     handleError(error);

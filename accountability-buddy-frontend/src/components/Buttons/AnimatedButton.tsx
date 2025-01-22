@@ -1,11 +1,11 @@
-import React from "react";
-import styles from "./AnimatedButton.module.css";
+import React from 'react';
+import styles from './AnimatedButton.module.css';
 
 interface AnimatedButtonProps {
   label: string;
   onClick?: () => void;
-  variant?: "primary" | "secondary" | "outline";
-  size?: "small" | "medium" | "large";
+  variant?: 'primary' | 'secondary' | 'outline';
+  size?: 'small' | 'medium' | 'large';
   isLoading?: boolean;
   disabled?: boolean;
   className?: string; // Allows additional custom styling
@@ -14,15 +14,15 @@ interface AnimatedButtonProps {
 const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   label,
   onClick,
-  variant = "primary",
-  size = "medium",
+  variant = 'primary',
+  size = 'medium',
   isLoading = false,
   disabled = false,
-  className = "",
+  className = '',
 }) => {
   return (
     <button
-      className={`${styles["animated-button"]} ${styles[variant]} ${styles[size]} ${className}`}
+      className={`${styles['animated-button']} ${styles[variant]} ${styles[size]} ${className}`}
       onClick={onClick}
       disabled={isLoading || disabled}
       aria-label={label}

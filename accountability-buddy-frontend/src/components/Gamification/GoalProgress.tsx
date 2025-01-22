@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   LinearProgress,
@@ -7,7 +7,7 @@ import {
   CardContent,
   CardHeader,
   Button,
-} from "@mui/material";
+} from '@mui/material';
 
 // Define the interface for the goal progress
 interface GoalProgressProps {
@@ -35,7 +35,7 @@ const GoalProgress: React.FC<GoalProgressProps> = ({
     <Card data-testid="goal-progress-card">
       <CardHeader
         title={goalTitle}
-        titleTypographyProps={{ variant: "h6" }}
+        titleTypographyProps={{ variant: 'h6' }}
         data-testid="goal-title"
       />
       <CardContent>
@@ -57,7 +57,7 @@ const GoalProgress: React.FC<GoalProgressProps> = ({
             aria-valuenow={progressPercentage}
             aria-valuemin={0}
             aria-valuemax={100}
-            style={{ height: "10px", borderRadius: "5px" }}
+            style={{ height: '10px', borderRadius: '5px' }}
           />
         </Box>
         {/* Percentage completion */}
@@ -74,7 +74,7 @@ const GoalProgress: React.FC<GoalProgressProps> = ({
           color="primary"
           onClick={onEditGoal}
           data-testid="edit-goal-button"
-          style={{ marginTop: "16px" }}
+          style={{ marginTop: '16px' }}
         >
           Edit Goal
         </Button>

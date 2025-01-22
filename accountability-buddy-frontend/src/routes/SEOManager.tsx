@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 interface SEOManagerProps {
   title: string;
@@ -26,39 +26,42 @@ const SEOManager: React.FC<SEOManagerProps> = ({
       if (!content) return;
       let metaTag = document.querySelector(`meta[name="${name}"]`);
       if (!metaTag) {
-        metaTag = document.createElement("meta");
-        metaTag.setAttribute("name", name);
+        metaTag = document.createElement('meta');
+        metaTag.setAttribute('name', name);
         document.head.appendChild(metaTag);
       }
-      metaTag.setAttribute("content", content);
+      metaTag.setAttribute('content', content);
     };
 
-    const updateOrCreatePropertyMeta = (property: string, content: string | undefined) => {
+    const updateOrCreatePropertyMeta = (
+      property: string,
+      content: string | undefined
+    ) => {
       if (!content) return;
       let metaTag = document.querySelector(`meta[property="${property}"]`);
       if (!metaTag) {
-        metaTag = document.createElement("meta");
-        metaTag.setAttribute("property", property);
+        metaTag = document.createElement('meta');
+        metaTag.setAttribute('property', property);
         document.head.appendChild(metaTag);
       }
-      metaTag.setAttribute("content", content);
+      metaTag.setAttribute('content', content);
     };
 
-    updateOrCreateMeta("title", title);
-    updateOrCreateMeta("description", description);
-    updateOrCreateMeta("keywords", keywords);
-    updateOrCreateMeta("author", author);
+    updateOrCreateMeta('title', title);
+    updateOrCreateMeta('description', description);
+    updateOrCreateMeta('keywords', keywords);
+    updateOrCreateMeta('author', author);
 
-    updateOrCreatePropertyMeta("og:title", title);
-    updateOrCreatePropertyMeta("og:description", description);
-    updateOrCreatePropertyMeta("og:image", image);
-    updateOrCreatePropertyMeta("og:url", url);
-    updateOrCreatePropertyMeta("og:type", "website");
+    updateOrCreatePropertyMeta('og:title', title);
+    updateOrCreatePropertyMeta('og:description', description);
+    updateOrCreatePropertyMeta('og:image', image);
+    updateOrCreatePropertyMeta('og:url', url);
+    updateOrCreatePropertyMeta('og:type', 'website');
 
-    updateOrCreateMeta("twitter:card", "summary_large_image");
-    updateOrCreateMeta("twitter:title", title);
-    updateOrCreateMeta("twitter:description", description);
-    updateOrCreateMeta("twitter:image", image);
+    updateOrCreateMeta('twitter:card', 'summary_large_image');
+    updateOrCreateMeta('twitter:title', title);
+    updateOrCreateMeta('twitter:description', description);
+    updateOrCreateMeta('twitter:image', image);
   }, [title, description, image, url, keywords, author]);
 
   return null;

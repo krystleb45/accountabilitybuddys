@@ -28,7 +28,10 @@ const Register: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('/api/auth/register', { email, password });
+      const response = await axios.post('/api/auth/register', {
+        email,
+        password,
+      });
       if (response.data.success) {
         setSuccess('Account created successfully! Redirecting to login...');
         setTimeout(() => navigate('/login'), 3000); // Redirect to login after 3 seconds
@@ -36,7 +39,10 @@ const Register: React.FC = () => {
         setError(response.data.message || 'Failed to register.');
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'An error occurred. Please try again later.');
+      setError(
+        err.response?.data?.message ||
+          'An error occurred. Please try again later.'
+      );
     } finally {
       setLoading(false);
     }

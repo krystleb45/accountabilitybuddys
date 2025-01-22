@@ -1,37 +1,37 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "src/app/homepage/page";
-import Profile from "src/app/profile/page";
-import Settings from "src/app/settings/page";
-import NotFound from "src/app/notfound/page";
-import RouteMetadata from "./RouteMetadata";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from 'src/app/homepage/page';
+import Profile from 'src/app/profile/page';
+import Settings from 'src/app/settings/page';
+import NotFound from 'src/app/notfound/page';
+import RouteMetadata from './RouteMetadata';
 
 /**
  * Application Routes
- * 
+ *
  * This component defines the routing structure of the application,
  * including metadata for each route.
  */
 const AppRoutes: React.FC = () => {
   const routes = [
     {
-      path: "/",
-      title: "Home | Accountability Buddy",
+      path: '/',
+      title: 'Home | Accountability Buddy',
       component: <Home />,
     },
     {
-      path: "/profile",
-      title: "Profile | Accountability Buddy",
+      path: '/profile',
+      title: 'Profile | Accountability Buddy',
       component: <Profile />,
     },
     {
-      path: "/settings",
-      title: "Settings | Accountability Buddy",
+      path: '/settings',
+      title: 'Settings | Accountability Buddy',
       component: <Settings />,
     },
     {
-      path: "*",
-      title: "404 | Page Not Found",
+      path: '*',
+      title: '404 | Page Not Found',
       component: <NotFound />,
     },
   ];

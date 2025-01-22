@@ -1,6 +1,6 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import "./NavbarItems.css";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import './NavbarItems.css';
 
 interface NavbarItem {
   label: string;
@@ -23,7 +23,7 @@ const NavbarItems: React.FC<NavbarItemsProps> = ({ items }) => {
             to={item.to}
             end={item.exact}
             className={({ isActive }) =>
-              isActive ? "navbar-link active" : "navbar-link"
+              isActive ? 'navbar-link active' : 'navbar-link'
             }
             onClick={item.onClick}
             aria-label={item.label}

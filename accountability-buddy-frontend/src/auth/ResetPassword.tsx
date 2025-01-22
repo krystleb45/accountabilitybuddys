@@ -28,15 +28,22 @@ const ResetPassword: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`/api/auth/reset-password/${token}`, { password });
+      const response = await axios.post(`/api/auth/reset-password/${token}`, {
+        password,
+      });
       if (response.data.success) {
-        setSuccess('Password has been reset successfully! Redirecting to login...');
+        setSuccess(
+          'Password has been reset successfully! Redirecting to login...'
+        );
         setTimeout(() => navigate('/login'), 3000); // Redirect to login after 3 seconds
       } else {
         setError(response.data.message || 'Failed to reset password.');
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'An error occurred. Please try again later.');
+      setError(
+        err.response?.data?.message ||
+          'An error occurred. Please try again later.'
+      );
     } finally {
       setLoading(false);
     }

@@ -1,7 +1,6 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import authService from "./authService"; // Helper function for Authorization header
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import authService from './authService'; // Helper function for Authorization header
 import { AxiosHeaders } from 'axios';
-
 
 // Define types for task data
 export interface Task {
@@ -9,8 +8,8 @@ export interface Task {
   title: string;
   description?: string;
   dueDate?: string; // ISO date string
-  status: "pending" | "in-progress" | "completed";
-  priority?: "low" | "medium" | "high"; // Optional field for task priority
+  status: 'pending' | 'in-progress' | 'completed';
+  priority?: 'low' | 'medium' | 'high'; // Optional field for task priority
   [key: string]: any; // Additional fields
 }
 
@@ -19,15 +18,15 @@ export interface TaskInput {
   title: string;
   description?: string;
   dueDate?: string;
-  status?: "pending" | "in-progress" | "completed";
-  priority?: "low" | "medium" | "high"; // Optional field for task priority
+  status?: 'pending' | 'in-progress' | 'completed';
+  priority?: 'low' | 'medium' | 'high'; // Optional field for task priority
 }
 
 // Create an axios instance for tasks API
 const apiClient = axios.create({
-  baseURL: "https://accountabilitybuddys.com/api/tasks",
+  baseURL: 'https://accountabilitybuddys.com/api/tasks',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -61,15 +60,15 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
         await new Promise((resolve) => setTimeout(resolve, delay));
         attempt++;
       } else {
-        console.error("Request failed:", error);
+        console.error('Request failed:', error);
         throw new Error(
           error.response?.data?.message ||
-            "An error occurred. Please try again."
+            'An error occurred. Please try again.'
         );
       }
     }
   }
-  throw new Error("Failed after multiple retries.");
+  throw new Error('Failed after multiple retries.');
 };
 
 // Task service methods
@@ -81,18 +80,18 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
  */
 export const createTask = async (taskData: TaskInput): Promise<Task> => {
   if (!taskData.title) {
-    throw new Error("Task title is required to create a task.");
+    throw new Error('Task title is required to create a task.');
   }
 
   try {
     const response: AxiosResponse<Task> = await axiosRetry(() =>
-      apiClient.post("/create", taskData)
+      apiClient.post('/create', taskData)
     );
-    console.log("Task created successfully:", response.data);
+    console.log('Task created successfully:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error creating task:", error);
-    throw new Error(error.response?.data?.message || "Failed to create task.");
+    console.error('Error creating task:', error);
+    throw new Error(error.response?.data?.message || 'Failed to create task.');
   }
 };
 
@@ -103,14 +102,14 @@ export const createTask = async (taskData: TaskInput): Promise<Task> => {
 export const getUserTasks = async (): Promise<Task[]> => {
   try {
     const response: AxiosResponse<Task[]> = await axiosRetry(() =>
-      apiClient.get("/list")
+      apiClient.get('/list')
     );
-    console.log("User tasks fetched successfully:", response.data);
+    console.log('User tasks fetched successfully:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error fetching user tasks:", error);
+    console.error('Error fetching user tasks:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to fetch user tasks."
+      error.response?.data?.message || 'Failed to fetch user tasks.'
     );
   }
 };
@@ -126,7 +125,7 @@ export const updateTask = async (
   taskData: Partial<TaskInput>
 ): Promise<Task> => {
   if (!taskId) {
-    throw new Error("Task ID is required to update a task.");
+    throw new Error('Task ID is required to update a task.');
   }
 
   try {
@@ -136,8 +135,8 @@ export const updateTask = async (
     console.log(`Task ${taskId} updated successfully:`, response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error updating task:", error);
-    throw new Error(error.response?.data?.message || "Failed to update task.");
+    console.error('Error updating task:', error);
+    throw new Error(error.response?.data?.message || 'Failed to update task.');
   }
 };
 
@@ -147,15 +146,15 @@ export const updateTask = async (
  */
 export const deleteTask = async (taskId: string): Promise<void> => {
   if (!taskId) {
-    throw new Error("Task ID is required to delete a task.");
+    throw new Error('Task ID is required to delete a task.');
   }
 
   try {
     await axiosRetry(() => apiClient.delete(`/delete/${taskId}`));
     console.log(`Task ${taskId} deleted successfully.`);
   } catch (error: any) {
-    console.error("Error deleting task:", error);
-    throw new Error(error.response?.data?.message || "Failed to delete task.");
+    console.error('Error deleting task:', error);
+    throw new Error(error.response?.data?.message || 'Failed to delete task.');
   }
 };
 
@@ -166,7 +165,7 @@ export const deleteTask = async (taskId: string): Promise<void> => {
  */
 export const getTaskDetails = async (taskId: string): Promise<Task> => {
   if (!taskId) {
-    throw new Error("Task ID is required to fetch task details.");
+    throw new Error('Task ID is required to fetch task details.');
   }
 
   try {
@@ -176,9 +175,9 @@ export const getTaskDetails = async (taskId: string): Promise<Task> => {
     console.log(`Task details fetched for ID ${taskId}:`, response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error fetching task details:", error);
+    console.error('Error fetching task details:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to fetch task details."
+      error.response?.data?.message || 'Failed to fetch task details.'
     );
   }
 };

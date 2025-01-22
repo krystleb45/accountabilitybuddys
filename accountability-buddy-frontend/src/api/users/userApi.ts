@@ -1,7 +1,8 @@
-import axios from "axios";
-import { getAuthHeader } from "src/services/authService"; // Ensure token is included in requests
+import axios from 'axios';
+import { getAuthHeader } from 'src/services/authService'; // Ensure token is included in requests
 
-const API_URL = process.env.REACT_APP_API_URL || "https://api.example.com/users";
+const API_URL =
+  process.env.REACT_APP_API_URL || 'https://api.example.com/users';
 
 // Define the structure of User Profile Data
 interface UserProfile {
@@ -20,10 +21,11 @@ interface PasswordData {
 // Helper function to handle API errors
 const handleError = (error: any): never => {
   if (error.response && error.response.status === 401) {
-    throw new Error("Invalid credentials. Please try again.");
+    throw new Error('Invalid credentials. Please try again.');
   }
   throw new Error(
-    error.response?.data?.message || "An error occurred. Please try again later."
+    error.response?.data?.message ||
+      'An error occurred. Please try again later.'
   );
 };
 
@@ -41,7 +43,9 @@ export const getUserProfile = async (): Promise<UserProfile | undefined> => {
 };
 
 // Update the user's profile
-export const updateUserProfile = async (profileData: Partial<UserProfile>): Promise<UserProfile | undefined> => {
+export const updateUserProfile = async (
+  profileData: Partial<UserProfile>
+): Promise<UserProfile | undefined> => {
   try {
     const response = await axios.put<UserProfile>(
       `${API_URL}/profile/update`,
@@ -49,7 +53,7 @@ export const updateUserProfile = async (profileData: Partial<UserProfile>): Prom
       {
         headers: {
           ...getAuthHeader(), // Include the authorization token in headers
-          "Content-Type": "application/json", // Ensure content type is set for JSON requests
+          'Content-Type': 'application/json', // Ensure content type is set for JSON requests
         },
       }
     );
@@ -61,7 +65,9 @@ export const updateUserProfile = async (profileData: Partial<UserProfile>): Prom
 };
 
 // Update user password
-export const updatePassword = async (passwordData: PasswordData): Promise<{ message: string } | undefined> => {
+export const updatePassword = async (
+  passwordData: PasswordData
+): Promise<{ message: string } | undefined> => {
   try {
     const response = await axios.put<{ message: string }>(
       `${API_URL}/password/update`,
@@ -91,11 +97,16 @@ export const getUserActivityLogs = async (): Promise<any[] | undefined> => {
 };
 
 // Delete the user's account
-export const deleteUserAccount = async (): Promise<{ message: string } | undefined> => {
+export const deleteUserAccount = async (): Promise<
+  { message: string } | undefined
+> => {
   try {
-    const response = await axios.delete<{ message: string }>(`${API_URL}/delete`, {
-      headers: getAuthHeader(), // Include the authorization token in headers
-    });
+    const response = await axios.delete<{ message: string }>(
+      `${API_URL}/delete`,
+      {
+        headers: getAuthHeader(), // Include the authorization token in headers
+      }
+    );
     return response.data; // Assuming response contains confirmation of account deletion
   } catch (error: any) {
     handleError(error);

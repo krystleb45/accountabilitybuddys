@@ -10,7 +10,9 @@ interface RelatedActivitiesProps {
   activities: RelatedActivity[];
 }
 
-const RelatedActivities: React.FC<RelatedActivitiesProps> = ({ activities }) => {
+const RelatedActivities: React.FC<RelatedActivitiesProps> = ({
+  activities,
+}) => {
   if (!activities || activities.length === 0) {
     return <p className="related-activities-empty">No related activities</p>;
   }

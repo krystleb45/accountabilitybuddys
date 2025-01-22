@@ -1,5 +1,5 @@
-import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 
 interface PrivateRouteProps {
   isAuthenticated: boolean;
@@ -20,7 +20,7 @@ interface PrivateRouteProps {
 const PrivateRoute: React.FC<PrivateRouteProps> = ({
   isAuthenticated,
   element,
-  redirectPath = "/login",
+  redirectPath = '/login',
 }) => {
   const location = useLocation();
 

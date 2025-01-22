@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     // Simulate login process (replace with API call)
-    if (email === "test@example.com" && password === "password") {
-      console.log("Logged in successfully");
-      setError("");
+    if (email === 'test@example.com' && password === 'password') {
+      console.log('Logged in successfully');
+      setError('');
     } else {
-      setError("Invalid email or password.");
+      setError('Invalid email or password.');
     }
   };
 
@@ -32,7 +32,10 @@ const LoginPage: React.FC = () => {
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-gray-700 font-medium mb-1">
+            <label
+              htmlFor="email"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Email Address:
             </label>
             <input
@@ -46,7 +49,10 @@ const LoginPage: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-gray-700 font-medium mb-1">
+            <label
+              htmlFor="password"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Password:
             </label>
             <input
@@ -66,11 +72,8 @@ const LoginPage: React.FC = () => {
           </button>
         </form>
         <p className="text-center text-gray-600 mt-4">
-          Forgot password?{" "}
-          <a
-            href="/forgot-password"
-            className="text-blue-600 hover:underline"
-          >
+          Forgot password?{' '}
+          <a href="/forgot-password" className="text-blue-600 hover:underline">
             Reset here
           </a>
         </p>

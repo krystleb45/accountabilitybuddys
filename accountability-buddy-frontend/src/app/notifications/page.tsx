@@ -1,7 +1,7 @@
-"use client"; // Mark as Client Component
+'use client'; // Mark as Client Component
 
-import React, { useState } from "react";
-import Link from "next/link"; // Import Link from Next.js
+import React, { useState } from 'react';
+import Link from 'next/link'; // Import Link from Next.js
 
 // Notification Item Component
 const NotificationItem = ({
@@ -11,7 +11,7 @@ const NotificationItem = ({
 }) => (
   <div
     className={`p-4 rounded-lg shadow-md mb-2 transition-colors ${
-      notification.read ? "bg-gray-200" : "bg-white"
+      notification.read ? 'bg-gray-200' : 'bg-white'
     }`}
   >
     <div className="flex justify-between items-center">
@@ -22,30 +22,30 @@ const NotificationItem = ({
 );
 
 const NotificationsPage: React.FC = () => {
-  const [filter, setFilter] = useState<"all" | "unread" | "read">("all");
+  const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
   const [notifications] = useState([
-    { message: "You have a meeting at 3 PM.", date: "Today", read: false },
+    { message: 'You have a meeting at 3 PM.', date: 'Today', read: false },
     {
       message: "Goal 'Launch marketing campaign' is due tomorrow.",
-      date: "Yesterday",
+      date: 'Yesterday',
       read: false,
     },
     {
-      message: "You completed 5 tasks this week. Great job!",
-      date: "2 days ago",
+      message: 'You completed 5 tasks this week. Great job!',
+      date: '2 days ago',
       read: true,
     },
     {
-      message: "Your password was changed successfully.",
-      date: "Last week",
+      message: 'Your password was changed successfully.',
+      date: 'Last week',
       read: true,
     },
   ]);
 
   // Filter notifications based on the selected filter
   const filteredNotifications = notifications.filter((notification) => {
-    if (filter === "unread") return !notification.read;
-    if (filter === "read") return notification.read;
+    if (filter === 'unread') return !notification.read;
+    if (filter === 'read') return notification.read;
     return true; // Show all notifications
   });
 
@@ -75,33 +75,33 @@ const NotificationsPage: React.FC = () => {
         </h2>
         <div className="flex gap-4">
           <button
-            onClick={() => setFilter("all")}
+            onClick={() => setFilter('all')}
             className={`py-2 px-4 rounded-lg transition-colors ${
-              filter === "all"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
+              filter === 'all'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700'
             }`}
             aria-label="Show all notifications"
           >
             All
           </button>
           <button
-            onClick={() => setFilter("unread")}
+            onClick={() => setFilter('unread')}
             className={`py-2 px-4 rounded-lg transition-colors ${
-              filter === "unread"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
+              filter === 'unread'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700'
             }`}
             aria-label="Show unread notifications"
           >
             Unread
           </button>
           <button
-            onClick={() => setFilter("read")}
+            onClick={() => setFilter('read')}
             className={`py-2 px-4 rounded-lg transition-colors ${
-              filter === "read"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
+              filter === 'read'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700'
             }`}
             aria-label="Show read notifications"
           >
@@ -126,7 +126,8 @@ const NotificationsPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="mt-12 text-center text-gray-600">
-        &copy; {new Date().getFullYear()} Accountability Buddy. All rights reserved.
+        &copy; {new Date().getFullYear()} Accountability Buddy. All rights
+        reserved.
       </footer>
     </div>
   );

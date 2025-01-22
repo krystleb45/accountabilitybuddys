@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import "./Notification.css";
+import React, { useState, useEffect } from 'react';
+import './Notification.css';
 
 type NotificationProps = {
   message: string;
   type?: string; // Update the type here
   duration?: number;
   onDismiss?: () => void;
-}
+};
 
 const Notification: React.FC<NotificationProps> = ({
   message,
-  type = "info",
+  type = 'info',
   duration = 5000,
   onDismiss,
 }) => {

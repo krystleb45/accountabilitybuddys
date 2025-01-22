@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react';
 
 /**
  * Interface for a Premium Feature.
@@ -22,7 +22,9 @@ const usePremiumFeatureHook = (initialFeatures: PremiumFeature[]) => {
   const toggleFeature = useCallback((id: string): void => {
     setFeatures((prevFeatures) =>
       prevFeatures.map((feature) =>
-        feature.id === id ? { ...feature, isActive: !feature.isActive } : feature
+        feature.id === id
+          ? { ...feature, isActive: !feature.isActive }
+          : feature
       )
     );
   }, []);

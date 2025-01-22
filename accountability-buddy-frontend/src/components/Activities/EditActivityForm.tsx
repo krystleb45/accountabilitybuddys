@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import "./EditActivityForm.css"; // Optional CSS for styling
+import React, { useState, useEffect } from 'react';
+import './EditActivityForm.css'; // Optional CSS for styling
 
 interface Activity {
   id: string;
   title: string;
   description: string;
-  status: "pending" | "in-progress" | "completed";
+  status: 'pending' | 'in-progress' | 'completed';
 }
 
 interface EditActivityFormProps {
@@ -14,10 +14,16 @@ interface EditActivityFormProps {
   onCancel?: () => void; // Optional callback for cancel action
 }
 
-const EditActivityForm: React.FC<EditActivityFormProps> = ({ activity, onSubmit, onCancel }) => {
+const EditActivityForm: React.FC<EditActivityFormProps> = ({
+  activity,
+  onSubmit,
+  onCancel,
+}) => {
   const [title, setTitle] = useState<string>(activity.title);
   const [description, setDescription] = useState<string>(activity.description);
-  const [status, setStatus] = useState<"pending" | "in-progress" | "completed">(activity.status);
+  const [status, setStatus] = useState<'pending' | 'in-progress' | 'completed'>(
+    activity.status
+  );
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -31,16 +37,21 @@ const EditActivityForm: React.FC<EditActivityFormProps> = ({ activity, onSubmit,
 
     // Form validation
     if (!title.trim()) {
-      setError("Title is required.");
+      setError('Title is required.');
       return;
     }
     if (!description.trim()) {
-      setError("Description is required.");
+      setError('Description is required.');
       return;
     }
 
     setError(null);
-    onSubmit({ ...activity, title: title.trim(), description: description.trim(), status });
+    onSubmit({
+      ...activity,
+      title: title.trim(),
+      description: description.trim(),
+      status,
+    });
   };
 
   return (
@@ -76,7 +87,9 @@ const EditActivityForm: React.FC<EditActivityFormProps> = ({ activity, onSubmit,
         <select
           id="status"
           value={status}
-          onChange={(e) => setStatus(e.target.value as "pending" | "in-progress" | "completed")}
+          onChange={(e) =>
+            setStatus(e.target.value as 'pending' | 'in-progress' | 'completed')
+          }
         >
           <option value="pending">Pending</option>
           <option value="in-progress">In Progress</option>

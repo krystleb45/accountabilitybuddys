@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react';
 
 /**
  * Type definition for a notification.
@@ -6,7 +6,7 @@ import { useState, useCallback } from "react";
 interface Notification {
   id: string;
   message: string;
-  type: "info" | "success" | "error" | "warning";
+  type: 'info' | 'success' | 'error' | 'warning';
   duration?: number; // Optional duration for auto-dismiss
 }
 
@@ -24,7 +24,7 @@ const useNotifications = () => {
   const addNotification = useCallback(
     (
       message: string,
-      type: "info" | "success" | "error" | "warning" = "info",
+      type: 'info' | 'success' | 'error' | 'warning' = 'info',
       duration: number = 5000 // Default duration: 5 seconds
     ) => {
       const id = Date.now().toString();
@@ -44,7 +44,9 @@ const useNotifications = () => {
 
   // Remove a notification by ID
   const removeNotification = useCallback((id: string) => {
-    setNotifications((prev) => prev.filter((notification) => notification.id !== id));
+    setNotifications((prev) =>
+      prev.filter((notification) => notification.id !== id)
+    );
   }, []);
 
   // Clear all notifications

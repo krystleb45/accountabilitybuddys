@@ -63,7 +63,9 @@ describe('Dashboard Notifications', () => {
 
   it('should clear all notifications when "Clear All" is clicked', () => {
     // Simulate clearing all notifications
-    cy.intercept('DELETE', '/api/notifications', { statusCode: 200 }).as('clearAllNotifications');
+    cy.intercept('DELETE', '/api/notifications', { statusCode: 200 }).as(
+      'clearAllNotifications'
+    );
 
     // Click "Clear All" button
     cy.contains(/clear all/i).click();

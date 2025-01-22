@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import styles from "./Modal.module.css";
+import React, { useEffect, useRef } from 'react';
+import styles from './Modal.module.css';
 
 interface ModalProps {
   title?: string; // Title of the modal
@@ -16,20 +16,20 @@ const Modal: React.FC<ModalProps> = ({
   content,
   isVisible,
   onClose,
-  customClass = "",
+  customClass = '',
 }) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   // Close modal on 'Escape' key press
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isVisible) {
+      if (e.key === 'Escape' && isVisible) {
         onClose();
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isVisible, onClose]);
 
   // Focus on the modal when visible
@@ -44,7 +44,7 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className={styles["modal-overlay"]}
+      className={styles['modal-overlay']}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
@@ -58,12 +58,12 @@ const Modal: React.FC<ModalProps> = ({
         data-testid="modal"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
       >
-        <h2 id="modal-title" className={styles["modal-header"]}>
+        <h2 id="modal-title" className={styles['modal-header']}>
           {title}
         </h2>
-        <div className={styles["modal-content"]}>{content}</div>
+        <div className={styles['modal-content']}>{content}</div>
         <button
-          className={styles["close-button"]}
+          className={styles['close-button']}
           onClick={onClose}
           aria-label="Close modal"
           data-testid="close-button"

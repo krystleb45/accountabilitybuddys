@@ -1,6 +1,6 @@
-import React from "react";
-import TaskItem from "./TaskItem"; // Assuming TaskItem.tsx exists
-import "./TaskList.css"; // Optional CSS for styling
+import React from 'react';
+import TaskItem from './TaskItem'; // Assuming TaskItem.tsx exists
+import './TaskList.css'; // Optional CSS for styling
 
 interface Task {
   id: string;

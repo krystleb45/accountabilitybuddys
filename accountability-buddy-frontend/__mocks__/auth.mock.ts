@@ -66,7 +66,9 @@ function logout(): Promise<void> {
  * @returns Whether the user is authenticated.
  */
 function isAuthenticated(): boolean {
-  console.log(`[Auth Mock] Authentication status: ${mockAuthState.isAuthenticated}`);
+  console.log(
+    `[Auth Mock] Authentication status: ${mockAuthState.isAuthenticated}`
+  );
   return mockAuthState.isAuthenticated;
 }
 
@@ -101,11 +103,4 @@ function resetAuthState(): void {
 }
 
 // Export mock functions
-export {
-  login,
-  logout,
-  isAuthenticated,
-  getUser,
-  getToken,
-  resetAuthState,
-};
+export { login, logout, isAuthenticated, getUser, getToken, resetAuthState };

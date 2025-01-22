@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import { useRouter } from "next/router";
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const LogoutPage: React.FC = () => {
   const router = useRouter();
@@ -11,7 +11,7 @@ const LogoutPage: React.FC = () => {
     const performLogout = () => {
       sessionStorage.clear();
       localStorage.clear();
-      router.replace("/login"); // Prevent navigating back
+      router.replace('/login'); // Prevent navigating back
     };
 
     performLogout();

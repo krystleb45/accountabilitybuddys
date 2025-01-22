@@ -1,18 +1,18 @@
 // mockAuthProvider.tsx
 
-import React, { createContext, ReactNode } from "react";
-import { AuthContextType } from "src/context/auth/AuthContext"; // Ensure the correct path is imported
+import React, { createContext, ReactNode } from 'react';
+import { AuthContextType } from 'src/context/auth/AuthContext'; // Ensure the correct path is imported
 
 // Mock AuthContext shape
 const mockAuthContext: AuthContextType = {
-  authToken: "mockAuthToken",
+  authToken: 'mockAuthToken',
   isAuthenticated: true,
   user: {
-    id: "1",
-    name: "Mock User",
-    username: "mockuser",
-    email: "mockuser@example.com",
-    profilePictureUrl: "https://example.com/mock-profile.jpg",
+    id: '1',
+    name: 'Mock User',
+    username: 'mockuser',
+    email: 'mockuser@example.com',
+    profilePictureUrl: 'https://example.com/mock-profile.jpg',
   },
   loading: false,
   login: jest.fn(),
@@ -48,7 +48,7 @@ export const MockAuthProvider: React.FC<MockAuthProviderProps> = ({
 export const useMockAuth = (): AuthContextType => {
   const context = React.useContext(MockAuthContext);
   if (!context) {
-    throw new Error("useMockAuth must be used within a MockAuthProvider");
+    throw new Error('useMockAuth must be used within a MockAuthProvider');
   }
   return context;
 };

@@ -1,5 +1,5 @@
-import React from "react";
-import "./LoadingSpinner.css"; // Ensure this path is correct or adjust as needed
+import React from 'react';
+import './LoadingSpinner.css'; // Ensure this path is correct or adjust as needed
 
 interface LoadingSpinnerProps {
   size?: number; // Spinner size in pixels
@@ -10,7 +10,7 @@ interface LoadingSpinnerProps {
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 50,
-  color = "#007bff",
+  color = '#007bff',
   loading = true,
   overlay = false,
 }) => {
@@ -18,7 +18,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   return (
     <div
-      className={overlay ? "spinner-overlay" : ""}
+      className={overlay ? 'spinner-overlay' : ''}
       role="status"
       aria-live="polite"
       aria-busy="true"
@@ -33,7 +33,8 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           borderColor: `${color} transparent transparent transparent`,
         }}
       />
-      <span className="sr-only">Loading...</span> {/* Accessible loading text */}
+      <span className="sr-only">Loading...</span>{' '}
+      {/* Accessible loading text */}
     </div>
   );
 };

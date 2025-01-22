@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.example.com';
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.example.com';
 
 export interface ActivityDetails {
   id: string;
@@ -18,7 +19,10 @@ const handleError = (functionName: string, error: unknown): void => {
 
   if (axios.isAxiosError(error)) {
     if (error.response) {
-      console.error(`Server responded with status: ${error.response.status}`, error.response.data);
+      console.error(
+        `Server responded with status: ${error.response.status}`,
+        error.response.data
+      );
     } else if (error.request) {
       console.error('Request made, but no response received.');
     }
@@ -30,13 +34,17 @@ const handleError = (functionName: string, error: unknown): void => {
 /**
  * Fetches activity details by activity ID.
  */
-export const getActivityDetails = async (activityId: string): Promise<ActivityDetails | undefined> => {
+export const getActivityDetails = async (
+  activityId: string
+): Promise<ActivityDetails | undefined> => {
   if (!activityId) {
     throw new Error('Invalid activity ID provided');
   }
 
   try {
-    const response: AxiosResponse<ActivityDetails> = await axios.get(`${BASE_URL}/activities/${activityId}`);
+    const response: AxiosResponse<ActivityDetails> = await axios.get(
+      `${BASE_URL}/activities/${activityId}`
+    );
     return response.data;
   } catch (error) {
     handleError('getActivityDetails', error);

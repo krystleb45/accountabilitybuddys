@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 /**
  * Represents a goal in the collaboration system.
@@ -10,7 +10,7 @@ export interface CollaborationGoal {
   description: string; // Description of the goal
   assignedUsers: CollaborationUser[]; // List of users assigned to the goal
   dueDate: Date; // Due date for the goal
-  status: "pending" | "in-progress" | "completed"; // Current status of the goal
+  status: 'pending' | 'in-progress' | 'completed'; // Current status of the goal
 }
 
 /**
@@ -31,7 +31,6 @@ export interface CollaborationGoalListProps {
   onGoalClick: (goalId: string) => void;
 }
 
-
 /**
  * Represents a collaboration action (e.g., comment or update).
  */
@@ -39,7 +38,7 @@ export interface CollaborationAction {
   id: string; // Unique identifier for the action
   goalId: string; // ID of the associated goal
   userId: string; // ID of the user performing the action
-  actionType: "comment" | "update" | "status-change"; // Type of action performed
+  actionType: 'comment' | 'update' | 'status-change'; // Type of action performed
   timestamp: Date; // Timestamp of the action
   details: string; // Details of the action
 }
@@ -47,7 +46,7 @@ export interface CollaborationAction {
 /**
  * Utility types for filtering goals.
  */
-export type GoalStatusFilter = "all" | "pending" | "in-progress" | "completed";
+export type GoalStatusFilter = 'all' | 'pending' | 'in-progress' | 'completed';
 
 /**
  * Props for a reusable GoalCard component.

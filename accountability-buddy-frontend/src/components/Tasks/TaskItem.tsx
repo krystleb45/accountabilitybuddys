@@ -1,5 +1,5 @@
-import React from "react";
-import "./TaskItem.css";
+import React from 'react';
+import './TaskItem.css';
 
 interface Task {
   id: string;
@@ -16,7 +16,7 @@ interface TaskItemProps {
 const TaskItem: React.FC<TaskItemProps> = ({ task, onComplete, onDelete }) => {
   return (
     <div
-      className={`task-item ${task.isCompleted ? "completed" : ""}`}
+      className={`task-item ${task.isCompleted ? 'completed' : ''}`}
       role="listitem"
       aria-live="polite"
     >
@@ -26,11 +26,11 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onComplete, onDelete }) => {
           checked={task.isCompleted}
           onChange={() => onComplete(task.id)}
           aria-label={`Mark "${task.title}" as ${
-            task.isCompleted ? "incomplete" : "complete"
+            task.isCompleted ? 'incomplete' : 'complete'
           }`}
         />
         <span
-          className={`task-title ${task.isCompleted ? "strikethrough" : ""}`}
+          className={`task-title ${task.isCompleted ? 'strikethrough' : ''}`}
         >
           {task.title}
         </span>
@@ -40,13 +40,11 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onComplete, onDelete }) => {
         <button
           onClick={() => onComplete(task.id)}
           aria-label={`Mark "${task.title}" as ${
-            task.isCompleted ? "incomplete" : "complete"
+            task.isCompleted ? 'incomplete' : 'complete'
           }`}
-          className={`complete-button ${
-            task.isCompleted ? "undo-button" : ""
-          }`}
+          className={`complete-button ${task.isCompleted ? 'undo-button' : ''}`}
         >
-          {task.isCompleted ? "Undo" : "Complete"}
+          {task.isCompleted ? 'Undo' : 'Complete'}
         </button>
 
         <button

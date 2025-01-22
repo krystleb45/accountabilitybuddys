@@ -27,8 +27,8 @@ export const handleResponse = async <T>(response: Response): Promise<T> => {
 
     return json as T; // Type-casting to the expected response type
   } catch (error) {
-    console.error("Error parsing response JSON:", error);
-    throw new Error("Failed to parse server response.");
+    console.error('Error parsing response JSON:', error);
+    throw new Error('Failed to parse server response.');
   }
 };
 
@@ -39,9 +39,9 @@ export const handleResponse = async <T>(response: Response): Promise<T> => {
  */
 export const handleError = (error: unknown): void => {
   if (error instanceof Error) {
-    console.error("API Error:", error.message);
+    console.error('API Error:', error.message);
   } else {
-    console.error("Unexpected API error:", error);
+    console.error('Unexpected API error:', error);
   }
   // Optional: Implement additional error handling (e.g., notifications)
 };
@@ -53,12 +53,15 @@ export const handleError = (error: unknown): void => {
  * @param options - Optional fetch options (e.g., method, headers, body).
  * @returns A promise resolving to the parsed JSON data from the API response.
  */
-export const fetchData = async <T>(url: string, options: RequestInit = {}): Promise<T> => {
+export const fetchData = async <T>(
+  url: string,
+  options: RequestInit = {}
+): Promise<T> => {
   try {
     const response = await fetch(url, {
       ...options,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...(options.headers || {}),
       },
     });
@@ -75,15 +78,20 @@ export const fetchData = async <T>(url: string, options: RequestInit = {}): Prom
  * @param params - An object containing query parameters.
  * @returns A query string (e.g., ?key=value&key2=value2).
  */
-export const buildQueryString = (params: Record<string, string | number | boolean>): string => {
+export const buildQueryString = (
+  params: Record<string, string | number | boolean>
+): string => {
   const queryString = new URLSearchParams(
-    Object.entries(params).reduce((acc, [key, value]) => {
-      acc[key] = String(value);
-      return acc;
-    }, {} as Record<string, string>)
+    Object.entries(params).reduce(
+      (acc, [key, value]) => {
+        acc[key] = String(value);
+        return acc;
+      },
+      {} as Record<string, string>
+    )
   ).toString();
 
-  return queryString ? `?${queryString}` : "";
+  return queryString ? `?${queryString}` : '';
 };
 
 /**

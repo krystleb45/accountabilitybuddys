@@ -1,25 +1,25 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import PrivateRoute from "../../src/routes/PrivateRoute";
-import AuthContext from "../../src/context/auth/AuthContext";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import PrivateRoute from '../../src/routes/PrivateRoute';
+import AuthContext from '../../src/context/auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 // Mock useNavigate to simulate redirection
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
   useNavigate: jest.fn(),
 }));
 
-describe("PrivateRoute Component", () => {
+describe('PrivateRoute Component', () => {
   const mockNavigate = jest.fn();
 
   // Mock AuthContextType structure
   const mockAuthContextValueAuthenticated = {
-    authToken: "mockAuthToken",
+    authToken: 'mockAuthToken',
     isAuthenticated: true,
     loading: false,
-    user: { id: "1", name: "Test User" },
+    user: { id: '1', name: 'Test User' },
     login: jest.fn(),
     logout: jest.fn(),
   };
@@ -43,11 +43,14 @@ describe("PrivateRoute Component", () => {
     (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
   });
 
-  test("renders correctly when user is authenticated", () => {
+  test('renders correctly when user is authenticated', () => {
     render(
       <AuthContext.Provider value={mockAuthContextValueAuthenticated}>
         <MemoryRouter>
-          <PrivateRoute element={<div>Protected Content</div>} isAuthenticated={false} />
+          <PrivateRoute
+            element={<div>Protected Content</div>}
+            isAuthenticated={false}
+          />
         </MemoryRouter>
       </AuthContext.Provider>
     );
@@ -56,24 +59,30 @@ describe("PrivateRoute Component", () => {
     expect(screen.getByText(/protected content/i)).toBeInTheDocument();
   });
 
-  test("redirects to login when user is not authenticated", () => {
+  test('redirects to login when user is not authenticated', () => {
     render(
       <AuthContext.Provider value={mockAuthContextValueUnauthenticated}>
         <MemoryRouter>
-          <PrivateRoute element={<div>Protected Content</div>} isAuthenticated={false} />
+          <PrivateRoute
+            element={<div>Protected Content</div>}
+            isAuthenticated={false}
+          />
         </MemoryRouter>
       </AuthContext.Provider>
     );
 
     // Check that navigation occurs to the login page
-    expect(mockNavigate).toHaveBeenCalledWith("/login", { replace: true });
+    expect(mockNavigate).toHaveBeenCalledWith('/login', { replace: true });
   });
 
-  test("shows loading spinner when loading", () => {
+  test('shows loading spinner when loading', () => {
     render(
       <AuthContext.Provider value={mockAuthContextValueLoading}>
         <MemoryRouter>
-          <PrivateRoute element={<div>Protected Content</div>} isAuthenticated={false} />
+          <PrivateRoute
+            element={<div>Protected Content</div>}
+            isAuthenticated={false}
+          />
         </MemoryRouter>
       </AuthContext.Provider>
     );

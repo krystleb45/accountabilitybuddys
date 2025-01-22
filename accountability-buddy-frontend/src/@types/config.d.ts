@@ -1,6 +1,5 @@
 export interface AppConfig {
-    apiUrl: string;
-    stripeKey: string;
-    enableBetaFeatures: boolean;
-  }
-  
+  apiUrl: string;
+  stripeKey: string;
+  enableBetaFeatures: boolean;
+}

@@ -5,43 +5,55 @@ module.exports = {
     node: true, // Ensures Node.js globals (e.g., `module`) are recognized
   },
   extends: [
-    "eslint:recommended",
-    "next/core-web-vitals",
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:jsx-a11y/recommended",
-    "plugin:prettier/recommended",
-    "plugin:storybook/recommended"
+    'eslint:recommended',
+    'next/core-web-vitals',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:jsx-a11y/recommended',
+    'plugin:prettier/recommended',
+    'plugin:storybook/recommended',
   ],
-  parser: "@typescript-eslint/parser", // Specifies the ESLint parser for TypeScript
+  parser: '@typescript-eslint/parser', // Specifies the ESLint parser for TypeScript
   parserOptions: {
     ecmaFeatures: {
       jsx: true, // Enables JSX parsing
     },
     ecmaVersion: 12,
-    sourceType: "module", // Allows `import` and `export`
+    sourceType: 'module', // Allows `import` and `export`
   },
   plugins: [
-    "react", // React-specific linting rules
-    "@typescript-eslint", // TypeScript linting rules
-    "jsx-a11y", // Accessibility linting rules
-    "prettier", // Integrates Prettier
+    'react', // React-specific linting rules
+    '@typescript-eslint', // TypeScript linting rules
+    'jsx-a11y', // Accessibility linting rules
+    'prettier', // Integrates Prettier
   ],
   rules: {
-    "react/react-in-jsx-scope": "off", // Not needed in Next.js
-    "react/prop-types": "off", // TypeScript handles prop types
-    "@typescript-eslint/no-unused-vars": ["warn"], // Warns for unused variables
-    "prettier/prettier": ["warn"], // Warns for Prettier formatting issues
-    "jsx-a11y/anchor-is-valid": [
-      "warn",
+    'react/react-in-jsx-scope': 'off', // Not needed in Next.js
+    'react/prop-types': 'off', // TypeScript handles prop types
+    '@typescript-eslint/no-unused-vars': ['warn'], // Warns for unused variables
+    '@typescript-eslint/explicit-function-return-type': 'warn', // Requires explicit return types
+    '@typescript-eslint/no-explicit-any': 'warn', // Discourages `any`
+    '@typescript-eslint/consistent-type-imports': 'warn', // Enforces type imports
+    'react-hooks/rules-of-hooks': 'error', // Ensures hooks are used correctly
+    'react-hooks/exhaustive-deps': 'warn', // Warns for missing dependencies in hooks
+    'prettier/prettier': [
+      'warn',
       {
-        aspects: ["invalidHref", "preferButton"],
+        endOfLine: 'auto', // Avoids line ending issues
+      },
+    ],
+    'jsx-a11y/anchor-is-valid': [
+      'warn',
+      {
+        aspects: ['invalidHref', 'preferButton'],
       },
     ], // Warns for invalid anchor tags
+    'jsx-a11y/click-events-have-key-events': 'warn', // Ensures clickable elements are accessible
+    'jsx-a11y/no-static-element-interactions': 'warn', // Warns for interactive elements without roles
   },
   settings: {
     react: {
-      version: "detect", // Automatically detects the React version
+      version: 'detect', // Automatically detects the React version
     },
   },
 };

@@ -1,7 +1,13 @@
 // APIContext.tsx
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
-import axios, { AxiosRequestConfig } from "axios";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  ReactNode,
+} from 'react';
+import axios, { AxiosRequestConfig } from 'axios';
 
 // Define the shape of the APIContext
 interface APIContextType {
@@ -19,7 +25,7 @@ const APIContext = createContext<APIContextType | undefined>(undefined);
 export const useAPI = (): APIContextType => {
   const context = useContext(APIContext);
   if (!context) {
-    throw new Error("useAPI must be used within an APIProvider");
+    throw new Error('useAPI must be used within an APIProvider');
   }
   return context;
 };
@@ -33,7 +39,8 @@ interface APIProviderProps {
 export const APIProvider: React.FC<APIProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const [abortController, setAbortController] =
+    useState<AbortController | null>(null);
 
   // Function to make API calls with enhanced error handling and cancellation
   const callAPI = useCallback(
@@ -57,17 +64,17 @@ export const APIProvider: React.FC<APIProviderProps> = ({ children }) => {
         return response.data;
       } catch (error: any) {
         if (axios.isCancel(error)) {
-          console.log("Request canceled");
+          console.log('Request canceled');
         } else {
-          setApiError(error.message || "API call failed");
-          console.error("API Error:", error);
+          setApiError(error.message || 'API call failed');
+          console.error('API Error:', error);
         }
         throw error;
       } finally {
         setIsLoading(false);
       }
     },
-    [abortController],
+    [abortController]
   );
 
   // Function to reset API error
@@ -78,12 +85,14 @@ export const APIProvider: React.FC<APIProviderProps> = ({ children }) => {
     if (abortController) {
       abortController.abort();
       setAbortController(null);
-      console.log("Request canceled manually");
+      console.log('Request canceled manually');
     }
   }, [abortController]);
 
   return (
-    <APIContext.Provider value={{ isLoading, apiError, callAPI, clearApiError, cancelRequest }}>
+    <APIContext.Provider
+      value={{ isLoading, apiError, callAPI, clearApiError, cancelRequest }}
+    >
       {children}
     </APIContext.Provider>
   );

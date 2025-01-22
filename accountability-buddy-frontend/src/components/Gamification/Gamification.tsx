@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import BadgeSystem from "../BadgeSystem/BadgeSystem";
-import ProgressTracker from "../Progress/ProgressTracker";
-import Leaderboard from "../Leaderboard/Leaderboard";
-import Notification from "../Notifications/Notification";
-import { fetchUserProgress } from "../../services/gamificationService";
-import { UserProgress } from "../../types/Gamification.types"; // Import the correct type
-import "./Gamification.css";
+import React, { useEffect, useState } from 'react';
+import BadgeSystem from '../BadgeSystem/BadgeSystem';
+import ProgressTracker from '../Progress/ProgressTracker';
+import Leaderboard from '../Leaderboard/Leaderboard';
+import Notification from '../Notifications/Notification';
+import { fetchUserProgress } from '../../services/gamificationService';
+import { UserProgress } from '../../types/Gamification.types'; // Import the correct type
+import './Gamification.css';
 
 interface User {
   id: string;
@@ -19,19 +19,19 @@ interface GamificationProps {
 const Gamification: React.FC<GamificationProps> = ({ user }) => {
   const [progress, setProgress] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>('');
   const [newBadge, setNewBadge] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) {
-      setError("No user logged in. Please log in to view gamification.");
+      setError('No user logged in. Please log in to view gamification.');
       setLoading(false);
       return;
     }
 
     const getUserProgress = async () => {
       setLoading(true);
-      setError("");
+      setError('');
 
       try {
         const userProgress: UserProgress = await fetchUserProgress(user.id);
@@ -42,8 +42,8 @@ const Gamification: React.FC<GamificationProps> = ({ user }) => {
           setNewBadge(userProgress.newBadge.name);
         }
       } catch (err) {
-        console.error("Failed to fetch user progress:", err);
-        setError("Failed to load progress. Please try again.");
+        console.error('Failed to fetch user progress:', err);
+        setError('Failed to load progress. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -57,18 +57,26 @@ const Gamification: React.FC<GamificationProps> = ({ user }) => {
   }
 
   return (
-    <div className="gamification-container" data-testid="gamification-container">
+    <div
+      className="gamification-container"
+      data-testid="gamification-container"
+    >
       <h2 className="gamification-header">Gamification</h2>
       {loading ? (
         <p data-testid="loading-message">Loading...</p>
       ) : error ? (
-        <p className="error" data-testid="error-message">{error}</p>
+        <p className="error" data-testid="error-message">
+          {error}
+        </p>
       ) : (
         <>
           <div className="progress-bar-container">
             <ProgressTracker progress={progress} />
           </div>
-          <div className="achievement-section" data-testid="achievement-section">
+          <div
+            className="achievement-section"
+            data-testid="achievement-section"
+          >
             <BadgeSystem user={user} badges={[]} />
           </div>
           <Leaderboard userId={user.id} />

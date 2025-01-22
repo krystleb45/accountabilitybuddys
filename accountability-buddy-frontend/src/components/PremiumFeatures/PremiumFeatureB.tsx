@@ -1,5 +1,5 @@
-import React from "react";
-import "./PremiumFeatureB.module.css";
+import React from 'react';
+import './PremiumFeatureB.module.css';
 
 interface PremiumFeatureBProps {
   featureName: string;
@@ -17,7 +17,7 @@ const PremiumFeatureB: React.FC<PremiumFeatureBProps> = ({
   onDisable,
 }) => {
   return (
-    <div className={`premium-feature-b ${enabled ? "enabled" : "disabled"}`}>
+    <div className={`premium-feature-b ${enabled ? 'enabled' : 'disabled'}`}>
       <h3>{featureName}</h3>
       <p>{details}</p>
       <div className="action-buttons">

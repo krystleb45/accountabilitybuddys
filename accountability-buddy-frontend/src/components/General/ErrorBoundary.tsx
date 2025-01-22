@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode } from 'react';
 
 // Define types for props and state
 interface ErrorBoundaryProps {
@@ -28,7 +28,7 @@ class ErrorBoundary extends React.Component<
 
   // Log error details
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    console.error("Error caught by ErrorBoundary:", error, errorInfo);
+    console.error('Error caught by ErrorBoundary:', error, errorInfo);
     // Add external logging service logic here (e.g., Sentry, LogRocket)
   }
 
@@ -43,22 +43,20 @@ class ErrorBoundary extends React.Component<
           role="alert"
           aria-live="assertive"
           style={{
-            padding: "20px",
-            textAlign: "center",
-            backgroundColor: "#f8d7da",
-            color: "#721c24",
-            border: "1px solid #f5c6cb",
-            borderRadius: "5px",
+            padding: '20px',
+            textAlign: 'center',
+            backgroundColor: '#f8d7da',
+            color: '#721c24',
+            border: '1px solid #f5c6cb',
+            borderRadius: '5px',
           }}
           data-testid="error-boundary"
         >
-          <h1>{fallbackMessage || "Something went wrong."}</h1>
-          <p>
-            We are working to fix the issue. Please try again later.
-          </p>
+          <h1>{fallbackMessage || 'Something went wrong.'}</h1>
+          <p>We are working to fix the issue. Please try again later.</p>
           {/* Optional detailed error info for debugging */}
-          {process.env.NODE_ENV === "development" && error && errorInfo && (
-            <details style={{ marginTop: "10px", whiteSpace: "pre-wrap" }}>
+          {process.env.NODE_ENV === 'development' && error && errorInfo && (
+            <details style={{ marginTop: '10px', whiteSpace: 'pre-wrap' }}>
               <summary>Error Details</summary>
               <p>{error.toString()}</p>
               <p>{errorInfo.componentStack}</p>

@@ -1,10 +1,18 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import LoginPage from '../../src/app/login/page';
 
 // Mock necessary components and hooks
-jest.mock('../../../components/LoadingSpinner', () => () => <div>Loading...</div>);
+jest.mock('../../../components/LoadingSpinner', () => () => (
+  <div>Loading...</div>
+));
 
 describe('LoginPage Tests', () => {
   beforeEach(() => {
@@ -21,8 +29,12 @@ describe('LoginPage Tests', () => {
 
   it('handles successful login', async () => {
     await act(async () => {
-      fireEvent.change(screen.getByPlaceholderText(/email/i), { target: { value: 'test@example.com' } });
-      fireEvent.change(screen.getByPlaceholderText(/password/i), { target: { value: 'password123' } });
+      fireEvent.change(screen.getByPlaceholderText(/email/i), {
+        target: { value: 'test@example.com' },
+      });
+      fireEvent.change(screen.getByPlaceholderText(/password/i), {
+        target: { value: 'password123' },
+      });
       fireEvent.click(screen.getByRole('button', { name: /login/i }));
     });
 
@@ -33,8 +45,12 @@ describe('LoginPage Tests', () => {
 
   it('handles login error', async () => {
     await act(async () => {
-      fireEvent.change(screen.getByPlaceholderText(/email/i), { target: { value: 'invalid@example.com' } });
-      fireEvent.change(screen.getByPlaceholderText(/password/i), { target: { value: 'wrongpassword' } });
+      fireEvent.change(screen.getByPlaceholderText(/email/i), {
+        target: { value: 'invalid@example.com' },
+      });
+      fireEvent.change(screen.getByPlaceholderText(/password/i), {
+        target: { value: 'wrongpassword' },
+      });
       fireEvent.click(screen.getByRole('button', { name: /login/i }));
     });
 

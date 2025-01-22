@@ -1,7 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 import { Badge, UserProgress } from '../types/Gamification.types';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://api.example.com';
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || 'https://api.example.com';
 
 export interface LeaderboardEntry {
   userId: string;
@@ -19,7 +20,10 @@ const handleError = (functionName: string, error: unknown): never => {
 
   if (axios.isAxiosError(error)) {
     if (error.response) {
-      console.error(`Server responded with status: ${error.response.status}`, error.response.data);
+      console.error(
+        `Server responded with status: ${error.response.status}`,
+        error.response.data
+      );
     } else if (error.request) {
       console.error('Request made, but no response received.');
     }
@@ -27,7 +31,9 @@ const handleError = (functionName: string, error: unknown): never => {
     console.error('Unexpected error:', error);
   }
 
-  throw new Error(`An error occurred in ${functionName}. Please try again later.`);
+  throw new Error(
+    `An error occurred in ${functionName}. Please try again later.`
+  );
 };
 
 const GamificationService = {
@@ -57,14 +63,15 @@ const GamificationService = {
   /**
    * Fetch user progress from the backend.
    */
-  fetchUserProgress: async (userId: string): Promise<UserProgress | undefined> => {
+  fetchUserProgress: async (
+    userId: string
+  ): Promise<UserProgress | undefined> => {
     try {
-      const response: AxiosResponse<UserProgress & { newBadge?: { name: string } }> = await axios.get(
-        `${API_BASE_URL}/users/${userId}/progress`,
-        {
-          headers: getAuthHeader(),
-        }
-      );
+      const response: AxiosResponse<
+        UserProgress & { newBadge?: { name: string } }
+      > = await axios.get(`${API_BASE_URL}/users/${userId}/progress`, {
+        headers: getAuthHeader(),
+      });
 
       return {
         ...response.data,

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import Link from "next/link";
+import React from 'react';
+import Link from 'next/link';
 
 const IndexPage: React.FC = () => {
   return (
@@ -31,7 +31,8 @@ const IndexPage: React.FC = () => {
       </main>
 
       <footer className="mt-8 text-center text-gray-600">
-        &copy; {new Date().getFullYear()} Accountability Buddy. All rights reserved.
+        &copy; {new Date().getFullYear()} Accountability Buddy. All rights
+        reserved.
       </footer>
     </div>
   );

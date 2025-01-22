@@ -28,8 +28,8 @@ const handleApiError = (error: any): never => {
   console.error('API Error:', error);
   throw new Error(
     error.response?.data?.message ||
-    error.message ||
-    'An unexpected error occurred. Please try again later.'
+      error.message ||
+      'An unexpected error occurred. Please try again later.'
   );
 };
 
@@ -64,9 +64,14 @@ const AdminService = {
    * @param {number} limit - The number of users per page.
    * @returns {Promise<{ users: User[]; total: number }>} - A list of users and the total count.
    */
-  listUsers: async (page: number = 1, limit: number = 10): Promise<{ users: User[]; total: number } | undefined> => {
+  listUsers: async (
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ users: User[]; total: number } | undefined> => {
     try {
-      const response = await apiClient.get('/users', { params: { page, limit } });
+      const response = await apiClient.get('/users', {
+        params: { page, limit },
+      });
       return {
         users: response.data.users as User[],
         total: response.data.total,
@@ -125,9 +130,14 @@ const AdminService = {
    * @param {number} limit - The number of reports per page.
    * @returns {Promise<{ reports: Report[]; total: number }>} - A list of reports and the total count.
    */
-  listReports: async (page: number = 1, limit: number = 10): Promise<{ reports: Report[]; total: number } | undefined> => {
+  listReports: async (
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ reports: Report[]; total: number } | undefined> => {
     try {
-      const response = await apiClient.get('/reports', { params: { page, limit } });
+      const response = await apiClient.get('/reports', {
+        params: { page, limit },
+      });
       return {
         reports: response.data.reports as Report[],
         total: response.data.total,

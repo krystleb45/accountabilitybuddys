@@ -1,5 +1,5 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import authService from "./authService"; // Ensure correct usage of authService
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import authService from './authService'; // Ensure correct usage of authService
 
 // Define types for settings
 export interface ProfileSettings {
@@ -26,9 +26,9 @@ export interface PrivacySettings {
 
 // Create an axios instance for settings API
 const apiClient = axios.create({
-  baseURL: "https://accountabilitybuddys.com/api/settings",
+  baseURL: 'https://accountabilitybuddys.com/api/settings',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -61,14 +61,15 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
         await new Promise((resolve) => setTimeout(resolve, delay));
         attempt++;
       } else {
-        console.error("Request failed:", error);
+        console.error('Request failed:', error);
         throw new Error(
-          error.response?.data?.message || "An error occurred. Please try again."
+          error.response?.data?.message ||
+            'An error occurred. Please try again.'
         );
       }
     }
   }
-  throw new Error("Failed after multiple retries.");
+  throw new Error('Failed after multiple retries.');
 };
 
 // Update user profile settings
@@ -76,19 +77,19 @@ export const updateProfileSettings = async (
   profileData: Partial<ProfileSettings>
 ): Promise<ProfileSettings> => {
   if (!profileData || Object.keys(profileData).length === 0) {
-    throw new Error("Profile data is required to update settings.");
+    throw new Error('Profile data is required to update settings.');
   }
 
   try {
     const response: AxiosResponse<ProfileSettings> = await axiosRetry(() =>
-      apiClient.put("/profile", profileData)
+      apiClient.put('/profile', profileData)
     );
-    console.log("Profile settings updated successfully:", response.data);
+    console.log('Profile settings updated successfully:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error updating profile settings:", error);
+    console.error('Error updating profile settings:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to update profile settings."
+      error.response?.data?.message || 'Failed to update profile settings.'
     );
   }
 };
@@ -98,23 +99,23 @@ export const updateNotificationPreferences = async (
   notificationData: Partial<NotificationPreferences>
 ): Promise<NotificationPreferences> => {
   if (!notificationData || Object.keys(notificationData).length === 0) {
-    throw new Error("Notification data is required to update preferences.");
+    throw new Error('Notification data is required to update preferences.');
   }
 
   try {
-    const response: AxiosResponse<NotificationPreferences> = await axiosRetry(() =>
-      apiClient.put("/notifications", notificationData)
+    const response: AxiosResponse<NotificationPreferences> = await axiosRetry(
+      () => apiClient.put('/notifications', notificationData)
     );
     console.log(
-      "Notification preferences updated successfully:",
+      'Notification preferences updated successfully:',
       response.data
     );
     return response.data;
   } catch (error: any) {
-    console.error("Error updating notification preferences:", error);
+    console.error('Error updating notification preferences:', error);
     throw new Error(
       error.response?.data?.message ||
-        "Failed to update notification preferences."
+        'Failed to update notification preferences.'
     );
   }
 };
@@ -124,19 +125,19 @@ export const updatePrivacySettings = async (
   privacyData: Partial<PrivacySettings>
 ): Promise<PrivacySettings> => {
   if (!privacyData || Object.keys(privacyData).length === 0) {
-    throw new Error("Privacy data is required to update settings.");
+    throw new Error('Privacy data is required to update settings.');
   }
 
   try {
     const response: AxiosResponse<PrivacySettings> = await axiosRetry(() =>
-      apiClient.put("/privacy", privacyData)
+      apiClient.put('/privacy', privacyData)
     );
-    console.log("Privacy settings updated successfully:", response.data);
+    console.log('Privacy settings updated successfully:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error updating privacy settings:", error);
+    console.error('Error updating privacy settings:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to update privacy settings."
+      error.response?.data?.message || 'Failed to update privacy settings.'
     );
   }
 };
@@ -152,13 +153,13 @@ export const getSettings = async (): Promise<{
       profileSettings: ProfileSettings;
       notificationPreferences: NotificationPreferences;
       privacySettings: PrivacySettings;
-    }> = await axiosRetry(() => apiClient.get("/"));
-    console.log("Settings fetched successfully:", response.data);
+    }> = await axiosRetry(() => apiClient.get('/'));
+    console.log('Settings fetched successfully:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error fetching settings:", error);
+    console.error('Error fetching settings:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to fetch settings."
+      error.response?.data?.message || 'Failed to fetch settings.'
     );
   }
 };

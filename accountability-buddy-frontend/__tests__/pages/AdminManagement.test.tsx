@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import AdminManagementPage from '../../src/app/admin-management/page'; 
+import AdminManagementPage from '../../src/app/admin-management/page';
 import axios from 'axios';
 
 // Mock axios
@@ -20,7 +20,10 @@ describe('AdminManagementPage', () => {
   test('displays admin users like Alice and Bob', async () => {
     // Mock the API response
     mockedAxios.get.mockResolvedValueOnce({
-      data: [{ name: 'Alice', role: 'Admin' }, { name: 'Bob', role: 'User' }],
+      data: [
+        { name: 'Alice', role: 'Admin' },
+        { name: 'Bob', role: 'User' },
+      ],
     });
 
     // Re-render after mock setup
@@ -39,7 +42,9 @@ describe('AdminManagementPage', () => {
     // (You can add role-changing simulation based on your UI)
 
     await waitFor(() => {
-      expect(screen.getByText(/role updated successfully/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/role updated successfully/i)
+      ).toBeInTheDocument();
     });
   });
 

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import "./Modal.module.css";
+import React, { useEffect, useRef } from 'react';
+import './Modal.module.css';
 
 interface ModalProps {
   title: string;
@@ -8,12 +8,17 @@ interface ModalProps {
   onClose: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ title, content, isVisible, onClose }) => {
+const Modal: React.FC<ModalProps> = ({
+  title,
+  content,
+  isVisible,
+  onClose,
+}) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isVisible) {
+      if (e.key === 'Escape' && isVisible) {
         onClose();
       }
     };
@@ -22,8 +27,8 @@ const Modal: React.FC<ModalProps> = ({ title, content, isVisible, onClose }) => 
       modalRef.current.focus();
     }
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isVisible, onClose]);
 
   if (!isVisible) return null;

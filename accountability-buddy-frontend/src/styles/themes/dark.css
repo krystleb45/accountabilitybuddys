@@ -5,7 +5,9 @@ body {
   background-color: #121212; /* Dark background */
   color: #e0e0e0; /* Light text color for contrast */
   font-family: 'Nunito Sans', Arial, sans-serif; /* Modern font */
-  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for theme changes */
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease; /* Smooth transition for theme changes */
 }
 
 /* Link Styles */
@@ -24,10 +26,15 @@ a:hover {
   background-color: #1f1f1f; /* Dark button background */
   color: #e0e0e0; /* Light text color */
   border: 1px solid #bb86fc; /* Light purple border */
-  border-radius: var(--border-radius-medium, 8px); /* Use variable for consistency */
+  border-radius: var(
+    --border-radius-medium,
+    8px
+  ); /* Use variable for consistency */
   padding: var(--spacing-medium, 8px) var(--spacing-large, 16px); /* Use spacing variables */
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .button:hover {
@@ -40,42 +47,62 @@ a:hover {
   background-color: #1e1e1e; /* Dark card background */
   border: 1px solid #333; /* Slightly lighter border */
   color: #e0e0e0; /* Light text color */
-  border-radius: var(--border-radius-medium, 8px); /* Consistent border radius */
+  border-radius: var(
+    --border-radius-medium,
+    8px
+  ); /* Consistent border radius */
   padding: var(--spacing-large, 16px); /* Use spacing variables */
-  box-shadow: var(--box-shadow-light, 0 1px 3px rgba(0, 0, 0, 0.1)); /* Subtle shadow */
+  box-shadow: var(
+    --box-shadow-light,
+    0 1px 3px rgba(0, 0, 0, 0.1)
+  ); /* Subtle shadow */
   transition: box-shadow 0.3s ease;
 }
 
 .card:hover {
-  box-shadow: var(--box-shadow-medium, 0 2px 5px rgba(0, 0, 0, 0.2)); /* Enhanced shadow on hover */
+  box-shadow: var(
+    --box-shadow-medium,
+    0 2px 5px rgba(0, 0, 0, 0.2)
+  ); /* Enhanced shadow on hover */
 }
 
 /* Modal Styles */
 .modal {
   background-color: #1e1e1e; /* Dark modal background */
   color: #e0e0e0; /* Light text color */
-  border-radius: var(--border-radius-medium, 8px); /* Rounded corners for modals */
+  border-radius: var(
+    --border-radius-medium,
+    8px
+  ); /* Rounded corners for modals */
   padding: var(--spacing-large, 16px); /* Consistent padding */
-  box-shadow: var(--box-shadow-medium, 0 2px 5px rgba(0, 0, 0, 0.2)); /* Subtle shadow */
+  box-shadow: var(
+    --box-shadow-medium,
+    0 2px 5px rgba(0, 0, 0, 0.2)
+  ); /* Subtle shadow */
 }
 
 /* Input Fields */
-input, textarea {
+input,
+textarea {
   background-color: #333; /* Dark input background */
   color: #e0e0e0; /* Light text color */
   border: 1px solid #555; /* Lighter border */
   border-radius: var(--border-radius-small, 4px); /* Rounded corners */
   padding: var(--spacing-medium, 8px); /* Consistent padding */
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   border-color: #bb86fc; /* Light purple border on focus */
   background-color: #222; /* Slightly darker background on focus */
   outline: none; /* Remove default outline */
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: #aaa; /* Subtle placeholder text color */
 }
 
@@ -106,7 +133,12 @@ footer {
     font-size: 14px; /* Smaller font size for mobile */
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-size: 90%; /* Reduce heading sizes for mobile */
   }
 }

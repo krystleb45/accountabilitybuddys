@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 const PrivacyPolicyPage: React.FC = () => {
   return (
@@ -27,7 +27,10 @@ const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section aria-labelledby="data-collection">
-          <h2 id="data-collection" className="text-xl font-semibold text-gray-800 mb-4">
+          <h2
+            id="data-collection"
+            className="text-xl font-semibold text-gray-800 mb-4"
+          >
             Data Collection
           </h2>
           <p className="text-gray-700 mb-4">
@@ -39,7 +42,10 @@ const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section aria-labelledby="data-usage">
-          <h2 id="data-usage" className="text-xl font-semibold text-gray-800 mb-4">
+          <h2
+            id="data-usage"
+            className="text-xl font-semibold text-gray-800 mb-4"
+          >
             How We Use Your Data
           </h2>
           <p className="text-gray-700 mb-4">
@@ -50,7 +56,10 @@ const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section aria-labelledby="third-parties">
-          <h2 id="third-parties" className="text-xl font-semibold text-gray-800 mb-4">
+          <h2
+            id="third-parties"
+            className="text-xl font-semibold text-gray-800 mb-4"
+          >
             Sharing with Third Parties
           </h2>
           <p className="text-gray-700 mb-4">
@@ -61,12 +70,15 @@ const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section aria-labelledby="contact-info">
-          <h2 id="contact-info" className="text-xl font-semibold text-gray-800 mb-4">
+          <h2
+            id="contact-info"
+            className="text-xl font-semibold text-gray-800 mb-4"
+          >
             Contact Information
           </h2>
           <p className="text-gray-700">
             If you have any questions about this Privacy Policy, please contact
-            us at{" "}
+            us at{' '}
             <a
               href="mailto:support@accountabilitybuddy.com"
               className="text-blue-600 hover:underline"
@@ -80,7 +92,8 @@ const PrivacyPolicyPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="mt-12 text-center text-gray-600">
-        &copy; {new Date().getFullYear()} Accountability Buddy. All rights reserved.
+        &copy; {new Date().getFullYear()} Accountability Buddy. All rights
+        reserved.
       </footer>
     </div>
   );

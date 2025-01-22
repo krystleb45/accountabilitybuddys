@@ -29,22 +29,35 @@ const Layout = ({ children, pageTitle }: LayoutProps) => {
             </h1>
             <ul className="flex gap-6">
               <li>
-                <Link href="/" aria-current="page" className="text-gray-700 hover:text-blue-600 transition-colors">
+                <Link
+                  href="/"
+                  aria-current="page"
+                  className="text-gray-700 hover:text-blue-600 transition-colors"
+                >
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">
+                <Link
+                  href="/dashboard"
+                  className="text-gray-700 hover:text-blue-600 transition-colors"
+                >
                   Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="/profile" className="text-gray-700 hover:text-blue-600 transition-colors">
+                <Link
+                  href="/profile"
+                  className="text-gray-700 hover:text-blue-600 transition-colors"
+                >
                   Profile
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="text-gray-700 hover:text-blue-600 transition-colors">
+                <Link
+                  href="/login"
+                  className="text-gray-700 hover:text-blue-600 transition-colors"
+                >
                   Login
                 </Link>
               </li>
@@ -53,12 +66,17 @@ const Layout = ({ children, pageTitle }: LayoutProps) => {
         </header>
 
         {/* Main Content */}
-        <main className="flex-grow container mx-auto px-6 py-8">{children}</main>
+        <main className="flex-grow container mx-auto px-6 py-8">
+          {children}
+        </main>
 
         {/* Footer */}
         <footer className="bg-gray-800 text-gray-200 py-4 mt-8">
           <div className="container mx-auto px-6 text-center">
-            <p>© {new Date().getFullYear()} Accountability Buddy. All Rights Reserved.</p>
+            <p>
+              © {new Date().getFullYear()} Accountability Buddy. All Rights
+              Reserved.
+            </p>
           </div>
         </footer>
       </body>

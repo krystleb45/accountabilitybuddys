@@ -1,8 +1,8 @@
-import React from "react";
-import ResourceLinks from "../Settings/ResourceLinks";
-import Disclaimer from "../UtilityComponents/Disclaimer";
-import ChatBox from "../chat/ChatBox";
-import styles from "./MilitarySupport.module.css";
+import React from 'react';
+import ResourceLinks from '../Settings/ResourceLinks';
+import Disclaimer from '../UtilityComponents/Disclaimer';
+import ChatBox from '../chat/ChatBox';
+import styles from './MilitarySupport.module.css';
 
 const MilitarySupport: React.FC = () => {
   return (
@@ -23,9 +23,11 @@ const MilitarySupport: React.FC = () => {
         <h2 id="chat-heading" className={styles.sectionTitle}>
           Peer Support Chat
         </h2>
-        <ChatBox onSendMessage={function (message: string): void {
-                  throw new Error("Function not implemented.");
-              } } />
+        <ChatBox
+          onSendMessage={function (message: string): void {
+            throw new Error('Function not implemented.');
+          }}
+        />
       </section>
 
       <section className={styles.resources} aria-labelledby="resources-heading">

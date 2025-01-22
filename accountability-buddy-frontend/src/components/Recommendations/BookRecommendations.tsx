@@ -1,5 +1,5 @@
-import React, { ReactNode, useEffect, useState } from "react";
-import "./Recommendations.module.css"; // Scoped styling for recommendations
+import React, { ReactNode, useEffect, useState } from 'react';
+import './Recommendations.module.css'; // Scoped styling for recommendations
 
 interface BookRecommendationsProps {
   [x: string]: any;
@@ -14,8 +14,12 @@ interface BookRecommendation {
   link?: string;
 }
 
-const BookRecommendations: React.FC<BookRecommendationsProps> = ({ recommendations }) => {
-  const [books, setBooks] = useState<BookRecommendationsProps[]>([{ recommendations: [] }]);
+const BookRecommendations: React.FC<BookRecommendationsProps> = ({
+  recommendations,
+}) => {
+  const [books, setBooks] = useState<BookRecommendationsProps[]>([
+    { recommendations: [] },
+  ]);
   const [loading, setLoading] = useState<boolean>(!recommendations); // Skip loading if data is passed
   const [error, setError] = useState<string | null>(null);
 
@@ -27,13 +31,17 @@ const BookRecommendations: React.FC<BookRecommendationsProps> = ({ recommendatio
         setLoading(true);
         setError(null);
 
-        const response = await fetch("/api/book-recommendations");
-        if (!response.ok) throw new Error("Failed to fetch book recommendations.");
+        const response = await fetch('/api/book-recommendations');
+        if (!response.ok)
+          throw new Error('Failed to fetch book recommendations.');
 
         const data: BookRecommendationsProps[] = await response.json();
         setBooks(data);
       } catch (err: any) {
-        setError(err.message || "An error occurred while fetching book recommendations.");
+        setError(
+          err.message ||
+            'An error occurred while fetching book recommendations.'
+        );
       } finally {
         setLoading(false);
       }
@@ -53,7 +61,9 @@ const BookRecommendations: React.FC<BookRecommendationsProps> = ({ recommendatio
           {books.map((book) => (
             <li key={book.id} className="book-item">
               <h3>{book.title}</h3>
-              <p><strong>Author:</strong> {book.author}</p>
+              <p>
+                <strong>Author:</strong> {book.author}
+              </p>
               <p>{book.description}</p>
               {book.link && (
                 <a href={book.link} target="_blank" rel="noopener noreferrer">

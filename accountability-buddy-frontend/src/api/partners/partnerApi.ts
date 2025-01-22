@@ -1,7 +1,8 @@
-import axios from "axios";
-import { getAuthHeader } from "src/services/authService"; // Helper to get the Authorization header
+import axios from 'axios';
+import { getAuthHeader } from 'src/services/authService'; // Helper to get the Authorization header
 
-const API_URL = process.env.REACT_APP_API_URL || "https://api.example.com/users";
+const API_URL =
+  process.env.REACT_APP_API_URL || 'https://api.example.com/users';
 
 // Define the structure of a Partner
 interface Partner {
@@ -22,10 +23,11 @@ interface Milestone {
 // Helper function to handle API errors
 const handleError = (error: any): never => {
   if (error.response && error.response.status === 401) {
-    throw new Error("Invalid credentials. Please try again.");
+    throw new Error('Invalid credentials. Please try again.');
   }
   throw new Error(
-    error.response?.data?.message || "An error occurred. Please try again later."
+    error.response?.data?.message ||
+      'An error occurred. Please try again later.'
   );
 };
 
@@ -68,7 +70,9 @@ export const fetchPartners = async (): Promise<Partner[] | undefined> => {
 };
 
 // Fetch specific partner information by ID
-export const fetchPartnerById = async (partnerId: string): Promise<Partner | undefined> => {
+export const fetchPartnerById = async (
+  partnerId: string
+): Promise<Partner | undefined> => {
   try {
     const response = await axios.get<Partner>(`${API_URL}/${partnerId}`, {
       headers: getAuthHeader(),
@@ -81,11 +85,16 @@ export const fetchPartnerById = async (partnerId: string): Promise<Partner | und
 };
 
 // Remove a partner from the user's list
-export const removePartner = async (partnerId: string): Promise<{ message: string } | undefined> => {
+export const removePartner = async (
+  partnerId: string
+): Promise<{ message: string } | undefined> => {
   try {
-    const response = await axios.delete<{ message: string }>(`${API_URL}/${partnerId}`, {
-      headers: getAuthHeader(),
-    });
+    const response = await axios.delete<{ message: string }>(
+      `${API_URL}/${partnerId}`,
+      {
+        headers: getAuthHeader(),
+      }
+    );
     return response.data;
   } catch (error: any) {
     handleError(error);
@@ -94,7 +103,9 @@ export const removePartner = async (partnerId: string): Promise<{ message: strin
 };
 
 // Add a new partner (for future partner management features)
-export const addPartner = async (partnerData: Partial<Partner>): Promise<Partner | undefined> => {
+export const addPartner = async (
+  partnerData: Partial<Partner>
+): Promise<Partner | undefined> => {
   try {
     const response = await axios.post<Partner>(`${API_URL}`, partnerData, {
       headers: getAuthHeader(),

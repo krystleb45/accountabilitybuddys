@@ -1,6 +1,9 @@
-import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import axios, {
+  AxiosInstance,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from 'axios';
 import { AxiosHeaders } from 'axios';
-
 
 // Define base API URL
 const API_URL = process.env.API_URL || 'https://accountabilitybuddys.com/api';
@@ -50,8 +53,8 @@ const handleApiError = (error: any): never => {
   console.error('API Error:', error);
   throw new Error(
     error.response?.data?.message ||
-    error.message ||
-    'An unexpected error occurred. Please try again later.'
+      error.message ||
+      'An unexpected error occurred. Please try again later.'
   );
 };
 
@@ -79,19 +82,20 @@ apiClient.interceptors.request.use(
 
 const ApiService = {
   /**
- * Fetch dashboard data.
- *
- * @returns {Promise<DashboardData>} - The dashboard data.
- */
-getDashboardData: async (): Promise<DashboardData> => {
-  try {
-    const response: AxiosResponse<DashboardData> = await apiClient.get('/dashboard');
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-    return {} as DashboardData; // Return an empty DashboardData object
-  }
-},
+   * Fetch dashboard data.
+   *
+   * @returns {Promise<DashboardData>} - The dashboard data.
+   */
+  getDashboardData: async (): Promise<DashboardData> => {
+    try {
+      const response: AxiosResponse<DashboardData> =
+        await apiClient.get('/dashboard');
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      return {} as DashboardData; // Return an empty DashboardData object
+    }
+  },
 
   /**
    * Fetch tasks.
@@ -115,9 +119,15 @@ getDashboardData: async (): Promise<DashboardData> => {
    * @param {Partial<Task>} taskData - The updated task data.
    * @returns {Promise<Task>} - The updated task.
    */
-  updateTask: async (taskId: string, taskData: Partial<Task>): Promise<Task> => {
+  updateTask: async (
+    taskId: string,
+    taskData: Partial<Task>
+  ): Promise<Task> => {
     try {
-      const response: AxiosResponse<Task> = await apiClient.put(`/tasks/${taskId}`, taskData);
+      const response: AxiosResponse<Task> = await apiClient.put(
+        `/tasks/${taskId}`,
+        taskData
+      );
       return response.data;
     } catch (error) {
       handleApiError(error);
@@ -132,7 +142,8 @@ getDashboardData: async (): Promise<DashboardData> => {
    */
   getNotifications: async (): Promise<Notification[]> => {
     try {
-      const response: AxiosResponse<Notification[]> = await apiClient.get('/notifications');
+      const response: AxiosResponse<Notification[]> =
+        await apiClient.get('/notifications');
       return response.data;
     } catch (error) {
       handleApiError(error);

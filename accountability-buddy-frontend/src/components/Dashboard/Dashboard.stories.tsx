@@ -1,12 +1,12 @@
-import React from "react";
-import { Meta, StoryFn } from "@storybook/react";
-import Dashboard from "./Dashboard";
+import React from 'react';
+import { Meta, StoryFn } from '@storybook/react';
+import Dashboard from './Dashboard';
 
 export default {
-  title: "Components/Dashboard",
+  title: 'Components/Dashboard',
   component: Dashboard,
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
 } as Meta<typeof Dashboard>;
 

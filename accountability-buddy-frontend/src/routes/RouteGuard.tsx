@@ -1,6 +1,6 @@
-import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "src/context/auth/AuthContext"; // Ensure the correct path to AuthContext
+import React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from 'src/context/auth/AuthContext'; // Ensure the correct path to AuthContext
 
 interface RouteGuardProps {
   element: JSX.Element;
@@ -19,7 +19,7 @@ interface RouteGuardProps {
 const RouteGuard: React.FC<RouteGuardProps> = ({
   element,
   isPrivate = false,
-  redirectPath = "/login",
+  redirectPath = '/login',
 }) => {
   const { isAuthenticated } = useAuth();
   const location = useLocation();

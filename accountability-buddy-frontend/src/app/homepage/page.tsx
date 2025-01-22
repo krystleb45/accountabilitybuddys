@@ -1,36 +1,36 @@
-"use client";
+'use client';
 
-import React, { useContext, useState, useEffect } from "react";
-import AuthContext from "../../context/auth/AuthContext";
-import RecentActivities from "../../components/Activities/RecentActivities";
-import GroupRecommendations from "../../components/Recommendations/GroupRecommendations";
-import GoalProgress from "../../components/Gamification/GoalProgress";
-import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
-import axios from "axios";
+import React, { useContext, useState, useEffect } from 'react';
+import AuthContext from '../../context/auth/AuthContext';
+import RecentActivities from '../../components/Activities/RecentActivities';
+import GroupRecommendations from '../../components/Recommendations/GroupRecommendations';
+import GoalProgress from '../../components/Gamification/GoalProgress';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import axios from 'axios';
 
 const HomePage: React.FC = () => {
   const { authToken } = useContext(AuthContext) || {};
-  const [username, setUsername] = useState<string>("User");
+  const [username, setUsername] = useState<string>('User');
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>('');
 
   // Sample state data for GoalProgress
-  const [goalTitle, setGoalTitle] = useState<string>("Complete Project");
+  const [goalTitle, setGoalTitle] = useState<string>('Complete Project');
   const [currentProgress, setCurrentProgress] = useState<number>(50);
   const [targetProgress, setTargetProgress] = useState<number>(100);
 
   // Sample state for GroupRecommendations
   const [recommendations] = useState([
     {
-      id: "1",
-      name: "Project Enthusiasts",
-      description: "A group for project lovers",
+      id: '1',
+      name: 'Project Enthusiasts',
+      description: 'A group for project lovers',
       membersCount: 150,
     },
     {
-      id: "2",
-      name: "Goal Setters",
-      description: "A community focused on achieving goals",
+      id: '2',
+      name: 'Goal Setters',
+      description: 'A community focused on achieving goals',
       membersCount: 200,
     },
   ]);
@@ -38,18 +38,18 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       setLoading(true);
-      setError("");
+      setError('');
       try {
-        const response = await axios.get("/api/user/profile", {
+        const response = await axios.get('/api/user/profile', {
           headers: { Authorization: `Bearer ${authToken}` },
         });
         if (response.data?.success) {
-          setUsername(response.data.user.username || "User");
+          setUsername(response.data.user.username || 'User');
         } else {
-          setError("Failed to fetch user data.");
+          setError('Failed to fetch user data.');
         }
       } catch (err) {
-        setError("An error occurred while loading your profile.");
+        setError('An error occurred while loading your profile.');
       } finally {
         setLoading(false);
       }
@@ -59,7 +59,7 @@ const HomePage: React.FC = () => {
   }, [authToken]);
 
   const handleEditGoal = () => {
-    console.log("Edit goal clicked");
+    console.log('Edit goal clicked');
   };
 
   const handleJoinGroup = (groupId: string) => {

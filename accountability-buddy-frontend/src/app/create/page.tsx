@@ -1,18 +1,18 @@
-"use client"; // Ensure it's a Client Component
+'use client'; // Ensure it's a Client Component
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 const CreatePage: React.FC = () => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Simulate form submission (replace with actual API call)
     setSuccess(true);
-    setTitle("");
-    setDescription("");
+    setTitle('');
+    setDescription('');
   };
 
   return (
@@ -37,7 +37,10 @@ const CreatePage: React.FC = () => {
             </div>
           )}
           <div className="mb-4">
-            <label htmlFor="title" className="block text-gray-700 font-medium mb-2">
+            <label
+              htmlFor="title"
+              className="block text-gray-700 font-medium mb-2"
+            >
               Goal Title
             </label>
             <input

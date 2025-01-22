@@ -26,16 +26,28 @@ const HomePage = () => {
 
       {/* Main Navigation Section */}
       <main className="flex flex-col gap-6 sm:flex-row sm:gap-4">
-        <Link href="/register" className="rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors py-3 px-8 text-sm sm:text-base flex items-center justify-center">
+        <Link
+          href="/register"
+          className="rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors py-3 px-8 text-sm sm:text-base flex items-center justify-center"
+        >
           Get Started
         </Link>
-        <Link href="/login" className="rounded-full border border-gray-300 text-gray-600 hover:bg-gray-200 transition-colors py-3 px-8 text-sm sm:text-base flex items-center justify-center">
+        <Link
+          href="/login"
+          className="rounded-full border border-gray-300 text-gray-600 hover:bg-gray-200 transition-colors py-3 px-8 text-sm sm:text-base flex items-center justify-center"
+        >
           Login
         </Link>
-        <Link href="/dashboard" className="rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors py-3 px-8 text-sm sm:text-base flex items-center justify-center">
+        <Link
+          href="/dashboard"
+          className="rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors py-3 px-8 text-sm sm:text-base flex items-center justify-center"
+        >
           Go to Dashboard
         </Link>
-        <Link href="/settings" className="rounded-full border border-gray-300 text-gray-600 hover:bg-gray-200 transition-colors py-3 px-8 text-sm sm:text-base flex items-center justify-center">
+        <Link
+          href="/settings"
+          className="rounded-full border border-gray-300 text-gray-600 hover:bg-gray-200 transition-colors py-3 px-8 text-sm sm:text-base flex items-center justify-center"
+        >
           Manage Settings
         </Link>
       </main>

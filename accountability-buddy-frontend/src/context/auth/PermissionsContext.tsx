@@ -1,6 +1,12 @@
 // PermissionsContext.tsx
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  ReactNode,
+} from 'react';
 
 // Define the shape of the PermissionsContext
 interface PermissionsContextType {
@@ -10,18 +16,23 @@ interface PermissionsContextType {
   hasRole: (role: string) => boolean;
   setUserPermissions: (perms: string[]) => void;
   setUserRoles: (userRoles: string[]) => void;
-  canAccess: (requiredRoles?: string[], requiredPermissions?: string[]) => boolean;
+  canAccess: (
+    requiredRoles?: string[],
+    requiredPermissions?: string[]
+  ) => boolean;
   resetPermissionsAndRoles: () => void; // Reset function
 }
 
 // Create PermissionsContext with the appropriate type
-const PermissionsContext = createContext<PermissionsContextType | undefined>(undefined);
+const PermissionsContext = createContext<PermissionsContextType | undefined>(
+  undefined
+);
 
 // Custom hook to use PermissionsContext
 export const usePermissions = (): PermissionsContextType => {
   const context = useContext(PermissionsContext);
   if (!context) {
-    throw new Error("usePermissions must be used within a PermissionsProvider");
+    throw new Error('usePermissions must be used within a PermissionsProvider');
   }
   return context;
 };
@@ -32,7 +43,9 @@ interface PermissionsProviderProps {
 }
 
 // Permissions Provider component
-export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ children }) => {
+export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({
+  children,
+}) => {
   const [permissions, setPermissions] = useState<string[]>([]);
   const [roles, setRoles] = useState<string[]>([]);
 
@@ -50,7 +63,7 @@ export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ childr
     if (Array.isArray(perms)) {
       setPermissions(perms);
     } else {
-      console.error("Permissions should be an array");
+      console.error('Permissions should be an array');
     }
   }, []);
 
@@ -59,7 +72,7 @@ export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ childr
     if (Array.isArray(userRoles)) {
       setRoles(userRoles);
     } else {
-      console.error("Roles should be an array");
+      console.error('Roles should be an array');
     }
   }, []);
 

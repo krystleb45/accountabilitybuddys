@@ -1,7 +1,8 @@
-import axios from "axios";
-import { getAuthHeader } from "src/services/authService"; // Ensure the token is included in requests
+import axios from 'axios';
+import { getAuthHeader } from 'src/services/authService'; // Ensure the token is included in requests
 
-const API_URL = process.env.REACT_APP_API_URL || "https://api.example.com/users";
+const API_URL =
+  process.env.REACT_APP_API_URL || 'https://api.example.com/users';
 
 // Define the structure of a Subscription Plan
 interface SubscriptionPlan {
@@ -24,15 +25,18 @@ interface SubscriptionStatus {
 // Helper function to handle API errors
 const handleError = (error: any): never => {
   if (error.response && error.response.status === 401) {
-    throw new Error("Invalid credentials. Please try again.");
+    throw new Error('Invalid credentials. Please try again.');
   }
   throw new Error(
-    error.response?.data?.message || "An error occurred. Please try again later."
+    error.response?.data?.message ||
+      'An error occurred. Please try again later.'
   );
 };
 
 // Fetch available subscription plans
-export const fetchSubscriptionPlans = async (): Promise<SubscriptionPlan[] | undefined> => {
+export const fetchSubscriptionPlans = async (): Promise<
+  SubscriptionPlan[] | undefined
+> => {
   try {
     const response = await axios.get<SubscriptionPlan[]>(`${API_URL}/plans`, {
       headers: getAuthHeader(),
@@ -47,7 +51,7 @@ export const fetchSubscriptionPlans = async (): Promise<SubscriptionPlan[] | und
 // Create a new subscription session
 export const createSubscriptionSession = async (
   planId: string,
-  provider: string = "stripe"
+  provider: string = 'stripe'
 ): Promise<{ sessionUrl: string } | undefined> => {
   try {
     const response = await axios.post<{ sessionUrl: string }>(
@@ -65,7 +69,9 @@ export const createSubscriptionSession = async (
 };
 
 // Fetch the user's current subscription status
-export const getSubscriptionStatus = async (): Promise<SubscriptionStatus | undefined> => {
+export const getSubscriptionStatus = async (): Promise<
+  SubscriptionStatus | undefined
+> => {
   try {
     const response = await axios.get<SubscriptionStatus>(`${API_URL}/status`, {
       headers: getAuthHeader(),
@@ -78,7 +84,9 @@ export const getSubscriptionStatus = async (): Promise<SubscriptionStatus | unde
 };
 
 // Cancel the user's active subscription
-export const cancelSubscription = async (): Promise<{ message: string } | undefined> => {
+export const cancelSubscription = async (): Promise<
+  { message: string } | undefined
+> => {
   try {
     const response = await axios.post<{ message: string }>(
       `${API_URL}/cancel`,
@@ -95,7 +103,9 @@ export const cancelSubscription = async (): Promise<{ message: string } | undefi
 };
 
 // Change the user's subscription plan
-export const changeSubscriptionPlan = async (newPlanId: string): Promise<{ message: string } | undefined> => {
+export const changeSubscriptionPlan = async (
+  newPlanId: string
+): Promise<{ message: string } | undefined> => {
   try {
     const response = await axios.post<{ message: string }>(
       `${API_URL}/change-plan`,

@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import "./NavbarDropdown.css";
+import React, { useState, useRef, useEffect } from 'react';
+import './NavbarDropdown.css';
 
 interface NavbarDropdownProps {
   title: string;
@@ -20,13 +20,16 @@ const NavbarDropdown: React.FC<NavbarDropdownProps> = ({ title, items }) => {
   // Close dropdown when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         closeDropdown();
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (

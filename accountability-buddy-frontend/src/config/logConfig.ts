@@ -1,23 +1,23 @@
-import * as Sentry from "@sentry/react";
-import LogRocket from "logrocket";
+import * as Sentry from '@sentry/react';
+import LogRocket from 'logrocket';
 
 // Enhanced Log Configuration
 const logConfig = {
   // Sentry Configuration
-  sentryDsn: process.env.REACT_APP_SENTRY_DSN || "",
+  sentryDsn: process.env.REACT_APP_SENTRY_DSN || '',
   sentryEnabled:
-    process.env.NODE_ENV === "production" && !!process.env.REACT_APP_SENTRY_DSN,
+    process.env.NODE_ENV === 'production' && !!process.env.REACT_APP_SENTRY_DSN,
 
   // LogRocket Configuration
-  logRocketAppId: process.env.REACT_APP_LOGROCKET_APP_ID || "",
+  logRocketAppId: process.env.REACT_APP_LOGROCKET_APP_ID || '',
   logRocketEnabled:
-    process.env.NODE_ENV === "production" &&
+    process.env.NODE_ENV === 'production' &&
     !!process.env.REACT_APP_LOGROCKET_APP_ID,
 
   // Enable/Disable Console Logging
   enableLogging:
-    process.env.REACT_APP_ENABLE_LOGGING === "true" ||
-    process.env.NODE_ENV === "development",
+    process.env.REACT_APP_ENABLE_LOGGING === 'true' ||
+    process.env.NODE_ENV === 'development',
 
   // Initialize Sentry
   initSentry: function () {
@@ -25,12 +25,12 @@ const logConfig = {
       Sentry.init({
         dsn: this.sentryDsn,
         tracesSampleRate: parseFloat(
-          process.env.REACT_APP_SENTRY_SAMPLE_RATE || "1.0"
+          process.env.REACT_APP_SENTRY_SAMPLE_RATE || '1.0'
         ), // Adjust sample rate dynamically
         environment: process.env.NODE_ENV, // Set environment context
-        release: process.env.REACT_APP_VERSION || "unknown", // App version tracking
+        release: process.env.REACT_APP_VERSION || 'unknown', // App version tracking
       });
-      console.log("Sentry initialized for error tracking");
+      console.log('Sentry initialized for error tracking');
     }
   },
 
@@ -42,25 +42,25 @@ const logConfig = {
       // Optionally, integrate LogRocket with Sentry
       if (this.sentryEnabled) {
         LogRocket.getSessionURL((sessionURL) => {
-          Sentry.setContext("session", { url: sessionURL });
+          Sentry.setContext('session', { url: sessionURL });
         });
       }
-      console.log("LogRocket initialized for session tracking");
+      console.log('LogRocket initialized for session tracking');
     }
   },
 
   // Generic Logger
   log: function (
     message: string,
-    level: "info" | "warn" | "error" = "info",
+    level: 'info' | 'warn' | 'error' = 'info',
     additionalContext?: Record<string, unknown>
   ) {
     if (this.enableLogging) {
-      console[level](message, additionalContext || "");
+      console[level](message, additionalContext || '');
     }
 
     // Send errors to Sentry in production
-    if (this.sentryEnabled && level === "error") {
+    if (this.sentryEnabled && level === 'error') {
       Sentry.captureException(new Error(message), {
         extra: additionalContext || {},
       });
@@ -77,7 +77,7 @@ const logConfig = {
       Sentry.setUser(user);
     }
     if (this.logRocketEnabled) {
-      LogRocket.identify(user.id || "unknown", {
+      LogRocket.identify(user.id || 'unknown', {
         email: user.email,
         name: user.username,
       });
@@ -85,15 +85,14 @@ const logConfig = {
   },
 
   // Clear User Context
-clearUserContext: function () {
-  if (this.sentryEnabled) {
-    Sentry.setUser(null); // Sentry supports null to clear user context
-  }
-  if (this.logRocketEnabled) {
-    LogRocket.identify("unknown", {}); // Use a placeholder string instead of null
-  }
-},
-
+  clearUserContext: function () {
+    if (this.sentryEnabled) {
+      Sentry.setUser(null); // Sentry supports null to clear user context
+    }
+    if (this.logRocketEnabled) {
+      LogRocket.identify('unknown', {}); // Use a placeholder string instead of null
+    }
+  },
 };
 
 // Initialize logging tools if enabled

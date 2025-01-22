@@ -6,15 +6,20 @@ import {
 } from 'src/components/Subscriptions/types'; // Adjust the import path if necessary
 
 // Fetch subscription details
-export const fetchSubscriptionDetails = async (): Promise<SubscriptionDetails> => {
-  try {
-    const response = await axios.get<SubscriptionDetails>('/api/subscription/details'); // Adjust API endpoint
-    return response.data;
-  } catch (error: any) {
-    console.error('Error fetching subscription details:', error);
-    throw new Error('Failed to fetch subscription details. Please try again.');
-  }
-};
+export const fetchSubscriptionDetails =
+  async (): Promise<SubscriptionDetails> => {
+    try {
+      const response = await axios.get<SubscriptionDetails>(
+        '/api/subscription/details'
+      ); // Adjust API endpoint
+      return response.data;
+    } catch (error: any) {
+      console.error('Error fetching subscription details:', error);
+      throw new Error(
+        'Failed to fetch subscription details. Please try again.'
+      );
+    }
+  };
 
 // Fetch billing history
 export const fetchBillingHistory = async (): Promise<BillingHistoryItem[]> => {
@@ -30,7 +35,9 @@ export const fetchBillingHistory = async (): Promise<BillingHistoryItem[]> => {
 };
 
 // Update subscription plan
-export const updateSubscription = async (payload: UpdateSubscriptionPayload): Promise<void> => {
+export const updateSubscription = async (
+  payload: UpdateSubscriptionPayload
+): Promise<void> => {
   try {
     await axios.post('/api/subscription/update', payload); // Adjust API endpoint
   } catch (error: any) {
@@ -68,7 +75,11 @@ export const formatAmount = (amountInCents: number): string => {
 
 // Format an ISO date string to a readable date
 export const formatDate = (isoDate: string): string => {
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
   return new Date(isoDate).toLocaleDateString(undefined, options);
 };
 

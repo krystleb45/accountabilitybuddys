@@ -1,5 +1,5 @@
-import React from "react";
-import "./BadgeDetails.css"; // Optional CSS for styling
+import React from 'react';
+import './BadgeDetails.css'; // Optional CSS for styling
 
 interface Badge {
   id: string;
@@ -19,7 +19,11 @@ const BadgeDetails: React.FC<BadgeDetailsProps> = ({ badge, onClose }) => {
   return (
     <div className="badge-details">
       <div className="badge-header">
-        <img src={badge.icon} alt={`${badge.name} badge`} className="badge-icon" />
+        <img
+          src={badge.icon}
+          alt={`${badge.name} badge`}
+          className="badge-icon"
+        />
         <h2 className="badge-name">{badge.name}</h2>
       </div>
       <p className="badge-description">{badge.description}</p>
@@ -29,10 +33,15 @@ const BadgeDetails: React.FC<BadgeDetailsProps> = ({ badge, onClose }) => {
       </div>
       {badge.dateEarned && (
         <p className="badge-date">
-          Earned on: <strong>{new Date(badge.dateEarned).toLocaleDateString()}</strong>
+          Earned on:{' '}
+          <strong>{new Date(badge.dateEarned).toLocaleDateString()}</strong>
         </p>
       )}
-      <button onClick={onClose} className="close-button" aria-label="Close badge details">
+      <button
+        onClick={onClose}
+        className="close-button"
+        aria-label="Close badge details"
+      >
         Close
       </button>
     </div>

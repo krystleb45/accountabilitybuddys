@@ -1,8 +1,8 @@
 // mockThemeProvider.tsx
 
-import React, { createContext, ReactNode } from "react";
-import { Theme } from "@mui/material/styles";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import React, { createContext, ReactNode } from 'react';
+import { Theme } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Mock Theme Context shape
 interface MockThemeContextType {
@@ -13,17 +13,17 @@ interface MockThemeContextType {
 // Create mock theme
 const lightTheme = createTheme({
   palette: {
-    mode: "light",
-    primary: { main: "#1976d2" },
-    secondary: { main: "#dc004e" },
+    mode: 'light',
+    primary: { main: '#1976d2' },
+    secondary: { main: '#dc004e' },
   },
 });
 
 const darkTheme = createTheme({
   palette: {
-    mode: "dark",
-    primary: { main: "#90caf9" },
-    secondary: { main: "#f48fb1" },
+    mode: 'dark',
+    primary: { main: '#90caf9' },
+    secondary: { main: '#f48fb1' },
   },
 });
 
@@ -60,7 +60,7 @@ export const MockThemeProvider: React.FC<MockThemeProviderProps> = ({
 export const useMockTheme = (): MockThemeContextType => {
   const context = React.useContext(MockThemeContext);
   if (!context) {
-    throw new Error("useMockTheme must be used within a MockThemeProvider");
+    throw new Error('useMockTheme must be used within a MockThemeProvider');
   }
   return context;
 };

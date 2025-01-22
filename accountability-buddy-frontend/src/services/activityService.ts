@@ -17,8 +17,8 @@ const handleApiError = (error: any): never => {
   console.error('API Error:', error);
   throw new Error(
     error.response?.data?.message ||
-    error.message ||
-    'An unexpected error occurred. Please try again later.'
+      error.message ||
+      'An unexpected error occurred. Please try again later.'
   );
 };
 
@@ -49,7 +49,10 @@ const ActivityService = {
    * @param {number} limit - The number of activities per page.
    * @returns {Promise<{ activities: Activity[]; total: number }>} - A list of activities and the total count.
    */
-  listActivities: async (page: number = 1, limit: number = 10): Promise<{ activities: Activity[]; total: number } | undefined> => {
+  listActivities: async (
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ activities: Activity[]; total: number } | undefined> => {
     try {
       const response = await axios.get('/activities', {
         params: { page, limit },
@@ -97,7 +100,9 @@ const ActivityService = {
    * @param {Partial<Activity>} activityData - The data for the new activity.
    * @returns {Promise<Activity>} - The created activity.
    */
-  createActivity: async (activityData: Partial<Activity>): Promise<Activity> => {
+  createActivity: async (
+    activityData: Partial<Activity>
+  ): Promise<Activity> => {
     try {
       const response = await axios.post('/activities', activityData);
       return response.data as Activity;
@@ -114,9 +119,15 @@ const ActivityService = {
    * @param {Partial<Activity>} activityData - The updated data for the activity.
    * @returns {Promise<Activity>} - The updated activity.
    */
-  updateActivity: async (activityId: string, activityData: Partial<Activity>): Promise<Activity> => {
+  updateActivity: async (
+    activityId: string,
+    activityData: Partial<Activity>
+  ): Promise<Activity> => {
     try {
-      const response = await axios.put(`/activities/${activityId}`, activityData);
+      const response = await axios.put(
+        `/activities/${activityId}`,
+        activityData
+      );
       return response.data as Activity;
     } catch (error) {
       handleApiError(error);

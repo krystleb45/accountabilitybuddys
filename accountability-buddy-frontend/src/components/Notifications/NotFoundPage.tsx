@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "./NotFoundPage.css"; // Optional: Create a CSS file for additional styling if needed.
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './NotFoundPage.css'; // Optional: Create a CSS file for additional styling if needed.
 
 const NotFoundPage: React.FC = () => {
   return (

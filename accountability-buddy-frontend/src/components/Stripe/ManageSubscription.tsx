@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { fetchSubscriptionDetails, updateSubscription, cancelSubscription } from 'src/utils/stripeHelpers'; // Utility functions
+import {
+  fetchSubscriptionDetails,
+  updateSubscription,
+  cancelSubscription,
+} from 'src/utils/stripeHelpers'; // Utility functions
 import { SubscriptionDetails } from './types'; // Type definitions
 import styles from './Stripe.module.css'; // CSS module for styling
 
 const ManageSubscription: React.FC = () => {
-  const [subscription, setSubscription] = useState<SubscriptionDetails | null>(null);
+  const [subscription, setSubscription] = useState<SubscriptionDetails | null>(
+    null
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState<boolean>(false);
@@ -29,7 +35,7 @@ const ManageSubscription: React.FC = () => {
   const handleUpdateSubscription = async (planId: string) => {
     try {
       setUpdating(true);
-      await updateSubscription({ planId });// Update subscription plan
+      await updateSubscription({ planId }); // Update subscription plan
       const updatedDetails = await fetchSubscriptionDetails();
       setSubscription(updatedDetails);
     } catch (err: any) {
@@ -63,12 +69,21 @@ const ManageSubscription: React.FC = () => {
     <div className={styles.subscriptionContainer}>
       <h2 className={styles.heading}>Manage Your Subscription</h2>
       {!subscription ? (
-        <p className={styles.noSubscription}>You don't have an active subscription.</p>
+        <p className={styles.noSubscription}>
+          You don't have an active subscription.
+        </p>
       ) : (
         <div>
-          <p><strong>Plan:</strong> {subscription.planName}</p>
-          <p><strong>Status:</strong> {subscription.status}</p>
-          <p><strong>Next Billing Date:</strong> {new Date(subscription.nextBillingDate).toLocaleDateString()}</p>
+          <p>
+            <strong>Plan:</strong> {subscription.planName}
+          </p>
+          <p>
+            <strong>Status:</strong> {subscription.status}
+          </p>
+          <p>
+            <strong>Next Billing Date:</strong>{' '}
+            {new Date(subscription.nextBillingDate).toLocaleDateString()}
+          </p>
           <div className={styles.actions}>
             <button
               className={styles.button}

@@ -15,11 +15,17 @@ const mockCookies: Record<string, CookieOptions> = {};
  * @param value - The value of the cookie.
  * @param options - Optional settings for the cookie (e.g., expires, path).
  */
-function setCookie(name: string, value: string, options: Partial<CookieOptions> = {}): void {
+function setCookie(
+  name: string,
+  value: string,
+  options: Partial<CookieOptions> = {}
+): void {
   const cookieOptions: CookieOptions = {
     value,
     ...options,
-    expires: options.expires ? new Date(options.expires).toUTCString() : undefined,
+    expires: options.expires
+      ? new Date(options.expires).toUTCString()
+      : undefined,
   };
   mockCookies[name] = cookieOptions;
   console.log(`[Cookie Mock] Cookie set: ${name}=${value}`, cookieOptions);
@@ -49,7 +55,9 @@ function deleteCookie(name: string): void {
     delete mockCookies[name];
     console.log(`[Cookie Mock] Cookie deleted: ${name}`);
   } else {
-    console.log(`[Cookie Mock] Attempted to delete non-existent cookie: ${name}`);
+    console.log(
+      `[Cookie Mock] Attempted to delete non-existent cookie: ${name}`
+    );
   }
 }
 
@@ -59,10 +67,13 @@ function deleteCookie(name: string): void {
  */
 function getAllCookies(): Record<string, string> {
   console.log(`[Cookie Mock] Retrieved all cookies:`, mockCookies);
-  return Object.keys(mockCookies).reduce((acc, key) => {
-    acc[key] = mockCookies[key].value;
-    return acc;
-  }, {} as Record<string, string>);
+  return Object.keys(mockCookies).reduce(
+    (acc, key) => {
+      acc[key] = mockCookies[key].value;
+      return acc;
+    },
+    {} as Record<string, string>
+  );
 }
 
 /**
@@ -76,10 +87,4 @@ function resetCookies(): void {
 }
 
 // Export mock functions
-export {
-  setCookie,
-  getCookie,
-  deleteCookie,
-  getAllCookies,
-  resetCookies,
-};
+export { setCookie, getCookie, deleteCookie, getAllCookies, resetCookies };

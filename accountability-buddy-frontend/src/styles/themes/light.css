@@ -5,7 +5,9 @@ body {
   background-color: #ffffff; /* Light background */
   color: #333333; /* Dark text color for contrast */
   font-family: 'Nunito Sans', Arial, sans-serif; /* Modern font */
-  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for theme changes */
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease; /* Smooth transition for theme changes */
 }
 
 /* Link Styles */
@@ -24,10 +26,15 @@ a:hover {
   background-color: #1976d2; /* Primary button background */
   color: white; /* Button text color */
   border: 1px solid #1976d2; /* Border matching the button */
-  border-radius: var(--border-radius-medium, 8px); /* Use variables for consistency */
+  border-radius: var(
+    --border-radius-medium,
+    8px
+  ); /* Use variables for consistency */
   padding: var(--spacing-medium, 8px) var(--spacing-large, 16px); /* Use spacing variables */
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .button:hover {
@@ -40,14 +47,20 @@ a:hover {
   background-color: white; /* White background for cards */
   border: 1px solid #ddd; /* Light grey border */
   border-radius: var(--border-radius-medium, 8px); /* Rounded corners */
-  box-shadow: var(--box-shadow-light, 0 1px 3px rgba(0, 0, 0, 0.1)); /* Subtle shadow for depth */
+  box-shadow: var(
+    --box-shadow-light,
+    0 1px 3px rgba(0, 0, 0, 0.1)
+  ); /* Subtle shadow for depth */
   padding: var(--spacing-large, 16px); /* Inner padding */
   margin: var(--spacing-large, 16px) 0; /* Space between cards */
   transition: box-shadow 0.3s ease;
 }
 
 .card:hover {
-  box-shadow: var(--box-shadow-medium, 0 2px 5px rgba(0, 0, 0, 0.2)); /* Enhanced shadow on hover */
+  box-shadow: var(
+    --box-shadow-medium,
+    0 2px 5px rgba(0, 0, 0, 0.2)
+  ); /* Enhanced shadow on hover */
 }
 
 /* Modal Styles */
@@ -56,26 +69,34 @@ a:hover {
   color: #333333; /* Dark text color */
   border-radius: var(--border-radius-medium, 8px); /* Rounded corners */
   padding: var(--spacing-large, 16px); /* Consistent padding */
-  box-shadow: var(--box-shadow-medium, 0 2px 5px rgba(0, 0, 0, 0.2)); /* Subtle shadow */
+  box-shadow: var(
+    --box-shadow-medium,
+    0 2px 5px rgba(0, 0, 0, 0.2)
+  ); /* Subtle shadow */
 }
 
 /* Input Fields */
-input, textarea {
+input,
+textarea {
   background-color: #ffffff; /* White input background */
   color: #333333; /* Dark text color */
   border: 1px solid #ccc; /* Light border */
   border-radius: var(--border-radius-small, 4px); /* Rounded corners */
   padding: var(--spacing-medium, 8px); /* Consistent padding */
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   border-color: #1976d2; /* Primary blue border on focus */
   background-color: #f9f9f9; /* Subtle background adjustment */
   outline: none; /* Remove default outline */
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: #aaa; /* Subtle placeholder text color */
 }
 
@@ -106,7 +127,12 @@ footer {
     font-size: 14px; /* Adjust font size for smaller screens */
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-size: 90%; /* Reduce heading sizes for smaller screens */
   }
 }

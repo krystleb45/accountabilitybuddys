@@ -1,5 +1,5 @@
-import React from "react";
-import "./SidebarItem.module.css";
+import React from 'react';
+import './SidebarItem.module.css';
 
 interface SidebarItemProps {
   label: string;
@@ -8,10 +8,15 @@ interface SidebarItemProps {
   onClick?: () => void;
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ label, icon, isActive, onClick }) => {
+const SidebarItem: React.FC<SidebarItemProps> = ({
+  label,
+  icon,
+  isActive,
+  onClick,
+}) => {
   return (
     <div
-      className={`sidebar-item ${isActive ? "active" : ""}`}
+      className={`sidebar-item ${isActive ? 'active' : ''}`}
       onClick={onClick}
       role="button"
       tabIndex={0}

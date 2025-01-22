@@ -1,5 +1,9 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig, AxiosHeaders } from "axios";
-import authService from "../../src/services/authService";
+import axios, {
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+  AxiosHeaders,
+} from 'axios';
+import authService from '../../src/services/authService';
 
 // Define types for the goal data
 export interface Goal {
@@ -19,9 +23,9 @@ export interface GoalAnalytics {
 }
 
 const apiClient = axios.create({
-  baseURL: "https://accountabilitybuddys.com/api/goals",
+  baseURL: 'https://accountabilitybuddys.com/api/goals',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -45,12 +49,14 @@ apiClient.interceptors.request.use(
 /**
  * Create a new goal.
  */
-export const createGoal = async (goalData: Partial<Goal>): Promise<Goal | undefined> => {
+export const createGoal = async (
+  goalData: Partial<Goal>
+): Promise<Goal | undefined> => {
   try {
-    const response: AxiosResponse<Goal> = await apiClient.post("/", goalData);
+    const response: AxiosResponse<Goal> = await apiClient.post('/', goalData);
     return response.data;
   } catch (error) {
-    console.error("Error creating goal:", error);
+    console.error('Error creating goal:', error);
     return undefined; // Explicitly return undefined in case of error
   }
 };
@@ -60,10 +66,10 @@ export const createGoal = async (goalData: Partial<Goal>): Promise<Goal | undefi
  */
 export const getUserGoals = async (): Promise<Goal[] | undefined> => {
   try {
-    const response: AxiosResponse<Goal[]> = await apiClient.get("/");
+    const response: AxiosResponse<Goal[]> = await apiClient.get('/');
     return response.data;
   } catch (error) {
-    console.error("Error fetching user goals:", error);
+    console.error('Error fetching user goals:', error);
     return undefined; // Explicitly return undefined in case of error
   }
 };
@@ -71,12 +77,18 @@ export const getUserGoals = async (): Promise<Goal[] | undefined> => {
 /**
  * Update a goal.
  */
-export const updateGoal = async (goalId: string, goalData: Partial<Goal>): Promise<Goal | undefined> => {
+export const updateGoal = async (
+  goalId: string,
+  goalData: Partial<Goal>
+): Promise<Goal | undefined> => {
   try {
-    const response: AxiosResponse<Goal> = await apiClient.put(`/${goalId}`, goalData);
+    const response: AxiosResponse<Goal> = await apiClient.put(
+      `/${goalId}`,
+      goalData
+    );
     return response.data;
   } catch (error) {
-    console.error("Error updating goal:", error);
+    console.error('Error updating goal:', error);
     return undefined; // Explicitly return undefined in case of error
   }
 };
@@ -89,7 +101,7 @@ export const deleteGoal = async (goalId: string): Promise<boolean> => {
     await apiClient.delete(`/${goalId}`);
     return true;
   } catch (error) {
-    console.error("Error deleting goal:", error);
+    console.error('Error deleting goal:', error);
     return false; // Return false if deletion fails
   }
 };
@@ -97,12 +109,14 @@ export const deleteGoal = async (goalId: string): Promise<boolean> => {
 /**
  * Get details of a specific goal.
  */
-export const getGoalDetails = async (goalId: string): Promise<Goal | undefined> => {
+export const getGoalDetails = async (
+  goalId: string
+): Promise<Goal | undefined> => {
   try {
     const response: AxiosResponse<Goal> = await apiClient.get(`/${goalId}`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching goal details:", error);
+    console.error('Error fetching goal details:', error);
     return undefined; // Explicitly return undefined in case of error
   }
 };
@@ -110,12 +124,17 @@ export const getGoalDetails = async (goalId: string): Promise<Goal | undefined> 
 /**
  * Fetch goal analytics.
  */
-export const getGoalAnalytics = async (filters?: Record<string, any>): Promise<GoalAnalytics | undefined> => {
+export const getGoalAnalytics = async (
+  filters?: Record<string, any>
+): Promise<GoalAnalytics | undefined> => {
   try {
-    const response: AxiosResponse<GoalAnalytics> = await apiClient.get("/analytics", { params: filters });
+    const response: AxiosResponse<GoalAnalytics> = await apiClient.get(
+      '/analytics',
+      { params: filters }
+    );
     return response.data;
   } catch (error) {
-    console.error("Error fetching goal analytics:", error);
+    console.error('Error fetching goal analytics:', error);
     return undefined; // Explicitly return undefined in case of error
   }
 };

@@ -22,7 +22,9 @@ export function setMediaQuery(query: string): void {
  * @returns The current media query string.
  */
 export function getMediaQuery(): string {
-  console.log(`[MediaQuery Mock] Retrieved current media query: ${currentMediaQuery}`);
+  console.log(
+    `[MediaQuery Mock] Retrieved current media query: ${currentMediaQuery}`
+  );
   return currentMediaQuery;
 }
 
@@ -59,7 +61,9 @@ export function removeMediaQueryListener(listener: MediaQueryListener): void {
  */
 function notifyListeners(query: string): void {
   mockListeners.forEach((listener) => listener(query));
-  console.log(`[MediaQuery Mock] Notified listeners of media query change to: ${query}`);
+  console.log(
+    `[MediaQuery Mock] Notified listeners of media query change to: ${query}`
+  );
 }
 
 /**

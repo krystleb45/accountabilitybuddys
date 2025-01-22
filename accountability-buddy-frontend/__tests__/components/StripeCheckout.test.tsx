@@ -1,16 +1,16 @@
-import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { Elements } from "@stripe/react-stripe-js";
-import StripeCheckoutForm from "../../src/components/Stripe/StripeCheckout";
-import { loadStripe } from "@stripe/stripe-js";
-import axios from "axios";
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { Elements } from '@stripe/react-stripe-js';
+import StripeCheckoutForm from '../../src/components/Stripe/StripeCheckout';
+import { loadStripe } from '@stripe/stripe-js';
+import axios from 'axios';
 
-jest.mock("@stripe/stripe-js");
-jest.mock("axios");
+jest.mock('@stripe/stripe-js');
+jest.mock('axios');
 
-const stripePromise = loadStripe("pk_test_XXXXXXXXXXXXXXXXXXXX");
+const stripePromise = loadStripe('pk_test_XXXXXXXXXXXXXXXXXXXX');
 
-describe("StripeCheckoutForm Component", () => {
+describe('StripeCheckoutForm Component', () => {
   const mockOnSuccess = jest.fn();
   const mockOnError = jest.fn();
   const mockSetLoading = jest.fn();
@@ -26,12 +26,12 @@ describe("StripeCheckoutForm Component", () => {
       </Elements>
     );
 
-  test("renders the form", () => {
+  test('renders the form', () => {
     renderComponent();
     expect(screen.getByText(/payment details/i)).toBeInTheDocument();
   });
 
-  test("handles successful payment", async () => {
+  test('handles successful payment', async () => {
     // Mock axios to simulate a successful payment response
     (axios.post as jest.Mock).mockResolvedValueOnce({
       data: { success: true },
@@ -41,13 +41,13 @@ describe("StripeCheckoutForm Component", () => {
 
     // Simulate filling in card details
     fireEvent.change(screen.getByLabelText(/card number/i), {
-      target: { value: "4242 4242 4242 4242" },
+      target: { value: '4242 4242 4242 4242' },
     });
     fireEvent.change(screen.getByLabelText(/expiry date/i), {
-      target: { value: "12/34" },
+      target: { value: '12/34' },
     });
     fireEvent.change(screen.getByLabelText(/cvc/i), {
-      target: { value: "123" },
+      target: { value: '123' },
     });
 
     // Simulate clicking the "Pay" button
@@ -60,21 +60,23 @@ describe("StripeCheckoutForm Component", () => {
     });
   });
 
-  test("handles payment errors", async () => {
+  test('handles payment errors', async () => {
     // Mock axios to simulate a payment failure response
-    (axios.post as jest.Mock).mockRejectedValueOnce(new Error("Payment failed"));
+    (axios.post as jest.Mock).mockRejectedValueOnce(
+      new Error('Payment failed')
+    );
 
     renderComponent();
 
     // Simulate filling in card details
     fireEvent.change(screen.getByLabelText(/card number/i), {
-      target: { value: "4000 0000 0000 9995" },
+      target: { value: '4000 0000 0000 9995' },
     });
     fireEvent.change(screen.getByLabelText(/expiry date/i), {
-      target: { value: "12/34" },
+      target: { value: '12/34' },
     });
     fireEvent.change(screen.getByLabelText(/cvc/i), {
-      target: { value: "123" },
+      target: { value: '123' },
     });
 
     // Simulate clicking the "Pay" button
@@ -82,7 +84,7 @@ describe("StripeCheckoutForm Component", () => {
 
     // Wait for error handling
     await waitFor(() => {
-      expect(mockOnError).toHaveBeenCalledWith("Payment failed");
+      expect(mockOnError).toHaveBeenCalledWith('Payment failed');
       expect(screen.getByText(/payment failed/i)).toBeInTheDocument();
     });
   });

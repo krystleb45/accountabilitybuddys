@@ -1,6 +1,12 @@
 // FormErrorContext.tsx
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  ReactNode,
+} from 'react';
 
 // Define the shape of the FormErrorContext
 interface FormErrorContextType {
@@ -12,13 +18,15 @@ interface FormErrorContextType {
 }
 
 // Create FormErrorContext with the appropriate type
-const FormErrorContext = createContext<FormErrorContextType | undefined>(undefined);
+const FormErrorContext = createContext<FormErrorContextType | undefined>(
+  undefined
+);
 
 // Custom hook to use FormErrorContext
 export const useFormError = (): FormErrorContextType => {
   const context = useContext(FormErrorContext);
   if (!context) {
-    throw new Error("useFormError must be used within a FormErrorProvider");
+    throw new Error('useFormError must be used within a FormErrorProvider');
   }
   return context;
 };
@@ -29,7 +37,9 @@ interface FormErrorProviderProps {
 }
 
 // FormErrorProvider component
-export const FormErrorProvider: React.FC<FormErrorProviderProps> = ({ children }) => {
+export const FormErrorProvider: React.FC<FormErrorProviderProps> = ({
+  children,
+}) => {
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
   // Add an error for a specific field
@@ -51,10 +61,15 @@ export const FormErrorProvider: React.FC<FormErrorProviderProps> = ({ children }
   }, []);
 
   // Check if there are any errors
-  const hasErrors = useCallback(() => Object.keys(formErrors).length > 0, [formErrors]);
+  const hasErrors = useCallback(
+    () => Object.keys(formErrors).length > 0,
+    [formErrors]
+  );
 
   return (
-    <FormErrorContext.Provider value={{ formErrors, addError, removeError, clearErrors, hasErrors }}>
+    <FormErrorContext.Provider
+      value={{ formErrors, addError, removeError, clearErrors, hasErrors }}
+    >
       {children}
     </FormErrorContext.Provider>
   );

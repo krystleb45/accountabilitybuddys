@@ -21,7 +21,7 @@
 }
 
 /* Dark Theme Variables */
-[data-theme="dark"] {
+[data-theme='dark'] {
   --primary-color: #0056b3;
   --hover-color: #007bff;
   --text-color: #ccc;
@@ -35,7 +35,10 @@ body,
 button,
 input,
 textarea {
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    border-color 0.3s;
 }
 
 /* Global Button Styles */
@@ -47,7 +50,9 @@ button {
   border-radius: var(--border-radius);
   cursor: pointer;
   margin-top: var(--margin-small);
-  transition: background-color 0.3s, transform 0.2s;
+  transition:
+    background-color 0.3s,
+    transform 0.2s;
 }
 
 button:hover:not(:disabled) {
@@ -183,13 +188,13 @@ textarea:focus {
 }
 
 /* Dark Mode Support */
-body[data-theme="dark"] {
+body[data-theme='dark'] {
   background-color: var(--background-dark);
   color: var(--text-color-dark);
 }
 
-input[data-theme="dark"],
-textarea[data-theme="dark"] {
+input[data-theme='dark'],
+textarea[data-theme='dark'] {
   background-color: var(--background-dark);
   border-color: var(--border-dark);
   color: var(--text-color);

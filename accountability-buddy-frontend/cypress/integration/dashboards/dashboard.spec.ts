@@ -16,7 +16,7 @@ describe('Dashboard Functionality', () => {
     cy.contains(/welcome to your dashboard/i).should('be.visible');
   });
 
-  it('should display the user\'s name if logged in', () => {
+  it("should display the user's name if logged in", () => {
     // Verify the user's name is visible and not empty
     cy.get('.user-name')
       .should('be.visible')
@@ -61,7 +61,10 @@ describe('Dashboard Functionality', () => {
 
   it('should display an error message if the dashboard fails to load', () => {
     // Simulate a server error for the dashboard API
-    cy.intercept('GET', '/api/dashboard', { statusCode: 500, body: { error: 'Server error' } }).as('getDashboardError');
+    cy.intercept('GET', '/api/dashboard', {
+      statusCode: 500,
+      body: { error: 'Server error' },
+    }).as('getDashboardError');
     cy.visit('/dashboard');
     cy.wait('@getDashboardError');
 

@@ -3,7 +3,7 @@
  * These definitions enhance type safety and IntelliSense when using Mixpanel's API.
  */
 
-declare module "mixpanel-browser" {
+declare module 'mixpanel-browser' {
   interface Mixpanel {
     /**
      * Initializes the Mixpanel library with your project token and optional configuration.
@@ -73,7 +73,7 @@ declare module "mixpanel-browser" {
     debug?: boolean; // Enable debug mode
     api_host?: string; // The API host URL
     track_pageview?: boolean; // Automatically track page views
-    persistence?: "cookie" | "localStorage"; // Storage method
+    persistence?: 'cookie' | 'localStorage'; // Storage method
     disable_persistence?: boolean; // Disable persistence
     property_blacklist?: string[]; // List of properties to exclude
   }

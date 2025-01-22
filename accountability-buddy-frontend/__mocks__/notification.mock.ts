@@ -27,7 +27,9 @@ const notificationMock = {
    * Simulates the requestPermission method.
    * @returns A promise that resolves with the permission.
    */
-  requestPermission: jest.fn(() => Promise.resolve('granted' as NotificationPermission)),
+  requestPermission: jest.fn(() =>
+    Promise.resolve('granted' as NotificationPermission)
+  ),
 
   /**
    * Simulates the Notification constructor.

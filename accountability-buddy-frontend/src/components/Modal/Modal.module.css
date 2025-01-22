@@ -5,7 +5,12 @@
   left: 0;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
-  background-color: rgba(0, 0, 0, 0.6); /* Slightly darker background for better focus */
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.6
+  ); /* Slightly darker background for better focus */
   z-index: 1000; /* High z-index to sit above other content */
   display: flex; /* Flexbox for centering modal */
   align-items: center; /* Vertically center */
@@ -81,7 +86,9 @@
   border-radius: 8px; /* Modern rounded corners */
   font-size: 1rem; /* Font size for readability */
   cursor: pointer; /* Pointer cursor */
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover and active effects */
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease; /* Smooth hover and active effects */
 }
 
 .modal-footer .button:hover {

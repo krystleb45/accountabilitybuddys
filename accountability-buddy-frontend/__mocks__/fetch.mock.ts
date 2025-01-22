@@ -26,7 +26,10 @@ export function mockFetchSuccess(data: unknown, status = 200): void {
  * @param errorMessage - The error message to include in the response (default: 'Fetch failed').
  * @param status - The HTTP status code (default: 500).
  */
-export function mockFetchError(errorMessage = 'Fetch failed', status = 500): void {
+export function mockFetchError(
+  errorMessage = 'Fetch failed',
+  status = 500
+): void {
   fetchMock.mockImplementationOnce(() =>
     Promise.resolve({
       ok: false,
@@ -40,7 +43,9 @@ export function mockFetchError(errorMessage = 'Fetch failed', status = 500): voi
  * Custom mock for network errors (e.g., when the request fails to reach the server).
  * @param error - The error to throw (default: new Error('Network Error')).
  */
-export function mockFetchNetworkError(error = new Error('Network Error')): void {
+export function mockFetchNetworkError(
+  error = new Error('Network Error')
+): void {
   fetchMock.mockImplementationOnce(() => Promise.reject(error));
 }
 

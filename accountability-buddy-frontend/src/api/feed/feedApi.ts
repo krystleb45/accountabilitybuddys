@@ -1,7 +1,8 @@
-import axios from "axios";
-import { getAuthHeader } from "src/services/authService"; // Helper for getting the auth header with the token
+import axios from 'axios';
+import { getAuthHeader } from 'src/services/authService'; // Helper for getting the auth header with the token
 
-const API_URL = process.env.REACT_APP_API_URL || "https://api.example.com/users";
+const API_URL =
+  process.env.REACT_APP_API_URL || 'https://api.example.com/users';
 
 // Define the shape of a Feed Post
 interface FeedPost {
@@ -25,7 +26,8 @@ interface Comment {
 // Helper function to handle API errors
 const handleError = (error: any): never => {
   const message =
-    error.response?.data?.message || "An error occurred. Please try again later.";
+    error.response?.data?.message ||
+    'An error occurred. Please try again later.';
   throw new Error(message);
 };
 
@@ -58,7 +60,9 @@ export const createFeedPost = async (
 };
 
 // Like a feed post
-export const likeFeedPost = async (postId: string): Promise<FeedPost | undefined> => {
+export const likeFeedPost = async (
+  postId: string
+): Promise<FeedPost | undefined> => {
   try {
     const response = await axios.put<FeedPost>(
       `${API_URL}/${postId}/like`,
@@ -75,7 +79,9 @@ export const likeFeedPost = async (postId: string): Promise<FeedPost | undefined
 };
 
 // Unlike a feed post
-export const unlikeFeedPost = async (postId: string): Promise<FeedPost | undefined> => {
+export const unlikeFeedPost = async (
+  postId: string
+): Promise<FeedPost | undefined> => {
   try {
     const response = await axios.put<FeedPost>(
       `${API_URL}/${postId}/unlike`,

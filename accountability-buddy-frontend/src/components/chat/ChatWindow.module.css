@@ -2,139 +2,140 @@
 
 /* Container for the entire chat window */
 .chat-window {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  height: 100%;
+  max-height: 80vh;
+  background-color: #f9f9f9; /* Light background */
+  border: 1px solid #ddd; /* Subtle border */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  overflow: hidden; /* Prevent content overflow */
+}
+
+/* Header section of the chat window */
+.chat-window-header {
+  padding: 16px;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 1px solid #ccc; /* Divider line */
+}
+
+/* Container for messages */
+.chat-messages {
+  flex-grow: 1;
+  padding: 16px;
+  overflow-y: auto; /* Scrollable content */
+  background-color: white; /* Message area background */
+}
+
+/* Individual message styles */
+.message {
+  margin-bottom: 12px; /* Space between messages */
+  line-height: 1.4;
+  font-size: 1rem;
+  word-wrap: break-word; /* Handle long words */
+}
+
+/* Styles for the sender's name */
+.message .sender {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+/* Differentiate user messages from others */
+.message.user {
+  text-align: right;
+  color: var(--primary-color);
+}
+
+.message.other {
+  text-align: left;
+  color: #333;
+}
+
+/* Footer section of the chat window */
+.chat-window-footer {
+  padding: 16px;
+  display: flex;
+  gap: 8px; /* Space between input and button */
+  border-top: 1px solid #ccc; /* Divider line */
+  background-color: #f1f1f1; /* Footer background */
+}
+
+/* Input field styles */
+.chat-input {
+  flex-grow: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.chat-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
+/* Send button styles */
+.send-button {
+  padding: 12px 16px;
+  font-size: 1rem;
+  color: white;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.send-button:hover {
+  background-color: var(--secondary-color);
+  transform: scale(1.05);
+}
+
+.send-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Typing indicator styles */
+.typing-indicator {
+  font-size: 0.9rem;
+  color: #888;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .chat-window {
     width: 100%;
-    max-width: 600px;
-    height: 100%;
-    max-height: 80vh;
-    background-color: #f9f9f9; /* Light background */
-    border: 1px solid #ddd; /* Subtle border */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-    overflow: hidden; /* Prevent content overflow */
+    height: 90vh;
+    border-radius: 0; /* Remove rounded corners for smaller screens */
   }
-  
-  /* Header section of the chat window */
+
   .chat-window-header {
-    padding: 16px;
-    background-color: var(--primary-color);
-    color: white;
-    font-size: 1.25rem;
-    font-weight: bold;
-    text-align: center;
-    border-bottom: 1px solid #ccc; /* Divider line */
-  }
-  
-  /* Container for messages */
-  .chat-messages {
-    flex-grow: 1;
-    padding: 16px;
-    overflow-y: auto; /* Scrollable content */
-    background-color: white; /* Message area background */
-  }
-  
-  /* Individual message styles */
-  .message {
-    margin-bottom: 12px; /* Space between messages */
-    line-height: 1.4;
     font-size: 1rem;
-    word-wrap: break-word; /* Handle long words */
   }
-  
-  /* Styles for the sender's name */
-  .message .sender {
-    font-weight: bold;
-    margin-bottom: 4px;
-  }
-  
-  /* Differentiate user messages from others */
-  .message.user {
-    text-align: right;
-    color: var(--primary-color);
-  }
-  
-  .message.other {
-    text-align: left;
-    color: #333;
-  }
-  
-  /* Footer section of the chat window */
-  .chat-window-footer {
-    padding: 16px;
-    display: flex;
-    gap: 8px; /* Space between input and button */
-    border-top: 1px solid #ccc; /* Divider line */
-    background-color: #f1f1f1; /* Footer background */
-  }
-  
-  /* Input field styles */
+
   .chat-input {
-    flex-grow: 1;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.3s ease;
-  }
-  
-  .chat-input:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
-  }
-  
-  /* Send button styles */
-  .send-button {
-    padding: 12px 16px;
-    font-size: 1rem;
-    color: white;
-    background-color: var(--primary-color);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .send-button:hover {
-    background-color: var(--secondary-color);
-    transform: scale(1.05);
-  }
-  
-  .send-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  /* Typing indicator styles */
-  .typing-indicator {
     font-size: 0.9rem;
-    color: #888;
-    margin-top: 8px;
-    font-style: italic;
+    padding: 8px;
   }
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .chat-window {
-      width: 100%;
-      height: 90vh;
-      border-radius: 0; /* Remove rounded corners for smaller screens */
-    }
-  
-    .chat-window-header {
-      font-size: 1rem;
-    }
-  
-    .chat-input {
-      font-size: 0.9rem;
-      padding: 8px;
-    }
-  
-    .send-button {
-      font-size: 0.9rem;
-      padding: 8px 12px;
-    }
+
+  .send-button {
+    font-size: 0.9rem;
+    padding: 8px 12px;
   }
-  
+}

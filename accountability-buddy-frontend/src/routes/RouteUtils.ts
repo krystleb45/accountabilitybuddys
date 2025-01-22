@@ -1,4 +1,4 @@
-import { ROUTES } from "./routes";
+import { ROUTES } from './routes';
 
 /**
  * Get the route metadata for a given route key.

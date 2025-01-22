@@ -1,4 +1,10 @@
-import React, { createContext, useState, useEffect, useCallback, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from 'react';
 
 // Define the shape of the settings
 interface Settings {
@@ -19,13 +25,15 @@ interface SettingsContextType {
 }
 
 // Create SettingsContext with the appropriate type
-export const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
+export const SettingsContext = createContext<SettingsContextType | undefined>(
+  undefined
+);
 
 // Default settings configuration
 const defaultSettings: Settings = {
   darkMode: false,
   notificationsEnabled: true,
-  language: "en",
+  language: 'en',
   autoSave: false,
   saveFrequency: 10, // Default to 10 minutes
 };
@@ -36,14 +44,16 @@ interface SettingsProviderProps {
 }
 
 // Settings Provider component
-export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) => {
+export const SettingsProvider: React.FC<SettingsProviderProps> = ({
+  children,
+}) => {
   // Load settings from localStorage or use default settings
   const [settings, setSettings] = useState<Settings>(() => {
     try {
-      const savedSettings = localStorage.getItem("appSettings");
+      const savedSettings = localStorage.getItem('appSettings');
       return savedSettings ? JSON.parse(savedSettings) : defaultSettings;
     } catch (error) {
-      console.error("Failed to load settings from localStorage:", error);
+      console.error('Failed to load settings from localStorage:', error);
       return defaultSettings;
     }
   });
@@ -56,18 +66,23 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
       // Validation for settings (e.g., check if language is supported)
       if (
         updatedSettings.language &&
-        !["en", "es", "fr", "de", "zh", "ar"].includes(updatedSettings.language)
+        !['en', 'es', 'fr', 'de', 'zh', 'ar'].includes(updatedSettings.language)
       ) {
-        console.warn("Unsupported language setting. Reverting to default.");
+        console.warn('Unsupported language setting. Reverting to default.');
         updatedSettings.language = defaultSettings.language;
       }
 
-      if (updatedSettings.saveFrequency < 1 || updatedSettings.saveFrequency > 60) {
-        console.warn("Save frequency must be between 1 and 60 minutes. Reverting to default.");
+      if (
+        updatedSettings.saveFrequency < 1 ||
+        updatedSettings.saveFrequency > 60
+      ) {
+        console.warn(
+          'Save frequency must be between 1 and 60 minutes. Reverting to default.'
+        );
         updatedSettings.saveFrequency = defaultSettings.saveFrequency;
       }
 
-      localStorage.setItem("appSettings", JSON.stringify(updatedSettings));
+      localStorage.setItem('appSettings', JSON.stringify(updatedSettings));
       return updatedSettings;
     });
   }, []);
@@ -75,7 +90,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
   // Reset settings to default values and clear them from localStorage
   const resetSettings = useCallback(() => {
     setSettings(defaultSettings);
-    localStorage.removeItem("appSettings");
+    localStorage.removeItem('appSettings');
   }, []);
 
   // Toggle dark mode
@@ -94,18 +109,24 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
   // Synchronize settings from localStorage on component mount
   useEffect(() => {
     try {
-      const savedSettings = localStorage.getItem("appSettings");
+      const savedSettings = localStorage.getItem('appSettings');
       if (savedSettings) {
         setSettings(JSON.parse(savedSettings));
       }
     } catch (error) {
-      console.error("Failed to load settings from localStorage:", error);
+      console.error('Failed to load settings from localStorage:', error);
     }
   }, []);
 
   return (
     <SettingsContext.Provider
-      value={{ settings, updateSettings, resetSettings, toggleDarkMode, enableNotifications }}
+      value={{
+        settings,
+        updateSettings,
+        resetSettings,
+        toggleDarkMode,
+        enableNotifications,
+      }}
     >
       {children}
     </SettingsContext.Provider>

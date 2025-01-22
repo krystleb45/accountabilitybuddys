@@ -106,7 +106,10 @@ describe('Mock Service Worker Handlers', () => {
   it('should return a 500 error for a specific endpoint', async () => {
     server.use(
       rest.get(`${API_BASE_URL}/example`, (req, res, ctx) => {
-        return res(ctx.status(500), ctx.json({ error: 'Internal Server Error' }));
+        return res(
+          ctx.status(500),
+          ctx.json({ error: 'Internal Server Error' })
+        );
       })
     );
 

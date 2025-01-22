@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import TaskList from "./TaskList";
-import "./TaskManager.css"; // Optional CSS for styling
+import React, { useState } from 'react';
+import TaskList from './TaskList';
+import './TaskManager.css'; // Optional CSS for styling
 
 interface Task {
   id: string;
@@ -10,7 +10,7 @@ interface Task {
 
 const TaskManager: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTask, setNewTask] = useState<string>("");
+  const [newTask, setNewTask] = useState<string>('');
 
   const addTask = () => {
     if (!newTask.trim()) return;
@@ -22,7 +22,7 @@ const TaskManager: React.FC = () => {
     };
 
     setTasks((prevTasks) => [...prevTasks, newTaskObject]);
-    setNewTask("");
+    setNewTask('');
   };
 
   const completeTask = (id: string) => {
@@ -52,7 +52,11 @@ const TaskManager: React.FC = () => {
           placeholder="Add a new task"
           aria-label="New task input"
         />
-        <button onClick={addTask} aria-label="Add task" disabled={!newTask.trim()}>
+        <button
+          onClick={addTask}
+          aria-label="Add task"
+          disabled={!newTask.trim()}
+        >
           Add Task
         </button>
       </div>

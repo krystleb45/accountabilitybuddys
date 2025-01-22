@@ -1,25 +1,29 @@
-import React, { useState, useEffect } from "react";
-import io, { Socket } from "socket.io-client";
-import { ChatBoxProps, ChatMessage } from "./Chat.types";
+import React, { useState, useEffect } from 'react';
+import io, { Socket } from 'socket.io-client';
+import { ChatBoxProps, ChatMessage } from './Chat.types';
 
-const socket: typeof Socket = io("http://localhost:5000", {
-    autoConnect: false, // Prevents auto-connect on component mount
-  });
+const socket: typeof Socket = io('http://localhost:5000', {
+  autoConnect: false, // Prevents auto-connect on component mount
+});
 
-const ChatBox: React.FC<ChatBoxProps> = ({ onSendMessage, placeholder = "Type a message...", disabled = false }) => {
-  const [message, setMessage] = useState<string>("");
+const ChatBox: React.FC<ChatBoxProps> = ({
+  onSendMessage,
+  placeholder = 'Type a message...',
+  disabled = false,
+}) => {
+  const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
     socket.connect();
 
     // Listen for incoming messages
-    socket.on("receiveMessage", (data: ChatMessage) => {
+    socket.on('receiveMessage', (data: ChatMessage) => {
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
     return () => {
-      socket.off("receiveMessage");
+      socket.off('receiveMessage');
       socket.disconnect(); // Disconnects socket when component unmounts
     };
   }, []);
@@ -28,14 +32,14 @@ const ChatBox: React.FC<ChatBoxProps> = ({ onSendMessage, placeholder = "Type a 
     if (message.trim()) {
       const newMessage: ChatMessage = {
         id: crypto.randomUUID(),
-        sender: "You",
+        sender: 'You',
         content: message,
         timestamp: new Date(),
       };
 
-      socket.emit("sendMessage", newMessage);
+      socket.emit('sendMessage', newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
-      setMessage("");
+      setMessage('');
       onSendMessage(message); // Trigger external callback if provided
     }
   };

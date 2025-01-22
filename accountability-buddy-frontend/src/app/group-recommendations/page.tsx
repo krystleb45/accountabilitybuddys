@@ -1,11 +1,15 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 const GroupRecommendationsPage: React.FC = () => {
   const [recommendations] = useState([
-    { id: "1", name: "Project Enthusiasts", description: "For project lovers." },
-    { id: "2", name: "Goal Setters", description: "For goal achievers." },
+    {
+      id: '1',
+      name: 'Project Enthusiasts',
+      description: 'For project lovers.',
+    },
+    { id: '2', name: 'Goal Setters', description: 'For goal achievers.' },
   ]);
 
   return (

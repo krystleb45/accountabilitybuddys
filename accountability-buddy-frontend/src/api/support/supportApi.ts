@@ -1,7 +1,8 @@
-import axios from "axios";
-import { getAuthHeader } from "src/services/authService"; // Ensure token is included in requests
+import axios from 'axios';
+import { getAuthHeader } from 'src/services/authService'; // Ensure token is included in requests
 
-const API_URL = process.env.REACT_APP_API_URL || "https://api.example.com/users";
+const API_URL =
+  process.env.REACT_APP_API_URL || 'https://api.example.com/users';
 
 // Define the structure of Support Data
 interface SupportData {
@@ -26,10 +27,11 @@ interface SupportTicket {
 // Helper function to handle API errors
 const handleError = (error: any): never => {
   if (error.response && error.response.status === 401) {
-    throw new Error("Invalid credentials. Please try again.");
+    throw new Error('Invalid credentials. Please try again.');
   }
   throw new Error(
-    error.response?.data?.message || "An error occurred. Please try again later."
+    error.response?.data?.message ||
+      'An error occurred. Please try again later.'
   );
 };
 
@@ -53,7 +55,9 @@ export const contactSupport = async (
 };
 
 // Get all support tickets submitted by the user
-export const getSupportTickets = async (): Promise<SupportTicket[] | undefined> => {
+export const getSupportTickets = async (): Promise<
+  SupportTicket[] | undefined
+> => {
   try {
     const response = await axios.get<SupportTicket[]>(`${API_URL}/tickets`, {
       headers: getAuthHeader(),

@@ -1,9 +1,9 @@
-import axios from "axios";
-import React from "react";
-import { render, screen, waitFor, cleanup } from "@testing-library/react";
-import App from "./App";
+import axios from 'axios';
+import React from 'react';
+import { render, screen, waitFor, cleanup } from '@testing-library/react';
+import App from './App';
 
-jest.mock("axios"); // Mock the axios module
+jest.mock('axios'); // Mock the axios module
 
 beforeEach(() => {
   jest.clearAllMocks(); // Clear all previous mocks to prevent interference
@@ -13,10 +13,10 @@ afterEach(() => {
   cleanup(); // Unmount components after each test
 });
 
-describe("App Component Tests", () => {
-  test("fetches and displays data from API successfully", async () => {
+describe('App Component Tests', () => {
+  test('fetches and displays data from API successfully', async () => {
     // Mock the API response
-    axios.get.mockResolvedValueOnce({ data: { message: "Hello from API" } });
+    axios.get.mockResolvedValueOnce({ data: { message: 'Hello from API' } });
 
     render(<App />);
 
@@ -26,7 +26,7 @@ describe("App Component Tests", () => {
     // Assert that the data from the API is displayed correctly
     const dataElement = await screen.findByText(/Hello from API/i);
     expect(dataElement).toBeInTheDocument();
-    expect(dataElement).toHaveAccessibleName("Message from API"); // Accessibility check
+    expect(dataElement).toHaveAccessibleName('Message from API'); // Accessibility check
 
     // Assert that the loading text is removed after data loads
     await waitFor(() => {
@@ -35,12 +35,12 @@ describe("App Component Tests", () => {
 
     // Verify that the API was called with the correct endpoint
     expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(axios.get).toHaveBeenCalledWith("/api/data"); // Adjust endpoint as per your implementation
+    expect(axios.get).toHaveBeenCalledWith('/api/data'); // Adjust endpoint as per your implementation
   });
 
-  test("handles API errors gracefully", async () => {
+  test('handles API errors gracefully', async () => {
     // Mock the API to reject with an error
-    axios.get.mockRejectedValueOnce(new Error("Failed to fetch data"));
+    axios.get.mockRejectedValueOnce(new Error('Failed to fetch data'));
 
     render(<App />);
 
@@ -50,7 +50,7 @@ describe("App Component Tests", () => {
     // Assert that an error message is displayed after the API call fails
     const errorElement = await screen.findByText(/Failed to load data/i);
     expect(errorElement).toBeInTheDocument();
-    expect(errorElement).toHaveAccessibleName("Error message"); // Accessibility check
+    expect(errorElement).toHaveAccessibleName('Error message'); // Accessibility check
 
     // Assert that the loading text is removed after the error is handled
     await waitFor(() => {
@@ -61,7 +61,7 @@ describe("App Component Tests", () => {
     expect(axios.get).toHaveBeenCalledTimes(1);
   });
 
-  test("displays a fallback UI if no data is available", async () => {
+  test('displays a fallback UI if no data is available', async () => {
     // Mock the API response with empty data
     axios.get.mockResolvedValueOnce({ data: {} });
 

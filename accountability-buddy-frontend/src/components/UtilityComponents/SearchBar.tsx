@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import "./SearchBar.css"; // CSS for styling the search bar
+import React, { useState } from 'react';
+import './SearchBar.css'; // CSS for styling the search bar
 
 interface SearchBarProps {
   placeholder?: string; // Optional placeholder for the search input
@@ -8,11 +8,11 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
-  placeholder = "Search...",
+  placeholder = 'Search...',
   onSearch,
   debounceTime = 300,
 }) => {
-  const [query, setQuery] = useState<string>("");
+  const [query, setQuery] = useState<string>('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -21,7 +21,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
     // Debounced search execution
     if (debounceTime > 0) {
       clearTimeout((handleInputChange as any).timer);
-      (handleInputChange as any).timer = setTimeout(() => onSearch(value), debounceTime);
+      (handleInputChange as any).timer = setTimeout(
+        () => onSearch(value),
+        debounceTime
+      );
     }
   };
 
@@ -30,7 +33,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       handleSearch();
     }
   };

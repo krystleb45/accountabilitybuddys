@@ -5,11 +5,15 @@
   font-size: 1rem; /* Base font size */
   font-weight: bold; /* Bold text */
   color: #ffffff; /* Text color */
-  background-color: var(--primary-color); /* Background color using a CSS variable */
+  background-color: var(
+    --primary-color
+  ); /* Background color using a CSS variable */
   border: none; /* No border */
   border-radius: 5px; /* Rounded corners */
   cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover effects */
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease; /* Smooth transition for hover effects */
 }
 
 /* Hover effect */

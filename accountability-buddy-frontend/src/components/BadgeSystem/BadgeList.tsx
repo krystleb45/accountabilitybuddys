@@ -1,6 +1,6 @@
-import React from "react";
-import BadgeItem from "./BadgeItem";
-import "./BadgeList.css"; // Optional CSS for styling
+import React from 'react';
+import BadgeItem from './BadgeItem';
+import './BadgeList.css'; // Optional CSS for styling
 
 interface Badge {
   id: string;

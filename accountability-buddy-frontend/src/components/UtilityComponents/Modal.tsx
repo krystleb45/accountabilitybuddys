@@ -1,6 +1,6 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./Modal.css"; // CSS for styling the modal
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './Modal.css'; // CSS for styling the modal
 
 interface ModalProps {
   isOpen: boolean; // Whether the modal is open
@@ -20,7 +20,12 @@ const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
-    <div className="modal-overlay" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+    <div
+      className="modal-overlay"
+      role="dialog"
+      aria-labelledby="modal-title"
+      aria-modal="true"
+    >
       <div className="modal-content">
         {title && (
           <header className="modal-header">

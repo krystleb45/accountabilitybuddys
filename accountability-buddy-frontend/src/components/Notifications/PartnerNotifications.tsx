@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   getPartnerNotifications,
   markNotificationAsRead,
   deleteNotification,
-} from "src/services/apiService"; // Replace with your actual API service
-import "./PartnerNotifications.css"; // Optional: import CSS for styling
+} from 'src/services/apiService'; // Replace with your actual API service
+import './PartnerNotifications.css'; // Optional: import CSS for styling
 
 // Extend the Notification type to include 'isRead'
 interface Notification {
@@ -16,27 +16,29 @@ interface Notification {
 const PartnerNotifications: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>('');
 
   // Fetch notifications on component mount
   useEffect(() => {
     const fetchNotifications = async () => {
       setLoading(true);
-      setError("");
+      setError('');
 
       try {
         const apiNotifications = await getPartnerNotifications();
 
         // Map to ensure all notifications have 'isRead' property
-        const formattedNotifications: Notification[] = apiNotifications.map((notification: any) => ({
-          id: notification.id,
-          message: notification.message,
-          isRead: notification.read || false, // Use 'read' from API or default to false
-        }));
+        const formattedNotifications: Notification[] = apiNotifications.map(
+          (notification: any) => ({
+            id: notification.id,
+            message: notification.message,
+            isRead: notification.read || false, // Use 'read' from API or default to false
+          })
+        );
 
         setNotifications(formattedNotifications);
       } catch (err) {
-        setError("Failed to load notifications");
+        setError('Failed to load notifications');
       } finally {
         setLoading(false);
       }
@@ -50,11 +52,13 @@ const PartnerNotifications: React.FC = () => {
       await markNotificationAsRead(id);
       setNotifications((prevNotifications) =>
         prevNotifications.map((notification) =>
-          notification.id === id ? { ...notification, isRead: true } : notification
+          notification.id === id
+            ? { ...notification, isRead: true }
+            : notification
         )
       );
     } catch (error) {
-      console.error("Failed to mark notification as read", error);
+      console.error('Failed to mark notification as read', error);
     }
   };
 
@@ -65,7 +69,7 @@ const PartnerNotifications: React.FC = () => {
         prevNotifications.filter((notification) => notification.id !== id)
       );
     } catch (error) {
-      console.error("Failed to delete notification", error);
+      console.error('Failed to delete notification', error);
     }
   };
 
@@ -79,10 +83,17 @@ const PartnerNotifications: React.FC = () => {
       ) : (
         <ul>
           {notifications.map((notification) => (
-            <li key={notification.id} className={notification.isRead ? "read" : "unread"}>
+            <li
+              key={notification.id}
+              className={notification.isRead ? 'read' : 'unread'}
+            >
               <p>{notification.message}</p>
-              <button onClick={() => handleMarkAsRead(notification.id)}>Mark as Read</button>
-              <button onClick={() => handleDelete(notification.id)}>Delete</button>
+              <button onClick={() => handleMarkAsRead(notification.id)}>
+                Mark as Read
+              </button>
+              <button onClick={() => handleDelete(notification.id)}>
+                Delete
+              </button>
             </li>
           ))}
         </ul>

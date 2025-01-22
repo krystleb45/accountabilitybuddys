@@ -1,11 +1,11 @@
 // index.ts - Centralized exports for the Chat module
 
 // Export components
-export { default as ChatBox } from "./ChatBox";
-export { default as ChatWindow } from "./ChatWindow";
+export { default as ChatBox } from './ChatBox';
+export { default as ChatWindow } from './ChatWindow';
 
 // Export utilities
-export * from "./ChatUtils";
+export * from './ChatUtils';
 
 // Export types
-export * from "./Chat.types";
+export * from './Chat.types';

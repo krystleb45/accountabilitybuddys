@@ -8,7 +8,9 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   padding: 16px; /* Inner padding */
   margin: 16px 0; /* Space between cards */
-  transition: box-shadow 0.3s ease, transform 0.2s ease; /* Smooth transitions for shadow and scaling */
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.2s ease; /* Smooth transitions for shadow and scaling */
   display: flex;
   flex-direction: column; /* Ensures vertical alignment of content */
 }

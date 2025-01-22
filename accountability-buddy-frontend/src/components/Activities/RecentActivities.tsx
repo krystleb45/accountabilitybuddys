@@ -21,7 +21,9 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({ activities }) => {
       <ul className="recent-activities-list">
         {activities.map((activity) => (
           <li key={activity.id} className="recent-activity-item">
-            <p className="recent-activity-description">{activity.description}</p>
+            <p className="recent-activity-description">
+              {activity.description}
+            </p>
             <span className="recent-activity-timestamp">
               {new Date(activity.timestamp).toLocaleString()}
             </span>

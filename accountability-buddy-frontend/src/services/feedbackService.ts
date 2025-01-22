@@ -26,7 +26,8 @@ const FeedbackService = {
     } catch (error: any) {
       console.error('Error submitting feedback:', error);
       throw new Error(
-        error.response?.data?.message || 'Failed to submit feedback. Please try again later.'
+        error.response?.data?.message ||
+          'Failed to submit feedback. Please try again later.'
       );
     }
   },
@@ -46,7 +47,8 @@ const FeedbackService = {
     } catch (error: any) {
       console.error('Error fetching feedback feed:', error);
       throw new Error(
-        error.response?.data?.message || 'Failed to fetch feedback feed. Please try again later.'
+        error.response?.data?.message ||
+          'Failed to fetch feedback feed. Please try again later.'
       );
     }
   },
@@ -71,7 +73,8 @@ const FeedbackService = {
     } catch (error: any) {
       console.error('Error deleting feedback:', error);
       throw new Error(
-        error.response?.data?.message || 'Failed to delete feedback. Please try again later.'
+        error.response?.data?.message ||
+          'Failed to delete feedback. Please try again later.'
       );
     }
   },

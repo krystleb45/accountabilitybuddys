@@ -12,43 +12,42 @@
 // Declare global interfaces, types, and variables
 
 declare global {
-    /**
-     * A generic response structure for API calls.
-     */
-    interface ApiResponse<T> {
-      success: boolean;
-      data: T;
-      message?: string; // Optional message for errors or status
-    }
-  
-    /**
-     * A generic pagination structure for lists.
-     */
-    interface Pagination {
-      currentPage: number;
-      totalPages: number;
-      pageSize: number;
-      totalItems: number;
-    }
-  
-    /**
-     * A global utility type for nullable values.
-     */
-    type Nullable<T> = T | null;
-  
-    /**
-     * A global utility type for optional values.
-     */
-    type Optional<T> = T | undefined;
-  
-    /**
-     * Declare a custom global variable (example: Google Analytics tracking).
-     */
-    interface Window {
-      gtag?: (...args: any[]) => void;
-    }
+  /**
+   * A generic response structure for API calls.
+   */
+  interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+    message?: string; // Optional message for errors or status
   }
-  
-  // Export an empty object to make this file a module
-  export {};
-  
+
+  /**
+   * A generic pagination structure for lists.
+   */
+  interface Pagination {
+    currentPage: number;
+    totalPages: number;
+    pageSize: number;
+    totalItems: number;
+  }
+
+  /**
+   * A global utility type for nullable values.
+   */
+  type Nullable<T> = T | null;
+
+  /**
+   * A global utility type for optional values.
+   */
+  type Optional<T> = T | undefined;
+
+  /**
+   * Declare a custom global variable (example: Google Analytics tracking).
+   */
+  interface Window {
+    gtag?: (...args: any[]) => void;
+  }
+}
+
+// Export an empty object to make this file a module
+export {};

@@ -1,5 +1,5 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import authService from "./authService"; // Centralized token management
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import authService from './authService'; // Centralized token management
 
 // Define types for reminders
 export interface Reminder {
@@ -13,9 +13,9 @@ export interface Reminder {
 
 // Create an axios instance for reminders API
 const apiClient = axios.create({
-  baseURL: "https://accountabilitybuddys.com/api/reminders",
+  baseURL: 'https://accountabilitybuddys.com/api/reminders',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -50,31 +50,34 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
         await new Promise((resolve) => setTimeout(resolve, delay));
         attempt++;
       } else {
-        console.error("Request failed:", error);
+        console.error('Request failed:', error);
         throw new Error(
-          error.response?.data?.message || "An error occurred. Please try again."
+          error.response?.data?.message ||
+            'An error occurred. Please try again.'
         );
       }
     }
   }
-  throw new Error("Failed after multiple retries.");
+  throw new Error('Failed after multiple retries.');
 };
 
 // Set a new reminder
-export const setReminder = async (reminderData: Partial<Reminder>): Promise<Reminder> => {
+export const setReminder = async (
+  reminderData: Partial<Reminder>
+): Promise<Reminder> => {
   if (!reminderData || !reminderData.title || !reminderData.date) {
-    throw new Error("Reminder data must include a title and date.");
+    throw new Error('Reminder data must include a title and date.');
   }
 
   try {
     const response: AxiosResponse<Reminder> = await axiosRetry(() =>
-      apiClient.post("/create", reminderData)
+      apiClient.post('/create', reminderData)
     );
-    console.log("Reminder created successfully:", response.data);
+    console.log('Reminder created successfully:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error setting reminder:", error);
-    throw new Error(error.response?.data?.message || "Failed to set reminder.");
+    console.error('Error setting reminder:', error);
+    throw new Error(error.response?.data?.message || 'Failed to set reminder.');
   }
 };
 
@@ -84,19 +87,19 @@ export const updateReminder = async (
   reminderData: Partial<Reminder>
 ): Promise<Reminder> => {
   if (!reminderId) {
-    throw new Error("Reminder ID is required to update a reminder.");
+    throw new Error('Reminder ID is required to update a reminder.');
   }
 
   try {
     const response: AxiosResponse<Reminder> = await axiosRetry(() =>
       apiClient.put(`/update/${reminderId}`, reminderData)
     );
-    console.log("Reminder updated successfully:", response.data);
+    console.log('Reminder updated successfully:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error updating reminder:", error);
+    console.error('Error updating reminder:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to update reminder."
+      error.response?.data?.message || 'Failed to update reminder.'
     );
   }
 };
@@ -105,14 +108,14 @@ export const updateReminder = async (
 export const fetchReminders = async (): Promise<Reminder[]> => {
   try {
     const response: AxiosResponse<Reminder[]> = await axiosRetry(() =>
-      apiClient.get("/list")
+      apiClient.get('/list')
     );
-    console.log("Reminders fetched successfully:", response.data);
+    console.log('Reminders fetched successfully:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error fetching reminders:", error);
+    console.error('Error fetching reminders:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to fetch reminders."
+      error.response?.data?.message || 'Failed to fetch reminders.'
     );
   }
 };
@@ -120,16 +123,16 @@ export const fetchReminders = async (): Promise<Reminder[]> => {
 // Delete a reminder
 export const deleteReminder = async (reminderId: string): Promise<void> => {
   if (!reminderId) {
-    throw new Error("Reminder ID is required to delete a reminder.");
+    throw new Error('Reminder ID is required to delete a reminder.');
   }
 
   try {
     await axiosRetry(() => apiClient.delete(`/delete/${reminderId}`));
     console.log(`Reminder with ID ${reminderId} deleted successfully.`);
   } catch (error: any) {
-    console.error("Error deleting reminder:", error);
+    console.error('Error deleting reminder:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to delete reminder."
+      error.response?.data?.message || 'Failed to delete reminder.'
     );
   }
 };
@@ -137,16 +140,16 @@ export const deleteReminder = async (reminderId: string): Promise<void> => {
 // Mark a reminder as completed
 export const completeReminder = async (reminderId: string): Promise<void> => {
   if (!reminderId) {
-    throw new Error("Reminder ID is required to mark as completed.");
+    throw new Error('Reminder ID is required to mark as completed.');
   }
 
   try {
     await axiosRetry(() => apiClient.post(`/complete/${reminderId}`));
     console.log(`Reminder with ID ${reminderId} marked as completed.`);
   } catch (error: any) {
-    console.error("Error completing reminder:", error);
+    console.error('Error completing reminder:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to complete reminder."
+      error.response?.data?.message || 'Failed to complete reminder.'
     );
   }
 };

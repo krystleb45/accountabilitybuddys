@@ -1,6 +1,12 @@
-import React from "react";
-import { Card, CardContent, CardHeader, Typography, Button } from "@mui/material";
-import "./Recommendations.module.css";
+import React from 'react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+  Button,
+} from '@mui/material';
+import './Recommendations.module.css';
 
 interface IndividualRecommendation {
   id: string;
@@ -14,10 +20,21 @@ interface IndividualRecommendationsProps {
   onConnect: (individualId: string) => void; // Function to handle connecting with an individual
 }
 
-const IndividualRecommendations: React.FC<IndividualRecommendationsProps> = ({ recommendations, onConnect }) => {
+const IndividualRecommendations: React.FC<IndividualRecommendationsProps> = ({
+  recommendations,
+  onConnect,
+}) => {
   return (
-    <div className="individual-recommendations" role="region" aria-labelledby="individual-recommendations-header">
-      <Typography id="individual-recommendations-header" variant="h4" gutterBottom>
+    <div
+      className="individual-recommendations"
+      role="region"
+      aria-labelledby="individual-recommendations-header"
+    >
+      <Typography
+        id="individual-recommendations-header"
+        variant="h4"
+        gutterBottom
+      >
         Recommended Individuals
       </Typography>
       <div className="recommendations-grid">
@@ -26,7 +43,7 @@ const IndividualRecommendations: React.FC<IndividualRecommendationsProps> = ({ r
             <Card
               key={individual.id}
               className="individual-card"
-              style={{ minWidth: "240px", maxWidth: "300px" }}
+              style={{ minWidth: '240px', maxWidth: '300px' }}
               aria-labelledby={`individual-name-${individual.id}`}
             >
               <CardHeader
@@ -38,7 +55,11 @@ const IndividualRecommendations: React.FC<IndividualRecommendationsProps> = ({ r
                 <Typography variant="body2" color="textSecondary">
                   {individual.bio}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  style={{ marginTop: '8px' }}
+                >
                   Shared Goals:
                   <ul>
                     {individual.sharedGoals.map((goal, index) => (
@@ -50,7 +71,7 @@ const IndividualRecommendations: React.FC<IndividualRecommendationsProps> = ({ r
                   variant="contained"
                   color="primary"
                   onClick={() => onConnect(individual.id)}
-                  style={{ marginTop: "8px" }}
+                  style={{ marginTop: '8px' }}
                   aria-label={`Connect with ${individual.name}`}
                 >
                   Connect

@@ -1,9 +1,9 @@
-import React from "react";
-import "./Notification.css"; // CSS for styling the notification
+import React from 'react';
+import './Notification.css'; // CSS for styling the notification
 
 interface NotificationProps {
   message: string; // The notification message
-  type?: "success" | "error" | "warning" | "info"; // The type of notification
+  type?: 'success' | 'error' | 'warning' | 'info'; // The type of notification
   onClose?: () => void; // Optional callback to handle notification dismissal
   autoDismiss?: boolean; // Whether the notification should auto-dismiss
   dismissTime?: number; // Time in milliseconds for auto-dismiss
@@ -11,7 +11,7 @@ interface NotificationProps {
 
 const Notification: React.FC<NotificationProps> = ({
   message,
-  type = "info",
+  type = 'info',
   onClose,
   autoDismiss = false,
   dismissTime = 3000,
@@ -27,10 +27,18 @@ const Notification: React.FC<NotificationProps> = ({
   }, [autoDismiss, dismissTime, onClose]);
 
   return (
-    <div className={`notification notification-${type}`} role="alert" aria-live="assertive">
+    <div
+      className={`notification notification-${type}`}
+      role="alert"
+      aria-live="assertive"
+    >
       <p>{message}</p>
       {onClose && (
-        <button className="notification-close-button" onClick={onClose} aria-label="Close notification">
+        <button
+          className="notification-close-button"
+          onClick={onClose}
+          aria-label="Close notification"
+        >
           &times;
         </button>
       )}

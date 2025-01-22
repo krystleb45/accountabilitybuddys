@@ -1,6 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { getUserProfile } from "../../services/userService"; // Adjust the path to match your service file
-import { UserProfile } from "../../types/User.types";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
+import { getUserProfile } from '../../services/userService'; // Adjust the path to match your service file
+import { UserProfile } from '../../types/User.types';
 
 interface UserContextType {
   user: UserProfile | null;
@@ -12,7 +18,9 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const UserProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +33,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUser(userData as UserProfile);
         setError(null);
       } catch (err) {
-        setError("Failed to fetch user profile.");
+        setError('Failed to fetch user profile.');
         setUser(null);
       } finally {
         setLoading(false);
@@ -37,7 +45,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("authToken"); // Clear auth token (adjust to your app's needs)
+    localStorage.removeItem('authToken'); // Clear auth token (adjust to your app's needs)
   };
 
   return (
@@ -50,7 +58,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error("useUser must be used within a UserProvider");
+    throw new Error('useUser must be used within a UserProvider');
   }
   return context;
 };

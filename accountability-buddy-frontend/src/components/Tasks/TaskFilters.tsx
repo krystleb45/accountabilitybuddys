@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import "./Tasks.module.css";
+import React, { useState } from 'react';
+import './Tasks.module.css';
 
 interface TaskFiltersProps {
   onFilterChange: (filters: {
@@ -10,9 +10,9 @@ interface TaskFiltersProps {
 }
 
 const TaskFilters: React.FC<TaskFiltersProps> = ({ onFilterChange }) => {
-  const [status, setStatus] = useState<string>("");
-  const [priority, setPriority] = useState<string>("");
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [status, setStatus] = useState<string>('');
+  const [priority, setPriority] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const handleFilterChange = () => {
     onFilterChange({
@@ -23,9 +23,9 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ onFilterChange }) => {
   };
 
   const resetFilters = () => {
-    setStatus("");
-    setPriority("");
-    setSearchTerm("");
+    setStatus('');
+    setPriority('');
+    setSearchTerm('');
     onFilterChange({});
   };
 

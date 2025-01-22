@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import "./ResourceLinks.module.css";
+import React, { useEffect, useState } from 'react';
+import './ResourceLinks.module.css';
 
 interface Resource {
   id: string;
@@ -14,15 +14,15 @@ const ResourceLinks: React.FC = () => {
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        const response = await fetch("/api/militarySupport/resources"); // Backend endpoint
+        const response = await fetch('/api/militarySupport/resources'); // Backend endpoint
         if (!response.ok) {
           throw new Error(`Error fetching resources: ${response.statusText}`);
         }
         const data: Resource[] = await response.json();
         setResources(data);
       } catch (err: any) {
-        console.error("Error fetching resources:", err);
-        setError(err.message || "Failed to fetch resources.");
+        console.error('Error fetching resources:', err);
+        setError(err.message || 'Failed to fetch resources.');
       }
     };
 
@@ -33,7 +33,9 @@ const ResourceLinks: React.FC = () => {
     <div className="resources" role="region" aria-labelledby="resources-header">
       <h2 id="resources-header">Helpful Resources</h2>
       {error ? (
-        <p className="error-message" role="alert">{error}</p>
+        <p className="error-message" role="alert">
+          {error}
+        </p>
       ) : (
         <ul className="resource-list">
           {resources.length > 0 ? (

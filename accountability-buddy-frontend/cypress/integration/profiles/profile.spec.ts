@@ -20,7 +20,7 @@ describe('User Profile Page', () => {
     cy.get('input[name="email"]').should('have.value', 'testuser@example.com'); // Replace with actual email
   });
 
-  it('should update the user\'s profile successfully', () => {
+  it("should update the user's profile successfully", () => {
     // Update name and email fields
     cy.get('input[name="name"]').clear().type('Updated Name');
     cy.get('input[name="email"]').clear().type('updated@example.com');
@@ -61,7 +61,9 @@ describe('User Profile Page', () => {
     cy.get('input[type="file"]').attachFile(fileName);
 
     // Verify that the profile picture is displayed
-    cy.get('.profile-picture').should('have.attr', 'src').and('include', fileName);
+    cy.get('.profile-picture')
+      .should('have.attr', 'src')
+      .and('include', fileName);
   });
 
   it('should display a confirmation prompt before deleting the profile', () => {
@@ -69,7 +71,9 @@ describe('User Profile Page', () => {
     cy.get('button[aria-label="Delete Profile"]').click();
 
     // Verify that a confirmation dialog appears
-    cy.contains(/are you sure you want to delete your profile/i).should('be.visible');
+    cy.contains(/are you sure you want to delete your profile/i).should(
+      'be.visible'
+    );
 
     // Confirm deletion
     cy.get('button[aria-label="Confirm Delete"]').click();

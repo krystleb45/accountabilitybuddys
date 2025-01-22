@@ -83,7 +83,10 @@ declare namespace Cypress {
      * @param url - The URL to visit.
      * @param options - Additional options for visiting the URL.
      */
-    visit(url: string, options?: Partial<Cypress.VisitOptions>): Chainable<Subject>;
+    visit(
+      url: string,
+      options?: Partial<Cypress.VisitOptions>
+    ): Chainable<Subject>;
 
     /**
      * Navigate to the Military Support page.
@@ -111,13 +114,17 @@ declare namespace Cypress {
      * Mock loading existing messages in the chatroom.
      * @param messages - An array of chat messages to mock.
      */
-    mockChatMessages(messages: Array<{ id: number; sender: string; message: string }>): Chainable<Subject>;
+    mockChatMessages(
+      messages: Array<{ id: number; sender: string; message: string }>
+    ): Chainable<Subject>;
 
     /**
      * Mock and validate external resource links on the Military Support page.
      * @param resources - An array of resources with names and URLs.
      */
-    verifyResourceLinks(resources: Array<{ name: string; url: string }>): Chainable<Subject>;
+    verifyResourceLinks(
+      resources: Array<{ name: string; url: string }>
+    ): Chainable<Subject>;
 
     /**
      * Simulate and verify access control for the Military Support section.
@@ -141,7 +148,10 @@ declare namespace Cypress {
      * @param amount - The payment amount.
      * @param method - The payment method (e.g., 'credit card', 'PayPal').
      */
-    simulateSuccessfulPayment(amount: number, method: string): Chainable<Subject>;
+    simulateSuccessfulPayment(
+      amount: number,
+      method: string
+    ): Chainable<Subject>;
 
     /**
      * Simulate a failed payment.
@@ -153,14 +163,24 @@ declare namespace Cypress {
      * Verify the payment history is displayed correctly.
      * @param payments - An array of payment history objects.
      */
-    verifyPaymentHistory(payments: Array<{ id: number; date: string; amount: number; method: string }>): Chainable<Subject>;
+    verifyPaymentHistory(
+      payments: Array<{
+        id: number;
+        date: string;
+        amount: number;
+        method: string;
+      }>
+    ): Chainable<Subject>;
 
     /**
      * Simulate payment method validation errors.
      * @param field - The field to validate (e.g., 'amount', 'paymentMethod').
      * @param errorMessage - The validation error message.
      */
-    simulatePaymentValidationError(field: string, errorMessage: string): Chainable<Subject>;
+    simulatePaymentValidationError(
+      field: string,
+      errorMessage: string
+    ): Chainable<Subject>;
 
     /**
      * Mock and validate available payment methods.

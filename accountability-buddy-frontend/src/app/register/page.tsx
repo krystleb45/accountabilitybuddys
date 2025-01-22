@@ -1,20 +1,20 @@
-"use client"; // Mark as Client Component
+'use client'; // Mark as Client Component
 
-import React, { useState } from "react";
-import { useRouter } from "next/router";
-import axios from "axios";
-import Link from "next/link"; // Import Link from Next.js
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+import Link from 'next/link'; // Import Link from Next.js
 
 const RegisterPage: React.FC = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,30 +24,34 @@ const RegisterPage: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError('');
 
     const { name, email, password, confirmPassword } = formData;
     if (!name || !email || !password || !confirmPassword) {
-      setError("All fields are required.");
+      setError('All fields are required.');
       setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError('Passwords do not match.');
       setLoading(false);
       return;
     }
 
     try {
-      const response = await axios.post("/api/auth/register", { name, email, password });
+      const response = await axios.post('/api/auth/register', {
+        name,
+        email,
+        password,
+      });
       if (response.status === 201) {
-        router.push("/login");
+        router.push('/login');
       } else {
-        setError("Registration failed.");
+        setError('Registration failed.');
       }
     } catch (err) {
-      setError("Registration failed. Please try again.");
+      setError('Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -56,7 +60,9 @@ const RegisterPage: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Register</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+          Register
+        </h1>
 
         <form onSubmit={handleRegister} className="space-y-4">
           <input
@@ -104,13 +110,13 @@ const RegisterPage: React.FC = () => {
             disabled={loading}
             className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700"
           >
-            {loading ? "Registering..." : "Register"}
+            {loading ? 'Registering...' : 'Register'}
           </button>
         </form>
 
         <div className="mt-6 text-center">
           <p>
-            Already have an account?{" "}
+            Already have an account?{' '}
             <Link href="/login">
               <a className="text-blue-600 hover:underline">Login here</a>
             </Link>

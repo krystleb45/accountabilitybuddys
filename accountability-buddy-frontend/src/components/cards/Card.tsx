@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./Card.module.css";
+import React from 'react';
+import styles from './Card.module.css';
 
 interface CardProps {
   /** Content inside the card */
@@ -16,7 +16,7 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({
   children,
-  className = "",
+  className = '',
   onClick,
   elevated = false,
   bordered = false,
@@ -24,20 +24,20 @@ const Card: React.FC<CardProps> = ({
   // Combine class names dynamically
   const cardClassNames = [
     styles.card,
-    elevated ? styles.elevated : "",
-    bordered ? styles.bordered : "",
+    elevated ? styles.elevated : '',
+    bordered ? styles.bordered : '',
     className,
   ]
     .filter(Boolean)
-    .join(" ");
+    .join(' ');
 
   return (
     <div
       className={cardClassNames}
       onClick={onClick}
-      role={onClick ? "button" : undefined}
+      role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined} // Make card focusable if clickable
-      aria-pressed={onClick ? "false" : undefined}
+      aria-pressed={onClick ? 'false' : undefined}
     >
       {children}
     </div>

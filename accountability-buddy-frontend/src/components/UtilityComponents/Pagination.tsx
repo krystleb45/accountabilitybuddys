@@ -1,5 +1,5 @@
-import React from "react";
-import "./Pagination.css"; // CSS for styling the pagination
+import React from 'react';
+import './Pagination.css'; // CSS for styling the pagination
 
 interface PaginationProps {
   currentPage: number; // The current active page
@@ -7,7 +7,11 @@ interface PaginationProps {
   onPageChange: (page: number) => void; // Callback for changing the page
 }
 
-const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination: React.FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}) => {
   if (totalPages <= 1) return null; // Do not render if there's only one page
 
   const getPageNumbers = () => {
@@ -45,10 +49,10 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
           <li key={page}>
             <button
               className={`pagination-item ${
-                page === currentPage ? "active" : ""
+                page === currentPage ? 'active' : ''
               }`}
               onClick={() => onPageChange(page)}
-              aria-current={page === currentPage ? "page" : undefined}
+              aria-current={page === currentPage ? 'page' : undefined}
             >
               {page}
             </button>

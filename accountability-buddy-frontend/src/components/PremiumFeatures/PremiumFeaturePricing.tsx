@@ -1,5 +1,5 @@
-import React from "react";
-import "./PremiumFeaturePricing.module.css";
+import React from 'react';
+import './PremiumFeaturePricing.module.css';
 
 interface PricingPlan {
   name: string;
@@ -24,7 +24,7 @@ const PremiumFeaturePricing: React.FC<PremiumFeaturePricingProps> = ({
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`pricing-plan ${plan.isRecommended ? "recommended" : ""}`}
+            className={`pricing-plan ${plan.isRecommended ? 'recommended' : ''}`}
           >
             <h3>{plan.name}</h3>
             <p className="price">{plan.price}</p>
@@ -33,7 +33,10 @@ const PremiumFeaturePricing: React.FC<PremiumFeaturePricingProps> = ({
                 <li key={index}>{feature}</li>
               ))}
             </ul>
-            <button onClick={() => onSubscribe(plan.name)} className="subscribe-button">
+            <button
+              onClick={() => onSubscribe(plan.name)}
+              className="subscribe-button"
+            >
               Subscribe
             </button>
             {plan.isRecommended && <span className="badge">Recommended</span>}

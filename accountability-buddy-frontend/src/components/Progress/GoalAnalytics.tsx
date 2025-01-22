@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { getGoalAnalytics } from "src/services/goalService";
-import { Line } from "react-chartjs-2";
-import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
-import "./GoalAnalytics.module.css";
+import React, { useState, useEffect } from 'react';
+import { getGoalAnalytics } from 'src/services/goalService';
+import { Line } from 'react-chartjs-2';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import './GoalAnalytics.module.css';
 
 interface AnalyticsData {
   labels: string[];
@@ -18,20 +18,22 @@ interface AnalyticsData {
 const GoalAnalytics: React.FC = () => {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
-  const [dateRange, setDateRange] = useState<string>("all");
+  const [error, setError] = useState<string>('');
+  const [dateRange, setDateRange] = useState<string>('all');
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       setLoading(true);
-      setError("");
+      setError('');
 
       try {
         const response = await getGoalAnalytics({ dateRange });
         setAnalytics(response.data);
       } catch (err: any) {
-        console.error("Error fetching analytics:", err);
-        setError(err?.message || "Failed to load analytics data. Please try again.");
+        console.error('Error fetching analytics:', err);
+        setError(
+          err?.message || 'Failed to load analytics data. Please try again.'
+        );
       } finally {
         setLoading(false);
       }
@@ -45,10 +47,10 @@ const GoalAnalytics: React.FC = () => {
     labels: [],
     datasets: [
       {
-        label: "Goals Completed",
+        label: 'Goals Completed',
         data: [],
-        backgroundColor: "rgba(75,192,192,0.2)",
-        borderColor: "rgba(75,192,192,1)",
+        backgroundColor: 'rgba(75,192,192,0.2)',
+        borderColor: 'rgba(75,192,192,1)',
         fill: true,
       },
     ],
@@ -59,12 +61,18 @@ const GoalAnalytics: React.FC = () => {
   };
 
   return (
-    <div className="goal-analytics" role="region" aria-labelledby="analytics-header">
+    <div
+      className="goal-analytics"
+      role="region"
+      aria-labelledby="analytics-header"
+    >
       <h2 id="analytics-header">Goal Analytics</h2>
       {loading ? (
         <LoadingSpinner />
       ) : error ? (
-        <p className="error" role="alert">{error}</p>
+        <p className="error" role="alert">
+          {error}
+        </p>
       ) : (
         <>
           <div className="date-range-selector">
@@ -88,7 +96,7 @@ const GoalAnalytics: React.FC = () => {
                 plugins: {
                   legend: {
                     display: true,
-                    position: "top",
+                    position: 'top',
                   },
                 },
               }}

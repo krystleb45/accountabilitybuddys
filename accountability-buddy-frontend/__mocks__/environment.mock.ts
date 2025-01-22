@@ -19,7 +19,9 @@ function setEnvironmentVariable(key, value) {
  */
 function getEnvironmentVariable(key) {
   const value = mockEnvironmentVariables[key] || null;
-  console.log(`[Environment Mock] Retrieved environment variable: ${key}=${value}`);
+  console.log(
+    `[Environment Mock] Retrieved environment variable: ${key}=${value}`
+  );
   return value;
 }
 
@@ -32,7 +34,9 @@ function deleteEnvironmentVariable(key) {
     delete mockEnvironmentVariables[key];
     console.log(`[Environment Mock] Environment variable deleted: ${key}`);
   } else {
-    console.log(`[Environment Mock] Attempted to delete non-existent variable: ${key}`);
+    console.log(
+      `[Environment Mock] Attempted to delete non-existent variable: ${key}`
+    );
   }
 }
 
@@ -41,7 +45,10 @@ function deleteEnvironmentVariable(key) {
  * @returns {object} - An object representing all mock environment variables.
  */
 function getAllEnvironmentVariables() {
-  console.log(`[Environment Mock] Retrieved all environment variables:`, mockEnvironmentVariables);
+  console.log(
+    `[Environment Mock] Retrieved all environment variables:`,
+    mockEnvironmentVariables
+  );
   return { ...mockEnvironmentVariables };
 }
 
@@ -49,7 +56,9 @@ function getAllEnvironmentVariables() {
  * Resets all environment variables (useful for tests).
  */
 function resetEnvironmentVariables() {
-  Object.keys(mockEnvironmentVariables).forEach((key) => delete mockEnvironmentVariables[key]);
+  Object.keys(mockEnvironmentVariables).forEach(
+    (key) => delete mockEnvironmentVariables[key]
+  );
   console.log(`[Environment Mock] All environment variables cleared`);
 }
 

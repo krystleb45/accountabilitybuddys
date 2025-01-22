@@ -5,11 +5,7 @@ import './SubscriptionActions.css'; // Optional CSS module for styling
 const SubscriptionActions: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const {
-    subscription,
-    updateSubscription,
-    cancelSubscription,
-  } = useStripe();
+  const { subscription, updateSubscription, cancelSubscription } = useStripe();
 
   const handleUpgrade = async (planId: string) => {
     setLoading(true);

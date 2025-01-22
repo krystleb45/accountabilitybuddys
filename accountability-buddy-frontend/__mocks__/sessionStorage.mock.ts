@@ -5,7 +5,10 @@ const sessionStorageMock = (function () {
     getItem(key: PropertyKey) {
       return store.hasOwnProperty(key) ? store[key] : null;
     },
-    setItem(key: string | number, value: { toString: () => any; } | null | undefined) {
+    setItem(
+      key: string | number,
+      value: { toString: () => any } | null | undefined
+    ) {
       if (value === undefined || value === null) {
         throw new Error('sessionStorage cannot store undefined or null values');
       }
@@ -27,7 +30,7 @@ const sessionStorageMock = (function () {
     // Optional: helper function to reset sessionStorage (useful for testing setup)
     mockClear() {
       store = {};
-    }
+    },
   };
 })();
 
@@ -35,5 +38,5 @@ const sessionStorageMock = (function () {
 Object.defineProperty(window, 'sessionStorage', {
   value: sessionStorageMock,
   writable: false, // Prevents reassignment
-  configurable: false // Prevents reconfiguration
+  configurable: false, // Prevents reconfiguration
 });

@@ -1,6 +1,6 @@
-"use client"; // Mark as Client Component
+'use client'; // Mark as Client Component
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 // Search Result Item component
 const SearchResultItem = ({ result }: { result: string }) => (
@@ -10,7 +10,7 @@ const SearchResultItem = ({ result }: { result: string }) => (
 );
 
 const SearchPage: React.FC = () => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [results, setResults] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
 
@@ -20,13 +20,15 @@ const SearchPage: React.FC = () => {
 
     // Placeholder for results based on query
     const mockResults = [
-      "Search result 1",
-      "Search result 2",
-      "Search result 3",
-      "Search result 4",
+      'Search result 1',
+      'Search result 2',
+      'Search result 3',
+      'Search result 4',
     ];
 
-    setResults(query ? mockResults.filter((result) => result.includes(query)) : []);
+    setResults(
+      query ? mockResults.filter((result) => result.includes(query)) : []
+    );
   };
 
   return (
@@ -57,7 +59,9 @@ const SearchPage: React.FC = () => {
         <h2 className="text-2xl font-semibold mb-4 text-gray-800">Results</h2>
         {submitted ? (
           results.length > 0 ? (
-            results.map((result, index) => <SearchResultItem key={index} result={result} />)
+            results.map((result, index) => (
+              <SearchResultItem key={index} result={result} />
+            ))
           ) : (
             <p className="text-gray-500">No results found for "{query}".</p>
           )

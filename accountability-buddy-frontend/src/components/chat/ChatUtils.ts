@@ -1,6 +1,6 @@
 // ChatUtils.ts
 
-import { ChatMessage } from "./Chat.types";
+import { ChatMessage } from './Chat.types';
 
 /**
  * Formats a timestamp into a human-readable string.
@@ -8,9 +8,9 @@ import { ChatMessage } from "./Chat.types";
  * @returns A formatted string, e.g., "Jan 18, 2025, 3:45 PM".
  */
 export const formatTimestamp = (timestamp: Date): string => {
-  return new Intl.DateTimeFormat("en-US", {
-    dateStyle: "medium",
-    timeStyle: "short",
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
   }).format(timestamp);
 };
 
@@ -32,7 +32,7 @@ export const sanitizeMessages = (messages: ChatMessage[]): ChatMessage[] => {
  * @returns A sanitized string.
  */
 export const sanitizeString = (str: string): string => {
-  const div = document.createElement("div");
+  const div = document.createElement('div');
   div.innerText = str;
   return div.innerHTML;
 };

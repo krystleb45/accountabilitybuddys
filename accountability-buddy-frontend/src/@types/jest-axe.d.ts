@@ -4,14 +4,14 @@
  * type safety and IntelliSense for Axe-related functions and results.
  */
 
-declare module "jest-axe" {
+declare module 'jest-axe' {
   /**
    * Represents the result of an Axe accessibility test.
    */
   interface AxeResults {
     violations: Array<{
       id: string;
-      impact: "minor" | "moderate" | "serious" | "critical" | null; // Restrict impact levels
+      impact: 'minor' | 'moderate' | 'serious' | 'critical' | null; // Restrict impact levels
       tags: string[];
       description: string;
       help: string;
@@ -20,10 +20,10 @@ declare module "jest-axe" {
         html: string;
         target: string[];
         failureSummary: string;
-        impact: "minor" | "moderate" | "serious" | "critical" | null;
+        impact: 'minor' | 'moderate' | 'serious' | 'critical' | null;
         any: Array<{
           message: string;
-          impact: "minor" | "moderate" | "serious" | "critical" | null;
+          impact: 'minor' | 'moderate' | 'serious' | 'critical' | null;
         }>;
       }>;
     }>;

@@ -9,13 +9,15 @@
  */
 export const formatCurrency = (
   amount: number,
-  currency: string = "USD",
-  locale: string = "en-US"
+  currency: string = 'USD',
+  locale: string = 'en-US'
 ): string => {
-  if (typeof amount !== "number" || isNaN(amount)) {
-    throw new Error("Invalid amount provided for currency formatting.");
+  if (typeof amount !== 'number' || isNaN(amount)) {
+    throw new Error('Invalid amount provided for currency formatting.');
   }
-  return new Intl.NumberFormat(locale, { style: "currency", currency }).format(amount);
+  return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(
+    amount
+  );
 };
 
 /**
@@ -57,13 +59,15 @@ export const fetchData = async <T>(
     const response = await fetch(url, {
       ...options,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...options?.headers,
       },
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch data: ${response.status} ${response.statusText}`
+      );
     }
 
     return await response.json();
@@ -79,8 +83,8 @@ export const fetchData = async <T>(
  * @returns True if the email is valid, false otherwise.
  */
 export const validateEmail = (email: string): boolean => {
-  if (typeof email !== "string") {
-    throw new Error("Email must be a string.");
+  if (typeof email !== 'string') {
+    throw new Error('Email must be a string.');
   }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -94,10 +98,10 @@ export const validateEmail = (email: string): boolean => {
  * @throws An error if the input is not a string.
  */
 export const formatUserName = (name: string): string => {
-  if (typeof name !== "string") {
-    throw new Error("Name must be a string.");
+  if (typeof name !== 'string') {
+    throw new Error('Name must be a string.');
   }
-  return name.trim().replace(/\s+/g, " ");
+  return name.trim().replace(/\s+/g, ' ');
 };
 
 /**
@@ -108,8 +112,8 @@ export const formatUserName = (name: string): string => {
  * @throws An error if the input is not a string.
  */
 export const capitalizeWords = (str: string): string => {
-  if (typeof str !== "string") {
-    throw new Error("Input must be a string.");
+  if (typeof str !== 'string') {
+    throw new Error('Input must be a string.');
   }
   return str
     .trim()
@@ -125,14 +129,14 @@ export const capitalizeWords = (str: string): string => {
  * @throws An error if the input is not a string.
  */
 export const toKebabCase = (str: string): string => {
-  if (typeof str !== "string") {
-    throw new Error("Input must be a string.");
+  if (typeof str !== 'string') {
+    throw new Error('Input must be a string.');
   }
   return str
     .trim()
     .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w-]+/g, "");
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]+/g, '');
 };
 
 /**
@@ -145,7 +149,7 @@ export const toKebabCase = (str: string): string => {
  */
 export const getRandomInt = (min: number, max: number): number => {
   if (min > max) {
-    throw new Error("Minimum value cannot be greater than maximum value.");
+    throw new Error('Minimum value cannot be greater than maximum value.');
   }
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };

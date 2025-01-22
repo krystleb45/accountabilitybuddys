@@ -1,4 +1,4 @@
-import { Task, TaskFilters } from "src/components/Tasks/types";
+import { Task, TaskFilters } from 'src/components/Tasks/types';
 
 /**
  * Filters tasks based on the provided filters.
@@ -9,17 +9,23 @@ import { Task, TaskFilters } from "src/components/Tasks/types";
  */
 export const filterTasks = (tasks: Task[], filters: TaskFilters): Task[] => {
   if (!Array.isArray(tasks)) {
-    throw new Error("The tasks parameter must be an array.");
+    throw new Error('The tasks parameter must be an array.');
   }
 
   return tasks.filter((task) => {
-    if (filters.status && filters.status !== (task.isCompleted ? "completed" : "pending")) {
+    if (
+      filters.status &&
+      filters.status !== (task.isCompleted ? 'completed' : 'pending')
+    ) {
       return false;
     }
     if (filters.priority && filters.priority !== task.priority) {
       return false;
     }
-    if (filters.searchTerm && !task.title.toLowerCase().includes(filters.searchTerm.toLowerCase())) {
+    if (
+      filters.searchTerm &&
+      !task.title.toLowerCase().includes(filters.searchTerm.toLowerCase())
+    ) {
       return false;
     }
     return true;
@@ -33,22 +39,25 @@ export const filterTasks = (tasks: Task[], filters: TaskFilters): Task[] => {
  * @param sortBy - The property to sort by ("dueDate" or "priority").
  * @returns A sorted array of tasks.
  */
-export const sortTasks = (tasks: Task[], sortBy: "dueDate" | "priority"): Task[] => {
+export const sortTasks = (
+  tasks: Task[],
+  sortBy: 'dueDate' | 'priority'
+): Task[] => {
   if (!Array.isArray(tasks)) {
-    throw new Error("The tasks parameter must be an array.");
+    throw new Error('The tasks parameter must be an array.');
   }
 
   return [...tasks].sort((a, b) => {
-    if (sortBy === "dueDate") {
-      const dateA = new Date(a.dueDate || "").getTime();
-      const dateB = new Date(b.dueDate || "").getTime();
+    if (sortBy === 'dueDate') {
+      const dateA = new Date(a.dueDate || '').getTime();
+      const dateB = new Date(b.dueDate || '').getTime();
       return dateA - dateB;
     }
 
-    if (sortBy === "priority") {
+    if (sortBy === 'priority') {
       const priorityOrder = { low: 1, medium: 2, high: 3 };
-      const priorityA = priorityOrder[a.priority || "low"] || 0;
-      const priorityB = priorityOrder[b.priority || "low"] || 0;
+      const priorityA = priorityOrder[a.priority || 'low'] || 0;
+      const priorityB = priorityOrder[b.priority || 'low'] || 0;
       return priorityA - priorityB;
     }
 
@@ -63,14 +72,18 @@ export const sortTasks = (tasks: Task[], sortBy: "dueDate" | "priority"): Task[]
  * @returns A formatted date string or "No due date" if not provided.
  */
 export const formatDueDate = (dueDate?: string): string => {
-  if (!dueDate) return "No due date";
+  if (!dueDate) return 'No due date';
 
   const parsedDate = new Date(dueDate);
   if (isNaN(parsedDate.getTime())) {
-    throw new Error("Invalid due date format.");
+    throw new Error('Invalid due date format.');
   }
 
-  const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
   return parsedDate.toLocaleDateString(undefined, options);
 };
 
@@ -80,9 +93,11 @@ export const formatDueDate = (dueDate?: string): string => {
  * @param tasks - The array of tasks.
  * @returns A summary object containing counts for completed and pending tasks.
  */
-export const getTaskSummary = (tasks: Task[]): { completed: number; pending: number } => {
+export const getTaskSummary = (
+  tasks: Task[]
+): { completed: number; pending: number } => {
   if (!Array.isArray(tasks)) {
-    throw new Error("The tasks parameter must be an array.");
+    throw new Error('The tasks parameter must be an array.');
   }
 
   const completed = tasks.filter((task) => task.isCompleted).length;
@@ -97,9 +112,12 @@ export const getTaskSummary = (tasks: Task[]): { completed: number; pending: num
  * @param priority - The priority to count ("low", "medium", "high").
  * @returns The count of tasks with the specified priority.
  */
-export const countTasksByPriority = (tasks: Task[], priority: "low" | "medium" | "high"): number => {
+export const countTasksByPriority = (
+  tasks: Task[],
+  priority: 'low' | 'medium' | 'high'
+): number => {
   if (!Array.isArray(tasks)) {
-    throw new Error("The tasks parameter must be an array.");
+    throw new Error('The tasks parameter must be an array.');
   }
 
   return tasks.filter((task) => task.priority === priority).length;

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 interface RouteMetadataProps {
   title: string;
@@ -7,19 +7,26 @@ interface RouteMetadataProps {
   children: React.ReactNode;
 }
 
-const RouteMetadata: React.FC<RouteMetadataProps> = ({ title, description, keywords, children }) => {
+const RouteMetadata: React.FC<RouteMetadataProps> = ({
+  title,
+  description,
+  keywords,
+  children,
+}) => {
   useEffect(() => {
     // Update document title
     document.title = title;
 
     // Update or add meta description
     if (description) {
-      const metaDescription = document.querySelector('meta[name="description"]');
+      const metaDescription = document.querySelector(
+        'meta[name="description"]'
+      );
       if (metaDescription) {
-        metaDescription.setAttribute("content", description);
+        metaDescription.setAttribute('content', description);
       } else {
-        const meta = document.createElement("meta");
-        meta.name = "description";
+        const meta = document.createElement('meta');
+        meta.name = 'description';
         meta.content = description;
         document.head.appendChild(meta);
       }
@@ -29,10 +36,10 @@ const RouteMetadata: React.FC<RouteMetadataProps> = ({ title, description, keywo
     if (keywords) {
       const metaKeywords = document.querySelector('meta[name="keywords"]');
       if (metaKeywords) {
-        metaKeywords.setAttribute("content", keywords);
+        metaKeywords.setAttribute('content', keywords);
       } else {
-        const meta = document.createElement("meta");
-        meta.name = "keywords";
+        const meta = document.createElement('meta');
+        meta.name = 'keywords';
         meta.content = keywords;
         document.head.appendChild(meta);
       }

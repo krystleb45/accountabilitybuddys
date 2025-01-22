@@ -28,21 +28,20 @@ describe('Audit Logs Page', () => {
     cy.get('button[aria-label="Filter"]').click();
 
     // Verify the filtered results
-cy.get('.audit-log-item').each(($log) => {
-  cy.wrap($log)
-    .find('.log-date') // Adjust the selector to match your app
-    .invoke('text')
-    .then((dateText: string) => {
-      const date = new Date(dateText.trim()); // Ensure `trim` works by casting `dateText` as a string
-      const startDate = new Date('2024-01-01');
-      const endDate = new Date('2024-01-31');
+    cy.get('.audit-log-item').each(($log) => {
+      cy.wrap($log)
+        .find('.log-date') // Adjust the selector to match your app
+        .invoke('text')
+        .then((dateText: string) => {
+          const date = new Date(dateText.trim()); // Ensure `trim` works by casting `dateText` as a string
+          const startDate = new Date('2024-01-01');
+          const endDate = new Date('2024-01-31');
 
-      // Use Chai assertions with Cypress
-      expect(date).to.be.gte(startDate);
-      expect(date).to.be.lte(endDate);
+          // Use Chai assertions with Cypress
+          expect(date).to.be.gte(startDate);
+          expect(date).to.be.lte(endDate);
+        });
     });
-});
-
   });
 
   it('should allow sorting audit logs by columns', () => {

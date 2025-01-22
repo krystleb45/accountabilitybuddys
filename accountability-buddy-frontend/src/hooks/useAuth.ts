@@ -1,9 +1,9 @@
 // useAuth.ts
 
-import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "src/config/axiosConfig";
-import { User } from "@/types/User.types";
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'src/config/axiosConfig';
+import { User } from '@/types/User.types';
 
 interface UseAuthResult {
   user: User | null;
@@ -24,11 +24,11 @@ const useAuth = (): UseAuthResult => {
   const fetchUser = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/user");
+      const response = await axios.get('/user');
       setUser(response.data);
       setIsAuthenticated(true);
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      console.error('Error fetching user data:', error);
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -41,18 +41,18 @@ const useAuth = (): UseAuthResult => {
     async (email: string, password: string) => {
       try {
         setLoading(true);
-        const response = await axios.post("/auth/login", { email, password });
+        const response = await axios.post('/auth/login', { email, password });
 
         // Save token in localStorage or cookie
-        localStorage.setItem("authToken", response.data.token);
+        localStorage.setItem('authToken', response.data.token);
 
         // Fetch user data after login
         await fetchUser();
 
         // Redirect to dashboard or home
-        navigate("/dashboard");
+        navigate('/dashboard');
       } catch (error) {
-        console.error("Login failed:", error);
+        console.error('Login failed:', error);
         throw error;
       } finally {
         setLoading(false);
@@ -65,14 +65,14 @@ const useAuth = (): UseAuthResult => {
   const logout = useCallback(() => {
     try {
       // Clear token and user data
-      localStorage.removeItem("authToken");
+      localStorage.removeItem('authToken');
       setUser(null);
       setIsAuthenticated(false);
 
       // Redirect to login
-      navigate("/login");
+      navigate('/login');
     } catch (error) {
-      console.error("Error during logout:", error);
+      console.error('Error during logout:', error);
     }
   }, [navigate]);
 
@@ -81,13 +81,13 @@ const useAuth = (): UseAuthResult => {
     try {
       await fetchUser();
     } catch (error) {
-      console.error("Error refreshing user data:", error);
+      console.error('Error refreshing user data:', error);
     }
   }, [fetchUser]);
 
   // Initial user fetch on mount
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem('authToken');
     if (token) {
       fetchUser();
     } else {

@@ -1,11 +1,18 @@
 // AuthContext.tsx
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import axios from "src/config/axiosConfig";
-import { User } from "@/types/User.types"; // Import your User type
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
+import axios from 'src/config/axiosConfig';
+import { User } from '@/types/User.types'; // Import your User type
 
 // Define the shape of the AuthContext
-export interface AuthContextType { // Explicitly export the interface
+export interface AuthContextType {
+  // Explicitly export the interface
   authToken: string | null; // Authentication token
   isAuthenticated: boolean; // User authentication state
   user: User | null; // Replace 'any' with your User type
@@ -22,7 +29,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
@@ -33,7 +40,9 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [authToken, setAuthToken] = useState<string | null>(localStorage.getItem("authToken"));
+  const [authToken, setAuthToken] = useState<string | null>(
+    localStorage.getItem('authToken')
+  );
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!authToken);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -50,12 +59,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/user", {
+      const response = await axios.get('/user', {
         headers: { Authorization: `Bearer ${authToken}` },
       });
       setUser(response.data);
     } catch (error) {
-      console.error("Failed to fetch user data:", error);
+      console.error('Failed to fetch user data:', error);
       setIsAuthenticated(false);
     } finally {
       setLoading(false);
@@ -63,14 +72,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const login = (token: string) => {
-    localStorage.setItem("authToken", token);
+    localStorage.setItem('authToken', token);
     setAuthToken(token);
     setIsAuthenticated(true);
     fetchUserData();
   };
 
   const logout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem('authToken');
     setAuthToken(null);
     setIsAuthenticated(false);
     setUser(null);
@@ -82,7 +91,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ authToken, isAuthenticated, user, loading, login, logout, refreshUser }}
+      value={{
+        authToken,
+        isAuthenticated,
+        user,
+        loading,
+        login,
+        logout,
+        refreshUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

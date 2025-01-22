@@ -27,7 +27,10 @@ const mockAnalyticsData: AnalyticsData[] = [];
  * @param eventName - The name of the event to track.
  * @param properties - Additional properties to send with the event.
  */
-function trackEvent(eventName: string, properties: Record<string, unknown> = {}): void {
+function trackEvent(
+  eventName: string,
+  properties: Record<string, unknown> = {}
+): void {
   mockAnalyticsData.push({ type: 'event', eventName, properties });
   console.log(`[Analytics Mock] Event tracked: ${eventName}`, properties);
 }
@@ -37,7 +40,10 @@ function trackEvent(eventName: string, properties: Record<string, unknown> = {})
  * @param pageName - The name of the page.
  * @param properties - Additional properties to send with the page view.
  */
-function trackPageView(pageName: string, properties: Record<string, unknown> = {}): void {
+function trackPageView(
+  pageName: string,
+  properties: Record<string, unknown> = {}
+): void {
   mockAnalyticsData.push({ type: 'pageView', pageName, properties });
   console.log(`[Analytics Mock] Page view tracked: ${pageName}`, properties);
 }
@@ -47,7 +53,10 @@ function trackPageView(pageName: string, properties: Record<string, unknown> = {
  * @param userId - The unique identifier of the user.
  * @param traits - Additional traits or attributes about the user.
  */
-function identifyUser(userId: string, traits: Record<string, unknown> = {}): void {
+function identifyUser(
+  userId: string,
+  traits: Record<string, unknown> = {}
+): void {
   mockAnalyticsData.push({ type: 'identify', userId, traits });
   console.log(`[Analytics Mock] User identified: ${userId}`, traits);
 }

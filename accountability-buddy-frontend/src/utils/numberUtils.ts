@@ -9,11 +9,11 @@
  * @throws Throws an error if the input is not a valid number or decimal places is not a non-negative integer.
  */
 export const roundToDecimal = (num: number, decimalPlaces: number): number => {
-  if (typeof num !== "number" || isNaN(num)) {
-    throw new Error("Input must be a valid number.");
+  if (typeof num !== 'number' || isNaN(num)) {
+    throw new Error('Input must be a valid number.');
   }
   if (!Number.isInteger(decimalPlaces) || decimalPlaces < 0) {
-    throw new Error("Decimal places must be a non-negative integer.");
+    throw new Error('Decimal places must be a non-negative integer.');
   }
   return Number(num.toFixed(decimalPlaces));
 };
@@ -29,14 +29,14 @@ export const roundToDecimal = (num: number, decimalPlaces: number): number => {
  */
 export const formatCurrency = (
   num: number,
-  locale: string = "en-US",
-  currency: string = "USD"
+  locale: string = 'en-US',
+  currency: string = 'USD'
 ): string => {
-  if (typeof num !== "number" || isNaN(num)) {
-    throw new Error("Input must be a valid number.");
+  if (typeof num !== 'number' || isNaN(num)) {
+    throw new Error('Input must be a valid number.');
   }
   return new Intl.NumberFormat(locale, {
-    style: "currency",
+    style: 'currency',
     currency,
   }).format(num);
 };
@@ -49,8 +49,8 @@ export const formatCurrency = (
  * @throws Throws an error if the input is not a valid number.
  */
 export const isEven = (num: number): boolean => {
-  if (typeof num !== "number" || isNaN(num)) {
-    throw new Error("Input must be a valid number.");
+  if (typeof num !== 'number' || isNaN(num)) {
+    throw new Error('Input must be a valid number.');
   }
   return num % 2 === 0;
 };
@@ -63,8 +63,8 @@ export const isEven = (num: number): boolean => {
  * @throws Throws an error if the input is not a valid number.
  */
 export const isOdd = (num: number): boolean => {
-  if (typeof num !== "number" || isNaN(num)) {
-    throw new Error("Input must be a valid number.");
+  if (typeof num !== 'number' || isNaN(num)) {
+    throw new Error('Input must be a valid number.');
   }
   return num % 2 !== 0;
 };
@@ -78,11 +78,16 @@ export const isOdd = (num: number): boolean => {
  * @throws Throws an error if min is greater than max or inputs are not valid numbers.
  */
 export const getRandomNumber = (min: number, max: number): number => {
-  if (typeof min !== "number" || typeof max !== "number" || isNaN(min) || isNaN(max)) {
-    throw new Error("Both min and max must be valid numbers.");
+  if (
+    typeof min !== 'number' ||
+    typeof max !== 'number' ||
+    isNaN(min) ||
+    isNaN(max)
+  ) {
+    throw new Error('Both min and max must be valid numbers.');
   }
   if (min > max) {
-    throw new Error("Minimum value cannot be greater than maximum value.");
+    throw new Error('Minimum value cannot be greater than maximum value.');
   }
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -97,15 +102,15 @@ export const getRandomNumber = (min: number, max: number): number => {
  */
 export const calculatePercentage = (value: number, total: number): number => {
   if (
-    typeof value !== "number" ||
-    typeof total !== "number" ||
+    typeof value !== 'number' ||
+    typeof total !== 'number' ||
     isNaN(value) ||
     isNaN(total)
   ) {
-    throw new Error("Both value and total must be valid numbers.");
+    throw new Error('Both value and total must be valid numbers.');
   }
   if (total === 0) {
-    throw new Error("Total cannot be zero.");
+    throw new Error('Total cannot be zero.');
   }
   return (value / total) * 100;
 };
@@ -118,8 +123,8 @@ export const calculatePercentage = (value: number, total: number): number => {
  * @throws Throws an error if the input is not a valid number.
  */
 export const formatWithCommas = (num: number): string => {
-  if (typeof num !== "number" || isNaN(num)) {
-    throw new Error("Input must be a valid number.");
+  if (typeof num !== 'number' || isNaN(num)) {
+    throw new Error('Input must be a valid number.');
   }
   return num.toLocaleString();
 };

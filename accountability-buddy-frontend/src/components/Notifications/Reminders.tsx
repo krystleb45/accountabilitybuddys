@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "./Reminder.css"; // Optional: Custom CSS for styling
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './Reminder.css'; // Optional: Custom CSS for styling
 
 interface Reminder {
   id: string;
@@ -10,24 +10,29 @@ interface Reminder {
 
 const Reminders: React.FC = () => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
-  const [newReminder, setNewReminder] = useState<{ message: string; time: string }>({
-    message: "",
-    time: "",
+  const [newReminder, setNewReminder] = useState<{
+    message: string;
+    time: string;
+  }>({
+    message: '',
+    time: '',
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [saving, setSaving] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>('');
 
   // Fetch reminders when component mounts
   useEffect(() => {
     const fetchReminders = async () => {
       setLoading(true);
-      setError("");
+      setError('');
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/reminders`);
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/reminders`
+        );
         setReminders(response.data);
       } catch (err) {
-        setError("Failed to fetch reminders. Please try again later.");
+        setError('Failed to fetch reminders. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -45,14 +50,17 @@ const Reminders: React.FC = () => {
   // Handle saving a new reminder
   const handleSaveReminder = async () => {
     setSaving(true);
-    setError("");
+    setError('');
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/reminders`, newReminder);
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/reminders`,
+        newReminder
+      );
       setReminders([...reminders, response.data]);
-      setNewReminder({ message: "", time: "" });
+      setNewReminder({ message: '', time: '' });
     } catch (err) {
-      setError("Failed to save reminder. Please try again.");
+      setError('Failed to save reminder. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -62,9 +70,11 @@ const Reminders: React.FC = () => {
   const handleDeleteReminder = async (id: string) => {
     try {
       await axios.delete(`${process.env.REACT_APP_API_URL}/reminders/${id}`);
-      setReminders((prevReminders) => prevReminders.filter((reminder) => reminder.id !== id));
+      setReminders((prevReminders) =>
+        prevReminders.filter((reminder) => reminder.id !== id)
+      );
     } catch (err) {
-      setError("Failed to delete reminder. Please try again.");
+      setError('Failed to delete reminder. Please try again.');
     }
   };
 
@@ -81,7 +91,9 @@ const Reminders: React.FC = () => {
             <li key={reminder.id}>
               <p>{reminder.message}</p>
               <p>{new Date(reminder.time).toLocaleString()}</p>
-              <button onClick={() => handleDeleteReminder(reminder.id)}>Delete</button>
+              <button onClick={() => handleDeleteReminder(reminder.id)}>
+                Delete
+              </button>
             </li>
           ))}
         </ul>
@@ -102,7 +114,7 @@ const Reminders: React.FC = () => {
           onChange={handleInputChange}
         />
         <button onClick={handleSaveReminder} disabled={saving}>
-          {saving ? "Saving..." : "Save Reminder"}
+          {saving ? 'Saving...' : 'Save Reminder'}
         </button>
       </div>
     </div>

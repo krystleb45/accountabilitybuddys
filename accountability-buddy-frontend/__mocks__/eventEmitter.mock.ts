@@ -33,7 +33,9 @@ class MockEventEmitter {
       this.off(event, oneTimeListener);
     };
     this.on(event, oneTimeListener);
-    console.log(`[EventEmitter Mock] One-time listener added for event: ${event}`);
+    console.log(
+      `[EventEmitter Mock] One-time listener added for event: ${event}`
+    );
   }
 
   /**
@@ -67,7 +69,9 @@ class MockEventEmitter {
   removeAllListeners(event?: string): void {
     if (event) {
       delete this.events[event];
-      console.log(`[EventEmitter Mock] All listeners removed for event: ${event}`);
+      console.log(
+        `[EventEmitter Mock] All listeners removed for event: ${event}`
+      );
     } else {
       this.events = {};
       console.log(`[EventEmitter Mock] All listeners removed for all events`);

@@ -15,7 +15,7 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-/** 
+/**
  * Button Component
  * A reusable button component with primary and secondary styles, customizable size, and colors.
  */
@@ -27,12 +27,16 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   // Determine the button's mode based on the primary prop
-  const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
+  const mode = primary
+    ? 'storybook-button--primary'
+    : 'storybook-button--secondary';
 
   return (
     <button
       type="button"
-      className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
+      className={['storybook-button', `storybook-button--${size}`, mode].join(
+        ' '
+      )}
       style={{ backgroundColor }} // Inline style for dynamic background color
       {...props}
     >

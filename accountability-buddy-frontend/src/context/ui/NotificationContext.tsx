@@ -1,12 +1,18 @@
 // NotificationContext.tsx
 
-import React, { createContext, useState, useContext, useCallback, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useCallback,
+  ReactNode,
+} from 'react';
 
 // Define the shape of a notification
 interface Notification {
   id: number;
   message: string;
-  type: "info" | "success" | "error" | "warning";
+  type: 'info' | 'success' | 'error' | 'warning';
 }
 
 // Define the shape of the NotificationContext
@@ -14,7 +20,7 @@ interface NotificationContextType {
   notifications: Notification[];
   addNotification: (
     message: string,
-    type?: "info" | "success" | "error" | "warning",
+    type?: 'info' | 'success' | 'error' | 'warning',
     duration?: number
   ) => void;
   removeNotification: (id: number) => void;
@@ -22,13 +28,17 @@ interface NotificationContextType {
 }
 
 // Create Notification Context with the appropriate type
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+const NotificationContext = createContext<NotificationContextType | undefined>(
+  undefined
+);
 
 // Custom hook to use NotificationContext
 export const useNotification = (): NotificationContextType => {
   const context = useContext(NotificationContext);
   if (!context) {
-    throw new Error("useNotification must be used within a NotificationProvider");
+    throw new Error(
+      'useNotification must be used within a NotificationProvider'
+    );
   }
   return context;
 };
@@ -39,14 +49,16 @@ interface NotificationProviderProps {
 }
 
 // Notification Context Provider
-export const NotificationProvider: React.FC<NotificationProviderProps> = ({ children }) => {
+export const NotificationProvider: React.FC<NotificationProviderProps> = ({
+  children,
+}) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   // Add a new notification with message, type, and duration
   const addNotification = useCallback(
     (
       message: string,
-      type: "info" | "success" | "error" | "warning" = "info",
+      type: 'info' | 'success' | 'error' | 'warning' = 'info',
       duration: number = 5000
     ) => {
       const id = Date.now();
@@ -74,7 +86,12 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
 
   return (
     <NotificationContext.Provider
-      value={{ notifications, addNotification, removeNotification, clearAllNotifications }}
+      value={{
+        notifications,
+        addNotification,
+        removeNotification,
+        clearAllNotifications,
+      }}
     >
       {children}
       <div className="notification-container">
@@ -132,9 +149,9 @@ const styles = `
 `;
 
 // Inject styles into the document
-if (typeof document !== "undefined") {
-  const styleSheet = document.createElement("style");
-  styleSheet.type = "text/css";
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.type = 'text/css';
   styleSheet.innerText = styles;
   document.head.appendChild(styleSheet);
 }

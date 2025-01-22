@@ -1,6 +1,12 @@
 // MilitarySupportContext.tsx
 
-import React, { createContext, useState, useCallback, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useCallback,
+  useContext,
+  ReactNode,
+} from 'react';
 
 // Define the shape of a Military Resource
 interface MilitaryResource {
@@ -15,17 +21,24 @@ interface MilitarySupportContextType {
   resources: MilitaryResource[];
   addResource: (resource: MilitaryResource) => void;
   removeResource: (id: string) => void;
-  updateResource: (id: string, updatedResource: Partial<MilitaryResource>) => void;
+  updateResource: (
+    id: string,
+    updatedResource: Partial<MilitaryResource>
+  ) => void;
 }
 
 // Create MilitarySupportContext with the appropriate type
-const MilitarySupportContext = createContext<MilitarySupportContextType | undefined>(undefined);
+const MilitarySupportContext = createContext<
+  MilitarySupportContextType | undefined
+>(undefined);
 
 // Custom hook to use MilitarySupportContext
 export const useMilitarySupport = (): MilitarySupportContextType => {
   const context = useContext(MilitarySupportContext);
   if (!context) {
-    throw new Error("useMilitarySupport must be used within a MilitarySupportProvider");
+    throw new Error(
+      'useMilitarySupport must be used within a MilitarySupportProvider'
+    );
   }
   return context;
 };
@@ -36,7 +49,9 @@ interface MilitarySupportProviderProps {
 }
 
 // MilitarySupportProvider component
-export const MilitarySupportProvider: React.FC<MilitarySupportProviderProps> = ({ children }) => {
+export const MilitarySupportProvider: React.FC<
+  MilitarySupportProviderProps
+> = ({ children }) => {
   const [resources, setResources] = useState<MilitaryResource[]>([]);
 
   // Add a new resource

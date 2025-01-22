@@ -1,6 +1,6 @@
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
-import "./Header.css"; // Optional CSS for styling
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import './Header.css'; // Optional CSS for styling
 
 interface HeaderProps {
   isAuthenticated: boolean;
@@ -25,7 +25,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
           <li>
             <NavLink
               to="/"
-              className={({ isActive }) => (isActive ? "active" : "")}
+              className={({ isActive }) => (isActive ? 'active' : '')}
               aria-label="Home"
             >
               Home
@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
           <li>
             <NavLink
               to="/goals"
-              className={({ isActive }) => (isActive ? "active" : "")}
+              className={({ isActive }) => (isActive ? 'active' : '')}
               aria-label="Goals"
             >
               Goals
@@ -43,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
           <li>
             <NavLink
               to="/collaborations"
-              className={({ isActive }) => (isActive ? "active" : "")}
+              className={({ isActive }) => (isActive ? 'active' : '')}
               aria-label="Collaborations"
             >
               Collaborations
@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
               <li>
                 <NavLink
                   to="/profile"
-                  className={({ isActive }) => (isActive ? "active" : "")}
+                  className={({ isActive }) => (isActive ? 'active' : '')}
                   aria-label="Profile"
                 >
                   Profile
@@ -75,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
               <li>
                 <NavLink
                   to="/signup"
-                  className={({ isActive }) => (isActive ? "active" : "")}
+                  className={({ isActive }) => (isActive ? 'active' : '')}
                   aria-label="Sign up"
                 >
                   Sign Up
@@ -84,7 +84,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
               <li>
                 <NavLink
                   to="/login"
-                  className={({ isActive }) => (isActive ? "active" : "")}
+                  className={({ isActive }) => (isActive ? 'active' : '')}
                   aria-label="Login"
                 >
                   Login

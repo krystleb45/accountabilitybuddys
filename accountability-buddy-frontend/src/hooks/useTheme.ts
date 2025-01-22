@@ -1,28 +1,28 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 
 /**
  * Type definition for theme.
  */
-type ThemeType = "light" | "dark" | "highContrast";
+type ThemeType = 'light' | 'dark' | 'highContrast';
 
 /**
  * Theme configuration object defining CSS variables for each theme.
  */
 const themes: Record<ThemeType, Record<string, string>> = {
   light: {
-    "--background-color": "#ffffff",
-    "--text-color": "#000000",
-    "--primary-color": "#1976d2",
+    '--background-color': '#ffffff',
+    '--text-color': '#000000',
+    '--primary-color': '#1976d2',
   },
   dark: {
-    "--background-color": "#121212",
-    "--text-color": "#ffffff",
-    "--primary-color": "#90caf9",
+    '--background-color': '#121212',
+    '--text-color': '#ffffff',
+    '--primary-color': '#90caf9',
   },
   highContrast: {
-    "--background-color": "#000000",
-    "--text-color": "#ffcc00",
-    "--primary-color": "#ff3300",
+    '--background-color': '#000000',
+    '--text-color': '#ffcc00',
+    '--primary-color': '#ff3300',
   },
 };
 
@@ -34,13 +34,15 @@ const themes: Record<ThemeType, Record<string, string>> = {
  */
 const useTheme = () => {
   const [theme, setTheme] = useState<ThemeType>(() => {
-    const savedTheme = localStorage.getItem("theme") as ThemeType;
+    const savedTheme = localStorage.getItem('theme') as ThemeType;
     if (savedTheme && Object.keys(themes).includes(savedTheme)) {
       return savedTheme;
     }
 
-    const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    return prefersDarkMode ? "dark" : "light";
+    const prefersDarkMode = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
+    return prefersDarkMode ? 'dark' : 'light';
   });
 
   // Apply CSS variables for the selected theme
@@ -55,8 +57,12 @@ const useTheme = () => {
   const toggleTheme = useCallback(() => {
     setTheme((prevTheme) => {
       const newTheme: ThemeType =
-        prevTheme === "light" ? "dark" : prevTheme === "dark" ? "highContrast" : "light";
-      localStorage.setItem("theme", newTheme);
+        prevTheme === 'light'
+          ? 'dark'
+          : prevTheme === 'dark'
+            ? 'highContrast'
+            : 'light';
+      localStorage.setItem('theme', newTheme);
       applyTheme(newTheme);
       return newTheme;
     });
@@ -67,18 +73,18 @@ const useTheme = () => {
     applyTheme(theme);
 
     const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem("theme")) {
-        const systemTheme: ThemeType = e.matches ? "dark" : "light";
+      if (!localStorage.getItem('theme')) {
+        const systemTheme: ThemeType = e.matches ? 'dark' : 'light';
         setTheme(systemTheme);
         applyTheme(systemTheme);
       }
     };
 
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    mediaQuery.addEventListener("change", handleSystemThemeChange);
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
 
     return () => {
-      mediaQuery.removeEventListener("change", handleSystemThemeChange);
+      mediaQuery.removeEventListener('change', handleSystemThemeChange);
     };
   }, [theme, applyTheme]);
 

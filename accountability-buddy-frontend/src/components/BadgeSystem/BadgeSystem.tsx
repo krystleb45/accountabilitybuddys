@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./BadgeSystem.module.css"; // Ensure this file exists
+import React from 'react';
+import styles from './BadgeSystem.module.css'; // Ensure this file exists
 
 // Define the Badge interface
 interface Badge {
@@ -26,13 +26,21 @@ const BadgeSystem: React.FC<BadgeSystemProps> = ({ badges, user }) => {
     <div className={styles.badgeSystemContainer} data-testid="badge-system">
       <h2 className={styles.userGreeting}>Badges for {user.name}</h2>
       {badges.length === 0 ? (
-        <p className={styles.emptyMessage} role="alert" data-testid="empty-message">
+        <p
+          className={styles.emptyMessage}
+          role="alert"
+          data-testid="empty-message"
+        >
           No badges available.
         </p>
       ) : (
         <ul className={styles.badgeList} aria-label="List of badges">
           {badges.map((badge) => (
-            <li key={badge.id} className={styles.badgeItem} data-testid="badge-item">
+            <li
+              key={badge.id}
+              className={styles.badgeItem}
+              data-testid="badge-item"
+            >
               <img
                 src={badge.imageUrl}
                 alt={badge.description}

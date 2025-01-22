@@ -1,18 +1,18 @@
-"use client"; // Ensure it's a Client Component
+'use client'; // Ensure it's a Client Component
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 const FeedbackPage: React.FC = () => {
-  const [name, setName] = useState("");
-  const [feedback, setFeedback] = useState("");
+  const [name, setName] = useState('');
+  const [feedback, setFeedback] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Simulate API submission (replace with actual API logic)
     setSubmitted(true);
-    setName("");
-    setFeedback("");
+    setName('');
+    setFeedback('');
   };
 
   return (
@@ -32,7 +32,10 @@ const FeedbackPage: React.FC = () => {
           </div>
         )}
         <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
+          <label
+            htmlFor="name"
+            className="block text-gray-700 font-medium mb-2"
+          >
             Name
           </label>
           <input

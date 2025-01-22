@@ -2,16 +2,16 @@
 
 // Route Constants
 const ROUTES = {
-  HOME: "/",
-  LOGIN: "/login",
-  LOGOUT: "/logout",
-  REGISTER: "/register",
-  DASHBOARD: "/dashboard",
-  SETTINGS: "/settings",
-  PROFILE: "/profile",
-  TASKS: "/tasks",
-  TASK_DETAILS: "/tasks/:id",
-  NOT_FOUND: "*",
+  HOME: '/',
+  LOGIN: '/login',
+  LOGOUT: '/logout',
+  REGISTER: '/register',
+  DASHBOARD: '/dashboard',
+  SETTINGS: '/settings',
+  PROFILE: '/profile',
+  TASKS: '/tasks',
+  TASK_DETAILS: '/tasks/:id',
+  NOT_FOUND: '*',
 };
 
 interface RoutingConfig {
@@ -25,7 +25,10 @@ interface RoutingConfig {
   isProtectedRoute: (route: string) => boolean;
   getRoleBasedRoutes: (role: string) => string[];
   getRedirectRoute: (isAuthenticated: boolean) => string;
-  generateDynamicRoute: (route: string, params?: Record<string, string | number>) => string;
+  generateDynamicRoute: (
+    route: string,
+    params?: Record<string, string | number>
+  ) => string;
 }
 
 // Routing Configuration
@@ -61,7 +64,7 @@ const routingConfig: RoutingConfig = {
 
   // Function to get allowed routes for a specific role
   getRoleBasedRoutes: function (role: string): string[] {
-    return this.roleBasedRoutes[role] || this.roleBasedRoutes["guest"];
+    return this.roleBasedRoutes[role] || this.roleBasedRoutes['guest'];
   },
 
   // Function to get the redirect route after login
@@ -78,7 +81,10 @@ const routingConfig: RoutingConfig = {
   ): string {
     let dynamicRoute = route;
     for (const [key, value] of Object.entries(params)) {
-      dynamicRoute = dynamicRoute.replace(`:${key}`, encodeURIComponent(value.toString()));
+      dynamicRoute = dynamicRoute.replace(
+        `:${key}`,
+        encodeURIComponent(value.toString())
+      );
     }
     return dynamicRoute;
   },

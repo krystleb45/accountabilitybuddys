@@ -10,7 +10,11 @@
 export const formatDate = (
   date: string | Date | number,
   locale: string = 'en-US',
-  options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
+  options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }
 ): string => {
   const parsedDate = new Date(date);
   if (isNaN(parsedDate.getTime())) {

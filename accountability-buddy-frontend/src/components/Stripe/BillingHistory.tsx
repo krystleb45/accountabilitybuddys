@@ -4,7 +4,9 @@ import { BillingHistoryItem } from './types'; // Type definitions
 import styles from './Stripe.module.css'; // CSS module for styling
 
 const BillingHistory: React.FC = () => {
-  const [billingHistory, setBillingHistory] = useState<BillingHistoryItem[]>([]);
+  const [billingHistory, setBillingHistory] = useState<BillingHistoryItem[]>(
+    []
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 

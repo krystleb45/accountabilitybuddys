@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
-import { LoadingSpinner } from "../components/LoadingSpinner"; // Ensure the correct path to LoadingSpinner
+import React, { Suspense } from 'react';
+import { LoadingSpinner } from '../components/LoadingSpinner'; // Ensure the correct path to LoadingSpinner
 
 interface LazyRouteLoaderProps {
   component: React.LazyExoticComponent<React.FC>;
@@ -13,7 +13,9 @@ interface LazyRouteLoaderProps {
  * @param {LazyRouteLoaderProps} props - The props containing the lazy-loaded component.
  * @returns {JSX.Element} - The component wrapped with a Suspense fallback.
  */
-const LazyRouteLoader: React.FC<LazyRouteLoaderProps> = ({ component: Component }) => {
+const LazyRouteLoader: React.FC<LazyRouteLoaderProps> = ({
+  component: Component,
+}) => {
   return (
     <Suspense fallback={<LoadingSpinner size={50} color="#007bff" overlay />}>
       <Component />

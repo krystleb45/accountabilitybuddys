@@ -1,8 +1,8 @@
-import ROUTES from "./routes";
-import Home from "src/app/homepage/page";
-import Profile from "src/app/profile/page";
-import Login from "src/app/login/page";
-import Settings from "src/app/settings/page"; // Example of additional route import
+import ROUTES from './routes';
+import Home from 'src/app/homepage/page';
+import Profile from 'src/app/profile/page';
+import Login from 'src/app/login/page';
+import Settings from 'src/app/settings/page'; // Example of additional route import
 
 export interface RouteDefinition {
   path: string;
@@ -20,8 +20,9 @@ export const ROUTE_DEFINITIONS: RouteDefinition[] = [
     element: <Home />,
     isPrivate: false,
     metadata: {
-      title: "Home | Accountability Buddy",
-      description: "Welcome to Accountability Buddy, your tool for tracking progress and achieving goals."
+      title: 'Home | Accountability Buddy',
+      description:
+        'Welcome to Accountability Buddy, your tool for tracking progress and achieving goals.',
     },
   },
   {
@@ -29,8 +30,8 @@ export const ROUTE_DEFINITIONS: RouteDefinition[] = [
     element: <Profile />,
     isPrivate: true,
     metadata: {
-      title: "Profile | Accountability Buddy",
-      description: "View and edit your profile information."
+      title: 'Profile | Accountability Buddy',
+      description: 'View and edit your profile information.',
     },
   },
   {
@@ -38,8 +39,8 @@ export const ROUTE_DEFINITIONS: RouteDefinition[] = [
     element: <Login />,
     isPrivate: false,
     metadata: {
-      title: "Login | Accountability Buddy",
-      description: "Log in to access your account and track your progress."
+      title: 'Login | Accountability Buddy',
+      description: 'Log in to access your account and track your progress.',
     },
   },
   {
@@ -47,8 +48,8 @@ export const ROUTE_DEFINITIONS: RouteDefinition[] = [
     element: <Settings />,
     isPrivate: true,
     metadata: {
-      title: "Settings | Accountability Buddy",
-      description: "Manage your account settings and preferences."
+      title: 'Settings | Accountability Buddy',
+      description: 'Manage your account settings and preferences.',
     },
   },
 ];

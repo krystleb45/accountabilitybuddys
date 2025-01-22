@@ -11,51 +11,53 @@ interface RouteDetails {
 
 export const ROUTES: Record<string, RouteDetails> = {
   HOME: {
-    path: "/",
+    path: '/',
     requiresAuth: false,
     metadata: {
-      title: "Home | Accountability Buddy",
-      description: "Welcome to Accountability Buddy, your tool for tracking progress and achieving goals."
+      title: 'Home | Accountability Buddy',
+      description:
+        'Welcome to Accountability Buddy, your tool for tracking progress and achieving goals.',
     },
   },
   LOGIN: {
-    path: "/login",
+    path: '/login',
     requiresAuth: false,
     metadata: {
-      title: "Login | Accountability Buddy",
-      description: "Log in to access your account and track your progress."
+      title: 'Login | Accountability Buddy',
+      description: 'Log in to access your account and track your progress.',
     },
   },
   REGISTER: {
-    path: "/register",
+    path: '/register',
     requiresAuth: false,
     metadata: {
-      title: "Register | Accountability Buddy",
-      description: "Create an account to start tracking your goals today."
+      title: 'Register | Accountability Buddy',
+      description: 'Create an account to start tracking your goals today.',
     },
   },
   DASHBOARD: {
-    path: "/dashboard",
+    path: '/dashboard',
     requiresAuth: true,
     metadata: {
-      title: "Dashboard | Accountability Buddy",
-      description: "View your progress, goals, and personalized recommendations."
+      title: 'Dashboard | Accountability Buddy',
+      description:
+        'View your progress, goals, and personalized recommendations.',
     },
   },
   PROFILE: {
-    path: "/profile",
+    path: '/profile',
     requiresAuth: true,
     metadata: {
-      title: "Profile | Accountability Buddy",
-      description: "View and edit your personal profile information."
+      title: 'Profile | Accountability Buddy',
+      description: 'View and edit your personal profile information.',
     },
   },
   SETTINGS: {
-    path: "/settings",
+    path: '/settings',
     requiresAuth: true,
     metadata: {
-      title: "Settings | Accountability Buddy",
-      description: "Manage your account settings and preferences."
+      title: 'Settings | Accountability Buddy',
+      description: 'Manage your account settings and preferences.',
     },
   },
 };

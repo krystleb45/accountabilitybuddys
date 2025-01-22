@@ -1,12 +1,15 @@
-import React from "react";
-import "./SidebarFooter.module.css";
+import React from 'react';
+import './SidebarFooter.module.css';
 
 interface SidebarFooterProps {
   onThemeToggle?: () => void;
   onLogout?: () => void;
 }
 
-const SidebarFooter: React.FC<SidebarFooterProps> = ({ onThemeToggle, onLogout }) => {
+const SidebarFooter: React.FC<SidebarFooterProps> = ({
+  onThemeToggle,
+  onLogout,
+}) => {
   return (
     <div className="sidebar-footer">
       <button

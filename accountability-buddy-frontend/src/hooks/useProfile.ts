@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
-import axios from "src/config/axiosConfig";
-import { User } from "@/types/User.types";
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'src/config/axiosConfig';
+import { User } from '@/types/User.types';
 
 /**
  * Custom hook to manage user profiles.
@@ -19,10 +19,10 @@ const useProfile = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get<User>("/user/profile");
+      const response = await axios.get<User>('/user/profile');
       setProfile(response.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch profile.");
+      setError(err instanceof Error ? err.message : 'Failed to fetch profile.');
     } finally {
       setLoading(false);
     }
@@ -33,10 +33,12 @@ const useProfile = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.put<User>("/user/profile", updatedProfile);
+      const response = await axios.put<User>('/user/profile', updatedProfile);
       setProfile(response.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update profile.");
+      setError(
+        err instanceof Error ? err.message : 'Failed to update profile.'
+      );
     } finally {
       setLoading(false);
     }

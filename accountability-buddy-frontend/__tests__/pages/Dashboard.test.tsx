@@ -4,7 +4,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom'; // For extra matchers like toBeInTheDocument
 import Dashboard from '../../src/app/dashboard/page'; // Adjust the import path based on your structure
-import { fetchDashboardData } from '../../src/services/apiService'
+import { fetchDashboardData } from '../../src/services/apiService';
 
 // Mock Data
 const mockFetchData = {
@@ -42,9 +42,11 @@ describe('Dashboard Component', () => {
 
   it('handles errors gracefully', async () => {
     // Mock an error response
-    jest.spyOn(require('../../services/apiService'), 'fetchDashboardData').mockImplementationOnce(() =>
-      Promise.reject(new Error('Failed to fetch data'))
-    );
+    jest
+      .spyOn(require('../../services/apiService'), 'fetchDashboardData')
+      .mockImplementationOnce(() =>
+        Promise.reject(new Error('Failed to fetch data'))
+      );
 
     render(<Dashboard />);
 

@@ -50,7 +50,9 @@
   padding: 10px 20px;
   border: 2px solid #3178c6; /* Matches the info notification */
   border-radius: 5px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .back-home-link:hover {

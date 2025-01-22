@@ -1,16 +1,16 @@
-"use client"; // Mark as Client Component
+'use client'; // Mark as Client Component
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 const SettingsPage: React.FC = () => {
-  const [username, setUsername] = useState("John Doe");
-  const [email, setEmail] = useState("johndoe@example.com");
-  const [theme, setTheme] = useState("light");
+  const [username, setUsername] = useState('John Doe');
+  const [email, setEmail] = useState('johndoe@example.com');
+  const [theme, setTheme] = useState('light');
   const [notifications, setNotifications] = useState(true);
 
   const handleSave = () => {
-    console.log("Settings Saved:", { username, email, theme, notifications });
-    alert("Settings saved successfully!");
+    console.log('Settings Saved:', { username, email, theme, notifications });
+    alert('Settings saved successfully!');
   };
 
   return (
@@ -22,7 +22,9 @@ const SettingsPage: React.FC = () => {
 
       <div className="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-1">Username</label>
+          <label className="block text-gray-700 font-medium mb-1">
+            Username
+          </label>
           <input
             type="text"
             value={username}
@@ -54,15 +56,17 @@ const SettingsPage: React.FC = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-1">Notifications</label>
+          <label className="block text-gray-700 font-medium mb-1">
+            Notifications
+          </label>
           <div className="flex items-center">
             <button
               className={`p-3 rounded-lg ${
-                notifications ? "bg-blue-600 text-white" : "bg-gray-300"
+                notifications ? 'bg-blue-600 text-white' : 'bg-gray-300'
               }`}
               onClick={() => setNotifications(!notifications)}
             >
-              {notifications ? "Enabled" : "Disabled"}
+              {notifications ? 'Enabled' : 'Disabled'}
             </button>
           </div>
         </div>

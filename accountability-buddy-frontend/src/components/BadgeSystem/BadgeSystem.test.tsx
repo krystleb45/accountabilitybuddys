@@ -4,8 +4,18 @@ import BadgeSystem from './BadgeSystem';
 import { expect } from '@jest/globals';
 
 const mockBadges = [
-  { id: '1', name: 'Achiever', description: 'Awarded for achieving 10 goals', imageUrl: '/images/achiever.png' },
-  { id: '2', name: 'Starter', description: 'Awarded for starting your first goal', imageUrl: '/images/starter.png' },
+  {
+    id: '1',
+    name: 'Achiever',
+    description: 'Awarded for achieving 10 goals',
+    imageUrl: '/images/achiever.png',
+  },
+  {
+    id: '2',
+    name: 'Starter',
+    description: 'Awarded for starting your first goal',
+    imageUrl: '/images/starter.png',
+  },
 ];
 
 test('renders badges correctly', () => {

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import "./ActivityDetails.css"; // Optional CSS for styling
+import React, { useEffect, useState } from 'react';
+import './ActivityDetails.css'; // Optional CSS for styling
 
 interface Activity {
   id: string;
@@ -8,7 +8,7 @@ interface Activity {
   createdAt: string;
   updatedAt?: string;
   tags?: string[];
-  status?: "pending" | "in-progress" | "completed";
+  status?: 'pending' | 'in-progress' | 'completed';
 }
 
 interface ActivityDetailsProps {
@@ -16,7 +16,10 @@ interface ActivityDetailsProps {
   fetchActivity: (id: string) => Promise<Activity>; // Function to fetch activity details
 }
 
-const ActivityDetails: React.FC<ActivityDetailsProps> = ({ activityId, fetchActivity }) => {
+const ActivityDetails: React.FC<ActivityDetailsProps> = ({
+  activityId,
+  fetchActivity,
+}) => {
   const [activity, setActivity] = useState<Activity | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,8 +31,8 @@ const ActivityDetails: React.FC<ActivityDetailsProps> = ({ activityId, fetchActi
         const fetchedActivity = await fetchActivity(activityId);
         setActivity(fetchedActivity);
       } catch (err) {
-        console.error("Error fetching activity details:", err);
-        setError("Failed to load activity details. Please try again.");
+        console.error('Error fetching activity details:', err);
+        setError('Failed to load activity details. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -39,7 +42,9 @@ const ActivityDetails: React.FC<ActivityDetailsProps> = ({ activityId, fetchActi
   }, [activityId, fetchActivity]);
 
   if (loading) {
-    return <p className="activity-details-loading">Loading activity details...</p>;
+    return (
+      <p className="activity-details-loading">Loading activity details...</p>
+    );
   }
 
   if (error) {
@@ -55,11 +60,13 @@ const ActivityDetails: React.FC<ActivityDetailsProps> = ({ activityId, fetchActi
       <h2 className="activity-title">{activity.title}</h2>
       <p className="activity-description">{activity.description}</p>
       <p className="activity-meta">
-        Created At: <strong>{new Date(activity.createdAt).toLocaleDateString()}</strong>
+        Created At:{' '}
+        <strong>{new Date(activity.createdAt).toLocaleDateString()}</strong>
       </p>
       {activity.updatedAt && (
         <p className="activity-meta">
-          Last Updated: <strong>{new Date(activity.updatedAt).toLocaleDateString()}</strong>
+          Last Updated:{' '}
+          <strong>{new Date(activity.updatedAt).toLocaleDateString()}</strong>
         </p>
       )}
       {activity.tags && activity.tags.length > 0 && (

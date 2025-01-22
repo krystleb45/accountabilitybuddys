@@ -3,13 +3,11 @@ import '@testing-library/jest-dom';
 // src/types/tests/setupTests.tsx
 import './matchers/customMatchers';
 
-
 // Enable Fetch Mock for API requests
 import fetchMock from 'jest-fetch-mock';
 fetchMock.enableMocks();
 
 //console.log("setupTests.tsx is loaded");
-
 
 // Polyfill: MutationObserver
 global.MutationObserver = class {
@@ -27,7 +25,10 @@ global.IntersectionObserver = class IntersectionObserver {
   rootMargin: string = '';
   thresholds: ReadonlyArray<number> = [];
 
-  constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {}
+  constructor(
+    callback: IntersectionObserverCallback,
+    options?: IntersectionObserverInit
+  ) {}
 
   disconnect() {}
 

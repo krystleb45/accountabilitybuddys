@@ -27,23 +27,23 @@ interface ApiEndpoints {
 
 const API_ENDPOINTS: ApiEndpoints = {
   AUTH: {
-    LOGIN: "/auth/login",
-    REGISTER: "/auth/register",
-    LOGOUT: "/auth/logout",
-    REFRESH_TOKEN: "/auth/refresh-token",
+    LOGIN: '/auth/login',
+    REGISTER: '/auth/register',
+    LOGOUT: '/auth/logout',
+    REFRESH_TOKEN: '/auth/refresh-token',
   },
   USER: {
-    GET_USER: "/user",
-    UPDATE_USER: "/user/update",
-    DELETE_USER: "/user/delete",
-    CHANGE_PASSWORD: "/user/change-password",
+    GET_USER: '/user',
+    UPDATE_USER: '/user/update',
+    DELETE_USER: '/user/delete',
+    CHANGE_PASSWORD: '/user/change-password',
   },
   TASKS: {
-    GET_TASKS: "/tasks",
-    CREATE_TASK: "/tasks/create",
-    UPDATE_TASK: "/tasks/update",
-    DELETE_TASK: "/tasks/delete",
-    GET_TASK_BY_ID: "/tasks/:taskId",
+    GET_TASKS: '/tasks',
+    CREATE_TASK: '/tasks/create',
+    UPDATE_TASK: '/tasks/update',
+    DELETE_TASK: '/tasks/delete',
+    GET_TASK_BY_ID: '/tasks/:taskId',
   },
 };
 
@@ -55,10 +55,10 @@ const getApiUrl = (
 ): string => {
   try {
     if (!endpoint) {
-      throw new Error("Endpoint is undefined or empty");
+      throw new Error('Endpoint is undefined or empty');
     }
 
-    let url = `${process.env.REACT_APP_API_BASE_URL || "http://localhost:5000"}${endpoint}`;
+    let url = `${process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000'}${endpoint}`;
 
     // Replace placeholders in the URL (e.g., ':taskId')
     for (const [key, value] of Object.entries(params)) {
@@ -67,10 +67,13 @@ const getApiUrl = (
 
     // Append query parameters to the URL
     const queryString = new URLSearchParams(
-      Object.entries(queryParams).reduce((acc, [key, value]) => {
-        acc[key] = value.toString();
-        return acc;
-      }, {} as Record<string, string>)
+      Object.entries(queryParams).reduce(
+        (acc, [key, value]) => {
+          acc[key] = value.toString();
+          return acc;
+        },
+        {} as Record<string, string>
+      )
     ).toString();
 
     if (queryString) {
@@ -79,8 +82,8 @@ const getApiUrl = (
 
     return url;
   } catch (error) {
-    console.error("Error generating API URL:", error);
-    return "";
+    console.error('Error generating API URL:', error);
+    return '';
   }
 };
 

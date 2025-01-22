@@ -1,5 +1,5 @@
-import React from "react";
-import "./PremiumFeatureSettings.module.css";
+import React from 'react';
+import './PremiumFeatureSettings.module.css';
 
 interface PremiumFeatureSettingsProps {
   features: {
@@ -16,13 +16,17 @@ const PremiumFeatureSettings: React.FC<PremiumFeatureSettingsProps> = ({
   onToggleFeature,
 }) => {
   return (
-    <div className="premium-feature-settings" role="region" aria-labelledby="premium-feature-settings-header">
+    <div
+      className="premium-feature-settings"
+      role="region"
+      aria-labelledby="premium-feature-settings-header"
+    >
       <h2 id="premium-feature-settings-header">Premium Feature Settings</h2>
       <ul className="feature-list">
         {features.map((feature) => (
           <li
             key={feature.id}
-            className={`feature-item ${feature.isActive ? "active" : "inactive"}`}
+            className={`feature-item ${feature.isActive ? 'active' : 'inactive'}`}
           >
             <div className="feature-details">
               <h3 className="feature-name">{feature.name}</h3>
@@ -31,7 +35,7 @@ const PremiumFeatureSettings: React.FC<PremiumFeatureSettingsProps> = ({
             <button
               onClick={() => onToggleFeature(feature.id)}
               className={
-                feature.isActive ? "deactivate-button" : "activate-button"
+                feature.isActive ? 'deactivate-button' : 'activate-button'
               }
               aria-label={
                 feature.isActive
@@ -39,7 +43,7 @@ const PremiumFeatureSettings: React.FC<PremiumFeatureSettingsProps> = ({
                   : `Activate ${feature.name}`
               }
             >
-              {feature.isActive ? "Deactivate" : "Activate"}
+              {feature.isActive ? 'Deactivate' : 'Activate'}
             </button>
           </li>
         ))}

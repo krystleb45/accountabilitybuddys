@@ -1,120 +1,121 @@
 /* General layout styles */
 .layout-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Ensure the layout covers the full viewport height */
-    background-color: var(--layout-background, #f9f9f9);
-    color: var(--text-color, #333);
-  }
-  
-  /* Header styles */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure the layout covers the full viewport height */
+  background-color: var(--layout-background, #f9f9f9);
+  color: var(--text-color, #333);
+}
+
+/* Header styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--header-background, #ffffff);
+  border-bottom: 1px solid var(--header-border, #e0e0e0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  z-index: 1000; /* Ensure it stays above other elements */
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-image {
+  height: 40px;
+  width: auto;
+}
+
+.nav {
+  display: flex;
+}
+
+.nav-list {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-list li {
+  display: flex;
+  align-items: center;
+}
+
+.nav-list a {
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--nav-link-color, #333);
+  transition:
+    color 0.3s,
+    border-bottom 0.3s;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-list a:hover,
+.nav-list a.active {
+  color: var(--primary-color, #007bff);
+  border-bottom: 2px solid var(--primary-color, #007bff);
+}
+
+/* Logout button styles */
+.logout-button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--danger-color, #dc3545);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.logout-button:hover {
+  color: var(--hover-danger-color, #a71d2a);
+}
+
+/* Main content area */
+.main-content {
+  flex: 1; /* Ensure the main content takes up the remaining space */
+  padding: 2rem;
+}
+
+/* Footer styles */
+.footer {
+  background-color: var(--footer-background, #ffffff);
+  color: var(--footer-text-color, #666);
+  padding: 1rem 2rem;
+  text-align: center;
+  border-top: 1px solid var(--footer-border, #e0e0e0);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
   .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: var(--header-background, #ffffff);
-    border-bottom: 1px solid var(--header-border, #e0e0e0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    z-index: 1000; /* Ensure it stays above other elements */
+    padding: 1rem;
   }
-  
-  .logo {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo-image {
-    height: 40px;
-    width: auto;
-  }
-  
-  .nav {
-    display: flex;
-  }
-  
+
   .nav-list {
-    display: flex;
-    gap: 1.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    gap: 1rem;
   }
-  
-  .nav-list li {
-    display: flex;
-    align-items: center;
-  }
-  
+
   .nav-list a {
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--nav-link-color, #333);
-    transition: color 0.3s, border-bottom 0.3s;
-    border-bottom: 2px solid transparent;
+    font-size: 0.9rem;
   }
-  
-  .nav-list a:hover,
-  .nav-list a.active {
-    color: var(--primary-color, #007bff);
-    border-bottom: 2px solid var(--primary-color, #007bff);
-  }
-  
-  /* Logout button styles */
+
   .logout-button {
-    background: none;
-    border: none;
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--danger-color, #dc3545);
-    cursor: pointer;
-    transition: color 0.3s ease;
+    font-size: 0.9rem;
   }
-  
-  .logout-button:hover {
-    color: var(--hover-danger-color, #a71d2a);
-  }
-  
-  /* Main content area */
+
   .main-content {
-    flex: 1; /* Ensure the main content takes up the remaining space */
-    padding: 2rem;
+    padding: 1.5rem;
   }
-  
-  /* Footer styles */
+
   .footer {
-    background-color: var(--footer-background, #ffffff);
-    color: var(--footer-text-color, #666);
-    padding: 1rem 2rem;
-    text-align: center;
-    border-top: 1px solid var(--footer-border, #e0e0e0);
+    padding: 1rem;
   }
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .header {
-      padding: 1rem;
-    }
-  
-    .nav-list {
-      gap: 1rem;
-    }
-  
-    .nav-list a {
-      font-size: 0.9rem;
-    }
-  
-    .logout-button {
-      font-size: 0.9rem;
-    }
-  
-    .main-content {
-      padding: 1.5rem;
-    }
-  
-    .footer {
-      padding: 1rem;
-    }
-  }
-  
+}

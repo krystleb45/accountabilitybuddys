@@ -1,6 +1,6 @@
-"use client"; // Ensure it's a Client Component
+'use client'; // Ensure it's a Client Component
 
-import React from "react";
+import React from 'react';
 
 type ActivityDetailsProps = {
   activity: {
@@ -26,17 +26,19 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({ activity }) => {
         {/* Main Content */}
         <main className="text-gray-700">
           <p className="mb-4">
-            <strong>Created On:</strong> {new Date(activity.createdAt).toLocaleDateString()}
+            <strong>Created On:</strong>{' '}
+            {new Date(activity.createdAt).toLocaleDateString()}
           </p>
           <p>
-            <strong>Status:</strong>{" "}
-            {activity.completed ? "Completed" : "In Progress"}
+            <strong>Status:</strong>{' '}
+            {activity.completed ? 'Completed' : 'In Progress'}
           </p>
         </main>
 
         {/* Footer */}
         <footer className="mt-12 text-center text-gray-600">
-          &copy; {new Date().getFullYear()} Accountability Buddy. All rights reserved.
+          &copy; {new Date().getFullYear()} Accountability Buddy. All rights
+          reserved.
         </footer>
       </div>
     </div>

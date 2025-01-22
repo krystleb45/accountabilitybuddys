@@ -1,6 +1,6 @@
-import { useContext, useCallback } from "react";
-import { useUserSubscription } from "../context/data/UserSubscriptionContext";
-import { User, SubscriptionPlan } from "../types/User.types"; // Import centralized User type
+import { useContext, useCallback } from 'react';
+import { useUserSubscription } from '../context/data/UserSubscriptionContext';
+import { User, SubscriptionPlan } from '../types/User.types'; // Import centralized User type
 
 /**
  * Custom hook for accessing and managing user-related data.
@@ -18,10 +18,17 @@ const useUser = (): {
   const context = useUserSubscription();
 
   if (!context) {
-    throw new Error("useUser must be used within a UserSubscriptionProvider");
+    throw new Error('useUser must be used within a UserSubscriptionProvider');
   }
 
-  const { user, subscriptionPlan, isAuthenticated, login, logout, updateSubscription } = context;
+  const {
+    user,
+    subscriptionPlan,
+    isAuthenticated,
+    login,
+    logout,
+    updateSubscription,
+  } = context;
 
   return {
     user,

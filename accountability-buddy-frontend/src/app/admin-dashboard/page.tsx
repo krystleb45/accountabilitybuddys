@@ -1,14 +1,16 @@
-"use client"; // Ensure it's a Client Component
+'use client'; // Ensure it's a Client Component
 
-import React from "react";
-import Link from "next/link";
+import React from 'react';
+import Link from 'next/link';
 
 const AdminDashboardPage: React.FC = () => {
   return (
     <div className="min-h-screen p-6 bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="flex items-center justify-between bg-white p-6 rounded-lg shadow-md mb-6">
-        <h1 className="text-3xl font-extrabold text-gray-800">Admin Dashboard</h1>
+        <h1 className="text-3xl font-extrabold text-gray-800">
+          Admin Dashboard
+        </h1>
         <nav className="flex gap-4">
           <Link href="/dashboard">
             <span className="text-blue-600 font-semibold hover:underline">
@@ -69,7 +71,8 @@ const AdminDashboardPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="mt-12 text-center text-gray-600">
-        &copy; {new Date().getFullYear()} Accountability Buddy. All rights reserved.
+        &copy; {new Date().getFullYear()} Accountability Buddy. All rights
+        reserved.
       </footer>
     </div>
   );

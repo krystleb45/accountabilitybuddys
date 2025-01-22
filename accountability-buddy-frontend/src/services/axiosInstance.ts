@@ -26,36 +26,42 @@ const generateCacheKey = (config: AxiosRequestConfig): string => {
 };
 
 // Request Interceptor: Handle caching for GET requests
-axiosInstance.interceptors.request.use((config) => {
-  if (config.method?.toUpperCase() === 'GET') {
-    const cacheKey = generateCacheKey(config);
-    const cachedEntry = cache.get(cacheKey);
+axiosInstance.interceptors.request.use(
+  (config) => {
+    if (config.method?.toUpperCase() === 'GET') {
+      const cacheKey = generateCacheKey(config);
+      const cachedEntry = cache.get(cacheKey);
 
-    if (cachedEntry && cachedEntry.expiry > Date.now()) {
-      // Don't return the cached response here. Instead, let the request proceed and handle the cached response in the response interceptor.
-      return config;
+      if (cachedEntry && cachedEntry.expiry > Date.now()) {
+        // Don't return the cached response here. Instead, let the request proceed and handle the cached response in the response interceptor.
+        return config;
+      }
     }
+    return config;
+  },
+  (error) => {
+    console.error('Request Interceptor Error:', error);
+    return Promise.reject(error);
   }
-  return config;
-}, (error) => {
-  console.error('Request Interceptor Error:', error);
-  return Promise.reject(error);
-});
+);
 
 // Response Interceptor: Store GET responses in the cache
-axiosInstance.interceptors.response.use((response) => {
-  if (response.config.method?.toUpperCase() === 'GET') {
-    const cacheKey = generateCacheKey(response.config);
-    cache.set(cacheKey, {
-      data: response,
-      expiry: Date.now() + DEFAULT_TTL, // Set expiry based on TTL
-    });
+axiosInstance.interceptors.response.use(
+  (response) => {
+    if (response.config.method?.toUpperCase() === 'GET') {
+      const cacheKey = generateCacheKey(response.config);
+      cache.set(cacheKey, {
+        data: response,
+        expiry: Date.now() + DEFAULT_TTL, // Set expiry based on TTL
+      });
+    }
+    return response;
+  },
+  (error) => {
+    console.error('Response Interceptor Error:', error);
+    return Promise.reject(error);
   }
-  return response;
-}, (error) => {
-  console.error('Response Interceptor Error:', error);
-  return Promise.reject(error);
-});
+);
 
 // Utility function to clear expired cache entries (optional cleanup mechanism)
 const clearExpiredCache = (): void => {

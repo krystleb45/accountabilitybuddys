@@ -1,7 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 import { jwtDecode } from 'jwt-decode'; // Use named import
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://accountabilitybuddys.com/api';
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL || 'https://accountabilitybuddys.com/api';
 
 export interface LoginCredentials {
   email: string;
@@ -76,7 +77,10 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use((config) => {
   const authHeader = getAuthHeader();
   if (authHeader.Authorization) {
-    config.headers = new axios.AxiosHeaders({ ...config.headers, ...authHeader });
+    config.headers = new axios.AxiosHeaders({
+      ...config.headers,
+      ...authHeader,
+    });
   }
   return config;
 });
@@ -87,9 +91,12 @@ const AuthService = {
    * @param {LoginCredentials} credentials - The user's email and password.
    * @returns {Promise<{ token: string; user: UserInfo }>} - The authentication token and user info.
    */
-  login: async (credentials: LoginCredentials): Promise<{ token: string; user: UserInfo }> => {
+  login: async (
+    credentials: LoginCredentials
+  ): Promise<{ token: string; user: UserInfo }> => {
     try {
-      const response: AxiosResponse<{ token: string; user: UserInfo }> = await apiClient.post('/login', credentials);
+      const response: AxiosResponse<{ token: string; user: UserInfo }> =
+        await apiClient.post('/login', credentials);
       setToken(response.data.token);
       return response.data;
     } catch (error) {
@@ -105,7 +112,10 @@ const AuthService = {
    */
   register: async (data: RegisterData): Promise<UserInfo> => {
     try {
-      const response: AxiosResponse<UserInfo> = await apiClient.post('/register', data);
+      const response: AxiosResponse<UserInfo> = await apiClient.post(
+        '/register',
+        data
+      );
       return response.data;
     } catch (error) {
       console.error('Registration error:', error);
@@ -119,7 +129,8 @@ const AuthService = {
    */
   refreshToken: async (): Promise<string> => {
     try {
-      const response: AxiosResponse<{ token: string }> = await apiClient.post('/refresh');
+      const response: AxiosResponse<{ token: string }> =
+        await apiClient.post('/refresh');
       setToken(response.data.token);
       return response.data.token;
     } catch (error) {
@@ -158,6 +169,5 @@ const AuthService = {
 
 export default AuthService;
 export function logout(logout: any) {
-  throw new Error("Function not implemented.");
+  throw new Error('Function not implemented.');
 }
-

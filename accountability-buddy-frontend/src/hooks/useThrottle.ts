@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback } from 'react';
 
 /**
  * Custom hook for throttling a function.
@@ -18,24 +18,30 @@ const useThrottle = <T extends (...args: any[]) => void>(
   const lastRan = useRef<number>(Date.now()); // Track the last time the callback was run
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null); // Store the timeout ID
 
-  const throttledFunction = useCallback((...args: Parameters<T>) => {
-    const now = Date.now();
+  const throttledFunction = useCallback(
+    (...args: Parameters<T>) => {
+      const now = Date.now();
 
-    // If the current time minus the last run time exceeds the delay
-    if (now - lastRan.current >= delay) {
-      callback(...args); // Call the provided callback
-      lastRan.current = now; // Update last run time
-    } else {
-      // Clear the existing timer if it's running
-      if (timer.current) clearTimeout(timer.current);
+      // If the current time minus the last run time exceeds the delay
+      if (now - lastRan.current >= delay) {
+        callback(...args); // Call the provided callback
+        lastRan.current = now; // Update last run time
+      } else {
+        // Clear the existing timer if it's running
+        if (timer.current) clearTimeout(timer.current);
 
-      // Set a new timer to call the callback after the remaining time
-      timer.current = setTimeout(() => {
-        callback(...args);
-        lastRan.current = Date.now(); // Update last run time
-      }, delay - (now - lastRan.current));
-    }
-  }, [callback, delay]);
+        // Set a new timer to call the callback after the remaining time
+        timer.current = setTimeout(
+          () => {
+            callback(...args);
+            lastRan.current = Date.now(); // Update last run time
+          },
+          delay - (now - lastRan.current)
+        );
+      }
+    },
+    [callback, delay]
+  );
 
   // Cleanup on unmount to avoid memory leaks
   useEffect(() => {

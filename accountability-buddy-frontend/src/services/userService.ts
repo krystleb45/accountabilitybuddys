@@ -1,5 +1,5 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import authService from "./authService"; // Import helper to get Authorization header
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import authService from './authService'; // Import helper to get Authorization header
 
 // Define types for user data and actions
 export interface UserProfile {
@@ -22,13 +22,13 @@ export interface UpdateProfileData {
   [key: string]: any; // Additional fields for profile updates
 }
 
-export type UserAction = "block" | "unblock";
+export type UserAction = 'block' | 'unblock';
 
 // Create an axios instance to centralize base URL and headers
 const apiClient = axios.create({
-  baseURL: "https://accountabilitybuddys.com/api/users",
+  baseURL: 'https://accountabilitybuddys.com/api/users',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -62,15 +62,15 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
         await new Promise((resolve) => setTimeout(resolve, delay));
         attempt++;
       } else {
-        console.error("Request failed:", error);
+        console.error('Request failed:', error);
         throw new Error(
           error.response?.data?.message ||
-            "An error occurred. Please try again."
+            'An error occurred. Please try again.'
         );
       }
     }
   }
-  throw new Error("Failed after multiple retries.");
+  throw new Error('Failed after multiple retries.');
 };
 
 // User service methods
@@ -82,26 +82,25 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
 export const getUserProfile = async (): Promise<UserProfile> => {
   try {
     const response: AxiosResponse<UserProfile> = await axiosRetry(() =>
-      apiClient.get("/profile")
+      apiClient.get('/profile')
     );
 
     const userData = response.data;
 
     // Ensure username is present (fallback or transformation if needed)
     if (!userData.username) {
-      userData.username = userData.email.split("@")[0]; // Example fallback logic
+      userData.username = userData.email.split('@')[0]; // Example fallback logic
     }
 
-    console.log("User profile fetched successfully:", userData);
+    console.log('User profile fetched successfully:', userData);
     return userData;
   } catch (error: any) {
-    console.error("Error fetching user profile:", error);
+    console.error('Error fetching user profile:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to fetch user profile."
+      error.response?.data?.message || 'Failed to fetch user profile.'
     );
   }
 };
- 
 
 /**
  * Update the current user's profile.
@@ -112,19 +111,19 @@ export const updateUserProfile = async (
   profileData: UpdateProfileData
 ): Promise<UserProfile> => {
   if (!Object.keys(profileData).length) {
-    throw new Error("Profile data is required to update the profile.");
+    throw new Error('Profile data is required to update the profile.');
   }
 
   try {
     const response: AxiosResponse<UserProfile> = await axiosRetry(() =>
-      apiClient.put("/profile", profileData)
+      apiClient.put('/profile', profileData)
     );
-    console.log("User profile updated successfully:", response.data);
+    console.log('User profile updated successfully:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error updating user profile:", error);
+    console.error('Error updating user profile:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to update profile."
+      error.response?.data?.message || 'Failed to update profile.'
     );
   }
 };
@@ -134,12 +133,12 @@ export const updateUserProfile = async (
  */
 export const deleteUserAccount = async (): Promise<void> => {
   try {
-    await axiosRetry(() => apiClient.delete("/account"));
-    console.log("User account deleted successfully.");
+    await axiosRetry(() => apiClient.delete('/account'));
+    console.log('User account deleted successfully.');
   } catch (error: any) {
-    console.error("Error deleting user account:", error);
+    console.error('Error deleting user account:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to delete user account."
+      error.response?.data?.message || 'Failed to delete user account.'
     );
   }
 };
@@ -151,14 +150,14 @@ export const deleteUserAccount = async (): Promise<void> => {
 export const fetchAllUsers = async (): Promise<UserProfile[]> => {
   try {
     const response: AxiosResponse<UserProfile[]> = await axiosRetry(() =>
-      apiClient.get("/all")
+      apiClient.get('/all')
     );
-    console.log("All users fetched successfully:", response.data);
+    console.log('All users fetched successfully:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error fetching all users:", error);
+    console.error('Error fetching all users:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to fetch all users."
+      error.response?.data?.message || 'Failed to fetch all users.'
     );
   }
 };
@@ -172,12 +171,12 @@ export const toggleUserStatus = async (
   userId: string,
   action: UserAction
 ): Promise<void> => {
-  if (!["block", "unblock"].includes(action)) {
+  if (!['block', 'unblock'].includes(action)) {
     throw new Error("Invalid action. Must be 'block' or 'unblock'.");
   }
 
   if (!userId) {
-    throw new Error("User ID is required to toggle user status.");
+    throw new Error('User ID is required to toggle user status.');
   }
 
   try {

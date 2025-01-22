@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 const FriendRequestsPage: React.FC = () => {
   const requests = [
-    { id: 1, name: "John Doe" },
-    { id: 2, name: "Jane Smith" },
+    { id: 1, name: 'John Doe' },
+    { id: 2, name: 'Jane Smith' },
   ];
 
   const handleAccept = (id: number) => {

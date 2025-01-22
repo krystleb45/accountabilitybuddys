@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import authService from "src/services/authService";
-import NavbarDropdown from "./NavbarDropdown";
-import NavbarItems from "./NavbarItem";
-import { FaHome, FaUser, FaCog } from "react-icons/fa";
-import "./Navbar.css";
+import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import authService from 'src/services/authService';
+import NavbarDropdown from './NavbarDropdown';
+import NavbarItems from './NavbarItem';
+import { FaHome, FaUser, FaCog } from 'react-icons/fa';
+import './Navbar.css';
 
 interface User {
   id: string;
@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
           const userInfo = await authService.getUserInfo();
           setUser(userInfo);
         } catch (error) {
-          console.error("Error fetching user info:", error);
+          console.error('Error fetching user info:', error);
         }
       }
       setLoading(false);
@@ -38,21 +38,21 @@ const Navbar: React.FC = () => {
   const handleLogout = () => {
     authService.removeToken();
     setUser(null);
-    navigate("/login");
+    navigate('/login');
   };
 
   // Navigation items for the main navbar
   const navItems = [
-    { label: "Home", to: "/", exact: true, icon: <FaHome /> },
-    { label: "Profile", to: "/profile", icon: <FaUser /> },
-    { label: "Settings", to: "/settings", icon: <FaCog /> },
+    { label: 'Home', to: '/', exact: true, icon: <FaHome /> },
+    { label: 'Profile', to: '/profile', icon: <FaUser /> },
+    { label: 'Settings', to: '/settings', icon: <FaCog /> },
   ];
 
   // Dropdown items for user-specific actions
   const dropdownItems = [
-    { label: "Profile", onClick: () => navigate("/profile") },
-    { label: "Settings", onClick: () => navigate("/settings") },
-    { label: "Logout", onClick: handleLogout },
+    { label: 'Profile', onClick: () => navigate('/profile') },
+    { label: 'Settings', onClick: () => navigate('/settings') },
+    { label: 'Logout', onClick: handleLogout },
   ];
 
   return (
@@ -77,11 +77,7 @@ const Navbar: React.FC = () => {
             <NavbarDropdown title="Account" items={dropdownItems} />
           </>
         ) : (
-          <NavLink
-            to="/login"
-            className="login-link"
-            aria-label="Login"
-          >
+          <NavLink to="/login" className="login-link" aria-label="Login">
             Login
           </NavLink>
         )}

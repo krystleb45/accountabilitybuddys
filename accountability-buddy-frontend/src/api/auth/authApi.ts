@@ -1,7 +1,7 @@
-import axios from "axios";
-import { setToken, removeToken } from "../../services/authService"; // Ensure token management is handled
+import axios from 'axios';
+import { setToken, removeToken } from '../../services/authService'; // Ensure token management is handled
 
-const API_URL = process.env.REACT_APP_API_URL || "https://api.example.com/auth";
+const API_URL = process.env.REACT_APP_API_URL || 'https://api.example.com/auth';
 
 // Define the shape of the user data returned from the API
 interface AuthResponse {
@@ -25,17 +25,24 @@ interface RegisterUserData {
 // Helper function for error handling
 const handleError = (error: any): never => {
   if (error.response && error.response.status === 401) {
-    throw new Error("Invalid credentials. Please try again.");
+    throw new Error('Invalid credentials. Please try again.');
   }
   throw new Error(
-    error.response?.data?.message || "An error occurred. Please try again later."
+    error.response?.data?.message ||
+      'An error occurred. Please try again later.'
   );
 };
 
 // Login user
-export const loginUser = async (email: string, password: string): Promise<AuthResponse | undefined> => {
+export const loginUser = async (
+  email: string,
+  password: string
+): Promise<AuthResponse | undefined> => {
   try {
-    const response = await axios.post<AuthResponse>(`${API_URL}/login`, { email, password });
+    const response = await axios.post<AuthResponse>(`${API_URL}/login`, {
+      email,
+      password,
+    });
     const { token } = response.data;
 
     if (token) {
@@ -50,9 +57,14 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
 };
 
 // Register new user
-export const registerUser = async (userData: RegisterUserData): Promise<AuthResponse | undefined> => {
+export const registerUser = async (
+  userData: RegisterUserData
+): Promise<AuthResponse | undefined> => {
   try {
-    const response = await axios.post<AuthResponse>(`${API_URL}/register`, userData);
+    const response = await axios.post<AuthResponse>(
+      `${API_URL}/register`,
+      userData
+    );
     const { token } = response.data;
 
     if (token) {
@@ -67,9 +79,9 @@ export const registerUser = async (userData: RegisterUserData): Promise<AuthResp
 };
 // This function retrieves the auth token from local storage and returns it in the Authorization header
 export const getAuthHeader = (): { Authorization: string } => {
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem('authToken');
   if (!token) {
-    throw new Error("Authentication token is missing.");
+    throw new Error('Authentication token is missing.');
   }
   return { Authorization: `Bearer ${token}` };
 };

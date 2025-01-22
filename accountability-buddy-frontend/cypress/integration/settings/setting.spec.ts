@@ -12,6 +12,9 @@ describe('Settings Management', () => {
   it('should update user preferences', () => {
     cy.get('input[name="username"]').clear().type('UpdatedUser');
     cy.get('button').contains('Save Changes').click();
-    cy.get('.success-message').should('contain', 'Preferences updated successfully');
+    cy.get('.success-message').should(
+      'contain',
+      'Preferences updated successfully'
+    );
   });
 });

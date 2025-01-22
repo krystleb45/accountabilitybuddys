@@ -1,15 +1,22 @@
-import React, { useState } from "react";
-import "./AddActivityForm.css"; // Optional CSS for styling
+import React, { useState } from 'react';
+import './AddActivityForm.css'; // Optional CSS for styling
 
 interface AddActivityFormProps {
-  onSubmit: (activity: { title: string; description: string; status: string }) => void; // Callback for form submission
+  onSubmit: (activity: {
+    title: string;
+    description: string;
+    status: string;
+  }) => void; // Callback for form submission
   onCancel?: () => void; // Optional callback for cancel action
 }
 
-const AddActivityForm: React.FC<AddActivityFormProps> = ({ onSubmit, onCancel }) => {
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [status, setStatus] = useState<string>("pending");
+const AddActivityForm: React.FC<AddActivityFormProps> = ({
+  onSubmit,
+  onCancel,
+}) => {
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [status, setStatus] = useState<string>('pending');
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -17,19 +24,19 @@ const AddActivityForm: React.FC<AddActivityFormProps> = ({ onSubmit, onCancel })
 
     // Form validation
     if (!title.trim()) {
-      setError("Title is required.");
+      setError('Title is required.');
       return;
     }
     if (!description.trim()) {
-      setError("Description is required.");
+      setError('Description is required.');
       return;
     }
 
     setError(null);
     onSubmit({ title: title.trim(), description: description.trim(), status });
-    setTitle("");
-    setDescription("");
-    setStatus("pending");
+    setTitle('');
+    setDescription('');
+    setStatus('pending');
   };
 
   return (

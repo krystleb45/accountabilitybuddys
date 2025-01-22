@@ -1,15 +1,15 @@
-"use client"; // Mark as Client Component
+'use client'; // Mark as Client Component
 
-import React, { useState } from "react";
-import Link from "next/link"; // Import Link from Next.js
+import React, { useState } from 'react';
+import Link from 'next/link'; // Import Link from Next.js
 
 const ResetPasswordPage: React.FC = () => {
   const [form, setForm] = useState({
-    password: "",
-    confirmPassword: "",
+    password: '',
+    confirmPassword: '',
   });
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -21,24 +21,24 @@ const ResetPasswordPage: React.FC = () => {
 
     // Basic validation
     if (!form.password || !form.confirmPassword) {
-      setError("Both fields are required.");
+      setError('Both fields are required.');
       return;
     }
 
     if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match.");
+      setError('Passwords do not match.');
       return;
     }
 
     if (form.password.length < 8) {
-      setError("Password must be at least 8 characters long.");
+      setError('Password must be at least 8 characters long.');
       return;
     }
 
     // Placeholder for password reset logic
-    console.log("Password reset submitted:", form);
+    console.log('Password reset submitted:', form);
     setSubmitted(true);
-    setError("");
+    setError('');
   };
 
   return (
@@ -92,11 +92,7 @@ const ResetPasswordPage: React.FC = () => {
             </div>
 
             {error && (
-              <p
-                className="text-red-600"
-                role="alert"
-                aria-live="assertive"
-              >
+              <p className="text-red-600" role="alert" aria-live="assertive">
                 {error}
               </p>
             )}
@@ -121,7 +117,10 @@ const ResetPasswordPage: React.FC = () => {
         {/* Back to Login Link */}
         <div className="mt-6 text-center">
           <Link href="/login">
-            <a className="text-blue-600 hover:underline" aria-label="Back to Login">
+            <a
+              className="text-blue-600 hover:underline"
+              aria-label="Back to Login"
+            >
               Back to Login
             </a>
           </Link>

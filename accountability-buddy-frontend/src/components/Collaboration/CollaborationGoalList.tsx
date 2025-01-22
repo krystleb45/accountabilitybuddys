@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   getUserCollaborationGoals,
   updateCollaborationGoalProgress,
-} from "src/api/collaboration/collaborationGoalApi";
-import { CollaborationGoal, CollaborationGoalListProps } from "./Collaboration.types";
-import styles from "./CollaborationGoalList.module.css";
+} from 'src/api/collaboration/collaborationGoalApi';
+import {
+  CollaborationGoal,
+  CollaborationGoalListProps,
+} from './Collaboration.types';
+import styles from './CollaborationGoalList.module.css';
 
 const CollaborationGoalList: React.FC<CollaborationGoalListProps> = ({
   goals: initialGoals = [],
@@ -29,18 +32,22 @@ const CollaborationGoalList: React.FC<CollaborationGoalListProps> = ({
       try {
         const response = await getUserCollaborationGoals(page);
 
-        const formattedGoals: CollaborationGoal[] = response.goals.map((goal) => ({
-          ...goal,
-          progress: goal.progress ?? 0,
-          status: ["pending", "in-progress", "completed"].includes(goal.status)
-            ? (goal.status as "pending" | "in-progress" | "completed")
-            : "pending",
-        }));
+        const formattedGoals: CollaborationGoal[] = response.goals.map(
+          (goal) => ({
+            ...goal,
+            progress: goal.progress ?? 0,
+            status: ['pending', 'in-progress', 'completed'].includes(
+              goal.status
+            )
+              ? (goal.status as 'pending' | 'in-progress' | 'completed')
+              : 'pending',
+          })
+        );
 
         setGoals(formattedGoals);
         setTotalPages(response.totalPages);
       } catch (err) {
-        setError("Failed to fetch collaboration goals. Please try again.");
+        setError('Failed to fetch collaboration goals. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -59,7 +66,7 @@ const CollaborationGoalList: React.FC<CollaborationGoalListProps> = ({
         )
       );
     } catch (error) {
-      console.error("Failed to update goal progress:", error);
+      console.error('Failed to update goal progress:', error);
     }
   };
 
@@ -68,7 +75,7 @@ const CollaborationGoalList: React.FC<CollaborationGoalListProps> = ({
   };
 
   return (
-    <div className={styles["goal-list-container"]}>
+    <div className={styles['goal-list-container']}>
       <h2>Collaboration Goals</h2>
       {loading ? (
         <p>Loading...</p>
@@ -77,20 +84,22 @@ const CollaborationGoalList: React.FC<CollaborationGoalListProps> = ({
       ) : goals.length === 0 ? (
         <p>No goals to display</p>
       ) : (
-        <ul className={styles["goal-list"]}>
+        <ul className={styles['goal-list']}>
           {goals.map((goal) => (
             <li
               key={goal.id}
-              className={styles["goal-card"]}
+              className={styles['goal-card']}
               onClick={() => onGoalClick?.(goal.id)}
             >
-              <h3 className={styles["goal-title"]}>{goal.title}</h3>
-              <p className={styles["goal-description"]}>
+              <h3 className={styles['goal-title']}>{goal.title}</h3>
+              <p className={styles['goal-description']}>
                 Progress: {goal.progress}%
               </p>
               <button
-                onClick={() => handleProgressUpdate(goal.id, goal.progress + 10)}
-                className={styles["progress-button"]}
+                onClick={() =>
+                  handleProgressUpdate(goal.id, goal.progress + 10)
+                }
+                className={styles['progress-button']}
               >
                 Update Progress
               </button>
@@ -106,8 +115,8 @@ const CollaborationGoalList: React.FC<CollaborationGoalListProps> = ({
             onClick={() => handlePageChange(index + 1)}
             className={
               page === index + 1
-                ? styles["pagination-button-active"]
-                : styles["pagination-button"]
+                ? styles['pagination-button-active']
+                : styles['pagination-button']
             }
           >
             {index + 1}

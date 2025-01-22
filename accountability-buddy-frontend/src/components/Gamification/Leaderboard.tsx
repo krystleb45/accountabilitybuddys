@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { fetchLeaderboard, LeaderboardEntry } from "../../services/gamificationService"; // Import LeaderboardEntry type
-import LoadingSpinner from "../LoadingSpinner/LoadingSpinner"; // Import a reusable loading spinner component
-import "./Leaderboard.css";
+import React, { useState, useEffect } from 'react';
+import {
+  fetchLeaderboard,
+  LeaderboardEntry,
+} from '../../services/gamificationService'; // Import LeaderboardEntry type
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'; // Import a reusable loading spinner component
+import './Leaderboard.css';
 
 // Define props interface
 interface LeaderboardProps {
@@ -17,19 +20,19 @@ interface LeaderboardProps {
 const Leaderboard: React.FC<LeaderboardProps> = ({ userId }) => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]); // State for leaderboard data
   const [loading, setLoading] = useState<boolean>(true); // State for loading status
-  const [error, setError] = useState<string>(""); // State for error message
+  const [error, setError] = useState<string>(''); // State for error message
 
   // Fetch leaderboard data
   const loadLeaderboard = async () => {
     setLoading(true);
-    setError("");
+    setError('');
 
     try {
       const data: LeaderboardEntry[] = await fetchLeaderboard(userId); // Fetch leaderboard data
       setLeaderboard(data);
     } catch (err) {
-      console.error("Error fetching leaderboard:", err);
-      setError("Failed to load the leaderboard. Please try again later.");
+      console.error('Error fetching leaderboard:', err);
+      setError('Failed to load the leaderboard. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -85,7 +88,11 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ userId }) => {
 
       {/* Display leaderboard data */}
       {!loading && !error && leaderboard.length > 0 ? (
-        <table className="leaderboard-table" aria-live="polite" data-testid="leaderboard-table">
+        <table
+          className="leaderboard-table"
+          aria-live="polite"
+          data-testid="leaderboard-table"
+        >
           <thead>
             <tr>
               <th className="leaderboard-rank">Rank</th>
@@ -98,7 +105,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ userId }) => {
               <tr
                 key={user.userId}
                 className={`leaderboard-item ${
-                  user.userId === userId ? "current-user" : ""
+                  user.userId === userId ? 'current-user' : ''
                 }`}
                 data-testid="leaderboard-row"
               >

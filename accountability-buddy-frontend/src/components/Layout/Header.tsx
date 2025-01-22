@@ -1,6 +1,6 @@
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
-import "./Header.css";
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import './Header.css';
 
 interface HeaderProps {
   isAuthenticated: boolean; // Indicates if the user is authenticated
@@ -24,15 +24,15 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
         <ul className="nav-list">
           {/* Main navigation links */}
           {[
-            { path: "/", label: "Home" },
-            { path: "/goals", label: "Goals" },
-            { path: "/collaborations", label: "Collaborations" },
-            { path: "/profile", label: "Profile" },
+            { path: '/', label: 'Home' },
+            { path: '/goals', label: 'Goals' },
+            { path: '/collaborations', label: 'Collaborations' },
+            { path: '/profile', label: 'Profile' },
           ].map(({ path, label }) => (
             <li key={path}>
               <NavLink
                 to={path}
-                className={({ isActive }) => (isActive ? "active" : "inactive")}
+                className={({ isActive }) => (isActive ? 'active' : 'inactive')}
                 aria-label={label}
               >
                 {label}
@@ -55,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
             <li>
               <NavLink
                 to="/login"
-                className={({ isActive }) => (isActive ? "active" : "inactive")}
+                className={({ isActive }) => (isActive ? 'active' : 'inactive')}
                 aria-label="Login"
               >
                 Login

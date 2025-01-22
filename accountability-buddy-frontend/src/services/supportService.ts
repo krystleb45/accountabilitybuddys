@@ -1,6 +1,6 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import authService from "./authService"; // Correctly use authService for token management
-import { AxiosHeaders } from "axios";
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import authService from './authService'; // Correctly use authService for token management
+import { AxiosHeaders } from 'axios';
 
 // Define types for support data
 export interface SupportData {
@@ -27,9 +27,9 @@ export interface TicketDetails extends SupportTicket {
 
 // Create an axios instance for the support API
 const apiClient = axios.create({
-  baseURL: "https://accountabilitybuddys.com/api/support",
+  baseURL: 'https://accountabilitybuddys.com/api/support',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -63,29 +63,39 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
         await new Promise((resolve) => setTimeout(resolve, delay));
         attempt++;
       } else {
-        console.error("Request failed:", error);
+        console.error('Request failed:', error);
         throw new Error(
-          error.response?.data?.message || "An error occurred. Please try again."
+          error.response?.data?.message ||
+            'An error occurred. Please try again.'
         );
       }
     }
   }
-  throw new Error("Failed after multiple retries.");
+  throw new Error('Failed after multiple retries.');
 };
 
 // Contact support function
-export const contactSupport = async (supportData: SupportData): Promise<void> => {
-  if (!supportData.name || !supportData.email || !supportData.subject || !supportData.message) {
-    throw new Error("All required fields (name, email, subject, and message) must be provided.");
+export const contactSupport = async (
+  supportData: SupportData
+): Promise<void> => {
+  if (
+    !supportData.name ||
+    !supportData.email ||
+    !supportData.subject ||
+    !supportData.message
+  ) {
+    throw new Error(
+      'All required fields (name, email, subject, and message) must be provided.'
+    );
   }
 
   try {
-    await axiosRetry(() => apiClient.post("/contact", supportData));
-    console.log("Support contacted successfully.");
+    await axiosRetry(() => apiClient.post('/contact', supportData));
+    console.log('Support contacted successfully.');
   } catch (error: any) {
-    console.error("Error contacting support:", error);
+    console.error('Error contacting support:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to contact support."
+      error.response?.data?.message || 'Failed to contact support.'
     );
   }
 };
@@ -94,14 +104,14 @@ export const contactSupport = async (supportData: SupportData): Promise<void> =>
 export const getSupportTickets = async (): Promise<SupportTicket[]> => {
   try {
     const response: AxiosResponse<SupportTicket[]> = await axiosRetry(() =>
-      apiClient.get("/tickets")
+      apiClient.get('/tickets')
     );
-    console.log("Support tickets fetched successfully:", response.data);
+    console.log('Support tickets fetched successfully:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error fetching support tickets:", error);
+    console.error('Error fetching support tickets:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to fetch support tickets."
+      error.response?.data?.message || 'Failed to fetch support tickets.'
     );
   }
 };
@@ -111,7 +121,7 @@ export const getTicketDetails = async (
   ticketId: string
 ): Promise<TicketDetails> => {
   if (!ticketId) {
-    throw new Error("Ticket ID is required to fetch ticket details.");
+    throw new Error('Ticket ID is required to fetch ticket details.');
   }
 
   try {
@@ -121,9 +131,9 @@ export const getTicketDetails = async (
     console.log(`Details fetched for ticket ID: ${ticketId}`, response.data);
     return response.data;
   } catch (error: any) {
-    console.error("Error fetching ticket details:", error);
+    console.error('Error fetching ticket details:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to fetch ticket details."
+      error.response?.data?.message || 'Failed to fetch ticket details.'
     );
   }
 };
@@ -134,16 +144,16 @@ export const updateSupportTicket = async (
   updateData: Partial<SupportTicket>
 ): Promise<void> => {
   if (!ticketId) {
-    throw new Error("Ticket ID is required to update a support ticket.");
+    throw new Error('Ticket ID is required to update a support ticket.');
   }
 
   try {
     await axiosRetry(() => apiClient.put(`/tickets/${ticketId}`, updateData));
     console.log(`Support ticket ${ticketId} updated successfully.`);
   } catch (error: any) {
-    console.error("Error updating support ticket:", error);
+    console.error('Error updating support ticket:', error);
     throw new Error(
-      error.response?.data?.message || "Failed to update support ticket."
+      error.response?.data?.message || 'Failed to update support ticket.'
     );
   }
 };

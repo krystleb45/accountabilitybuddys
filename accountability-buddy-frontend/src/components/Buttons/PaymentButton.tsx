@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { createSubscriptionSession } from "src/services/subscriptionService";
-import styles from "./PaymentButton.module.css";
+import React, { useState } from 'react';
+import { createSubscriptionSession } from 'src/services/subscriptionService';
+import styles from './PaymentButton.module.css';
 
 interface PaymentButtonProps {
   buttonText: string;
@@ -26,9 +26,9 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       // Redirect to Stripe checkout session
       window.location.href = `${process.env.REACT_APP_STRIPE_CHECKOUT_URL}/session/${sessionId}`;
     } catch (err: unknown) {
-      console.error("Error creating subscription session:", err);
+      console.error('Error creating subscription session:', err);
       const errorMessage =
-        "Failed to create a subscription session. Please try again.";
+        'Failed to create a subscription session. Please try again.';
       setError(errorMessage);
       if (onError) onError(errorMessage);
     } finally {
@@ -37,17 +37,17 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   };
 
   return (
-    <div className={styles["payment-button-container"]}>
+    <div className={styles['payment-button-container']}>
       <button
         onClick={handlePayment}
         disabled={loading}
         aria-busy={loading}
         aria-label="Start Payment Process"
-        className={`${styles["payment-button"]} ${loading ? styles.loading : ""}`}
+        className={`${styles['payment-button']} ${loading ? styles.loading : ''}`}
       >
-        {loading ? "Processing..." : buttonText}
+        {loading ? 'Processing...' : buttonText}
       </button>
-      {error && <p className={styles["error-message"]}>{error}</p>}
+      {error && <p className={styles['error-message']}>{error}</p>}
     </div>
   );
 };

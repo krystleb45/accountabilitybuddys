@@ -1,5 +1,5 @@
-import React from "react";
-import "./BadgeProgress.css"; // Optional CSS for styling
+import React from 'react';
+import './BadgeProgress.css'; // Optional CSS for styling
 
 interface BadgeProgressProps {
   badgeName: string; // Name of the badge

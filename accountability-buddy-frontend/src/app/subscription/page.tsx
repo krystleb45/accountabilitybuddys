@@ -1,12 +1,20 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 const SubscriptionsPage: React.FC = () => {
   const plans = [
-    { name: "Free", price: "$0/month", features: ["Basic access"] },
-    { name: "Pro", price: "$9.99/month", features: ["Advanced analytics", "Priority support"] },
-    { name: "Premium", price: "$19.99/month", features: ["All Pro features", "1-on-1 coaching"] },
+    { name: 'Free', price: '$0/month', features: ['Basic access'] },
+    {
+      name: 'Pro',
+      price: '$9.99/month',
+      features: ['Advanced analytics', 'Priority support'],
+    },
+    {
+      name: 'Premium',
+      price: '$19.99/month',
+      features: ['All Pro features', '1-on-1 coaching'],
+    },
   ];
 
   return (

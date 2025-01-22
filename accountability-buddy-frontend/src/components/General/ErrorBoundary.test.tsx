@@ -1,28 +1,28 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import ErrorBoundary from "./ErrorBoundary";
-import { expect } from "@jest/globals";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import ErrorBoundary from './ErrorBoundary';
+import { expect } from '@jest/globals';
 
 // A test component to simulate errors
 const ProblematicComponent: React.FC = () => {
-  throw new Error("Test error");
+  throw new Error('Test error');
 };
 
-describe("ErrorBoundary Component", () => {
-  test("renders children without errors when no error occurs", () => {
+describe('ErrorBoundary Component', () => {
+  test('renders children without errors when no error occurs', () => {
     render(
       <ErrorBoundary>
         <div data-testid="safe-child">This is safe content</div>
       </ErrorBoundary>
     );
 
-    const child = screen.getByTestId("safe-child");
+    const child = screen.getByTestId('safe-child');
     expect(child).toBeInTheDocument();
-    expect(child).toHaveTextContent("This is safe content");
+    expect(child).toHaveTextContent('This is safe content');
   });
 
-  test("displays fallback UI when an error occurs", () => {
+  test('displays fallback UI when an error occurs', () => {
     render(
       <ErrorBoundary>
         <ProblematicComponent />
@@ -33,8 +33,8 @@ describe("ErrorBoundary Component", () => {
     expect(fallbackMessage).toBeInTheDocument();
   });
 
-  test("displays custom fallback message if provided", () => {
-    const customFallback = "Custom error message";
+  test('displays custom fallback message if provided', () => {
+    const customFallback = 'Custom error message';
 
     render(
       <ErrorBoundary fallbackMessage={customFallback}>
@@ -46,8 +46,8 @@ describe("ErrorBoundary Component", () => {
     expect(fallbackMessage).toBeInTheDocument();
   });
 
-  test("logs errors to the console when an error occurs", () => {
-    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
+  test('logs errors to the console when an error occurs', () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
 
     render(
       <ErrorBoundary>

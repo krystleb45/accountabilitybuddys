@@ -87,6 +87,7 @@
     "@types/jest": "^29.5.14",
     "@types/jwt-decode": "^2.2.1",
     "@types/lodash": "^4.17.13",
+    "@types/next": "^8.0.7",
     "@types/node": "^22.9.0",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",

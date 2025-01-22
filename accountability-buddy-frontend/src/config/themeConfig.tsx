@@ -1,70 +1,81 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
-import { createTheme, Theme, ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
-import { responsiveFontSizes } from "@mui/material";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  ReactNode,
+} from 'react';
+import {
+  createTheme,
+  Theme,
+  ThemeProvider as MuiThemeProvider,
+} from '@mui/material/styles';
+import { responsiveFontSizes } from '@mui/material';
 
 // Define light, dark, and high-contrast theme palettes
 const lightPalette = {
-  primary: { main: "#1976d2", contrastText: "#ffffff" },
-  secondary: { main: "#dc004e", contrastText: "#ffffff" },
-  background: { default: "#f4f6f8", paper: "#ffffff" },
-  text: { primary: "#000000", secondary: "#555555" },
+  primary: { main: '#1976d2', contrastText: '#ffffff' },
+  secondary: { main: '#dc004e', contrastText: '#ffffff' },
+  background: { default: '#f4f6f8', paper: '#ffffff' },
+  text: { primary: '#000000', secondary: '#555555' },
 };
 
 const darkPalette = {
-  primary: { main: "#90caf9", contrastText: "#000000" },
-  secondary: { main: "#f48fb1", contrastText: "#000000" },
-  background: { default: "#121212", paper: "#1d1d1d" },
-  text: { primary: "#ffffff", secondary: "#bbbbbb" },
+  primary: { main: '#90caf9', contrastText: '#000000' },
+  secondary: { main: '#f48fb1', contrastText: '#000000' },
+  background: { default: '#121212', paper: '#1d1d1d' },
+  text: { primary: '#ffffff', secondary: '#bbbbbb' },
 };
 
 const highContrastPalette = {
-  primary: { main: "#ffcc00", contrastText: "#000000" },
-  secondary: { main: "#ff3300", contrastText: "#000000" },
-  background: { default: "#000000", paper: "#000000" },
-  text: { primary: "#ffffff", secondary: "#ffcc00" },
+  primary: { main: '#ffcc00', contrastText: '#000000' },
+  secondary: { main: '#ff3300', contrastText: '#000000' },
+  background: { default: '#000000', paper: '#000000' },
+  text: { primary: '#ffffff', secondary: '#ffcc00' },
 };
 
 // Default theme mode
-const defaultThemeMode = "light";
+const defaultThemeMode = 'light';
 
 // Utility to get theme mode from local storage or use the default
-const getThemeMode = (): string => localStorage.getItem("themeMode") || defaultThemeMode;
+const getThemeMode = (): string =>
+  localStorage.getItem('themeMode') || defaultThemeMode;
 
 // Utility to set theme mode in local storage
 const setThemeModeInStorage = (mode: string): void => {
-  localStorage.setItem("themeMode", mode);
+  localStorage.setItem('themeMode', mode);
 };
 
 // Function to create the app theme
 const createAppTheme = (mode: string): Theme => {
   const palette =
-    mode === "dark"
+    mode === 'dark'
       ? darkPalette
-      : mode === "high-contrast"
-      ? highContrastPalette
-      : lightPalette;
+      : mode === 'high-contrast'
+        ? highContrastPalette
+        : lightPalette;
 
   let theme = createTheme({
     palette,
     typography: {
-      fontFamily: "Roboto, Arial, sans-serif",
-      h1: { fontSize: "2.5rem", fontWeight: 700 },
-      h2: { fontSize: "2rem", fontWeight: 600 },
-      body1: { fontSize: "1rem", lineHeight: 1.5 },
+      fontFamily: 'Roboto, Arial, sans-serif',
+      h1: { fontSize: '2.5rem', fontWeight: 700 },
+      h2: { fontSize: '2rem', fontWeight: 600 },
+      body1: { fontSize: '1rem', lineHeight: 1.5 },
     },
     components: {
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: "8px",
-            textTransform: "none",
+            borderRadius: '8px',
+            textTransform: 'none',
           },
         },
       },
       MuiPaper: {
         styleOverrides: {
           rounded: {
-            borderRadius: "16px",
+            borderRadius: '16px',
           },
         },
       },
@@ -82,7 +93,9 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Theme Provider component
-const CustomThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+const CustomThemeProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [themeMode, setThemeMode] = useState<string>(getThemeMode());
 
   useEffect(() => {
@@ -91,9 +104,9 @@ const CustomThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const toggleTheme = () => {
     setThemeMode((prevMode) => {
-      if (prevMode === "light") return "dark";
-      else if (prevMode === "dark") return "high-contrast";
-      return "light";
+      if (prevMode === 'light') return 'dark';
+      else if (prevMode === 'dark') return 'high-contrast';
+      return 'light';
     });
   };
 
@@ -110,7 +123,9 @@ const CustomThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 const useThemeContext = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error("useThemeContext must be used within a CustomThemeProvider");
+    throw new Error(
+      'useThemeContext must be used within a CustomThemeProvider'
+    );
   }
   return context;
 };

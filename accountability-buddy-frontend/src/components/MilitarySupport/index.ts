@@ -1,1 +1,1 @@
-export { default as MilitarySupport } from "./MilitarySupport";
+export { default as MilitarySupport } from './MilitarySupport';

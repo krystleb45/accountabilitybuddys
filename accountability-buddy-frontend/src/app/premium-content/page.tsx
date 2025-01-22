@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 const PremiumContentPage: React.FC = () => {
   return (
@@ -51,7 +51,8 @@ const PremiumContentPage: React.FC = () => {
       </main>
 
       <footer className="mt-12 text-center text-gray-600">
-        &copy; {new Date().getFullYear()} Accountability Buddy. All rights reserved.
+        &copy; {new Date().getFullYear()} Accountability Buddy. All rights
+        reserved.
       </footer>
     </div>
   );

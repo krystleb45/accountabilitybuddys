@@ -1,27 +1,28 @@
-"use client"; // Ensure it's a Client Component
+'use client'; // Ensure it's a Client Component
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 const ContactSupportPage: React.FC = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Simulate form submission (replace with actual API call)
     setSuccess(true);
-    setName("");
-    setEmail("");
-    setMessage("");
+    setName('');
+    setEmail('');
+    setMessage('');
   };
 
   return (
     <div className="min-h-screen p-8 bg-gray-100 flex flex-col items-center">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">Contact Support</h1>
       <p className="text-lg mb-6 text-center max-w-lg text-gray-700">
-        If you need help, please reach out to us using the form below. We’re here to assist you with any questions or concerns.
+        If you need help, please reach out to us using the form below. We’re
+        here to assist you with any questions or concerns.
       </p>
 
       <form
@@ -34,7 +35,10 @@ const ContactSupportPage: React.FC = () => {
           </div>
         )}
         <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
+          <label
+            htmlFor="name"
+            className="block text-gray-700 font-medium mb-2"
+          >
             Name
           </label>
           <input
@@ -48,7 +52,10 @@ const ContactSupportPage: React.FC = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+          <label
+            htmlFor="email"
+            className="block text-gray-700 font-medium mb-2"
+          >
             Email
           </label>
           <input

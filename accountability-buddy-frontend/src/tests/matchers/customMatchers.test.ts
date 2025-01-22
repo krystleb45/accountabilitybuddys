@@ -23,8 +23,7 @@ const toBeWithinRange: MatcherFunction<[number, number]> = function (
   const message = pass
     ? () =>
         `Expected ${received} not to be within range [${floor}, ${ceiling}].`
-    : () =>
-        `Expected ${received} to be within range [${floor}, ${ceiling}].`;
+    : () => `Expected ${received} to be within range [${floor}, ${ceiling}].`;
 
   return { pass, message };
 };
@@ -81,9 +80,9 @@ const toContainText: MatcherFunction<[string]> = function (
 
 // Register custom matchers with Jest
 (expect as any).extend({
-    toBeWithinRange,
-    toHaveClass,
-    toContainText,
-  });
+  toBeWithinRange,
+  toHaveClass,
+  toContainText,
+});
 
 export {}; // Prevent "module has no exports" error.

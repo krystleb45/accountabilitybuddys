@@ -1,23 +1,23 @@
-import axios from "axios";
+import axios from 'axios';
 
 // Base URL setup for Axios
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:5000",
+  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000',
   timeout: 15000, // Extended timeout to 15 seconds for better reliability
   headers: {
-    "Content-Type": "application/json", // Ensures all requests use JSON format
+    'Content-Type': 'application/json', // Ensures all requests use JSON format
   },
 });
 
 // Helper function to get the auth token from localStorage
-const getAuthToken = (): string | null => localStorage.getItem("authToken");
+const getAuthToken = (): string | null => localStorage.getItem('authToken');
 
 // Request Interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = getAuthToken();
     if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
 
     // Additional headers if needed (e.g., for CSRF protection)
@@ -26,9 +26,9 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error("Request error:", error); // Improved logging for debugging
+    console.error('Request error:', error); // Improved logging for debugging
     return Promise.reject(error);
-  },
+  }
 );
 
 // Response Interceptor
@@ -47,31 +47,31 @@ axiosInstance.interceptors.response.use(
 
       try {
         // Attempt token refresh logic
-        const refreshToken = localStorage.getItem("refreshToken");
+        const refreshToken = localStorage.getItem('refreshToken');
         if (refreshToken) {
           const refreshResponse = await axios.post(
-            `${process.env.REACT_APP_API_BASE_URL || "http://localhost:5000"}/auth/refresh-token`,
+            `${process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000'}/auth/refresh-token`,
             { refreshToken },
-            { headers: { "Content-Type": "application/json" } }
+            { headers: { 'Content-Type': 'application/json' } }
           );
 
           const newToken = refreshResponse.data?.accessToken;
           if (newToken) {
-            localStorage.setItem("authToken", newToken);
-            originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+            localStorage.setItem('authToken', newToken);
+            originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
             return axiosInstance(originalRequest);
           }
         }
 
         // Clear tokens and redirect to login if refresh fails
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('refreshToken');
+        window.location.href = '/login';
       } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
+        console.error('Token refresh failed:', refreshError);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('refreshToken');
+        window.location.href = '/login';
       }
 
       return Promise.reject(error);
@@ -81,26 +81,26 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 403:
-          alert("Access denied. Please check your permissions.");
+          alert('Access denied. Please check your permissions.');
           break;
         case 404:
-          alert("Requested resource not found.");
+          alert('Requested resource not found.');
           break;
         case 500:
-          alert("Server error. Please try again later.");
+          alert('Server error. Please try again later.');
           break;
         default:
-          alert("An unexpected error occurred.");
+          alert('An unexpected error occurred.');
       }
     } else if (error.request) {
-      console.error("No response received:", error.request);
-      alert("Network error. Please check your connection.");
+      console.error('No response received:', error.request);
+      alert('Network error. Please check your connection.');
     } else {
-      console.error("Error setting up request:", error.message);
+      console.error('Error setting up request:', error.message);
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export default axiosInstance;

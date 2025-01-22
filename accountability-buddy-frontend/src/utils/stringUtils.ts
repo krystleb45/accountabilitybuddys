@@ -8,8 +8,8 @@
  * @throws Throws an error if the input is not a string.
  */
 export const trimString = (str: string): string => {
-  if (typeof str !== "string") {
-    throw new Error("Input must be a string.");
+  if (typeof str !== 'string') {
+    throw new Error('Input must be a string.');
   }
   return str.trim();
 };
@@ -22,8 +22,8 @@ export const trimString = (str: string): string => {
  * @throws Throws an error if the input is not a string.
  */
 export const capitalizeWords = (str: string): string => {
-  if (typeof str !== "string") {
-    throw new Error("Input must be a string.");
+  if (typeof str !== 'string') {
+    throw new Error('Input must be a string.');
   }
   return str.replace(/\b\w/g, (char) => char.toUpperCase());
 };
@@ -36,14 +36,14 @@ export const capitalizeWords = (str: string): string => {
  * @throws Throws an error if the input is not a string.
  */
 export const toKebabCase = (str: string): string => {
-  if (typeof str !== "string") {
-    throw new Error("Input must be a string.");
+  if (typeof str !== 'string') {
+    throw new Error('Input must be a string.');
   }
   return str
     .trim()
     .toLowerCase()
-    .replace(/\s+/g, "-") // Replace spaces with dashes
-    .replace(/[^\w-]+/g, ""); // Remove all non-word chars
+    .replace(/\s+/g, '-') // Replace spaces with dashes
+    .replace(/[^\w-]+/g, ''); // Remove all non-word chars
 };
 
 /**
@@ -54,17 +54,17 @@ export const toKebabCase = (str: string): string => {
  * @throws Throws an error if the input is not a string.
  */
 export const toCamelCase = (str: string): string => {
-  if (typeof str !== "string") {
-    throw new Error("Input must be a string.");
+  if (typeof str !== 'string') {
+    throw new Error('Input must be a string.');
   }
   return str
     .trim()
     .toLowerCase()
-    .split(" ")
+    .split(' ')
     .map((word, index) =>
       index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
     )
-    .join("");
+    .join('');
 };
 
 /**
@@ -74,8 +74,8 @@ export const toCamelCase = (str: string): string => {
  * @returns True if the string is a valid email, false otherwise.
  */
 export const isValidEmail = (email: string): boolean => {
-  if (typeof email !== "string") {
-    throw new Error("Input must be a string.");
+  if (typeof email !== 'string') {
+    throw new Error('Input must be a string.');
   }
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple regex for email validation
   return regex.test(email);
@@ -90,11 +90,11 @@ export const isValidEmail = (email: string): boolean => {
  * @throws Throws an error if the input is not a string or maxLength is invalid.
  */
 export const truncateString = (str: string, maxLength: number): string => {
-  if (typeof str !== "string") {
-    throw new Error("Input must be a string.");
+  if (typeof str !== 'string') {
+    throw new Error('Input must be a string.');
   }
-  if (typeof maxLength !== "number" || maxLength < 0) {
-    throw new Error("maxLength must be a non-negative number.");
+  if (typeof maxLength !== 'number' || maxLength < 0) {
+    throw new Error('maxLength must be a non-negative number.');
   }
   return str.length > maxLength ? `${str.slice(0, maxLength)}...` : str;
 };
@@ -107,14 +107,14 @@ export const truncateString = (str: string, maxLength: number): string => {
  * @throws Throws an error if the input is not a string.
  */
 export const toSnakeCase = (str: string): string => {
-  if (typeof str !== "string") {
-    throw new Error("Input must be a string.");
+  if (typeof str !== 'string') {
+    throw new Error('Input must be a string.');
   }
   return str
     .trim()
     .toLowerCase()
-    .replace(/\s+/g, "_") // Replace spaces with underscores
-    .replace(/[^\w_]+/g, ""); // Remove all non-word chars
+    .replace(/\s+/g, '_') // Replace spaces with underscores
+    .replace(/[^\w_]+/g, ''); // Remove all non-word chars
 };
 
 export default {

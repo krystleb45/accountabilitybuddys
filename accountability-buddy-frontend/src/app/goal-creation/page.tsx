@@ -1,7 +1,7 @@
-"use client"; // Mark as Client Component
+'use client'; // Mark as Client Component
 
-import React, { useState } from "react";
-import Link from "next/link"; // Import Link from Next.js
+import React, { useState } from 'react';
+import Link from 'next/link'; // Import Link from Next.js
 
 interface GoalForm {
   title: string;
@@ -12,16 +12,18 @@ interface GoalForm {
 
 const GoalCreationPage: React.FC = () => {
   const [form, setForm] = useState<GoalForm>({
-    title: "",
-    description: "",
-    deadline: "",
-    category: "",
+    title: '',
+    description: '',
+    deadline: '',
+    category: '',
   });
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
@@ -32,14 +34,14 @@ const GoalCreationPage: React.FC = () => {
 
     // Basic validation
     if (!form.title || !form.deadline || !form.category) {
-      setError("Title, Deadline, and Category are required.");
+      setError('Title, Deadline, and Category are required.');
       return;
     }
 
     // Placeholder for goal creation logic
-    console.log("Goal Created:", form);
+    console.log('Goal Created:', form);
     setSubmitted(true);
-    setError("");
+    setError('');
   };
 
   return (
@@ -52,7 +54,10 @@ const GoalCreationPage: React.FC = () => {
         {!submitted ? (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="title" className="block text-gray-700 font-medium mb-1">
+              <label
+                htmlFor="title"
+                className="block text-gray-700 font-medium mb-1"
+              >
                 Goal Title:
               </label>
               <input
@@ -68,7 +73,10 @@ const GoalCreationPage: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-gray-700 font-medium mb-1">
+              <label
+                htmlFor="description"
+                className="block text-gray-700 font-medium mb-1"
+              >
                 Description (Optional):
               </label>
               <textarea
@@ -83,7 +91,10 @@ const GoalCreationPage: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="deadline" className="block text-gray-700 font-medium mb-1">
+              <label
+                htmlFor="deadline"
+                className="block text-gray-700 font-medium mb-1"
+              >
                 Deadline:
               </label>
               <input
@@ -98,7 +109,10 @@ const GoalCreationPage: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="category" className="block text-gray-700 font-medium mb-1">
+              <label
+                htmlFor="category"
+                className="block text-gray-700 font-medium mb-1"
+              >
                 Category:
               </label>
               <select
@@ -128,9 +142,12 @@ const GoalCreationPage: React.FC = () => {
           </form>
         ) : (
           <div className="text-center text-green-600">
-            <h3 className="text-xl font-semibold">Goal Created Successfully!</h3>
+            <h3 className="text-xl font-semibold">
+              Goal Created Successfully!
+            </h3>
             <p>
-              Your new goal "<span className="font-bold">{form.title}</span>" has been created.
+              Your new goal "<span className="font-bold">{form.title}</span>"
+              has been created.
             </p>
           </div>
         )}

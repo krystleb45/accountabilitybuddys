@@ -1,5 +1,5 @@
-import React from "react";
-import "./EarnBadgeNotification.css"; // Optional CSS for styling
+import React from 'react';
+import './EarnBadgeNotification.css'; // Optional CSS for styling
 
 interface EarnBadgeNotificationProps {
   badgeName: string; // Name of the badge earned

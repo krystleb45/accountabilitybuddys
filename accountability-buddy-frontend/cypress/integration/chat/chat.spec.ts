@@ -31,7 +31,9 @@ describe('Chat Functionality', () => {
 
   it('should receive a new message notification', () => {
     // Simulate receiving a new message notification
-    cy.intercept('GET', '/api/chat/messages', { fixture: 'new-message.json' }).as('getNewMessage');
+    cy.intercept('GET', '/api/chat/messages', {
+      fixture: 'new-message.json',
+    }).as('getNewMessage');
     cy.wait('@getNewMessage');
 
     // Verify that the new message notification is visible
@@ -48,7 +50,9 @@ describe('Chat Functionality', () => {
     cy.get('.chat-history').scrollTo('top');
 
     // Verify that older messages are loaded
-    cy.intercept('GET', '/api/chat/older-messages', { fixture: 'older-messages.json' }).as('getOlderMessages');
+    cy.intercept('GET', '/api/chat/older-messages', {
+      fixture: 'older-messages.json',
+    }).as('getOlderMessages');
     cy.wait('@getOlderMessages');
     cy.get('.chat-history-item').should('have.length.greaterThan', 10); // Adjust based on your app's behavior
   });

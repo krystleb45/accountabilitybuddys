@@ -74,7 +74,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>Accountability Buddy</title>
-        <meta name="description" content="Achieve your goals with Accountability Buddy." />
+        <meta
+          name="description"
+          content="Achieve your goals with Accountability Buddy."
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 

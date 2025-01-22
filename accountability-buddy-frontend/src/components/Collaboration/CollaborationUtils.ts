@@ -1,6 +1,6 @@
 // CollaborationUtils.ts
 
-import { CollaborationGoal } from "./Collaboration.types";
+import { CollaborationGoal } from './Collaboration.types';
 
 /**
  * Filters a list of collaboration goals by their status.
@@ -11,7 +11,7 @@ import { CollaborationGoal } from "./Collaboration.types";
  */
 export const filterGoalsByStatus = (
   goals: CollaborationGoal[],
-  status: "pending" | "in-progress" | "completed"
+  status: 'pending' | 'in-progress' | 'completed'
 ): CollaborationGoal[] => {
   return goals.filter((goal) => goal.status === status);
 };
@@ -42,9 +42,9 @@ export const sortGoalsByDueDate = (
  */
 export const formatDate = (date: Date): string => {
   return date.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 };
 
@@ -58,7 +58,10 @@ export const calculateOverallProgress = (
   goals: CollaborationGoal[]
 ): number => {
   if (goals.length === 0) return 0;
-  const totalProgress = goals.reduce((sum, goal) => sum + (goal.progress || 0), 0);
+  const totalProgress = goals.reduce(
+    (sum, goal) => sum + (goal.progress || 0),
+    0
+  );
   return Math.round(totalProgress / goals.length);
 };
 
@@ -70,12 +73,12 @@ export const calculateOverallProgress = (
  */
 export const summarizeGoalsByStatus = (
   goals: CollaborationGoal[]
-): Record<"pending" | "in-progress" | "completed", number> => {
+): Record<'pending' | 'in-progress' | 'completed', number> => {
   return goals.reduce(
     (summary, goal) => {
       summary[goal.status]++;
       return summary;
     },
-    { pending: 0, "in-progress": 0, completed: 0 }
+    { pending: 0, 'in-progress': 0, completed: 0 }
   );
 };

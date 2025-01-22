@@ -4,7 +4,7 @@
  * and IntelliSense for fetch mocking methods.
  */
 
-declare module "jest-fetch-mock" {
+declare module 'jest-fetch-mock' {
   /**
    * Represents the fetch mock instance provided by jest-fetch-mock.
    */
@@ -59,13 +59,17 @@ declare module "jest-fetch-mock" {
      * Mock fetch with a custom implementation.
      * @param implementation - A custom function to handle fetch calls.
      */
-    mockImplementation: (implementation: (...args: any[]) => Promise<Response>) => void;
+    mockImplementation: (
+      implementation: (...args: any[]) => Promise<Response>
+    ) => void;
 
     /**
      * Mock fetch once with a custom implementation.
      * @param implementation - A custom function to handle a single fetch call.
      */
-    mockImplementationOnce: (implementation: (...args: any[]) => Promise<Response>) => void;
+    mockImplementationOnce: (
+      implementation: (...args: any[]) => Promise<Response>
+    ) => void;
   };
 
   export default fetchMock;

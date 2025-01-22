@@ -1,13 +1,13 @@
-import React from "react";
-import ActivityItem from "./ActivityItem";
-import "./ActivityList.css"; // Optional CSS for styling
+import React from 'react';
+import ActivityItem from './ActivityItem';
+import './ActivityList.css'; // Optional CSS for styling
 
 interface Activity {
   id: string;
   title: string;
   description: string;
   createdAt: string;
-  status: "pending" | "in-progress" | "completed";
+  status: 'pending' | 'in-progress' | 'completed';
 }
 
 interface ActivityListProps {
@@ -24,7 +24,11 @@ const ActivityList: React.FC<ActivityListProps> = ({
   onDelete,
 }) => {
   if (activities.length === 0) {
-    return <p className="activity-list-empty">No activities found. Add some to get started!</p>;
+    return (
+      <p className="activity-list-empty">
+        No activities found. Add some to get started!
+      </p>
+    );
   }
 
   return (

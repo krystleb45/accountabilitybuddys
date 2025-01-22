@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import "./ProfileSettings.module.css"; // Adjusted to use CSS Modules
+import React, { useState } from 'react';
+import './ProfileSettings.module.css'; // Adjusted to use CSS Modules
 
 interface User {
   name: string;
@@ -11,12 +11,15 @@ interface ProfileSettingsProps {
   onUpdate: (updatedData: User & { password?: string }) => void;
 }
 
-const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate }) => {
+const ProfileSettings: React.FC<ProfileSettingsProps> = ({
+  user,
+  onUpdate,
+}) => {
   const [formData, setFormData] = useState({
     name: user.name,
     email: user.email,
-    password: "",
-    confirmPassword: "",
+    password: '',
+    confirmPassword: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -29,7 +32,8 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate }) => 
 
   // Validate password strength (basic)
   const isPasswordStrong = (password: string): boolean => {
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password);
   };
 
@@ -40,13 +44,13 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate }) => 
     setSuccess(null);
 
     if (formData.password && formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
+      setError('Passwords do not match.');
       return;
     }
 
     if (formData.password && !isPasswordStrong(formData.password)) {
       setError(
-        "Password must be at least 8 characters long, include at least one letter, one number, and one special character."
+        'Password must be at least 8 characters long, include at least one letter, one number, and one special character.'
       );
       return;
     }
@@ -58,7 +62,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate }) => 
       ...(formData.password ? { password: formData.password } : {}),
     });
 
-    setSuccess("Profile updated successfully!");
+    setSuccess('Profile updated successfully!');
     setTimeout(() => setSuccess(null), 5000); // Clear success message after 5 seconds
   };
 

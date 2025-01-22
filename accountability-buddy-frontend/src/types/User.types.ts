@@ -18,7 +18,7 @@ export interface UserProfile {
   profilePictureUrl?: string;
 
   /** Role of the user (e.g., "admin", "user"). */
-  role?: "admin" | "user";
+  role?: 'admin' | 'user';
 
   /** Date when the user joined (ISO string). */
   joinedAt?: string;
@@ -58,7 +58,7 @@ export interface SubscriptionPlan {
   isFreeTier?: boolean;
 
   /** Indicates the billing cycle (e.g., "monthly", "yearly"). */
-  billingCycle?: "monthly" | "yearly";
+  billingCycle?: 'monthly' | 'yearly';
 
   /** Additional metadata or custom fields for the subscription plan. */
   metadata?: Record<string, any>;
@@ -78,7 +78,7 @@ export interface UserSubscription {
   renewalDate: string;
 
   /** Status of the subscription (e.g., "active", "inactive", "canceled"). */
-  status: "active" | "inactive" | "canceled";
+  status: 'active' | 'inactive' | 'canceled';
 
   /** Payment method associated with the subscription. */
   paymentMethod?: string;
