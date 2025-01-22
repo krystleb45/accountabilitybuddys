@@ -1,3 +1,5 @@
+// PermissionsContext.tsx
+
 import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
 
 // Define the shape of the PermissionsContext
@@ -9,6 +11,7 @@ interface PermissionsContextType {
   setUserPermissions: (perms: string[]) => void;
   setUserRoles: (userRoles: string[]) => void;
   canAccess: (requiredRoles?: string[], requiredPermissions?: string[]) => boolean;
+  resetPermissionsAndRoles: () => void; // Reset function
 }
 
 // Create PermissionsContext with the appropriate type
@@ -60,6 +63,12 @@ export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ childr
     }
   }, []);
 
+  // Reset permissions and roles
+  const resetPermissionsAndRoles = useCallback(() => {
+    setPermissions([]);
+    setRoles([]);
+  }, []);
+
   // Check if the user has both roles and permissions for an action
   const canAccess = useCallback(
     (requiredRoles: string[] = [], requiredPermissions: string[] = []) => {
@@ -82,6 +91,7 @@ export const PermissionsProvider: React.FC<PermissionsProviderProps> = ({ childr
         setUserPermissions,
         setUserRoles,
         canAccess,
+        resetPermissionsAndRoles,
       }}
     >
       {children}

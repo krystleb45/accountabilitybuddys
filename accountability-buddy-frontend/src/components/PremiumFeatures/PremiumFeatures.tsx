@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { trackEvent, trackConversion } from "../services/googleAnalytics";
-import StripeCheckout from "./Stripe/StripeCheckout"; // Import the StripeCheckout component
+import { trackEvent, trackConversion } from "src/services/googleAnalytics";
+import StripeCheckout from "../Stripe/StripeCheckout"; // Import the StripeCheckout component
 import "./PremiumFeatures.css";
 
 const PremiumFeatures: React.FC = () => {

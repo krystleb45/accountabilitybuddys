@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 /**
  * Custom hook for managing localStorage with TypeScript support.
@@ -11,7 +11,10 @@ import { useState } from "react";
  * @param initialValue - The initial value to use if no value is found in localStorage.
  * @returns A tuple containing the stored value and a function to update it.
  */
-const useLocalStorage = <T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] => {
+const useLocalStorage = <T>(
+  key: string,
+  initialValue: T
+): [T, (value: T | ((val: T) => T)) => void, () => void] => {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
@@ -32,7 +35,30 @@ const useLocalStorage = <T>(key: string, initialValue: T): [T, (value: T | ((val
     }
   };
 
-  return [storedValue, setValue];
+  const removeItem = () => {
+    try {
+      window.localStorage.removeItem(key);
+      setStoredValue(initialValue);
+    } catch (error) {
+      console.error(`Error removing localStorage key "${key}":`, error);
+    }
+  };
+
+  // Sync with localStorage changes made in other tabs
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === key) {
+        setStoredValue(event.newValue ? JSON.parse(event.newValue) : initialValue);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [key, initialValue]);
+
+  return [storedValue, setValue, removeItem];
 };
 
 export default useLocalStorage;

@@ -21,6 +21,8 @@ const Reminders: React.FC = () => {
   // Fetch reminders when component mounts
   useEffect(() => {
     const fetchReminders = async () => {
+      setLoading(true);
+      setError("");
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/reminders`);
         setReminders(response.data);
@@ -56,6 +58,16 @@ const Reminders: React.FC = () => {
     }
   };
 
+  // Handle deleting a reminder
+  const handleDeleteReminder = async (id: string) => {
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/reminders/${id}`);
+      setReminders((prevReminders) => prevReminders.filter((reminder) => reminder.id !== id));
+    } catch (err) {
+      setError("Failed to delete reminder. Please try again.");
+    }
+  };
+
   return (
     <div className="reminders">
       <h2>Reminders</h2>
@@ -69,6 +81,7 @@ const Reminders: React.FC = () => {
             <li key={reminder.id}>
               <p>{reminder.message}</p>
               <p>{new Date(reminder.time).toLocaleString()}</p>
+              <button onClick={() => handleDeleteReminder(reminder.id)}>Delete</button>
             </li>
           ))}
         </ul>

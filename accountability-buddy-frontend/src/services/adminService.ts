@@ -1,5 +1,5 @@
-import axios, { InternalAxiosRequestConfig, AxiosHeaders, AxiosResponse } from "axios";
-import { getAuthHeader } from "./authService";
+import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import { getAuthHeader } from './authService';
 
 // Define types for API responses
 export interface User {
@@ -20,90 +20,137 @@ export interface Report {
   contentId: string;
   reason: string;
   status: string;
+  createdAt: string;
 }
+
+// Utility function to handle API errors
+const handleApiError = (error: any): never => {
+  console.error('API Error:', error);
+  throw new Error(
+    error.response?.data?.message ||
+    error.message ||
+    'An unexpected error occurred. Please try again later.'
+  );
+};
 
 // Create an axios instance for admin API
 const apiClient = axios.create({
-  baseURL: "https://accountabilitybuddys.com/api/admin",
+  baseURL: 'https://accountabilitybuddys.com/api/admin',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
 // Axios interceptor to add the Authorization header to every request
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const authHeader = getAuthHeader(); // Get the token from the helper
-    if (authHeader) {
-      // Ensure headers use AxiosHeaders to meet the required type
-      config.headers = config.headers || new AxiosHeaders();
-      Object.entries(authHeader).forEach(([key, value]) => {
-        (config.headers as AxiosHeaders).set(key, value as string);
-      });
+    const authHeader = getAuthHeader() as { token: string }; // Get the token from the helper
+    if (authHeader && authHeader.token) {
+      const headers = new axios.AxiosHeaders();
+      headers.set('Content-Type', 'application/json');
+      headers.set('Authorization', `Bearer ${authHeader.token}`);
+      config.headers = headers;
     }
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
-// Utility function to handle retries with exponential backoff
-const axiosRetry = async <T>(fn: () => Promise<AxiosResponse<T>>, retries = 3): Promise<T> => {
-  let attempt = 0;
-  while (attempt < retries) {
+const AdminService = {
+  /**
+   * Fetch a list of users with optional pagination.
+   *
+   * @param {number} page - The page number to fetch.
+   * @param {number} limit - The number of users per page.
+   * @returns {Promise<{ users: User[]; total: number }>} - A list of users and the total count.
+   */
+  listUsers: async (page: number = 1, limit: number = 10): Promise<{ users: User[]; total: number } | undefined> => {
     try {
-      const response = await fn();
-      return response.data;
-    } catch (error: any) {
-      if (attempt < retries - 1 && error.response?.status >= 500) {
-        const delay = Math.pow(2, attempt) * 1000;
-        await new Promise((resolve) => setTimeout(resolve, delay));
-        attempt++;
-      } else {
-        console.error("Request failed:", error);
-        throw new Error(
-          error.response?.data?.message || "An error occurred. Please try again.",
-        );
-      }
+      const response = await apiClient.get('/users', { params: { page, limit } });
+      return {
+        users: response.data.users as User[],
+        total: response.data.total,
+      };
+    } catch (error) {
+      handleApiError(error);
     }
-  }
-  throw new Error("Max retries reached");
+  },
+
+  /**
+   * Block a user by their ID.
+   *
+   * @param {string} userId - The ID of the user to block.
+   * @returns {Promise<void>} - Resolves if the operation is successful.
+   */
+  blockUser: async (userId: string): Promise<void> => {
+    try {
+      await apiClient.post(`/users/${userId}/block`);
+    } catch (error) {
+      handleApiError(error);
+    }
+  },
+
+  /**
+   * Unblock a user by their ID.
+   *
+   * @param {string} userId - The ID of the user to unblock.
+   * @returns {Promise<void>} - Resolves if the operation is successful.
+   */
+  unblockUser: async (userId: string): Promise<void> => {
+    try {
+      await apiClient.post(`/users/${userId}/unblock`);
+    } catch (error) {
+      handleApiError(error);
+    }
+  },
+
+  /**
+   * Fetch analytics data.
+   *
+   * @returns {Promise<Analytics>} - The analytics data for the admin dashboard.
+   */
+  getAnalytics: async (): Promise<Analytics | undefined> => {
+    try {
+      const response = await apiClient.get('/analytics');
+      return response.data as Analytics;
+    } catch (error) {
+      handleApiError(error);
+    }
+  },
+
+  /**
+   * Fetch a list of reports with optional pagination.
+   *
+   * @param {number} page - The page number to fetch.
+   * @param {number} limit - The number of reports per page.
+   * @returns {Promise<{ reports: Report[]; total: number }>} - A list of reports and the total count.
+   */
+  listReports: async (page: number = 1, limit: number = 10): Promise<{ reports: Report[]; total: number } | undefined> => {
+    try {
+      const response = await apiClient.get('/reports', { params: { page, limit } });
+      return {
+        reports: response.data.reports as Report[],
+        total: response.data.total,
+      };
+    } catch (error) {
+      handleApiError(error);
+    }
+  },
+
+  /**
+   * Handle a report by marking it as resolved or taking specific actions.
+   *
+   * @param {string} reportId - The ID of the report to handle.
+   * @param {string} action - The action to take (e.g., "resolve").
+   * @returns {Promise<void>} - Resolves if the operation is successful.
+   */
+  handleReport: async (reportId: string, action: string): Promise<void> => {
+    try {
+      await apiClient.post(`/reports/${reportId}`, { action });
+    } catch (error) {
+      handleApiError(error);
+    }
+  },
 };
 
-// Fetch all users (admin view)
-export const getAllUsers = async (): Promise<User[]> => {
-  return axiosRetry(() => apiClient.get<User[]>("/users"));
-};
-
-// Block a user
-export const blockUser = async (userId: string): Promise<void> => {
-  return axiosRetry(() => apiClient.post<void>(`/users/${userId}/block`));
-};
-
-// Unblock a user
-export const unblockUser = async (userId: string): Promise<void> => {
-  return axiosRetry(() => apiClient.post<void>(`/users/${userId}/unblock`));
-};
-
-// Fetch site analytics (admin view)
-export const getSiteAnalytics = async (): Promise<Analytics> => {
-  return axiosRetry(() => apiClient.get<Analytics>("/analytics"));
-};
-
-// Get all reported content
-export const getReportedContent = async (): Promise<Report[]> => {
-  return axiosRetry(() => apiClient.get<Report[]>("/reports"));
-};
-
-// Resolve a report
-export const resolveReport = async (reportId: string): Promise<void> => {
-  return axiosRetry(() => apiClient.post<void>(`/reports/${reportId}/resolve`));
-};
-
-export default {
-  getAllUsers,
-  blockUser,
-  unblockUser,
-  getSiteAnalytics,
-  getReportedContent,
-  resolveReport,
-};
+export default AdminService;

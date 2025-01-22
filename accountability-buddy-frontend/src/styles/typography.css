@@ -1,0 +1,169 @@
+/* src/styles/typography.css */
+
+/* Base Typography Styles */
+html {
+    font-size: 16px; /* Default base font size for scalability */
+  }
+  
+  body {
+    font-family: 'Roboto', Arial, sans-serif; /* Modern, clean font */
+    line-height: 1.6; /* Comfortable line height for readability */
+    color: var(--text-color, #333333); /* Default text color with fallback */
+    letter-spacing: 0.5px; /* Subtle letter spacing for readability */
+  }
+  
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', Arial, sans-serif; /* Stylish font for headings */
+    margin: 0 0 1rem 0; /* Space below headings */
+    font-weight: 600; /* Bold headings for emphasis */
+    color: var(--heading-color, #222222); /* Primary color for headings */
+  }
+  
+  h1 {
+    font-size: 2.5rem; /* Largest heading */
+  }
+  
+  h2 {
+    font-size: 2rem; /* Second largest heading */
+  }
+  
+  h3 {
+    font-size: 1.75rem;
+  }
+  
+  h4 {
+    font-size: 1.5rem;
+  }
+  
+  h5 {
+    font-size: 1.25rem;
+  }
+  
+  h6 {
+    font-size: 1rem; /* Smallest heading */
+  }
+  
+  /* Paragraphs */
+  p {
+    margin: 0 0 1rem 0; /* Space below paragraphs */
+    font-size: 1rem; /* Standard font size */
+    color: var(--text-color, #333333); /* Default text color */
+  }
+  
+  /* Links */
+  a {
+    font-weight: 500; /* Slightly bold links */
+    color: var(--primary-color, #1976d2); /* Default link color */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease; /* Smooth transition on hover */
+  }
+  
+  a:hover {
+    color: var(--primary-hover-color, #0056b3); /* Darker color on hover */
+    text-decoration: underline; /* Underline for better accessibility */
+  }
+  
+  /* Lists */
+  ul, ol {
+    margin: 0 0 1rem 1.5rem; /* Add space and indentation */
+    padding: 0;
+    color: var(--text-color, #333333); /* Default text color */
+  }
+  
+  li {
+    margin-bottom: 0.5rem; /* Space between list items */
+  }
+  
+  /* Blockquotes */
+  blockquote {
+    font-style: italic; /* Italicize for emphasis */
+    margin: 1rem 0; /* Space above and below */
+    padding: 1rem; /* Inner padding */
+    border-left: 4px solid var(--primary-color, #1976d2); /* Primary color border */
+    background-color: var(--blockquote-bg, #f9f9f9); /* Subtle background */
+    color: var(--blockquote-text, #555555); /* Muted text color */
+  }
+  
+  /* Code Blocks */
+  code {
+    font-family: 'Courier New', Courier, monospace; /* Monospace for code */
+    font-size: 0.875rem; /* Slightly smaller font size */
+    background-color: var(--code-bg, #f4f4f4); /* Light gray background */
+    color: var(--code-color, #d6336c); /* Highlighted code color */
+    padding: 2px 4px; /* Add inner padding */
+    border-radius: 4px; /* Rounded corners */
+  }
+  
+  pre {
+    font-family: 'Courier New', Courier, monospace; /* Monospace for pre blocks */
+    font-size: 0.875rem; /* Slightly smaller font size */
+    background-color: var(--code-bg, #f4f4f4); /* Light gray background */
+    color: var(--code-color, #d6336c); /* Highlighted code color */
+    padding: 1rem; /* Add inner padding */
+    border-radius: 4px; /* Rounded corners */
+    overflow-x: auto; /* Scroll for long code lines */
+  }
+  
+  /* Small Text */
+  small {
+    font-size: 0.875rem; /* Smaller font size */
+    color: var(--text-muted, #777777); /* Muted text color */
+  }
+  
+  /* Utility Classes for Text */
+  .text-left {
+    text-align: left;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .text-right {
+    text-align: right;
+  }
+  
+  .text-uppercase {
+    text-transform: uppercase;
+  }
+  
+  .text-lowercase {
+    text-transform: lowercase;
+  }
+  
+  .text-capitalize {
+    text-transform: capitalize;
+  }
+  
+  /* Responsive Typography */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 2rem;
+    }
+  
+    h2 {
+      font-size: 1.75rem;
+    }
+  
+    h3 {
+      font-size: 1.5rem;
+    }
+  
+    h4 {
+      font-size: 1.25rem;
+    }
+  
+    h5 {
+      font-size: 1.125rem;
+    }
+  
+    h6 {
+      font-size: 1rem;
+    }
+  
+    p, li {
+      font-size: 0.95rem;
+    }
+  }
+  

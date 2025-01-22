@@ -14,6 +14,7 @@ type ThemeType = "light" | "dark" | "highContrast";
 interface ThemeContextType {
   theme: ThemeType;
   toggleTheme: () => void;
+  setTheme: (theme: ThemeType) => void; // Added function to set theme directly
 }
 
 // Default themes configuration with high-contrast support
@@ -67,7 +68,7 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setTheme] = useState<ThemeType>(getInitialTheme);
+  const [theme, setThemeState] = useState<ThemeType>(getInitialTheme);
 
   // Apply CSS variables for the current theme
   const applyThemeVariables = useCallback((theme: ThemeType) => {
@@ -77,20 +78,27 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     });
   }, []);
 
-  // Toggle theme and save preference
-  const toggleTheme = useCallback(() => {
-    setTheme((prevTheme) => {
-      const newTheme: ThemeType =
-        prevTheme === "light"
-          ? "dark"
-          : prevTheme === "dark"
-          ? "highContrast"
-          : "light";
+  // Set theme directly and save preference
+  const setTheme = useCallback(
+    (newTheme: ThemeType) => {
       localStorage.setItem("theme", newTheme);
       applyThemeVariables(newTheme);
-      return newTheme;
-    });
-  }, [applyThemeVariables]);
+      setThemeState(newTheme);
+    },
+    [applyThemeVariables]
+  );
+  
+
+  // Toggle theme and save preference
+const toggleTheme = useCallback(() => {
+  setThemeState((prevTheme: ThemeType) =>
+    prevTheme === "light"
+      ? "dark"
+      : prevTheme === "dark"
+      ? "highContrast"
+      : "light"
+  );
+}, []);
 
   // Apply theme on component mount
   useEffect(() => {
@@ -101,7 +109,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       if (!localStorage.getItem("theme")) {
         const systemTheme: ThemeType = e.matches ? "dark" : "light";
         setTheme(systemTheme);
-        applyThemeVariables(systemTheme);
       }
     };
 
@@ -110,10 +117,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
     return () =>
       mediaQuery.removeEventListener("change", handleSystemThemeChange);
-  }, [theme, applyThemeVariables]);
+  }, [theme, applyThemeVariables, setTheme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );

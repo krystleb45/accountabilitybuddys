@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { getSubscriptionStatus } from "../services/subscriptionService";
-import "./SubscriptionStatus.css"; // Optional CSS for styling
+import { getSubscriptionStatus } from "src/services/subscriptionService";
+import "./SubscriptionStatus.css"; // Import CSS for styling
 
 const SubscriptionStatus: React.FC = () => {
   const [status, setStatus] = useState<"loading" | "error" | "success">("loading");
-  const [subscriptionStatus, setSubscriptionStatus] = useState<string>("");
+  const [subscriptionStatus, setSubscriptionStatus] = useState<string>("No active subscription");
   const [error, setError] = useState<string>("");
 
+  // Fetch subscription status from the service
   const fetchStatus = useCallback(async () => {
     setError("");
     setStatus("loading");
@@ -22,6 +23,7 @@ const SubscriptionStatus: React.FC = () => {
     }
   }, []);
 
+  // Fetch status on component mount
   useEffect(() => {
     fetchStatus();
   }, [fetchStatus]);
@@ -29,14 +31,16 @@ const SubscriptionStatus: React.FC = () => {
   return (
     <div className="subscription-status">
       <h2>Subscription Status</h2>
-      {status === "loading" ? (
-        <p>Loading...</p>
-      ) : status === "error" ? (
-        <p className="error">{error}</p>
-      ) : (
-        <p>{subscriptionStatus}</p>
-      )}
-      <button onClick={fetchStatus}>Refresh Status</button>
+      {status === "loading" && <p className="loading">Loading...</p>}
+      {status === "error" && <p className="error">{error}</p>}
+      {status === "success" && <p className="success">{subscriptionStatus}</p>}
+      <button
+        onClick={fetchStatus}
+        className="refresh-button"
+        disabled={status === "loading"}
+      >
+        Refresh Status
+      </button>
     </div>
   );
 };

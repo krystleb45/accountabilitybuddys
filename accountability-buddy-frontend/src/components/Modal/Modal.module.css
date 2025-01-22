@@ -1,70 +1,126 @@
-/* src/styles/components/Modal.css */
-
 /* Modal overlay styles */
 .modal-overlay {
-    position: fixed; /* Position overlay to cover the entire viewport */
-    top: 0;
-    left: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    z-index: 1000; /* High z-index to sit above other content */
+  position: fixed; /* Position overlay to cover the entire viewport */
+  top: 0;
+  left: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-color: rgba(0, 0, 0, 0.6); /* Slightly darker background for better focus */
+  z-index: 1000; /* High z-index to sit above other content */
+  display: flex; /* Flexbox for centering modal */
+  align-items: center; /* Vertically center */
+  justify-content: center; /* Horizontally center */
+  animation: fadeIn 0.3s ease-in-out; /* Smooth fade-in animation */
+}
+
+/* Modal container styles */
+.modal {
+  background-color: #ffffff; /* Modal background color */
+  border-radius: 12px; /* Rounded corners for modern look */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  width: 90%; /* Default width */
+  max-width: 500px; /* Max width for larger screens */
+  padding: 20px; /* Inner padding */
+  z-index: 1001; /* Higher z-index than overlay */
+  transform: translateY(-30px); /* Start position for animation */
+  opacity: 0; /* Start opacity for animation */
+  animation: slideIn 0.3s ease-in-out forwards; /* Smooth slide-in animation */
+}
+
+/* Modal animations */
+@keyframes fadeIn {
+  from {
+    background-color: rgba(0, 0, 0, 0);
   }
-  
-  /* Modal container styles */
+  to {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal title styles */
+.modal-title {
+  font-size: 1.8rem; /* Slightly larger font size */
+  font-weight: bold; /* Bold title for emphasis */
+  margin-bottom: 15px; /* Space below title */
+  color: #222; /* Darker text color */
+}
+
+/* Modal content styles */
+.modal-content {
+  font-size: 1rem; /* Content font size */
+  line-height: 1.6; /* Increased line spacing for readability */
+  color: #444; /* Neutral text color */
+  margin-bottom: 20px; /* Space below content */
+}
+
+/* Modal footer styles */
+.modal-footer {
+  display: flex; /* Flexbox for footer alignment */
+  justify-content: flex-end; /* Align items to the right */
+  gap: 10px; /* Space between buttons */
+  margin-top: 20px; /* Space above footer */
+}
+
+/* Button styles in the modal */
+.modal-footer .button {
+  background-color: var(--primary-color, #007bff); /* Default button color */
+  color: white; /* Button text color */
+  padding: 10px 16px; /* Button padding */
+  border: none; /* Remove border */
+  border-radius: 8px; /* Modern rounded corners */
+  font-size: 1rem; /* Font size for readability */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover and active effects */
+}
+
+.modal-footer .button:hover {
+  background-color: var(--secondary-color, #0056b3); /* Hover color */
+}
+
+.modal-footer .button:active {
+  transform: scale(0.95); /* Subtle scale effect on click */
+}
+
+/* Close button styles */
+.close-button {
+  position: absolute; /* Position in top-right corner */
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #999; /* Default icon color */
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-button:hover {
+  color: #555; /* Darker color on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .modal {
-    position: fixed; /* Position modal */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Offset by half its size */
-    background-color: white; /* Modal background color */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-    width: 90%; /* Default width */
-    max-width: 600px; /* Max width for larger screens */
-    padding: 20px; /* Inner padding */
-    z-index: 1001; /* Higher z-index than overlay */
-    transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth opening and closing */
+    width: 95%; /* Wider modal on smaller screens */
   }
-  
-  /* Modal title styles */
+
   .modal-title {
-    font-size: 1.5rem; /* Title font size */
-    margin-bottom: 10px; /* Space below title */
+    font-size: 1.5rem; /* Adjust title size */
   }
-  
-  /* Modal content styles */
-  .modal-content {
-    font-size: 1rem; /* Content font size */
-    line-height: 1.5; /* Line spacing */
-    color: #333; /* Text color */
-  }
-  
-  /* Modal footer styles */
-  .modal-footer {
-    display: flex; /* Flexbox for footer alignment */
-    justify-content: flex-end; /* Align items to the right */
-    margin-top: 20px; /* Space above footer */
-  }
-  
-  /* Button styles in the modal */
+
   .modal-footer .button {
-    background-color: var(--primary-color); /* Button color */
-    color: white; /* Button text color */
-    padding: 8px 12px; /* Button padding */
-    border-radius: 5px; /* Rounded corners for button */
-    cursor: pointer; /* Pointer cursor */
-    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    padding: 8px 12px; /* Adjust button padding */
+    font-size: 0.9rem; /* Adjust font size */
   }
-  
-  .modal-footer .button:hover {
-    background-color: var(--secondary-color); /* Change color on hover */
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .modal {
-      width: 95%; /* Wider modal on smaller screens */
-    }
-  }
-  
+}

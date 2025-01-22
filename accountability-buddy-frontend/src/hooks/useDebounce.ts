@@ -8,10 +8,10 @@ import { useState, useEffect } from "react";
  *
  * @template T - The type of the debounced value.
  * @param value - The value to be debounced.
- * @param delay - The debounce delay in milliseconds.
+ * @param delay - The debounce delay in milliseconds (defaults to 300ms).
  * @returns The debounced value.
  */
-const useDebounce = <T>(value: T, delay: number): T => {
+const useDebounce = <T>(value: T, delay: number = 300): T => {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {

@@ -1,47 +1,51 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "../pages/Home";
-import Profile from "../pages/Profile";
-import Settings from "../pages/Settings";
-import NotFound from "../pages/NotFound";
+import Home from "src/app/homepage/page";
+import Profile from "src/app/profile/page";
+import Settings from "src/app/settings/page";
+import NotFound from "src/app/notfound/page";
 import RouteMetadata from "./RouteMetadata";
 
-const AppRoutes = () => {
+/**
+ * Application Routes
+ * 
+ * This component defines the routing structure of the application,
+ * including metadata for each route.
+ */
+const AppRoutes: React.FC = () => {
+  const routes = [
+    {
+      path: "/",
+      title: "Home | Accountability Buddy",
+      component: <Home />,
+    },
+    {
+      path: "/profile",
+      title: "Profile | Accountability Buddy",
+      component: <Profile />,
+    },
+    {
+      path: "/settings",
+      title: "Settings | Accountability Buddy",
+      component: <Settings />,
+    },
+    {
+      path: "*",
+      title: "404 | Page Not Found",
+      component: <NotFound />,
+    },
+  ];
+
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <RouteMetadata title="Home | Accountability Buddy">
-              <Home />
-            </RouteMetadata>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <RouteMetadata title="Profile | Accountability Buddy">
-              <Profile />
-            </RouteMetadata>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <RouteMetadata title="Settings | Accountability Buddy">
-              <Settings />
-            </RouteMetadata>
-          }
-        />
-        <Route
-          path="*"
-          element={
-            <RouteMetadata title="404 | Page Not Found">
-              <NotFound />
-            </RouteMetadata>
-          }
-        />
+        {routes.map(({ path, title, component }) => (
+          <Route
+            key={path}
+            path={path}
+            element={<RouteMetadata title={title}>{component}</RouteMetadata>}
+          />
+        ))}
       </Routes>
     </Router>
   );

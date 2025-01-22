@@ -1,5 +1,7 @@
+// APIContext.tsx
+
 import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
-import axios, { AxiosRequestConfig } from "axios"; // Import axios and types
+import axios, { AxiosRequestConfig } from "axios";
 
 // Define the shape of the APIContext
 interface APIContextType {
@@ -7,6 +9,7 @@ interface APIContextType {
   apiError: string | null;
   callAPI: (config: AxiosRequestConfig) => Promise<any>;
   clearApiError: () => void;
+  cancelRequest: () => void; // Function to cancel the current request
 }
 
 // Create API Context with the appropriate type
@@ -53,7 +56,7 @@ export const APIProvider: React.FC<APIProviderProps> = ({ children }) => {
         });
         return response.data;
       } catch (error: any) {
-        if (error.name === "CanceledError") {
+        if (axios.isCancel(error)) {
           console.log("Request canceled");
         } else {
           setApiError(error.message || "API call failed");
@@ -70,8 +73,17 @@ export const APIProvider: React.FC<APIProviderProps> = ({ children }) => {
   // Function to reset API error
   const clearApiError = useCallback(() => setApiError(null), []);
 
+  // Function to cancel the current request
+  const cancelRequest = useCallback(() => {
+    if (abortController) {
+      abortController.abort();
+      setAbortController(null);
+      console.log("Request canceled manually");
+    }
+  }, [abortController]);
+
   return (
-    <APIContext.Provider value={{ isLoading, apiError, callAPI, clearApiError }}>
+    <APIContext.Provider value={{ isLoading, apiError, callAPI, clearApiError, cancelRequest }}>
       {children}
     </APIContext.Provider>
   );

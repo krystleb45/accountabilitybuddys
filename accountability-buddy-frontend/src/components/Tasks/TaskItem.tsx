@@ -1,5 +1,5 @@
 import React from "react";
-import "./TaskItem.css"; // Import optional CSS for styling
+import "./TaskItem.css";
 
 interface Task {
   id: string;
@@ -25,20 +25,38 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onComplete, onDelete }) => {
           type="checkbox"
           checked={task.isCompleted}
           onChange={() => onComplete(task.id)}
-          aria-label={`Mark ${task.title} as ${
+          aria-label={`Mark "${task.title}" as ${
             task.isCompleted ? "incomplete" : "complete"
           }`}
         />
-        <span className="task-title">{task.title}</span>
+        <span
+          className={`task-title ${task.isCompleted ? "strikethrough" : ""}`}
+        >
+          {task.title}
+        </span>
       </div>
 
-      <button
-        onClick={() => onDelete(task.id)}
-        aria-label={`Delete ${task.title}`}
-        className="delete-button"
-      >
-        Delete
-      </button>
+      <div className="task-actions">
+        <button
+          onClick={() => onComplete(task.id)}
+          aria-label={`Mark "${task.title}" as ${
+            task.isCompleted ? "incomplete" : "complete"
+          }`}
+          className={`complete-button ${
+            task.isCompleted ? "undo-button" : ""
+          }`}
+        >
+          {task.isCompleted ? "Undo" : "Complete"}
+        </button>
+
+        <button
+          onClick={() => onDelete(task.id)}
+          aria-label={`Delete "${task.title}"`}
+          className="delete-button"
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 };

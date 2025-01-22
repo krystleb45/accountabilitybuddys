@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, waitFor, cleanup } from "@testing-library/react";
 import BadgeSystem from "../../src/components/BadgeSystem/BadgeSystem";
 import * as gamificationService from "../../src/services/gamificationService";
-import { Badge, UserProgress } from "../../src/types/Gamification";
+import { Badge, UserProgress } from "../../src/types/Gamification.types";
 
 
 // Mock the gamification service

@@ -1,80 +1,130 @@
-/* src/styles/global.css */
-
-/* CSS Reset */
+/* Global Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box; /* Include padding and border in element's total width and height */
-  }
-  
-  /* Body styles */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+/* Body Styles */
+body {
+  font-family: 'Nunito Sans', Arial, sans-serif; /* Modern font family */
+  line-height: 1.6; /* Improved readability */
+  background-color: #f4f4f4; /* Light background for better contrast */
+  color: #333; /* Neutral text color */
+  padding: 0 16px; /* Consistent horizontal padding */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions for theme changes */
+}
+
+/* Links */
+a {
+  text-decoration: none; /* Remove underline */
+  color: var(--primary-color, #1ea7fd); /* Fallback if CSS variable is missing */
+}
+
+a:hover {
+  text-decoration: underline; /* Indicate hover interaction */
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 16px; /* Consistent spacing below headings */
+  color: var(--primary-color, #1ea7fd); /* Use primary color */
+  font-weight: 700; /* Bold for headings */
+}
+
+/* Paragraphs */
+p {
+  margin-bottom: 16px; /* Consistent spacing for paragraphs */
+}
+
+/* Buttons */
+.button {
+  display: inline-block;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  background-color: var(--primary-color, #1ea7fd); /* Primary color for buttons */
+  color: #fff; /* White text for contrast */
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button:hover {
+  background-color: var(--primary-hover-color, #166bb7); /* Darker hover color */
+}
+
+/* Utility Classes */
+.hidden {
+  display: none;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
   body {
-    font-family: 'Arial', sans-serif; /* Base font family */
-    line-height: 1.6; /* Line height for better readability */
-    background-color: #ffffff; /* Default background color */
-    color: #333333; /* Default text color */
-    padding: 0 15px; /* Horizontal padding */
+    font-size: 14px; /* Adjust font size for small screens */
   }
-  
-  /* Links */
-  a {
-    text-decoration: none; /* Remove underline from links */
-    color: var(--primary-color); /* Use CSS variable for primary color */
+
+  h1 {
+    font-size: 1.75rem; /* Scaled down heading size */
   }
-  
-  a:hover {
-    text-decoration: underline; /* Underline on hover for better indication */
+
+  h2 {
+    font-size: 1.5rem;
   }
-  
-  /* Headings */
-  h1, h2, h3, h4, h5, h6 {
-    margin-bottom: 15px; /* Space below headings */
-    color: var(--primary-color); /* Use primary color for headings */
+
+  h3 {
+    font-size: 1.25rem;
   }
-  
-  /* Buttons */
-  .button {
-    display: inline-block; /* Allow padding and margin to work properly */
-    border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px 15px; /* Padding for buttons */
-    cursor: pointer; /* Pointer cursor for buttons */
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effects */
-  }
-  
-  /* Utility classes */
-  .hidden {
-    display: none; /* Utility class to hide elements */
-  }
-  
-  .text-center {
-    text-align: center; /* Center text */
-  }
-  
-  .mt-1 {
-    margin-top: 0.25rem; /* Small top margin */
-  }
-  
-  .mt-2 {
-    margin-top: 0.5rem; /* Medium top margin */
-  }
-  
-  .mb-1 {
-    margin-bottom: 0.25rem; /* Small bottom margin */
-  }
-  
-  .mb-2 {
-    margin-bottom: 0.5rem; /* Medium bottom margin */
-  }
-  
-  /* Responsive typography */
-  @media (max-width: 768px) {
-    body {
-      font-size: 14px; /* Adjust font size for smaller screens */
-    }
-  
-    h1 {
-      font-size: 1.5rem; /* Smaller heading size */
-    }
-  }
-  
+}
+
+/* Additional Components */
+.card {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.alert {
+  padding: 10px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.alert-success {
+  background-color: #e7fdd8;
+  color: #357a14;
+}
+
+.alert-error {
+  background-color: #fde8e8;
+  color: #d32f2f;
+}

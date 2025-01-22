@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
 });
 
 // Helper function to get the auth token from localStorage
-const getAuthToken = () => localStorage.getItem("authToken");
+const getAuthToken = (): string | null => localStorage.getItem("authToken");
 
 // Request Interceptor
 axiosInstance.interceptors.request.use(
@@ -45,9 +45,34 @@ axiosInstance.interceptors.response.use(
     ) {
       originalRequest._retry = true; // Prevents infinite retry loops
 
-      // Clear token and redirect to login
-      localStorage.removeItem("authToken");
-      window.location.href = "/login";
+      try {
+        // Attempt token refresh logic
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (refreshToken) {
+          const refreshResponse = await axios.post(
+            `${process.env.REACT_APP_API_BASE_URL || "http://localhost:5000"}/auth/refresh-token`,
+            { refreshToken },
+            { headers: { "Content-Type": "application/json" } }
+          );
+
+          const newToken = refreshResponse.data?.accessToken;
+          if (newToken) {
+            localStorage.setItem("authToken", newToken);
+            originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+            return axiosInstance(originalRequest);
+          }
+        }
+
+        // Clear tokens and redirect to login if refresh fails
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/login";
+      } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/login";
+      }
 
       return Promise.reject(error);
     }

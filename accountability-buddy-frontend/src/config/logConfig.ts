@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/react";
 import LogRocket from "logrocket";
 
-// Log Configuration
+// Enhanced Log Configuration
 const logConfig = {
   // Sentry Configuration
   sentryDsn: process.env.REACT_APP_SENTRY_DSN || "",
@@ -24,7 +24,11 @@ const logConfig = {
     if (this.sentryEnabled) {
       Sentry.init({
         dsn: this.sentryDsn,
-        tracesSampleRate: 1.0, // Adjust the sample rate for performance monitoring
+        tracesSampleRate: parseFloat(
+          process.env.REACT_APP_SENTRY_SAMPLE_RATE || "1.0"
+        ), // Adjust sample rate dynamically
+        environment: process.env.NODE_ENV, // Set environment context
+        release: process.env.REACT_APP_VERSION || "unknown", // App version tracking
       });
       console.log("Sentry initialized for error tracking");
     }
@@ -46,15 +50,50 @@ const logConfig = {
   },
 
   // Generic Logger
-  log: function (message, level = "info") {
+  log: function (
+    message: string,
+    level: "info" | "warn" | "error" = "info",
+    additionalContext?: Record<string, unknown>
+  ) {
     if (this.enableLogging) {
-      console[level](message); // Logs message to console based on specified level
+      console[level](message, additionalContext || "");
     }
+
     // Send errors to Sentry in production
     if (this.sentryEnabled && level === "error") {
-      Sentry.captureException(new Error(message));
+      Sentry.captureException(new Error(message), {
+        extra: additionalContext || {},
+      });
     }
   },
+
+  // Add User Context to Logs
+  setUserContext: function (user: {
+    id?: string;
+    email?: string;
+    username?: string;
+  }) {
+    if (this.sentryEnabled) {
+      Sentry.setUser(user);
+    }
+    if (this.logRocketEnabled) {
+      LogRocket.identify(user.id || "unknown", {
+        email: user.email,
+        name: user.username,
+      });
+    }
+  },
+
+  // Clear User Context
+clearUserContext: function () {
+  if (this.sentryEnabled) {
+    Sentry.setUser(null); // Sentry supports null to clear user context
+  }
+  if (this.logRocketEnabled) {
+    LogRocket.identify("unknown", {}); // Use a placeholder string instead of null
+  }
+},
+
 };
 
 // Initialize logging tools if enabled
@@ -64,5 +103,7 @@ logConfig.initLogRocket();
 // Example Usage:
 // logConfig.log('This is an info message');
 // logConfig.log('This is an error message', 'error');
+// logConfig.setUserContext({ id: '123', email: 'user@example.com', username: 'JohnDoe' });
+// logConfig.clearUserContext();
 
 export default logConfig;

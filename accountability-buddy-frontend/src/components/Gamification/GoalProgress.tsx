@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Box,
   LinearProgress,
@@ -7,44 +7,74 @@ import {
   CardContent,
   CardHeader,
   Button,
-} from '@mui/material';
+} from "@mui/material";
 
 // Define the interface for the goal progress
 interface GoalProgressProps {
   goalTitle: string;
-  currentProgress: number; // Current progress as a percentage (0-100)
-  targetProgress: number; // Target progress
-  onEditGoal: () => void; // Function to handle editing the goal
+  currentProgress: number;
+  targetProgress: number;
+  onEditGoal: () => void;
+  progress?: number; // Add a progress prop with an optional value
+  description?: string; // Add a description prop with an optional value
 }
 
-// GoalProgress Component
 const GoalProgress: React.FC<GoalProgressProps> = ({
   goalTitle,
   currentProgress,
   targetProgress,
   onEditGoal,
 }) => {
-  // Calculate the percentage completion
-  const progressPercentage = (currentProgress / targetProgress) * 100;
+  // Calculate the percentage completion safely
+  const progressPercentage =
+    targetProgress > 0
+      ? Math.min((currentProgress / targetProgress) * 100, 100)
+      : 0; // Prevent values over 100%
 
   return (
-    <Card>
-      <CardHeader title={goalTitle} />
+    <Card data-testid="goal-progress-card">
+      <CardHeader
+        title={goalTitle}
+        titleTypographyProps={{ variant: "h6" }}
+        data-testid="goal-title"
+      />
       <CardContent>
+        {/* Progress information */}
         <Box mb={2}>
-          <Typography variant="body2" color="textSecondary">
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            data-testid="progress-info"
+          >
             Progress: {currentProgress}/{targetProgress}
           </Typography>
-          <LinearProgress variant="determinate" value={progressPercentage} />
+          {/* Accessible progress bar */}
+          <LinearProgress
+            variant="determinate"
+            value={progressPercentage}
+            data-testid="progress-bar"
+            role="progressbar"
+            aria-valuenow={progressPercentage}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            style={{ height: "10px", borderRadius: "5px" }}
+          />
         </Box>
-        <Typography variant="caption" color="textSecondary">
+        {/* Percentage completion */}
+        <Typography
+          variant="caption"
+          color="textSecondary"
+          data-testid="progress-percentage"
+        >
           {progressPercentage.toFixed(0)}% completed
         </Typography>
+        {/* Edit goal button */}
         <Button
           variant="contained"
           color="primary"
           onClick={onEditGoal}
-          style={{ marginTop: '16px' }}
+          data-testid="edit-goal-button"
+          style={{ marginTop: "16px" }}
         >
           Edit Goal
         </Button>

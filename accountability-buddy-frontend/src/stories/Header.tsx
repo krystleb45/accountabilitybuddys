@@ -1,24 +1,44 @@
 import React from 'react';
+import { Button } from './Button'; // Import the Button component
+import './header.css'; // Import styles for the Header component
 
-import { Button } from './Button';
-import './header.css';
-
+// Define the User type
 type User = {
   name: string;
 };
 
+// Define the props for the Header component
 export interface HeaderProps {
+  /** Current user object; undefined if no user is logged in */
   user?: User;
+  /** Callback function triggered on login */
   onLogin?: () => void;
+  /** Callback function triggered on logout */
   onLogout?: () => void;
+  /** Callback function triggered to create an account */
   onCreateAccount?: () => void;
 }
 
-export const Header = ({ user, onLogin, onLogout, onCreateAccount }: HeaderProps) => (
+/**
+ * Header Component
+ * Displays the header with branding and user actions (login/logout/sign up).
+ */
+export const Header: React.FC<HeaderProps> = ({
+  user,
+  onLogin,
+  onLogout,
+  onCreateAccount,
+}) => (
   <header>
     <div className="storybook-header">
-      <div>
-        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <div className="header-branding">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-label="Logo"
+        >
           <g fill="none" fillRule="evenodd">
             <path
               d="M10 0h12a10 10 0 0110 10v12a10 10 0 01-10 10H10A10 10 0 010 22V10A10 10 0 0110 0z"
@@ -36,7 +56,7 @@ export const Header = ({ user, onLogin, onLogout, onCreateAccount }: HeaderProps
         </svg>
         <h1>Acme</h1>
       </div>
-      <div>
+      <div className="header-actions">
         {user ? (
           <>
             <span className="welcome">

@@ -16,36 +16,66 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     this.state = { hasError: false, error: null, errorInfo: null };
   }
 
-  // Catch errors in any components below and re-render with an error message
+  // Update state when an error is caught
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    // Update state so the next render shows the fallback UI
     return { hasError: true, error, errorInfo: null };
   }
 
-  // Log error information to an external logging service or console
+  // Log error details to an external service or console
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({ error, errorInfo });
-    // Log the error to an external service or console
     console.error("Error caught by ErrorBoundary:", error, errorInfo);
+
+    // You can send the error details to an external logging service here
+    // Example:
+    // logErrorToService({ error, errorInfo });
   }
+
+  // Reset the error state (useful for retrying actions or navigation)
+  handleRetry = () => {
+    this.setState({ hasError: false, error: null, errorInfo: null });
+  };
 
   render() {
     if (this.state.hasError) {
-      // Render a custom fallback UI
       return (
         <div
           role="alert"
           aria-live="assertive"
-          style={{ padding: "20px", textAlign: "center" }}
+          style={{
+            padding: "20px",
+            textAlign: "center",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+            borderRadius: "8px",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            maxWidth: "600px",
+            margin: "20px auto",
+          }}
         >
           <h1>Something went wrong.</h1>
           <p>
-            We're sorry, an error occurred. Please try refreshing the page or
-            contact support.
+            We're sorry, an unexpected error occurred. Please try refreshing the page or
+            contact support if the problem persists.
           </p>
-          {/* Show error details if in development mode */}
+          <button
+            onClick={this.handleRetry}
+            style={{
+              padding: "10px 20px",
+              fontSize: "1rem",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            Retry
+          </button>
+
           {process.env.NODE_ENV === "development" && (
-            <details style={{ whiteSpace: "pre-wrap" }}>
+            <details style={{ marginTop: "20px", textAlign: "left", whiteSpace: "pre-wrap" }}>
+              <summary>Error Details (Development Only)</summary>
               {this.state.error && this.state.error.toString()}
               <br />
               {this.state.errorInfo && this.state.errorInfo.componentStack}
@@ -55,7 +85,6 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       );
     }
 
-    // Render children if no error occurred
     return this.props.children;
   }
 }

@@ -1,3 +1,5 @@
+// NotificationContext.tsx
+
 import React, { createContext, useState, useContext, useCallback, ReactNode } from "react";
 
 // Define the shape of a notification
@@ -10,8 +12,13 @@ interface Notification {
 // Define the shape of the NotificationContext
 interface NotificationContextType {
   notifications: Notification[];
-  addNotification: (message: string, type?: "info" | "success" | "error" | "warning", duration?: number) => void;
+  addNotification: (
+    message: string,
+    type?: "info" | "success" | "error" | "warning",
+    duration?: number
+  ) => void;
   removeNotification: (id: number) => void;
+  clearAllNotifications: () => void; // New method to clear all notifications
 }
 
 // Create Notification Context with the appropriate type
@@ -37,7 +44,11 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
 
   // Add a new notification with message, type, and duration
   const addNotification = useCallback(
-    (message: string, type: "info" | "success" | "error" | "warning" = "info", duration: number = 5000) => {
+    (
+      message: string,
+      type: "info" | "success" | "error" | "warning" = "info",
+      duration: number = 5000
+    ) => {
       const id = Date.now();
       setNotifications((prev) => [...prev, { id, message, type }]);
 
@@ -46,7 +57,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
         removeNotification(id);
       }, duration);
     },
-    [],
+    []
   );
 
   // Remove notification by ID
@@ -56,9 +67,14 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
     );
   }, []);
 
+  // Clear all notifications
+  const clearAllNotifications = useCallback(() => {
+    setNotifications([]);
+  }, []);
+
   return (
     <NotificationContext.Provider
-      value={{ notifications, addNotification, removeNotification }}
+      value={{ notifications, addNotification, removeNotification, clearAllNotifications }}
     >
       {children}
       <div className="notification-container">

@@ -1,29 +1,44 @@
 import React from "react";
-import { useTheme } from "./context/ui/ThemeContext"; // Use the custom hook for ThemeContext
+import { useTheme } from "src/context/ui/ThemeContext"; // Use the custom hook for ThemeContext
 import "./ThemeToggle.css";
+import { ThemeToggleProps } from ".";
 
-const ThemeToggle: React.FC = () => {
+const ThemeToggle: React.FC<ThemeToggleProps> = ({ isDarkMode, onToggle }) => {
+
   const { theme, toggleTheme } = useTheme();
-
+  interface ThemeToggleProps {
+    isDarkMode: boolean;
+    onToggle: () => void;
+  }
   return (
-    <div className="theme-toggle">
-      <label className="switch">
-        <input
-          type="checkbox"
-          onChange={toggleTheme}
-          checked={theme === "dark"} // Checked if the theme is dark
-          aria-checked={theme === "dark"} // ARIA attribute for accessibility
-          aria-label="Toggle dark mode" // ARIA label for screen readers
-          role="switch" // Switch role for accessibility
-          tabIndex={0} // Allow focus for keyboard navigation
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              toggleTheme(); // Toggle theme on 'Enter' or 'Space' key press
-            }
-          }}
-        />
-        <span className="slider"></span> {/* Custom slider element */}
-      </label>
+    <div className="theme-toggle" data-testid="theme-toggle">
+      <button
+        onClick={toggleTheme}
+        aria-label="Toggle theme"
+        aria-pressed={theme === "dark"} // Accessibility: indicates the current state
+        role="button" // Role for accessibility
+        className={`theme-toggle-button ${theme === "dark" ? "dark" : "light"}`}
+        data-testid="theme-toggle-button"
+      >
+        {theme === "dark" ? (
+          <span
+            data-testid="dark-mode-icon"
+            className="theme-icon"
+            aria-hidden="true"
+          >
+            🌙
+          </span>
+        ) : (
+          <span
+            data-testid="light-mode-icon"
+            className="theme-icon"
+            aria-hidden="true"
+          >
+            ☀️
+          </span>
+        )}
+        {theme === "dark" ? "Dark Mode" : "Light Mode"}
+      </button>
     </div>
   );
 };

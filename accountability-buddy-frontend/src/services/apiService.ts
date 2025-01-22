@@ -1,7 +1,9 @@
-import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { AxiosHeaders } from 'axios';
+
 
 // Define base API URL
-const API_URL = "https://accountabilitybuddys.com/api";
+const API_URL = process.env.API_URL || 'https://accountabilitybuddys.com/api';
 
 // Define types for API responses
 export interface DashboardData {
@@ -43,163 +45,129 @@ export interface Notification {
   read: boolean;
 }
 
+// Utility function to handle API errors
+const handleApiError = (error: any): never => {
+  console.error('API Error:', error);
+  throw new Error(
+    error.response?.data?.message ||
+    error.message ||
+    'An unexpected error occurred. Please try again later.'
+  );
+};
+
 // Axios instance with default settings
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
 // Interceptor for adding authorization tokens
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('authToken'); // Retrieve token from localStorage
     if (token) {
-      config.headers.set("Authorization", `Bearer ${token}`);
+      const headers = new AxiosHeaders(config.headers);
+      headers.set('Authorization', `Bearer ${token}`);
+      config.headers = headers;
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Utility function for handling errors
-const handleApiError = (error: any, defaultMessage: string): never => {
-  console.error(error);
-  throw new Error(error.response?.data?.message || defaultMessage);
-};
-
-// Fetch dashboard data
-// Fetch dashboard data
-export const fetchDashboardData = async (): Promise<DashboardData> => {
+const ApiService = {
+  /**
+ * Fetch dashboard data.
+ *
+ * @returns {Promise<DashboardData>} - The dashboard data.
+ */
+getDashboardData: async (): Promise<DashboardData> => {
   try {
-    const response: AxiosResponse<DashboardData> = await apiClient.get<DashboardData>("/dashboard");
-    return response.data; // Return the parsed data
-  } catch (error: any) {
-    handleApiError(error, "Failed to fetch dashboard data.");
-    return Promise.reject(error); // Explicitly reject the Promise in case of error
+    const response: AxiosResponse<DashboardData> = await apiClient.get('/dashboard');
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    return {} as DashboardData; // Return an empty DashboardData object
   }
+},
+
+  /**
+   * Fetch tasks.
+   *
+   * @returns {Promise<Task[]>} - A list of tasks.
+   */
+  getTasks: async (): Promise<Task[]> => {
+    try {
+      const response: AxiosResponse<Task[]> = await apiClient.get('/tasks');
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      return [] as Task[];
+    }
+  },
+
+  /**
+   * Update a specific task.
+   *
+   * @param {string} taskId - The ID of the task to update.
+   * @param {Partial<Task>} taskData - The updated task data.
+   * @returns {Promise<Task>} - The updated task.
+   */
+  updateTask: async (taskId: string, taskData: Partial<Task>): Promise<Task> => {
+    try {
+      const response: AxiosResponse<Task> = await apiClient.put(`/tasks/${taskId}`, taskData);
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      throw error; // Add this line to re-throw the error
+    }
+  },
+
+  /**
+   * Fetch notifications.
+   *
+   * @returns {Promise<Notification[]>} - A list of notifications.
+   */
+  getNotifications: async (): Promise<Notification[]> => {
+    try {
+      const response: AxiosResponse<Notification[]> = await apiClient.get('/notifications');
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      return []; // Return an empty array if an error occurs
+    }
+  },
+
+  /**
+   * Mark a notification as read.
+   *
+   * @param {string} notificationId - The ID of the notification to mark as read.
+   * @returns {Promise<void>} - Resolves if successful.
+   */
+  markNotificationAsRead: async (notificationId: string): Promise<void> => {
+    try {
+      await apiClient.post(`/notifications/${notificationId}/read`);
+    } catch (error) {
+      handleApiError(error);
+    }
+  },
+
+  /**
+   * Fetch feed posts.
+   *
+   * @returns {Promise<FeedPost[]>} - A list of feed posts.
+   */
+  getFeedPosts: async (): Promise<FeedPost[]> => {
+    try {
+      const response: AxiosResponse<FeedPost[]> = await apiClient.get('/feed');
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      throw error; // Re-throw the error
+    }
+  },
 };
 
-// Fetch user data
-export const fetchUserData = async (userId: string): Promise<UserData> => {
-  try {
-    const response: AxiosResponse<UserData> = await apiClient.get<UserData>(`/users/${userId}`);
-    return response.data; // Return the parsed data
-  } catch (error: any) {
-    handleApiError(error, "Failed to fetch user data.");
-    return Promise.reject(error); // Explicitly reject the Promise in case of error
-  }
-};
-
-// Create a task
-export const createTask = async (taskData: Partial<Task>): Promise<Task> => {
-  try {
-    const response: AxiosResponse<Task> = await apiClient.post<Task>("/tasks", taskData);
-    return response.data; // Return the parsed data
-  } catch (error: any) {
-    handleApiError(error, "Failed to create task.");
-    return Promise.reject(error); // Explicitly reject the Promise in case of error
-  }
-};
-
-
-// Fetch feed posts
-export const getFeed = async (): Promise<FeedPost[]> => {
-  try {
-    const response: AxiosResponse<FeedPost[]> = await apiClient.get<FeedPost[]>("/feed");
-    return response.data; // Ensure `data` is an array of `FeedPost`.
-  } catch (error: any) {
-    handleApiError(error, "Failed to fetch feed.");
-    return []; // Return a fallback empty array if an error occurs.
-  }
-};
-
-
-// Create a new post
-export const createPost = async (content: string): Promise<FeedPost> => {
-  try {
-    const response: AxiosResponse<FeedPost> = await apiClient.post<FeedPost>("/posts", { content });
-    return response.data; // Return the parsed post data
-  } catch (error: any) {
-    handleApiError(error, "Failed to create post.");
-    return Promise.reject(error); // Explicitly reject the Promise to maintain a consistent error flow
-  }
-};
-
-
-// Like a post
-export const likePost = async (postId: string): Promise<void> => {
-  try {
-    await apiClient.post(`/posts/${postId}/like`);
-  } catch (error: any) {
-    handleApiError(error, "Failed to like post.");
-  }
-};
-
-// Unlike a post
-export const unlikePost = async (postId: string): Promise<void> => {
-  try {
-    await apiClient.post(`/posts/${postId}/unlike`);
-  } catch (error: any) {
-    handleApiError(error, "Failed to unlike post.");
-  }
-};
-
-// Add a comment to a post
-export const addComment = async (postId: string, commentText: string): Promise<Comment> => {
-  try {
-    const response: AxiosResponse<Comment> = await apiClient.post<Comment>(`/posts/${postId}/comments`, {
-      text: commentText,
-    });
-    return response.data; // Return the parsed comment data
-  } catch (error: any) {
-    handleApiError(error, "Failed to add comment.");
-    return Promise.reject(error); // Explicitly reject the Promise to maintain error flow
-  }
-};
-
-
-// Fetch partner notifications
-export const getPartnerNotifications = async (): Promise<Notification[]> => {
-  try {
-    const response: AxiosResponse<Notification[]> = await apiClient.get<Notification[]>("/partner-notifications");
-    return response.data; // Return the parsed notifications
-  } catch (error: any) {
-    handleApiError(error, "Failed to fetch partner notifications.");
-    return Promise.reject(error); // Explicitly reject the Promise to maintain error flow
-  }
-};
-
-
-// Mark a notification as read
-export const markNotificationAsRead = async (notificationId: string): Promise<void> => {
-  try {
-    await apiClient.put(`/partner-notifications/${notificationId}/read`);
-  } catch (error: any) {
-    handleApiError(error, "Failed to mark notification as read.");
-  }
-};
-
-// Delete a notification
-export const deleteNotification = async (notificationId: string): Promise<void> => {
-  try {
-    await apiClient.delete(`/partner-notifications/${notificationId}`);
-  } catch (error: any) {
-    handleApiError(error, "Failed to delete notification.");
-  }
-};
-
-export default {
-  fetchDashboardData,
-  fetchUserData,
-  createTask,
-  getFeed,
-  createPost,
-  likePost,
-  unlikePost,
-  addComment,
-  getPartnerNotifications,
-  markNotificationAsRead,
-  deleteNotification,
-};
+export default ApiService;

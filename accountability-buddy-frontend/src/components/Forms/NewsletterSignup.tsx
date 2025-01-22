@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./NewsletterSignup.css"; // Optional: Import CSS for styling
+import styles from "./Forms.module.css"; // Import CSS module for styling
+import { validateEmail } from "./FormsUtils"; // Use the reusable email validation utility
 
-const NewsletterSignup: React.FC = () => {
+interface NewsletterSignupProps {
+  onSubmit?: (data: { email: string; consent: boolean }) => void; // Optional callback for testing
+}
+
+const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
   const [email, setEmail] = useState<string>("");
+  const [consent, setConsent] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-
-  // Email validation
-  const validateEmail = (email: string): boolean => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,12 +20,30 @@ const NewsletterSignup: React.FC = () => {
     setSuccessMessage("");
     setErrorMessage("");
 
+    // Validate email
     if (!validateEmail(email)) {
       setErrorMessage("Please enter a valid email address.");
       setLoading(false);
       return;
     }
 
+    // Validate consent
+    if (!consent) {
+      setErrorMessage("You must agree to receive newsletters.");
+      setLoading(false);
+      return;
+    }
+
+    // Mock onSubmit callback for testing
+    if (onSubmit) {
+      onSubmit({ email, consent });
+      setEmail("");
+      setConsent(false);
+      setLoading(false);
+      return;
+    }
+
+    // Perform API request
     try {
       const response = await axios.post(
         "https://accountabilitybuddys.com/api/newsletter/subscribe",
@@ -34,54 +52,78 @@ const NewsletterSignup: React.FC = () => {
       if (response.status === 200) {
         setSuccessMessage("Thank you for subscribing to our newsletter!");
         setEmail("");
+        setConsent(false);
       } else {
         throw new Error("Subscription failed.");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to subscribe:", err);
-      setErrorMessage("Failed to subscribe. Please try again later.");
+      setErrorMessage(
+        err.response?.data?.message || "Failed to subscribe. Please try again later."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="newsletter-signup" role="form" aria-labelledby="newsletter-header">
-      <h3 id="newsletter-header">Subscribe to our Newsletter</h3>
-      <form onSubmit={handleSubmit} noValidate>
-        <div>
-          <label htmlFor="email" className="sr-only">
-            Email Address
-          </label>
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      data-testid="newsletter-signup-form"
+      className={styles["form-container"]}
+    >
+      <h3 id="newsletter-header" className={styles["form-title"]}>
+        Subscribe to our Newsletter
+      </h3>
+      <div>
+        <label htmlFor="email" className={styles["label"]}>
+          Email Address
+        </label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          aria-label="Email address"
+          aria-required="true"
+          className={styles["input"]}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="consent" className={styles["label"]}>
           <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            aria-label="Email address"
-            aria-required="true"
-            className="email-input"
-            required
+            type="checkbox"
+            id="consent"
+            checked={consent}
+            onChange={() => setConsent((prev) => !prev)}
+            aria-label="I agree to receive newsletters"
           />
-        </div>
-        <div>
-          <button type="submit" disabled={loading} className="subscribe-button">
-            {loading ? "Subscribing..." : "Subscribe"}
-          </button>
-        </div>
-      </form>
+          I agree to receive newsletters
+        </label>
+      </div>
+      <div>
+        <button
+          type="submit"
+          disabled={loading || !email || !consent}
+          className={styles["submit-button"]}
+        >
+          {loading ? "Subscribing..." : "Subscribe"}
+        </button>
+      </div>
       {successMessage && (
-        <p className="success-message" role="status">
+        <p className={styles["success-message"]} role="status" data-testid="success-message">
           {successMessage}
         </p>
       )}
       {errorMessage && (
-        <p className="error-message" role="alert">
+        <p className={styles["error-message"]} role="alert" data-testid="error-message">
           {errorMessage}
         </p>
       )}
-    </div>
+    </form>
   );
 };
 

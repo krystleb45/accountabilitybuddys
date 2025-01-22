@@ -1,68 +1,112 @@
-/* src/styles/components/light.css */
+/* src/styles/light.css */
 
-/* General body styles for light mode */
+/* General Body Styles for Light Mode */
 body {
-    background-color: #ffffff; /* Light background */
-    color: #333333; /* Dark text color for contrast */
+  background-color: #ffffff; /* Light background */
+  color: #333333; /* Dark text color for contrast */
+  font-family: 'Nunito Sans', Arial, sans-serif; /* Modern font */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for theme changes */
+}
+
+/* Link Styles */
+a {
+  color: #1976d2; /* Primary blue for links */
+  text-decoration: none; /* Remove underline */
+}
+
+a:hover {
+  color: #0056b3; /* Darker blue on hover */
+  text-decoration: underline; /* Underline for better accessibility */
+}
+
+/* Button Styles */
+.button {
+  background-color: #1976d2; /* Primary button background */
+  color: white; /* Button text color */
+  border: 1px solid #1976d2; /* Border matching the button */
+  border-radius: var(--border-radius-medium, 8px); /* Use variables for consistency */
+  padding: var(--spacing-medium, 8px) var(--spacing-large, 16px); /* Use spacing variables */
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  color: #e0e0e0; /* Subtle text color adjustment */
+}
+
+/* Card Styles */
+.card {
+  background-color: white; /* White background for cards */
+  border: 1px solid #ddd; /* Light grey border */
+  border-radius: var(--border-radius-medium, 8px); /* Rounded corners */
+  box-shadow: var(--box-shadow-light, 0 1px 3px rgba(0, 0, 0, 0.1)); /* Subtle shadow for depth */
+  padding: var(--spacing-large, 16px); /* Inner padding */
+  margin: var(--spacing-large, 16px) 0; /* Space between cards */
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: var(--box-shadow-medium, 0 2px 5px rgba(0, 0, 0, 0.2)); /* Enhanced shadow on hover */
+}
+
+/* Modal Styles */
+.modal {
+  background-color: white; /* White modal background */
+  color: #333333; /* Dark text color */
+  border-radius: var(--border-radius-medium, 8px); /* Rounded corners */
+  padding: var(--spacing-large, 16px); /* Consistent padding */
+  box-shadow: var(--box-shadow-medium, 0 2px 5px rgba(0, 0, 0, 0.2)); /* Subtle shadow */
+}
+
+/* Input Fields */
+input, textarea {
+  background-color: #ffffff; /* White input background */
+  color: #333333; /* Dark text color */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: var(--border-radius-small, 4px); /* Rounded corners */
+  padding: var(--spacing-medium, 8px); /* Consistent padding */
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+input:focus, textarea:focus {
+  border-color: #1976d2; /* Primary blue border on focus */
+  background-color: #f9f9f9; /* Subtle background adjustment */
+  outline: none; /* Remove default outline */
+}
+
+input::placeholder, textarea::placeholder {
+  color: #aaa; /* Subtle placeholder text color */
+}
+
+/* Footer Styles */
+footer {
+  background-color: #f5f5f5; /* Light footer background */
+  color: #333333; /* Dark text color */
+  padding: var(--spacing-large, 16px); /* Consistent padding */
+  text-align: center; /* Centered text */
+}
+
+/* Utility Classes */
+.text-muted {
+  color: #777; /* Muted text color */
+}
+
+.bg-light {
+  background-color: #f5f5f5; /* Light background utility */
+}
+
+.bg-white {
+  background-color: #ffffff; /* Utility for pure white background */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px; /* Adjust font size for smaller screens */
   }
-  
-  /* Link styles */
-  a {
-    color: #1976d2; /* Primary blue color for links */
+
+  h1, h2, h3, h4, h5, h6 {
+    font-size: 90%; /* Reduce heading sizes for smaller screens */
   }
-  
-  a:hover {
-    color: #0056b3; /* Darker blue on hover */
-  }
-  
-  /* Button styles */
-  .button {
-    background-color: #1976d2; /* Primary button background */
-    color: white; /* Button text color */
-    border: 1px solid #1976d2; /* Border matching the button */
-  }
-  
-  .button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-  }
-  
-  /* Card styles */
-  .card {
-    background-color: white; /* White background for cards */
-    border: 1px solid #ddd; /* Light grey border */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    padding: 16px; /* Inner padding */
-    margin: 16px 0; /* Space between cards */
-  }
-  
-  /* Modal styles */
-  .modal {
-    background-color: white; /* White modal background */
-    color: #333333; /* Dark text color */
-  }
-  
-  /* Input fields */
-  input, textarea {
-    background-color: #ffffff; /* White input background */
-    color: #333333; /* Dark text color */
-    border: 1px solid #ccc; /* Light border */
-  }
-  
-  input::placeholder, textarea::placeholder {
-    color: #aaa; /* Placeholder text color */
-  }
-  
-  /* Footer styles */
-  footer {
-    background-color: #f5f5f5; /* Light footer background */
-    color: #333333; /* Dark text color */
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    body {
-      font-size: 14px; /* Adjust font size for smaller screens */
-    }
-  }
-  
+}

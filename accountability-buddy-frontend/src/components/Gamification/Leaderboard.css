@@ -1,0 +1,97 @@
+/* Leaderboard.css */
+
+/* General container for the leaderboard */
+.leaderboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    width: 90%;
+}
+
+/* Leaderboard title */
+.leaderboard-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Table for leaderboard */
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Header row styling */
+.leaderboard-table th {
+    background-color: #2980b9;
+    color: #ffffff;
+    text-align: left;
+    padding: 12px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Data row styling */
+.leaderboard-table td {
+    padding: 12px 15px;
+    color: #2c3e50;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+/* Highlight current user's row */
+.leaderboard-table .current-user {
+    background-color: #dff9fb;
+    font-weight: bold;
+}
+
+/* Alternate row colors */
+.leaderboard-table tr:nth-child(even) {
+    background-color: #f4f6f8;
+}
+
+/* Hover effect for rows */
+.leaderboard-table tr:hover {
+    background-color: #ecf0f1;
+    cursor: pointer;
+}
+
+/* Rank column styling */
+.leaderboard-rank {
+    text-align: center;
+    font-weight: bold;
+    color: #2980b9;
+}
+
+/* Score column styling */
+.leaderboard-score {
+    text-align: right;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .leaderboard-table th, 
+    .leaderboard-table td {
+        font-size: 0.85rem;
+        padding: 10px;
+    }
+
+    .leaderboard-title {
+        font-size: 1.5rem;
+    }
+}

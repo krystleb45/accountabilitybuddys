@@ -1,32 +1,66 @@
+/* Header container */
 .storybook-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 15px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #f8f9fa; /* Subtle background color */
+}
+
+/* Branding section */
+.storybook-header .header-branding {
+  display: flex;
+  align-items: center;
 }
 
 .storybook-header svg {
   display: inline-block;
   vertical-align: top;
+  width: 32px;
+  height: 32px;
 }
 
 .storybook-header h1 {
-  display: inline-block;
-  vertical-align: top;
-  margin: 6px 0 6px 10px;
+  margin: 0 0 0 10px;
   font-weight: 700;
   font-size: 20px;
-  line-height: 1;
+  line-height: 1.2;
+  color: #555ab9; /* Matches the theme */
+}
+
+/* Actions section */
+.storybook-header .header-actions {
+  display: flex;
+  align-items: center;
 }
 
 .storybook-header button + button {
   margin-left: 10px;
 }
 
+/* Welcome text */
 .storybook-header .welcome {
   margin-right: 10px;
   color: #333;
   font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .storybook-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .storybook-header .header-actions {
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .storybook-header button + button {
+    margin-left: 0;
+    margin-top: 5px;
+  }
 }

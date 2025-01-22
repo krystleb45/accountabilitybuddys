@@ -1,95 +1,107 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosHeaders } from "axios";
-import { getAuthHeader } from "./authService"; // Helper function to get Authorization header
+import axios, { InternalAxiosRequestConfig } from 'axios';
 
-// Define response types for analytics endpoints
-export interface GoalAnalytics {
-  totalGoals: number;
-  completedGoals: number;
-  activeGoals: number;
+// Define types for analytics data
+export interface UserAnalytics {
+  totalUsers: number;
+  activeUsers: number;
+  newSignups: number;
+  [key: string]: number; // Allow flexibility for additional metrics
 }
 
 export interface ActivityAnalytics {
   totalActivities: number;
-  joinedActivities: number;
+  completedActivities: number;
+  pendingActivities: number;
+  [key: string]: number; // Allow flexibility for additional metrics
 }
 
-export interface UserGrowthAnalytics {
-  totalUsers: number;
-  newUsersThisMonth: number;
-}
-
-export interface EngagementAnalytics {
-  engagementRate: number;
-  activeUsers: number;
-  averageSessionDuration: string;
-}
-
-// Utility function to handle retries with exponential backoff
-const axiosRetry = async <T>(fn: () => Promise<AxiosResponse<T>>, retries = 3): Promise<T> => {
-  let attempt = 0;
-  while (attempt < retries) {
-    try {
-      const response = await fn();
-      return response.data;
-    } catch (error: any) {
-      if (attempt < retries - 1 && error.response?.status >= 500) {
-        const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-        await new Promise((resolve) => setTimeout(resolve, delay));
-        attempt++;
-      } else {
-        console.error("Request failed:", error);
-        throw new Error(
-          error.response?.data?.message || "An error occurred. Please try again.",
-        );
-      }
-    }
-  }
-  throw new Error("Max retries reached");
+// Utility function to handle API errors
+const handleApiError = (error: any): never => {
+  console.error('API Error:', error);
+  throw new Error(
+    error.response?.data?.message ||
+    error.message ||
+    'An unexpected error occurred. Please try again later.'
+  );
 };
 
-// Create an axios instance for the analytics API
-const apiClient: AxiosInstance = axios.create({
-  baseURL: "https://accountabilitybuddys.com/api/analytics",
+// Create an axios instance for analytics API
+const apiClient = axios.create({
+  baseURL: 'https://accountabilitybuddys.com/api/analytics',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
-// Axios interceptor to add the Authorization header dynamically before each request
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const authHeader = getAuthHeader(); // Get the updated token
-    if (authHeader) {
-      config.headers = config.headers || new AxiosHeaders();
-      Object.entries(authHeader).forEach(([key, value]) => {
-        (config.headers as AxiosHeaders).set(key, value as string);
-      });
-    }
+    // Add authorization header or other request-level configurations here if needed
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
-// Fetch goal analytics for the current user
-export const getGoalAnalytics = async (): Promise<GoalAnalytics> => {
-  return axiosRetry(() => apiClient.get<GoalAnalytics>("/goals"));
+const AnalyticsService = {
+  /**
+   * Fetch user analytics data.
+   *
+   * @returns {Promise<UserAnalytics>} - The user analytics data.
+   */
+  getUserAnalytics: async (): Promise<UserAnalytics> => {
+    try {
+      const response = await apiClient.get('/users');
+      return response.data as UserAnalytics;
+    } catch (error) {
+      return Promise.reject(handleApiError(error));
+    }
+  },
+
+  /**
+   * Fetch activity analytics data.
+   *
+   * @returns {Promise<ActivityAnalytics>} - The activity analytics data.
+   */
+  getActivityAnalytics: async (): Promise<ActivityAnalytics> => {
+    try {
+      const response = await apiClient.get('/activities');
+      return response.data as ActivityAnalytics;
+    } catch (error) {
+      return Promise.reject(handleApiError(error));
+    }
+  },
+
+  /**
+   * Fetch detailed analytics for a specific timeframe.
+   *
+   * @param {string} startDate - The start date for the analytics data (YYYY-MM-DD).
+   * @param {string} endDate - The end date for the analytics data (YYYY-MM-DD).
+   * @returns {Promise<any>} - The detailed analytics data for the specified timeframe.
+   */
+  getDetailedAnalytics: async (startDate: string, endDate: string): Promise<any> => {
+    try {
+      const response = await apiClient.get('/detailed', {
+        params: { startDate, endDate },
+      });
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+    }
+  },
+
+  /**
+   * Fetch custom analytics data by category.
+   *
+   * @param {string} category - The category of analytics to fetch (e.g., "user", "activity").
+   * @returns {Promise<any>} - The analytics data for the specified category.
+   */
+  getAnalyticsByCategory: async (category: string): Promise<any> => {
+    try {
+      const response = await apiClient.get(`/category/${category}`);
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+    }
+  },
 };
 
-// Fetch activity analytics for the current user
-export const getActivityAnalytics = async (): Promise<ActivityAnalytics> => {
-  return axiosRetry(() => apiClient.get<ActivityAnalytics>("/activities"));
-};
-
-// Fetch user growth analytics
-export const getUserGrowthAnalytics = async (): Promise<UserGrowthAnalytics> => {
-  return axiosRetry(() => apiClient.get<UserGrowthAnalytics>("/users"));
-};
-
-// Fetch engagement rate analytics
-export const getEngagementAnalytics = async (): Promise<EngagementAnalytics> => {
-  return axiosRetry(() => apiClient.get<EngagementAnalytics>("/engagement"));
-};
-
-export default {
-  getGoalAnalytics,
-  getActivityAnalytics,
-  getUserGrowthAnalytics,
-  getEngagementAnalytics,
-};
+export default AnalyticsService;

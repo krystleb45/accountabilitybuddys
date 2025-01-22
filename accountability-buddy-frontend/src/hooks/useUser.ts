@@ -1,20 +1,36 @@
-import { useContext } from "react";
-import UserContext from "../context/data/UserContext";
-import { User } from "../../src/types/User"; // Import centralized User type
+import { useContext, useCallback } from "react";
+import { useUserSubscription } from "../context/data/UserSubscriptionContext";
+import { User, SubscriptionPlan } from "../types/User.types"; // Import centralized User type
 
+/**
+ * Custom hook for accessing and managing user-related data.
+ *
+ * Provides access to the current user, subscription details, and authentication state.
+ */
 const useUser = (): {
   user: User | null;
-  refreshUserProfile: () => Promise<void>;
-  loading: boolean;
-  error: string | null;
+  subscriptionPlan: SubscriptionPlan | null;
+  isAuthenticated: boolean;
+  login: (userData: User) => void;
+  logout: () => void;
+  updateSubscription: (plan: SubscriptionPlan) => void;
 } => {
-  const context = useContext(UserContext);
+  const context = useUserSubscription();
 
   if (!context) {
-    throw new Error("useUser must be used within a UserProvider");
+    throw new Error("useUser must be used within a UserSubscriptionProvider");
   }
 
-  return context;
+  const { user, subscriptionPlan, isAuthenticated, login, logout, updateSubscription } = context;
+
+  return {
+    user,
+    subscriptionPlan,
+    isAuthenticated,
+    login,
+    logout,
+    updateSubscription,
+  };
 };
 
 export default useUser;

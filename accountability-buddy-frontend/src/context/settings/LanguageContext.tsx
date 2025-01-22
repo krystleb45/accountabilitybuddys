@@ -12,6 +12,7 @@ import i18n from "../../config/i18n";
 interface LanguageContextType {
   language: string;
   changeLanguage: (lng: string) => void;
+  getSupportedLanguages: () => string[]; // New method to retrieve supported languages
 }
 
 // Create Language Context with the appropriate type
@@ -31,6 +32,9 @@ interface LanguageProviderProps {
   children: ReactNode;
 }
 
+// Define supported languages
+const SUPPORTED_LANGUAGES = ["en", "es", "fr", "de", "zh", "ar"];
+
 // Language Context Provider
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
   const [language, setLanguage] = useState<string>(() => {
@@ -44,10 +48,17 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
 
   // Change language and persist the preference
   const changeLanguage = useCallback((lng: string) => {
-    setLanguage(lng);
-    i18n.changeLanguage(lng);
-    localStorage.setItem("language", lng);
+    if (SUPPORTED_LANGUAGES.includes(lng)) {
+      setLanguage(lng);
+      i18n.changeLanguage(lng);
+      localStorage.setItem("language", lng);
+    } else {
+      console.warn(`Unsupported language: ${lng}`);
+    }
   }, []);
+
+  // Get supported languages
+  const getSupportedLanguages = useCallback(() => SUPPORTED_LANGUAGES, []);
 
   // Update i18n when language changes
   useEffect(() => {
@@ -60,7 +71,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   }, [language]);
 
   return (
-    <LanguageContext.Provider value={{ language, changeLanguage }}>
+    <LanguageContext.Provider value={{ language, changeLanguage, getSupportedLanguages }}>
       {children}
     </LanguageContext.Provider>
   );

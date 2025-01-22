@@ -1,5 +1,5 @@
 import React from "react";
-import "./ProgressTracker.css";
+import "./ProgressTracker.module.css";
 
 interface ProgressTrackerProps {
   progress: number;
@@ -11,7 +11,12 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({ progress, label }) =>
   const validProgress = Math.max(0, Math.min(progress, 100));
 
   return (
-    <div className="progress-tracker" role="region" aria-label="Progress Tracker">
+    <div
+      className="progress-tracker"
+      role="region"
+      aria-label="Progress Tracker"
+      aria-labelledby="progress-tracker-label"
+    >
       <div
         className="progress-bar-container"
         role="progressbar"
@@ -26,7 +31,13 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({ progress, label }) =>
           style={{ width: `${validProgress}%` }}
           aria-hidden="true" // Screen readers will use the outer role="progressbar"
         ></div>
-        <span className="progress-label">{validProgress}% Complete</span>
+        <span
+          id="progress-tracker-label"
+          className="progress-label"
+          aria-live="polite"
+        >
+          {label || "User Progress"}: {validProgress}% Complete
+        </span>
       </div>
     </div>
   );

@@ -1,9 +1,6 @@
-import axios, {
-  AxiosRequestConfig,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-} from "axios";
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import authService from "./authService"; // Correctly use authService for token management
+import { AxiosHeaders } from "axios";
 
 // Define types for support data
 export interface SupportData {
@@ -11,14 +8,16 @@ export interface SupportData {
   email: string;
   subject: string;
   message: string;
+  priority?: string; // Optional priority field (e.g., "low", "medium", "high")
   [key: string]: any; // Additional fields
 }
 
 export interface SupportTicket {
   id: string;
-  status: string; // e.g., "open", "resolved"
+  status: string; // e.g., "open", "resolved", "pending"
   createdAt: string;
   updatedAt?: string;
+  priority?: string; // Optional priority field
   [key: string]: any; // Additional fields
 }
 
@@ -26,24 +25,27 @@ export interface TicketDetails extends SupportTicket {
   messages: Array<{ sender: string; content: string; timestamp: string }>;
 }
 
-// Create an axios instance for support API
+// Create an axios instance for the support API
 const apiClient = axios.create({
   baseURL: "https://accountabilitybuddys.com/api/support",
-  headers: new axios.AxiosHeaders({
+  headers: {
     "Content-Type": "application/json",
-  }),
+  },
 });
 
 // Axios interceptor to automatically add the Authorization header to every request
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     const authHeader = authService.getAuthHeader();
+
     if (!config.headers) {
-      config.headers = new axios.AxiosHeaders();
+      config.headers = new AxiosHeaders();
     }
-    for (const [key, value] of Object.entries(authHeader)) {
-      config.headers.set(key, value);
-    }
+
+    Object.entries(authHeader).forEach(([key, value]) => {
+      config.headers.set(key, value as string);
+    });
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -73,10 +75,13 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
 
 // Contact support function
 export const contactSupport = async (supportData: SupportData): Promise<void> => {
+  if (!supportData.name || !supportData.email || !supportData.subject || !supportData.message) {
+    throw new Error("All required fields (name, email, subject, and message) must be provided.");
+  }
+
   try {
-    await axiosRetry(() =>
-      apiClient.post("/contact", supportData)
-    );
+    await axiosRetry(() => apiClient.post("/contact", supportData));
+    console.log("Support contacted successfully.");
   } catch (error: any) {
     console.error("Error contacting support:", error);
     throw new Error(
@@ -91,6 +96,7 @@ export const getSupportTickets = async (): Promise<SupportTicket[]> => {
     const response: AxiosResponse<SupportTicket[]> = await axiosRetry(() =>
       apiClient.get("/tickets")
     );
+    console.log("Support tickets fetched successfully:", response.data);
     return response.data;
   } catch (error: any) {
     console.error("Error fetching support tickets:", error);
@@ -104,10 +110,15 @@ export const getSupportTickets = async (): Promise<SupportTicket[]> => {
 export const getTicketDetails = async (
   ticketId: string
 ): Promise<TicketDetails> => {
+  if (!ticketId) {
+    throw new Error("Ticket ID is required to fetch ticket details.");
+  }
+
   try {
     const response: AxiosResponse<TicketDetails> = await axiosRetry(() =>
       apiClient.get(`/tickets/${ticketId}`)
     );
+    console.log(`Details fetched for ticket ID: ${ticketId}`, response.data);
     return response.data;
   } catch (error: any) {
     console.error("Error fetching ticket details:", error);
@@ -122,10 +133,13 @@ export const updateSupportTicket = async (
   ticketId: string,
   updateData: Partial<SupportTicket>
 ): Promise<void> => {
+  if (!ticketId) {
+    throw new Error("Ticket ID is required to update a support ticket.");
+  }
+
   try {
-    await axiosRetry(() =>
-      apiClient.put(`/tickets/${ticketId}`, updateData)
-    );
+    await axiosRetry(() => apiClient.put(`/tickets/${ticketId}`, updateData));
+    console.log(`Support ticket ${ticketId} updated successfully.`);
   } catch (error: any) {
     console.error("Error updating support ticket:", error);
     throw new Error(

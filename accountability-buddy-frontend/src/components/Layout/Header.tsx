@@ -1,10 +1,10 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
-import "./Header.css"; // Optional CSS for styling
+import "./Header.css";
 
 interface HeaderProps {
-  isAuthenticated: boolean;
-  onLogout: () => void;
+  isAuthenticated: boolean; // Indicates if the user is authenticated
+  onLogout: () => void; // Callback for logging out
 }
 
 const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
@@ -12,54 +12,41 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
     <header className="header" role="banner" aria-label="Main navigation">
       <div className="logo">
         <Link to="/" aria-label="Home">
-          <img src="/logo.png" alt="Accountability Buddy Logo" />
+          <img
+            src="/logo.png"
+            alt="Accountability Buddy Logo"
+            className="logo-image"
+          />
         </Link>
       </div>
 
       <nav className="nav">
         <ul className="nav-list">
-          <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) => (isActive ? "active" : undefined)}
-              aria-label="Home"
-            >
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/goals"
-              className={({ isActive }) => (isActive ? "active" : undefined)}
-              aria-label="Goals"
-            >
-              Goals
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/collaborations"
-              className={({ isActive }) => (isActive ? "active" : undefined)}
-              aria-label="Collaborations"
-            >
-              Collaborations
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/profile"
-              className={({ isActive }) => (isActive ? "active" : undefined)}
-              aria-label="Profile"
-            >
-              Profile
-            </NavLink>
-          </li>
+          {/* Main navigation links */}
+          {[
+            { path: "/", label: "Home" },
+            { path: "/goals", label: "Goals" },
+            { path: "/collaborations", label: "Collaborations" },
+            { path: "/profile", label: "Profile" },
+          ].map(({ path, label }) => (
+            <li key={path}>
+              <NavLink
+                to={path}
+                className={({ isActive }) => (isActive ? "active" : "inactive")}
+                aria-label={label}
+              >
+                {label}
+              </NavLink>
+            </li>
+          ))}
+
+          {/* Conditional rendering for login/logout */}
           {isAuthenticated ? (
             <li>
               <button
                 onClick={onLogout}
-                aria-label="Logout"
                 className="logout-button"
+                aria-label="Logout"
               >
                 Logout
               </button>
@@ -68,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
             <li>
               <NavLink
                 to="/login"
-                className={({ isActive }) => (isActive ? "active" : undefined)}
+                className={({ isActive }) => (isActive ? "active" : "inactive")}
                 aria-label="Login"
               >
                 Login

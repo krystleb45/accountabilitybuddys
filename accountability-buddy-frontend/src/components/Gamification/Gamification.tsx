@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import BadgeSystem from "./BadgeSystem";
+import BadgeSystem from "../BadgeSystem/BadgeSystem";
 import ProgressTracker from "../Progress/ProgressTracker";
-import Leaderboard from "../Leaderboard";
+import Leaderboard from "../Leaderboard/Leaderboard";
 import Notification from "../Notifications/Notification";
 import { fetchUserProgress } from "../../services/gamificationService";
-import { UserProgress } from "../../types/Gamification"; // Import the correct type
+import { UserProgress } from "../../types/Gamification.types"; // Import the correct type
 import "./Gamification.css";
 
 interface User {
@@ -57,21 +57,28 @@ const Gamification: React.FC<GamificationProps> = ({ user }) => {
   }
 
   return (
-    <div className="gamification">
-      <h2>Gamification</h2>
+    <div className="gamification-container" data-testid="gamification-container">
+      <h2 className="gamification-header">Gamification</h2>
       {loading ? (
-        <p>Loading...</p>
+        <p data-testid="loading-message">Loading...</p>
       ) : error ? (
-        <p className="error">{error}</p>
+        <p className="error" data-testid="error-message">{error}</p>
       ) : (
         <>
-          <ProgressTracker progress={progress} />
-          <BadgeSystem user={user} />
+          <div className="progress-bar-container">
+            <ProgressTracker progress={progress} />
+          </div>
+          <div className="achievement-section" data-testid="achievement-section">
+            <BadgeSystem user={user} badges={[]} />
+          </div>
           <Leaderboard userId={user.id} />
         </>
       )}
       {newBadge && (
-        <Notification message={`Congratulations! You've earned the ${newBadge} badge!`} />
+        <Notification
+          message={`Congratulations! You've earned the ${newBadge} badge!`}
+          data-testid="new-badge-notification"
+        />
       )}
     </div>
   );

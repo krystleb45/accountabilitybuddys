@@ -1,89 +1,102 @@
-import axios, { AxiosResponse } from "axios"; // Import AxiosResponse directly from axios
-import apiClient from "./axiosInstance"; // Import the axios instance
+import axios, { AxiosResponse } from "axios";
+import apiClient from "./axiosInstance";
 
-// Define types for group data
 export interface Group {
   id: string;
   name: string;
   description?: string;
-  members?: number; // Optional number of members
-  [key: string]: any; // Additional fields
+  members?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  [key: string]: any;
 }
 
 export interface GroupService {
-  createGroup(groupData: Partial<Group>): Promise<Group>;
-  fetchGroups(): Promise<Group[]>;
-  joinGroup(groupId: string): Promise<Group>;
-  leaveGroup(groupId: string): Promise<Group>;
+  createGroup(groupData: Partial<Group>): Promise<Group | undefined>;
+  fetchGroups(): Promise<Group[] | undefined>;
+  getGroupDetails(groupId: string): Promise<Group | undefined>;
+  joinGroup(groupId: string): Promise<Group | undefined>;
+  leaveGroup(groupId: string): Promise<Group | undefined>;
 }
 
-// Implementation of GroupService
+const handleError = (functionName: string, error: unknown): void => {
+  console.error(`Error in ${functionName}:`, error);
+
+  if (axios.isAxiosError(error)) {
+    if (error.response) {
+      console.error(`Server responded with status: ${error.response.status}`, error.response.data);
+    } else if (error.request) {
+      console.error("Request made, but no response received.");
+    }
+  } else {
+    console.error("Unexpected error:", error);
+  }
+};
+
 const GroupService: GroupService = {
-  /**
-   * Create a new group.
-   * @param groupData - Data for the new group.
-   * @returns The created group data.
-   */
-  createGroup: async (groupData: Partial<Group>): Promise<Group> => {
+  createGroup: async (groupData: Partial<Group>): Promise<Group | undefined> => {
     if (!groupData || !groupData.name) {
       throw new Error("Group data is required, including a name.");
     }
+
     try {
       const response: AxiosResponse<Group> = await apiClient.post("/groups", groupData);
       return response.data;
-    } catch (error: any) {
-      console.error("Error creating group:", error);
-      throw new Error(error.response?.data?.message || "Failed to create group. Please try again later.");
+    } catch (error) {
+      handleError("createGroup", error);
+      return undefined;
     }
   },
 
-  /**
-   * Fetch groups for the user.
-   * @returns An array of user groups.
-   */
-  fetchGroups: async (): Promise<Group[]> => {
+  fetchGroups: async (): Promise<Group[] | undefined> => {
     try {
       const response: AxiosResponse<Group[]> = await apiClient.get("/groups");
       return response.data;
-    } catch (error: any) {
-      console.error("Error fetching groups:", error);
-      throw new Error(error.response?.data?.message || "Failed to fetch groups. Please try again later.");
+    } catch (error) {
+      handleError("fetchGroups", error);
+      return undefined;
     }
   },
 
-  /**
-   * Join a specific group.
-   * @param groupId - The ID of the group to join.
-   * @returns The updated group data.
-   */
-  joinGroup: async (groupId: string): Promise<Group> => {
+  getGroupDetails: async (groupId: string): Promise<Group | undefined> => {
+    if (!groupId) {
+      throw new Error("Group ID is required to fetch group details.");
+    }
+
+    try {
+      const response: AxiosResponse<Group> = await apiClient.get(`/groups/${groupId}`);
+      return response.data;
+    } catch (error) {
+      handleError("getGroupDetails", error);
+      return undefined;
+    }
+  },
+
+  joinGroup: async (groupId: string): Promise<Group | undefined> => {
     if (!groupId) {
       throw new Error("Group ID is required to join a group.");
     }
+
     try {
       const response: AxiosResponse<Group> = await apiClient.post(`/groups/${groupId}/join`);
       return response.data;
-    } catch (error: any) {
-      console.error("Error joining group:", error);
-      throw new Error(error.response?.data?.message || "Failed to join group. Please try again later.");
+    } catch (error) {
+      handleError("joinGroup", error);
+      return undefined;
     }
   },
 
-  /**
-   * Leave a specific group.
-   * @param groupId - The ID of the group to leave.
-   * @returns The updated group data.
-   */
-  leaveGroup: async (groupId: string): Promise<Group> => {
+  leaveGroup: async (groupId: string): Promise<Group | undefined> => {
     if (!groupId) {
       throw new Error("Group ID is required to leave a group.");
     }
+
     try {
       const response: AxiosResponse<Group> = await apiClient.post(`/groups/${groupId}/leave`);
       return response.data;
-    } catch (error: any) {
-      console.error("Error leaving group:", error);
-      throw new Error(error.response?.data?.message || "Failed to leave group. Please try again later.");
+    } catch (error) {
+      handleError("leaveGroup", error);
+      return undefined;
     }
   },
 };

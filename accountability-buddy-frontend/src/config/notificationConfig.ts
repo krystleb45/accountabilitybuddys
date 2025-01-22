@@ -1,5 +1,22 @@
-// Notification Configuration
-const notificationConfig = {
+// Enhanced Notification Configuration
+interface NotificationType {
+  duration: number;
+  style: {
+    backgroundColor: string;
+    color: string;
+  };
+  icon: string;
+}
+
+interface NotificationConfig {
+  defaultDuration: number;
+  position: "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center";
+  types: Record<string, NotificationType>;
+  getConfig: (type: string) => NotificationType;
+  setGlobalConfig: (config: { duration?: number; position?: string }) => void;
+}
+
+const notificationConfig: NotificationConfig = {
   // Default notification settings
   defaultDuration: 5000, // Duration in milliseconds
   position: "top-right", // Default position
@@ -29,7 +46,7 @@ const notificationConfig = {
   },
 
   // Function to get config for a specific type of notification
-  getConfig: function (type) {
+  getConfig: function (type: string): NotificationType {
     return (
       this.types[type] || {
         duration: this.defaultDuration,
@@ -40,9 +57,11 @@ const notificationConfig = {
   },
 
   // Function to customize global notification settings
-  setGlobalConfig: function ({ duration, position }) {
+  setGlobalConfig: function ({ duration, position }: { duration?: number; position?: string }): void {
     if (duration) this.defaultDuration = duration;
-    if (position) this.position = position;
+    if (position && ["top-left", "top-right", "bottom-left", "bottom-right", "center"].includes(position)) {
+      this.position = position as NotificationConfig["position"];
+    }
   },
 };
 

@@ -13,6 +13,7 @@ interface ModalContextType {
 // Define the shape of the modal options
 interface ModalOptions {
   style?: React.CSSProperties; // Optional style for modal content
+  closeOnOverlayClick?: boolean; // Option to close modal by clicking on overlay
 }
 
 // Create ModalContext with the appropriate type
@@ -48,13 +49,21 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     setIsModalOpen((prev) => !prev);
   }, []);
 
+  // Handle overlay click if enabled in options
+  const handleOverlayClick = useCallback(() => {
+    if (modalOptions.closeOnOverlayClick) {
+      closeModal();
+    }
+  }, [modalOptions, closeModal]);
+
   // Modal component rendering
   const renderModal = () => (
-    <div style={modalStyles}>
+    <div style={modalStyles} onClick={handleOverlayClick}>
       <div
         style={{ ...modalContentStyles, ...modalOptions.style }}
         aria-modal="true"
         role="dialog"
+        onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal from closing it
       >
         {modalContent}
         <button

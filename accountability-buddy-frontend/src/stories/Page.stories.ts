@@ -1,31 +1,36 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { expect, userEvent, within } from '@storybook/test';
-
 import { Page } from './Page';
 
-const meta = {
+/**
+ * Metadata for the Page component in Storybook.
+ */
+const meta: Meta<typeof Page> = {
   title: 'Example/Page',
   component: Page,
   parameters: {
-    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
-    layout: 'fullscreen',
+    layout: 'fullscreen', // Display the story in fullscreen layout
   },
-} satisfies Meta<typeof Page>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Story for a logged-out page view */
 export const LoggedOut: Story = {};
 
-// More on interaction testing: https://storybook.js.org/docs/writing-tests/interaction-testing
+/** Story for a logged-in page view with interaction testing */
 export const LoggedIn: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const loginButton = canvas.getByRole('button', { name: /Log in/i });
-    await expect(loginButton).toBeInTheDocument();
-    await userEvent.click(loginButton);
-    await expect(loginButton).not.toBeInTheDocument();
 
+    // Simulate a user logging in
+    const loginButton = canvas.getByRole('button', { name: /Log in/i });
+    await expect(loginButton).toBeInTheDocument(); // Verify the login button exists
+    await userEvent.click(loginButton); // Simulate a button click
+    await expect(loginButton).not.toBeInTheDocument(); // Verify the button disappears
+
+    // Verify the logout button appears
     const logoutButton = canvas.getByRole('button', { name: /Log out/i });
     await expect(logoutButton).toBeInTheDocument();
   },

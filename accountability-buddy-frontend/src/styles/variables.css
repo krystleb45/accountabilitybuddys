@@ -1,42 +1,55 @@
 /* src/styles/variables.css */
 
-/* Color Variables */
+/* Root Variables */
 :root {
-    --primary-color: #1976d2; /* Main brand color */
-    --secondary-color: #90caf9; /* Lighter shade for secondary elements */
-    --accent-color: #ff4081; /* Accent color for highlights */
-    --text-color: #333333; /* Default text color */
-    --background-color: #ffffff; /* Default background color */
-    --error-color: #f44336; /* Color for error messages */
-    --warning-color: #ff9800; /* Color for warnings */
-    --success-color: #4caf50; /* Color for success messages */
-  }
-  
+  /* Color Variables */
+  --primary-color: #1976d2; /* Main brand color */
+  --primary-hover-color: #1565c0; /* Slightly darker for hover */
+  --secondary-color: #90caf9; /* Lighter shade for secondary elements */
+  --secondary-hover-color: #64b5f6; /* Secondary hover color */
+  --accent-color: #ff4081; /* Accent color for highlights */
+  --text-color: #333333; /* Default text color */
+  --text-muted-color: #777777; /* Muted text for less emphasis */
+  --background-color: #ffffff; /* Default background color */
+  --background-alt-color: #f4f4f4; /* Alternative background */
+  --error-color: #f44336; /* Color for error messages */
+  --warning-color: #ff9800; /* Color for warnings */
+  --success-color: #4caf50; /* Color for success messages */
+  --info-color: #2196f3; /* Informational messages */
+
   /* Font Size Variables */
-  :root {
-    --font-size-base: 16px; /* Base font size */
-    --font-size-small: 14px; /* Small font size */
-    --font-size-large: 20px; /* Large font size */
-  }
-  
+  --font-size-base: 16px; /* Base font size */
+  --font-size-small: 14px; /* Small font size */
+  --font-size-medium: 18px; /* Medium font size */
+  --font-size-large: 20px; /* Large font size */
+  --font-size-heading: 24px; /* Font size for headings */
+
   /* Spacing Variables */
-  :root {
-    --spacing-small: 4px; /* Small spacing */
-    --spacing-medium: 8px; /* Medium spacing */
-    --spacing-large: 16px; /* Large spacing */
-  }
-  
+  --spacing-xs: 2px; /* Extra small spacing */
+  --spacing-small: 4px; /* Small spacing */
+  --spacing-medium: 8px; /* Medium spacing */
+  --spacing-large: 16px; /* Large spacing */
+  --spacing-xl: 24px; /* Extra large spacing */
+
   /* Border Radius Variables */
-  :root {
-    --border-radius-small: 4px; /* Small border radius */
-    --border-radius-medium: 8px; /* Medium border radius */
-    --border-radius-large: 16px; /* Large border radius */
-  }
-  
+  --border-radius-small: 4px; /* Small border radius */
+  --border-radius-medium: 8px; /* Medium border radius */
+  --border-radius-large: 16px; /* Large border radius */
+  --border-radius-circle: 50%; /* Circle border radius for avatars, etc. */
+
   /* Box Shadow Variables */
-  :root {
-    --box-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1); /* Light shadow */
-    --box-shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.2); /* Medium shadow */
-    --box-shadow-heavy: 0 4px 8px rgba(0, 0, 0, 0.3); /* Heavy shadow */
-  }
-  
+  --box-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1); /* Light shadow */
+  --box-shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.2); /* Medium shadow */
+  --box-shadow-heavy: 0 4px 8px rgba(0, 0, 0, 0.3); /* Heavy shadow */
+
+  /* Z-Index Variables */
+  --z-index-default: 1; /* Default stacking order */
+  --z-index-dropdown: 1000; /* Dropdowns */
+  --z-index-modal: 1050; /* Modals */
+  --z-index-tooltip: 1100; /* Tooltips */
+
+  /* Transition Variables */
+  --transition-fast: 0.2s ease-in-out; /* Fast transitions */
+  --transition-medium: 0.3s ease-in-out; /* Medium transitions */
+  --transition-slow: 0.5s ease-in-out; /* Slow transitions */
+}

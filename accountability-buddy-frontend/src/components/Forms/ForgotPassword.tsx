@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import styles from "./Forms.module.css"; // Import CSS module for styling
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -32,27 +33,35 @@ const ForgotPassword: React.FC = () => {
         { email }
       );
       setMessage(res.data.message || "Password reset instructions have been sent to your email.");
-    } catch (err) {
-      setError("Failed to send password reset instructions. Please try again.");
+    } catch (err: any) {
+      setError(
+        err.response?.data?.error || "Failed to send password reset instructions. Please try again."
+      );
     } finally {
       setLoading(false); // Stop loading
     }
   };
 
   return (
-    <div className="forgot-password-form">
+    <div className={styles["form-container"]}>
       <h2>Forgot Password</h2>
-      {message && <p className="success-message">{message}</p>}
-      {error && <p className="error-message">{error}</p>}
-      <form onSubmit={handleSubmit}>
+      {message && <p className={styles["success-message"]}>{message}</p>}
+      {error && <p className={styles["error-message"]}>{error}</p>}
+      <form onSubmit={handleSubmit} className={styles["form"]}>
+        <label htmlFor="email" className={styles["label"]}>
+          Email Address
+        </label>
         <input
           type="email"
+          id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
+          className={styles["input"]}
           aria-label="Email"
+          required
         />
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className={styles["submit-button"]}>
           {loading ? "Sending..." : "Send Instructions"}
         </button>
       </form>

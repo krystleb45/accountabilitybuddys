@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import authService from "../services/authService"; // Ensure `authService` is the default export
+import authService from "src/services/authService";
+import NavbarDropdown from "./NavbarDropdown";
+import NavbarItems from "./NavbarItem";
+import { FaHome, FaUser, FaCog } from "react-icons/fa";
 import "./Navbar.css";
 
 interface User {
@@ -17,7 +20,8 @@ const Navbar: React.FC = () => {
   // Fetch user info if a token is present
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if (authService.getToken()) { // Use `authService` to access the methods
+      const token = authService.getToken();
+      if (token) {
         try {
           const userInfo = await authService.getUserInfo();
           setUser(userInfo);
@@ -32,34 +36,54 @@ const Navbar: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
-    authService.removeToken(); // Use `authService` to handle token removal
+    authService.removeToken();
     setUser(null);
     navigate("/login");
   };
 
+  // Navigation items for the main navbar
+  const navItems = [
+    { label: "Home", to: "/", exact: true, icon: <FaHome /> },
+    { label: "Profile", to: "/profile", icon: <FaUser /> },
+    { label: "Settings", to: "/settings", icon: <FaCog /> },
+  ];
+
+  // Dropdown items for user-specific actions
+  const dropdownItems = [
+    { label: "Profile", onClick: () => navigate("/profile") },
+    { label: "Settings", onClick: () => navigate("/settings") },
+    { label: "Logout", onClick: handleLogout },
+  ];
+
   return (
     <nav className="navbar" aria-label="Main Navigation">
+      {/* Brand */}
       <div className="navbar-brand">
-        <NavLink to="/">BrandName</NavLink>
+        <NavLink to="/" aria-label="Go to Home">
+          BrandName
+        </NavLink>
       </div>
-      <ul className="navbar-links">
-        <li>
-          <NavLink to="/dashboard">Dashboard</NavLink>
-        </li>
-        <li>
-          <NavLink to="/profile">Profile</NavLink>
-        </li>
-      </ul>
+
+      {/* Navbar Items */}
+      <NavbarItems items={navItems} />
+
+      {/* User Section */}
       <div className="navbar-user">
         {loading ? (
-          <p>Loading...</p>
+          <p className="loading-text">Loading...</p>
         ) : user ? (
           <>
-            <span>Welcome, {user.name}!</span>
-            <button onClick={handleLogout}>Logout</button>
+            <span className="user-greeting">Welcome, {user.name}!</span>
+            <NavbarDropdown title="Account" items={dropdownItems} />
           </>
         ) : (
-          <NavLink to="/login">Login</NavLink>
+          <NavLink
+            to="/login"
+            className="login-link"
+            aria-label="Login"
+          >
+            Login
+          </NavLink>
         )}
       </div>
     </nav>

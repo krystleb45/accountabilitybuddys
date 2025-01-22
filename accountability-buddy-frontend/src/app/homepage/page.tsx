@@ -106,7 +106,7 @@ const HomePage: React.FC = () => {
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">
               Recent Activities
             </h2>
-            <RecentActivities />
+            <RecentActivities activities={[]} />
           </section>
 
           {/* Group Recommendations Section */}

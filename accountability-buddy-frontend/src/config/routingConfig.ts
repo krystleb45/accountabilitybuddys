@@ -1,3 +1,5 @@
+// Enhanced Routing Configuration
+
 // Route Constants
 const ROUTES = {
   HOME: "/",
@@ -12,8 +14,22 @@ const ROUTES = {
   NOT_FOUND: "*",
 };
 
+interface RoutingConfig {
+  routes: typeof ROUTES;
+  protectedRoutes: string[];
+  roleBasedRoutes: Record<string, string[]>;
+  defaultRedirects: {
+    authenticated: string;
+    unauthenticated: string;
+  };
+  isProtectedRoute: (route: string) => boolean;
+  getRoleBasedRoutes: (role: string) => string[];
+  getRedirectRoute: (isAuthenticated: boolean) => string;
+  generateDynamicRoute: (route: string, params?: Record<string, string | number>) => string;
+}
+
 // Routing Configuration
-const routingConfig = {
+const routingConfig: RoutingConfig = {
   // Core Routes
   routes: ROUTES,
 
@@ -39,27 +55,30 @@ const routingConfig = {
   },
 
   // Function to check if a route is protected
-  isProtectedRoute(route) {
+  isProtectedRoute: function (route: string): boolean {
     return this.protectedRoutes.includes(route);
   },
 
   // Function to get allowed routes for a specific role
-  getRoleBasedRoutes(role) {
+  getRoleBasedRoutes: function (role: string): string[] {
     return this.roleBasedRoutes[role] || this.roleBasedRoutes["guest"];
   },
 
   // Function to get the redirect route after login
-  getRedirectRoute(isAuthenticated) {
+  getRedirectRoute: function (isAuthenticated: boolean): string {
     return isAuthenticated
       ? this.defaultRedirects.authenticated
       : this.defaultRedirects.unauthenticated;
   },
 
   // Function to generate dynamic routes (e.g., '/tasks/:id')
-  generateDynamicRoute(route, params = {}) {
+  generateDynamicRoute: function (
+    route: string,
+    params: Record<string, string | number> = {}
+  ): string {
     let dynamicRoute = route;
     for (const [key, value] of Object.entries(params)) {
-      dynamicRoute = dynamicRoute.replace(`:${key}`, value);
+      dynamicRoute = dynamicRoute.replace(`:${key}`, encodeURIComponent(value.toString()));
     }
     return dynamicRoute;
   },

@@ -1,11 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 /**
  * Custom hook for throttling a function.
  *
- * This hook ensures that the provided function is only called at most once
+ * Ensures that the provided function is only called at most once
  * every specified time interval.
  *
+ * @template T - The type of the callback function.
  * @param callback - The function to throttle.
  * @param delay - The time interval (in milliseconds) for throttling.
  * @returns A throttled version of the provided function.
@@ -17,8 +18,9 @@ const useThrottle = <T extends (...args: any[]) => void>(
   const lastRan = useRef<number>(Date.now()); // Track the last time the callback was run
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null); // Store the timeout ID
 
-  const throttledFunction = (...args: Parameters<T>) => {
+  const throttledFunction = useCallback((...args: Parameters<T>) => {
     const now = Date.now();
+
     // If the current time minus the last run time exceeds the delay
     if (now - lastRan.current >= delay) {
       callback(...args); // Call the provided callback
@@ -33,7 +35,7 @@ const useThrottle = <T extends (...args: any[]) => void>(
         lastRan.current = Date.now(); // Update last run time
       }, delay - (now - lastRan.current));
     }
-  };
+  }, [callback, delay]);
 
   // Cleanup on unmount to avoid memory leaks
   useEffect(() => {

@@ -1,20 +1,20 @@
-import { onCLS, onFID, onFCP, onLCP, onTTFB, Metric } from "web-vitals";
+import { onCLS, onFID, onFCP, onLCP, onTTFB, Metric } from 'web-vitals';
 
-type ReportMetric = (metric: Metric) => void;
-
-const reportWebVitals = (onPerfEntry?: ReportMetric): void => {
-  if (onPerfEntry && typeof onPerfEntry === "function") {
-    onCLS(onPerfEntry);
-    onFID(onPerfEntry);
-    onFCP(onPerfEntry);
-    onLCP(onPerfEntry);
-    onTTFB(onPerfEntry);
+/**
+ * Report web vital metrics to a specified callback.
+ *
+ * @param onPerfEntry - Callback function to handle performance metrics.
+ */
+const reportWebVitals = (onPerfEntry?: (metric: Metric) => void): void => {
+  if (onPerfEntry && typeof onPerfEntry === 'function') {
+    onCLS(onPerfEntry); // Cumulative Layout Shift
+    onFID(onPerfEntry); // First Input Delay
+    onFCP(onPerfEntry); // First Contentful Paint
+    onLCP(onPerfEntry); // Largest Contentful Paint
+    onTTFB(onPerfEntry); // Time to First Byte
+  } else {
+    console.warn('Invalid onPerfEntry callback provided.');
   }
 };
-
-// Example usage for development
-if (process.env.NODE_ENV === "development") {
-  reportWebVitals(console.log); // Log metrics to the console in development
-}
 
 export default reportWebVitals;

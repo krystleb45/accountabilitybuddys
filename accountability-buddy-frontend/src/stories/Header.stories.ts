@@ -1,33 +1,44 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
-
+import { action } from '@storybook/addon-actions'; // For action logging in Storybook
 import { Header } from './Header';
 
-const meta = {
+/**
+ * Metadata configuration for the Header component in Storybook.
+ */
+const meta: Meta<typeof Header> = {
   title: 'Example/Header',
   component: Header,
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  tags: ['autodocs'],
   parameters: {
-    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
-    layout: 'fullscreen',
+    layout: 'fullscreen', // Displays the component in fullscreen mode
+  },
+  tags: ['autodocs'], // Automatically generates documentation
+  argTypes: {
+    onLogin: { action: 'logged in' },
+    onLogout: { action: 'logged out' },
+    onCreateAccount: { action: 'account created' },
   },
   args: {
-    onLogin: fn(),
-    onLogout: fn(),
-    onCreateAccount: fn(),
+    onLogin: action('onLogin'), // Logs actions to the Storybook actions panel
+    onLogout: action('onLogout'),
+    onCreateAccount: action('onCreateAccount'),
   },
-} satisfies Meta<typeof Header>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Header with a logged-in user */
 export const LoggedIn: Story = {
   args: {
     user: {
-      name: 'Jane Doe',
+      name: 'Jane Doe', // Simulated user data for the story
     },
   },
 };
 
-export const LoggedOut: Story = {};
+/** Header with a logged-out state */
+export const LoggedOut: Story = {
+  args: {
+    user: undefined, // Represents the logged-out state
+  },
+};

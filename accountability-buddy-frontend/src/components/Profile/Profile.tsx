@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "../context/AuthContext"; // Import your custom hook
+import { useAuth } from "src/context/auth/AuthContext";
+import "./Profile.module.css";
+import { validateEmail, formatUserName } from "src/utils/utility-functions";
 
 interface ProfileData {
   username: string;
@@ -14,7 +16,7 @@ interface UpdatedProfileData {
 }
 
 const Profile: React.FC = () => {
-  const { authToken, logout } = useAuth(); // Use the custom hook to get authToken and logout
+  const { authToken, logout } = useAuth();
   const [profile, setProfile] = useState<ProfileData>({
     username: "",
     email: "",
@@ -42,10 +44,10 @@ const Profile: React.FC = () => {
           username: response.data.username,
           email: response.data.email,
         });
-      } catch (err: any) { // Specify the type as 'any' to avoid TypeScript errors
+      } catch (err: any) {
         setError("Failed to load profile. Please try again.");
         if (err.response && err.response.status === 401) {
-          logout(); // Call logout if the token is invalid
+          logout();
         }
       } finally {
         setLoading(false);
@@ -53,11 +55,11 @@ const Profile: React.FC = () => {
     };
 
     if (authToken) {
-      fetchProfile(); // Fetch profile only if authToken exists
+      fetchProfile();
     } else {
-      setLoading(false); // If no authToken, stop loading
+      setLoading(false);
     }
-  }, [authToken, logout]); // Add logout to dependencies to avoid stale closure
+  }, [authToken, logout]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUpdatedProfile({ ...updatedProfile, [e.target.name]: e.target.value });
@@ -75,9 +77,15 @@ const Profile: React.FC = () => {
     setError("");
     setSuccessMessage("");
 
+    if (!validateEmail(updatedProfile.email)) {
+      setError("Invalid email address.");
+      setSaving(false);
+      return;
+    }
+
     try {
       const formData = new FormData();
-      formData.append("username", updatedProfile.username);
+      formData.append("username", formatUserName(updatedProfile.username));
       formData.append("email", updatedProfile.email);
       if (profilePicture) {
         formData.append("profilePicture", profilePicture);
@@ -89,7 +97,7 @@ const Profile: React.FC = () => {
 
       setSuccessMessage("Profile updated successfully!");
       setProfile({ ...profile, ...updatedProfile });
-    } catch (err: any) { // Specify the type as 'any' to avoid TypeScript errors
+    } catch (err: any) {
       setError("Failed to update profile. Please try again.");
     } finally {
       setSaving(false);
@@ -103,23 +111,34 @@ const Profile: React.FC = () => {
         <p>Loading...</p>
       ) : (
         <>
-          {error && <p className="error">{error}</p>}
-          {successMessage && <p className="success">{successMessage}</p>}
-          <input
-            type="text"
-            name="username"
-            value={updatedProfile.username}
-            onChange={handleInputChange}
-          />
-          <input
-            type="email"
-            name="email"
-            value={updatedProfile.email}
-            onChange={handleInputChange}
-          />
-          <input type="file" onChange={handleFileChange} />
-          {preview && <img src={preview} alt="Profile Preview" />}
-          <button onClick={handleSave} disabled={saving}>
+          {error && <p className="error" role="alert">{error}</p>}
+          {successMessage && <p className="success" role="alert">{successMessage}</p>}
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={updatedProfile.username}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={updatedProfile.email}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="profilePicture">Profile Picture</label>
+            <input type="file" id="profilePicture" onChange={handleFileChange} />
+            {preview && <img src={preview} alt="Profile Preview" className="profile-preview" />}
+          </div>
+          <button onClick={handleSave} disabled={saving} className="save-button">
             {saving ? "Saving..." : "Save Changes"}
           </button>
         </>

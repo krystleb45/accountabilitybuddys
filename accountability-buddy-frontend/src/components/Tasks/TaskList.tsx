@@ -16,19 +16,26 @@ interface TaskListProps {
 
 const TaskList: React.FC<TaskListProps> = ({ tasks, onComplete, onDelete }) => {
   if (!tasks || tasks.length === 0) {
-    return <p>No tasks available. Start by creating one!</p>;
+    return (
+      <p className="task-list-empty" role="alert">
+        No tasks available. Start by creating one!
+      </p>
+    );
   }
 
   return (
-    <div className="task-list" role="list" aria-live="polite">
-      {tasks.map((task) => (
-        <TaskItem
-          key={task.id}
-          task={task}
-          onComplete={onComplete}
-          onDelete={onDelete}
-        />
-      ))}
+    <div className="task-list-container">
+      <h3 className="task-list-title">Your Tasks</h3>
+      <div className="task-list" role="list" aria-live="polite">
+        {tasks.map((task) => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            onComplete={onComplete}
+            onDelete={onDelete}
+          />
+        ))}
+      </div>
     </div>
   );
 };

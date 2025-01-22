@@ -1,19 +1,24 @@
-import axios, { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import authService from "./authService"; // Import helper to get Authorization header
 
 // Define types for user data and actions
 export interface UserProfile {
   id: string;
   name: string;
+  username: string;
   email: string;
   role?: string; // e.g., "admin" or "user"
-  [key: string]: any; // Additional fields as needed
+  avatarUrl?: string; // Optional profile picture
+  isActive?: boolean; // Indicates if the user is active
+  joinedAt?: string; // Date when the user joined (ISO string)
+  metadata?: Record<string, any>; // Additional fields as needed
 }
 
 export interface UpdateProfileData {
   name?: string;
   email?: string;
   password?: string;
+  avatarUrl?: string; // Optional field for profile picture updates
   [key: string]: any; // Additional fields for profile updates
 }
 
@@ -22,34 +27,36 @@ export type UserAction = "block" | "unblock";
 // Create an axios instance to centralize base URL and headers
 const apiClient = axios.create({
   baseURL: "https://accountabilitybuddys.com/api/users",
-  headers: new axios.AxiosHeaders({
+  headers: {
     "Content-Type": "application/json",
-  }),
+  },
 });
 
 // Axios interceptor to dynamically add the Authorization header to every request
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     const authHeader = authService.getAuthHeader();
+
     if (!config.headers) {
       config.headers = new axios.AxiosHeaders();
     }
-    for (const [key, value] of Object.entries(authHeader)) {
-      config.headers.set(key, value);
-    }
+
+    Object.entries(authHeader).forEach(([key, value]) => {
+      config.headers[key] = value as string;
+    });
+
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Utility function to handle retries for axios requests with exponential backoff
+// Utility function to handle retries with exponential backoff
 const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
   let attempt = 0;
   while (attempt < retries) {
     try {
       return await fn();
     } catch (error: any) {
-      // Only retry for server errors (status code >= 500)
       if (attempt < retries - 1 && error.response?.status >= 500) {
         const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
         await new Promise((resolve) => setTimeout(resolve, delay));
@@ -57,7 +64,8 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
       } else {
         console.error("Request failed:", error);
         throw new Error(
-          error.response?.data?.message || "An error occurred. Please try again."
+          error.response?.data?.message ||
+            "An error occurred. Please try again."
         );
       }
     }
@@ -71,17 +79,29 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
  * Fetch the current user's profile.
  * @returns The user's profile.
  */
-export const fetchUserProfile = async (): Promise<UserProfile> => {
+export const getUserProfile = async (): Promise<UserProfile> => {
   try {
     const response: AxiosResponse<UserProfile> = await axiosRetry(() =>
       apiClient.get("/profile")
     );
-    return response.data;
+
+    const userData = response.data;
+
+    // Ensure username is present (fallback or transformation if needed)
+    if (!userData.username) {
+      userData.username = userData.email.split("@")[0]; // Example fallback logic
+    }
+
+    console.log("User profile fetched successfully:", userData);
+    return userData;
   } catch (error: any) {
     console.error("Error fetching user profile:", error);
-    throw new Error(error.response?.data?.message || "Failed to fetch user profile.");
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch user profile."
+    );
   }
 };
+ 
 
 /**
  * Update the current user's profile.
@@ -91,14 +111,21 @@ export const fetchUserProfile = async (): Promise<UserProfile> => {
 export const updateUserProfile = async (
   profileData: UpdateProfileData
 ): Promise<UserProfile> => {
+  if (!Object.keys(profileData).length) {
+    throw new Error("Profile data is required to update the profile.");
+  }
+
   try {
     const response: AxiosResponse<UserProfile> = await axiosRetry(() =>
       apiClient.put("/profile", profileData)
     );
+    console.log("User profile updated successfully:", response.data);
     return response.data;
   } catch (error: any) {
     console.error("Error updating user profile:", error);
-    throw new Error(error.response?.data?.message || "Failed to update profile.");
+    throw new Error(
+      error.response?.data?.message || "Failed to update profile."
+    );
   }
 };
 
@@ -108,9 +135,12 @@ export const updateUserProfile = async (
 export const deleteUserAccount = async (): Promise<void> => {
   try {
     await axiosRetry(() => apiClient.delete("/account"));
+    console.log("User account deleted successfully.");
   } catch (error: any) {
     console.error("Error deleting user account:", error);
-    throw new Error(error.response?.data?.message || "Failed to delete user account.");
+    throw new Error(
+      error.response?.data?.message || "Failed to delete user account."
+    );
   }
 };
 
@@ -123,10 +153,13 @@ export const fetchAllUsers = async (): Promise<UserProfile[]> => {
     const response: AxiosResponse<UserProfile[]> = await axiosRetry(() =>
       apiClient.get("/all")
     );
+    console.log("All users fetched successfully:", response.data);
     return response.data;
   } catch (error: any) {
     console.error("Error fetching all users:", error);
-    throw new Error(error.response?.data?.message || "Failed to fetch all users.");
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch all users."
+    );
   }
 };
 
@@ -143,17 +176,24 @@ export const toggleUserStatus = async (
     throw new Error("Invalid action. Must be 'block' or 'unblock'.");
   }
 
+  if (!userId) {
+    throw new Error("User ID is required to toggle user status.");
+  }
+
   try {
     await axiosRetry(() => apiClient.post(`/${userId}/${action}`));
+    console.log(`User ${action}ed successfully: ${userId}`);
   } catch (error: any) {
     console.error(`Error ${action}ing user:`, error);
-    throw new Error(error.response?.data?.message || `Failed to ${action} user.`);
+    throw new Error(
+      error.response?.data?.message || `Failed to ${action} user.`
+    );
   }
 };
 
 // Export all functions as a single object
 const UserService = {
-  fetchUserProfile,
+  getUserProfile,
   updateUserProfile,
   deleteUserAccount,
   fetchAllUsers,

@@ -3,6 +3,7 @@ import React, { ReactNode } from "react";
 // Define types for props and state
 interface ErrorBoundaryProps {
   children: ReactNode;
+  fallbackMessage?: string; // Optional custom fallback message
 }
 
 interface ErrorBoundaryState {
@@ -20,20 +21,23 @@ class ErrorBoundary extends React.Component<
     this.state = { hasError: false, error: null, errorInfo: null };
   }
 
-  // Catch errors in any components below and update state to display the fallback UI
+  // Update state when an error occurs
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error, errorInfo: null };
   }
 
-  // Log error information to an external service or console
+  // Log error details
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     console.error("Error caught by ErrorBoundary:", error, errorInfo);
-    // Here you can add external logging service logic (e.g., Sentry, LogRocket)
+    // Add external logging service logic here (e.g., Sentry, LogRocket)
   }
 
   render(): ReactNode {
-    if (this.state.hasError) {
-      // Render a custom fallback UI
+    const { hasError, error, errorInfo } = this.state;
+    const { children, fallbackMessage } = this.props;
+
+    if (hasError) {
+      // Render fallback UI
       return (
         <div
           role="alert"
@@ -46,15 +50,26 @@ class ErrorBoundary extends React.Component<
             border: "1px solid #f5c6cb",
             borderRadius: "5px",
           }}
+          data-testid="error-boundary"
         >
-          <h1>Something went wrong.</h1>
-          <p>We are working to fix the issue. Please try again later.</p>
+          <h1>{fallbackMessage || "Something went wrong."}</h1>
+          <p>
+            We are working to fix the issue. Please try again later.
+          </p>
+          {/* Optional detailed error info for debugging */}
+          {process.env.NODE_ENV === "development" && error && errorInfo && (
+            <details style={{ marginTop: "10px", whiteSpace: "pre-wrap" }}>
+              <summary>Error Details</summary>
+              <p>{error.toString()}</p>
+              <p>{errorInfo.componentStack}</p>
+            </details>
+          )}
         </div>
       );
     }
 
-    // Render the child components
-    return this.props.children;
+    // Render the child components when no error
+    return children;
   }
 }
 

@@ -3,18 +3,20 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements, useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import "./StripeCheckout.css";
 
-// Load Stripe public key
+// Load Stripe public key from environment variables
 const stripePromise = loadStripe(
   process.env.REACT_APP_STRIPE_PUBLIC_KEY || "pk_test_XXXXXXXXXXXXXXXXXXXX"
 );
 
 interface StripeCheckoutFormProps {
+  clientSecret: string; // Pass client secret from the backend
   onSuccess: () => void;
   onError: (error: string) => void;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const StripeCheckoutForm: React.FC<StripeCheckoutFormProps> = ({
+  clientSecret,
   onSuccess,
   onError,
   setLoading,
@@ -27,8 +29,7 @@ const StripeCheckoutForm: React.FC<StripeCheckoutFormProps> = ({
     setLoading(true);
 
     if (!stripe || !elements) {
-      const errorMessage = "Stripe is not initialized.";
-      onError(errorMessage);
+      onError("Stripe is not initialized.");
       setLoading(false);
       return;
     }
@@ -36,24 +37,28 @@ const StripeCheckoutForm: React.FC<StripeCheckoutFormProps> = ({
     const cardElement = elements.getElement(CardElement);
 
     if (!cardElement) {
-      const errorMessage = "Card element not found.";
-      onError(errorMessage);
+      onError("Card element not found.");
       setLoading(false);
       return;
     }
 
     try {
+      // Confirm card payment with the provided client secret
       const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
-        "client_secret_from_backend",
-        { payment_method: { card: cardElement } }
+        clientSecret,
+        {
+          payment_method: { card: cardElement },
+        }
       );
 
       if (stripeError) {
         onError(stripeError.message || "Payment failed.");
       } else if (paymentIntent?.status === "succeeded") {
         onSuccess();
+      } else {
+        onError("Payment did not succeed. Please try again.");
       }
-    } catch {
+    } catch (error) {
       onError("An unexpected error occurred.");
     } finally {
       setLoading(false);
@@ -62,8 +67,23 @@ const StripeCheckoutForm: React.FC<StripeCheckoutFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="stripe-checkout-form">
-      <CardElement />
-      <button type="submit" disabled={!stripe}>
+      <CardElement
+        options={{
+          style: {
+            base: {
+              fontSize: "16px",
+              color: "#424770",
+              "::placeholder": {
+                color: "#aab7c4",
+              },
+            },
+            invalid: {
+              color: "#9e2146",
+            },
+          },
+        }}
+      />
+      <button type="submit" disabled={!stripe || !clientSecret} className="stripe-checkout-button">
         Pay Now
       </button>
     </form>
@@ -71,12 +91,14 @@ const StripeCheckoutForm: React.FC<StripeCheckoutFormProps> = ({
 };
 
 interface StripeCheckoutProps {
+  clientSecret: string; // Client secret provided by the backend
   onSuccess: () => void;
   onError: (error: string) => void;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const StripeCheckout: React.FC<StripeCheckoutProps> = ({
+  clientSecret,
   onSuccess,
   onError,
   setLoading,
@@ -84,6 +106,7 @@ const StripeCheckout: React.FC<StripeCheckoutProps> = ({
   return (
     <Elements stripe={stripePromise}>
       <StripeCheckoutForm
+        clientSecret={clientSecret}
         onSuccess={onSuccess}
         onError={onError}
         setLoading={setLoading}

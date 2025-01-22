@@ -1,5 +1,31 @@
 // Centralized API Endpoints
-const API_ENDPOINTS = {
+
+interface ApiEndpoints {
+  AUTH: {
+    LOGIN: string;
+    REGISTER: string;
+    LOGOUT: string;
+    REFRESH_TOKEN: string;
+  };
+  USER: {
+    GET_USER: string;
+    UPDATE_USER: string;
+    DELETE_USER: string;
+    CHANGE_PASSWORD: string;
+  };
+  TASKS: {
+    GET_TASKS: string;
+    CREATE_TASK: string;
+    UPDATE_TASK: string;
+    DELETE_TASK: string;
+    GET_TASK_BY_ID: string;
+  };
+  [key: string]: {
+    [key: string]: string;
+  };
+}
+
+const API_ENDPOINTS: ApiEndpoints = {
   AUTH: {
     LOGIN: "/auth/login",
     REGISTER: "/auth/register",
@@ -19,34 +45,46 @@ const API_ENDPOINTS = {
     DELETE_TASK: "/tasks/delete",
     GET_TASK_BY_ID: "/tasks/:taskId",
   },
-  // Add more groups and endpoints as needed
 };
 
 // Helper function to get full URL with dynamic parameters and query strings
-const getApiUrl = (endpoint, params = {}, queryParams = {}) => {
-  // Validate endpoint existence
-  if (!endpoint) {
-    console.error("Undefined endpoint:", endpoint);
+const getApiUrl = (
+  endpoint: string,
+  params: Record<string, string | number> = {},
+  queryParams: Record<string, string | number> = {}
+): string => {
+  try {
+    if (!endpoint) {
+      throw new Error("Endpoint is undefined or empty");
+    }
+
+    let url = `${process.env.REACT_APP_API_BASE_URL || "http://localhost:5000"}${endpoint}`;
+
+    // Replace placeholders in the URL (e.g., ':taskId')
+    for (const [key, value] of Object.entries(params)) {
+      url = url.replace(`:${key}`, encodeURIComponent(value.toString()));
+    }
+
+    // Append query parameters to the URL
+    const queryString = new URLSearchParams(
+      Object.entries(queryParams).reduce((acc, [key, value]) => {
+        acc[key] = value.toString();
+        return acc;
+      }, {} as Record<string, string>)
+    ).toString();
+
+    if (queryString) {
+      url += `?${queryString}`;
+    }
+
+    return url;
+  } catch (error) {
+    console.error("Error generating API URL:", error);
     return "";
   }
-
-  let url = `${process.env.REACT_APP_API_BASE_URL || "http://localhost:5000"}${endpoint}`;
-
-  // Replace placeholders in the URL (e.g., ':taskId')
-  for (const [key, value] of Object.entries(params)) {
-    url = url.replace(`:${key}`, value);
-  }
-
-  // Append query parameters to the URL
-  const queryString = new URLSearchParams(queryParams).toString();
-  if (queryString) {
-    url += `?${queryString}`;
-  }
-
-  return url;
 };
 
-// Example usage:
-// getApiUrl(API_ENDPOINTS.TASKS.GET_TASK_BY_ID, { taskId: 123 }, { sort: 'asc', limit: 10 });
+// Enhanced Example Usage with TypeScript
+// const url = getApiUrl(API_ENDPOINTS.TASKS.GET_TASK_BY_ID, { taskId: 123 }, { sort: 'asc', limit: 10 });
 
 export { API_ENDPOINTS, getApiUrl };

@@ -46,7 +46,29 @@ const createAppTheme = (mode: string): Theme => {
 
   let theme = createTheme({
     palette,
-    typography: { fontFamily: "Roboto, Arial, sans-serif" },
+    typography: {
+      fontFamily: "Roboto, Arial, sans-serif",
+      h1: { fontSize: "2.5rem", fontWeight: 700 },
+      h2: { fontSize: "2rem", fontWeight: 600 },
+      body1: { fontSize: "1rem", lineHeight: 1.5 },
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: "8px",
+            textTransform: "none",
+          },
+        },
+      },
+      MuiPaper: {
+        styleOverrides: {
+          rounded: {
+            borderRadius: "16px",
+          },
+        },
+      },
+    },
   });
   return responsiveFontSizes(theme);
 };
@@ -84,5 +106,14 @@ const CustomThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-export { CustomThemeProvider, ThemeContext };
+// Custom Hook to use Theme Context
+const useThemeContext = (): ThemeContextType => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useThemeContext must be used within a CustomThemeProvider");
+  }
+  return context;
+};
+
+export { CustomThemeProvider, useThemeContext };
 export default createAppTheme;

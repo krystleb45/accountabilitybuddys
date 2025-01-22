@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from "react";
-import "./Modal.css";
+import styles from "./Modal.module.css";
 
 interface ModalProps {
-  title: string;
-  content: React.ReactNode;
-  isVisible: boolean;
-  onClose: () => void;
-  customClass?: string;
+  title?: string; // Title of the modal
+  children?: React.ReactNode;
+  content: React.ReactNode; // Content inside the modal
+  isVisible: boolean; // Controls whether the modal is shown
+  onClose: () => void; // Function to close the modal
+  customClass?: string; // Optional additional CSS class for customization
+  isOpen: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -37,28 +39,34 @@ const Modal: React.FC<ModalProps> = ({
     }
   }, [isVisible]);
 
+  // Prevent rendering when not visible
   if (!isVisible) return null;
 
   return (
     <div
-      className="modal-overlay"
+      className={styles["modal-overlay"]}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
+      data-testid="modal-overlay"
       onClick={onClose} // Close modal when clicking outside the content
     >
       <div
-        className={`modal ${customClass}`}
+        className={`${styles.modal} ${customClass}`}
         ref={modalRef}
-        tabIndex={-1} // Use a valid tabIndex type
+        tabIndex={-1}
+        data-testid="modal"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
       >
-        <h2 id="modal-title">{title}</h2>
-        <div className="modal-content">{content}</div>
+        <h2 id="modal-title" className={styles["modal-header"]}>
+          {title}
+        </h2>
+        <div className={styles["modal-content"]}>{content}</div>
         <button
-          className="close-button"
+          className={styles["close-button"]}
           onClick={onClose}
           aria-label="Close modal"
+          data-testid="close-button"
         >
           &times;
         </button>

@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import "./Sidebar.css"; // Optional CSS for styling
+import "./Sidebar.module.css"; // Use CSS module for scoped styling
 
 interface SidebarProps {
   isVisible: boolean;
@@ -14,37 +14,37 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible }) => {
   return (
     <aside className="sidebar" role="navigation" aria-label="Sidebar Navigation">
       <ul className="sidebar-list">
-        <li>
+        <li className="sidebar-item">
           <NavLink
             to="/"
-            className={({ isActive }) => (isActive ? "active" : "")}
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
             aria-label="Dashboard"
           >
             Dashboard
           </NavLink>
         </li>
-        <li>
+        <li className="sidebar-item">
           <NavLink
             to="/goals"
-            className={({ isActive }) => (isActive ? "active" : "")}
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
             aria-label="Goals"
           >
             Goals
           </NavLink>
         </li>
-        <li>
+        <li className="sidebar-item">
           <NavLink
             to="/collaborations"
-            className={({ isActive }) => (isActive ? "active" : "")}
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
             aria-label="Collaborations"
           >
             Collaborations
           </NavLink>
         </li>
-        <li>
+        <li className="sidebar-item">
           <NavLink
             to="/profile"
-            className={({ isActive }) => (isActive ? "active" : "")}
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
             aria-label="Profile"
           >
             Profile

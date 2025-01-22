@@ -1,12 +1,26 @@
 import axios from './axiosInstance';
 
-// Define the Activity interface
+// Define the Activity interface to represent the expected structure of activity data
 export interface Activity {
+  id: string;
   title: string;
   description: string;
   isJoined: boolean;
-  // Add any other properties your API returns
+  participants?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  [key: string]: any; // Allow additional fields for flexibility
 }
+
+// Utility function to handle API errors
+const handleApiError = (error: any): never => {
+  console.error('API Error:', error);
+  throw new Error(
+    error.response?.data?.message ||
+    error.message ||
+    'An unexpected error occurred. Please try again later.'
+  );
+};
 
 const ActivityService = {
   /**
@@ -21,10 +35,31 @@ const ActivityService = {
       if (!response.data || typeof response.data !== 'object') {
         throw new Error('Invalid response data');
       }
-      return response.data as Activity; // Ensure the response matches the Activity type
+      return response.data as Activity;
     } catch (error) {
-      console.error('Error fetching activity details:', error);
-      throw new Error('Failed to fetch activity details. Please try again later.');
+      handleApiError(error);
+      throw error; // Rethrow the error to ensure the function always returns a value
+    }
+  },
+
+  /**
+   * Fetch a paginated list of activities.
+   *
+   * @param {number} page - The page number to fetch.
+   * @param {number} limit - The number of activities per page.
+   * @returns {Promise<{ activities: Activity[]; total: number }>} - A list of activities and the total count.
+   */
+  listActivities: async (page: number = 1, limit: number = 10): Promise<{ activities: Activity[]; total: number } | undefined> => {
+    try {
+      const response = await axios.get('/activities', {
+        params: { page, limit },
+      });
+      return {
+        activities: response.data.activities as Activity[],
+        total: response.data.total,
+      };
+    } catch (error) {
+      handleApiError(error);
     }
   },
 
@@ -32,18 +67,13 @@ const ActivityService = {
    * Join a specific activity.
    *
    * @param {string} activityId - The ID of the activity to join.
-   * @returns {Promise<Activity>} - The updated activity data.
+   * @returns {Promise<void>} - Resolves if the join operation is successful.
    */
-  joinActivity: async (activityId: string): Promise<Activity> => {
+  joinActivity: async (activityId: string): Promise<void> => {
     try {
-      const response = await axios.post(`/activities/${activityId}/join`);
-      if (!response.data || typeof response.data !== 'object') {
-        throw new Error('Invalid response data');
-      }
-      return response.data as Activity;
+      await axios.post(`/activities/${activityId}/join`);
     } catch (error) {
-      console.error('Error joining activity:', error);
-      throw new Error('Failed to join activity. Please try again later.');
+      handleApiError(error);
     }
   },
 
@@ -51,18 +81,13 @@ const ActivityService = {
    * Leave a specific activity.
    *
    * @param {string} activityId - The ID of the activity to leave.
-   * @returns {Promise<Activity>} - The updated activity data.
+   * @returns {Promise<void>} - Resolves if the leave operation is successful.
    */
-  leaveActivity: async (activityId: string): Promise<Activity> => {
+  leaveActivity: async (activityId: string): Promise<void> => {
     try {
-      const response = await axios.post(`/activities/${activityId}/leave`);
-      if (!response.data || typeof response.data !== 'object') {
-        throw new Error('Invalid response data');
-      }
-      return response.data as Activity;
+      await axios.post(`/activities/${activityId}/leave`);
     } catch (error) {
-      console.error('Error leaving activity:', error);
-      throw new Error('Failed to leave activity. Please try again later.');
+      handleApiError(error);
     }
   },
 
@@ -70,18 +95,15 @@ const ActivityService = {
    * Create a new activity.
    *
    * @param {Partial<Activity>} activityData - The data for the new activity.
-   * @returns {Promise<Activity>} - The created activity data.
+   * @returns {Promise<Activity>} - The created activity.
    */
   createActivity: async (activityData: Partial<Activity>): Promise<Activity> => {
     try {
       const response = await axios.post('/activities', activityData);
-      if (!response.data || typeof response.data !== 'object') {
-        throw new Error('Invalid response data');
-      }
       return response.data as Activity;
     } catch (error) {
-      console.error('Error creating activity:', error);
-      throw new Error('Failed to create activity. Please try again later.');
+      handleApiError(error);
+      return Promise.reject(error); // Add this line
     }
   },
 
@@ -90,18 +112,29 @@ const ActivityService = {
    *
    * @param {string} activityId - The ID of the activity to update.
    * @param {Partial<Activity>} activityData - The updated data for the activity.
-   * @returns {Promise<Activity>} - The updated activity data.
+   * @returns {Promise<Activity>} - The updated activity.
    */
   updateActivity: async (activityId: string, activityData: Partial<Activity>): Promise<Activity> => {
     try {
       const response = await axios.put(`/activities/${activityId}`, activityData);
-      if (!response.data || typeof response.data !== 'object') {
-        throw new Error('Invalid response data');
-      }
       return response.data as Activity;
     } catch (error) {
-      console.error('Error updating activity:', error);
-      throw new Error('Failed to update activity. Please try again later.');
+      handleApiError(error);
+      return Promise.reject(error); // or return a default value
+    }
+  },
+
+  /**
+   * Delete a specific activity.
+   *
+   * @param {string} activityId - The ID of the activity to delete.
+   * @returns {Promise<void>} - Resolves if the delete operation is successful.
+   */
+  deleteActivity: async (activityId: string): Promise<void> => {
+    try {
+      await axios.delete(`/activities/${activityId}`);
+    } catch (error) {
+      handleApiError(error);
     }
   },
 };

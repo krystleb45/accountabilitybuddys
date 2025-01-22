@@ -3,7 +3,7 @@ import {
   getPartnerNotifications,
   markNotificationAsRead,
   deleteNotification,
-} from "../services/apiService"; // Replace with your actual API service
+} from "src/services/apiService"; // Replace with your actual API service
 import "./PartnerNotifications.css"; // Optional: import CSS for styling
 
 // Extend the Notification type to include 'isRead'
@@ -28,7 +28,7 @@ const PartnerNotifications: React.FC = () => {
         const apiNotifications = await getPartnerNotifications();
 
         // Map to ensure all notifications have 'isRead' property
-        const formattedNotifications = apiNotifications.map((notification) => ({
+        const formattedNotifications: Notification[] = apiNotifications.map((notification: any) => ({
           id: notification.id,
           message: notification.message,
           isRead: notification.read || false, // Use 'read' from API or default to false

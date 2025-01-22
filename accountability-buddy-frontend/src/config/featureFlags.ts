@@ -1,5 +1,20 @@
-// Feature Flags Configuration
-const featureFlags = {
+// Enhanced Feature Flags Configuration
+interface FeatureFlags {
+  enableBetaFeatures: boolean;
+  showNewDashboard: boolean;
+  enableDarkMode: boolean;
+  enableAnalytics: boolean;
+  enableMultiLanguageSupport: boolean;
+  experimental: {
+    enableTaskAutomation: boolean;
+    enableAIRecommendations: boolean;
+    [key: string]: boolean; // Allows for future experimental features
+  };
+  isFeatureEnabled: (featureName: keyof Omit<FeatureFlags, "experimental">) => boolean;
+  isExperimentalFeatureEnabled: (featureName: keyof FeatureFlags["experimental"]) => boolean;
+}
+
+const featureFlags: FeatureFlags = {
   // Core Feature Flags
   enableBetaFeatures: process.env.REACT_APP_ENABLE_BETA === "true",
   showNewDashboard: process.env.REACT_APP_SHOW_NEW_DASHBOARD === "true",
@@ -19,13 +34,13 @@ const featureFlags = {
   },
 
   // Function to check if a specific feature is enabled
-  isFeatureEnabled: (featureName) => {
-    return !!featureFlags[featureName];
+  isFeatureEnabled: function (featureName) {
+    return !!this[featureName];
   },
 
   // Function to check if experimental features are enabled
-  isExperimentalFeatureEnabled: (featureName) => {
-    return !!featureFlags.experimental[featureName];
+  isExperimentalFeatureEnabled: function (featureName) {
+    return !!this.experimental[featureName];
   },
 };
 

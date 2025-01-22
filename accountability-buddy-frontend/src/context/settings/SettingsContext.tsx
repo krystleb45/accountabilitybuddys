@@ -6,6 +6,7 @@ interface Settings {
   notificationsEnabled: boolean;
   language: string;
   autoSave: boolean;
+  saveFrequency: number; // New feature: save frequency in minutes
 }
 
 // Define the shape of the SettingsContext
@@ -13,6 +14,8 @@ interface SettingsContextType {
   settings: Settings;
   updateSettings: (newSettings: Partial<Settings>) => void;
   resetSettings: () => void;
+  toggleDarkMode: () => void;
+  enableNotifications: (enabled: boolean) => void;
 }
 
 // Create SettingsContext with the appropriate type
@@ -24,6 +27,7 @@ const defaultSettings: Settings = {
   notificationsEnabled: true,
   language: "en",
   autoSave: false,
+  saveFrequency: 10, // Default to 10 minutes
 };
 
 // SettingsProvider component props
@@ -52,10 +56,15 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
       // Validation for settings (e.g., check if language is supported)
       if (
         updatedSettings.language &&
-        !["en", "es", "fr"].includes(updatedSettings.language)
+        !["en", "es", "fr", "de", "zh", "ar"].includes(updatedSettings.language)
       ) {
         console.warn("Unsupported language setting. Reverting to default.");
         updatedSettings.language = defaultSettings.language;
+      }
+
+      if (updatedSettings.saveFrequency < 1 || updatedSettings.saveFrequency > 60) {
+        console.warn("Save frequency must be between 1 and 60 minutes. Reverting to default.");
+        updatedSettings.saveFrequency = defaultSettings.saveFrequency;
       }
 
       localStorage.setItem("appSettings", JSON.stringify(updatedSettings));
@@ -68,6 +77,19 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
     setSettings(defaultSettings);
     localStorage.removeItem("appSettings");
   }, []);
+
+  // Toggle dark mode
+  const toggleDarkMode = useCallback(() => {
+    updateSettings({ darkMode: !settings.darkMode });
+  }, [settings.darkMode, updateSettings]);
+
+  // Enable or disable notifications
+  const enableNotifications = useCallback(
+    (enabled: boolean) => {
+      updateSettings({ notificationsEnabled: enabled });
+    },
+    [updateSettings]
+  );
 
   // Synchronize settings from localStorage on component mount
   useEffect(() => {
@@ -82,7 +104,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
   }, []);
 
   return (
-    <SettingsContext.Provider value={{ settings, updateSettings, resetSettings }}>
+    <SettingsContext.Provider
+      value={{ settings, updateSettings, resetSettings, toggleDarkMode, enableNotifications }}
+    >
       {children}
     </SettingsContext.Provider>
   );

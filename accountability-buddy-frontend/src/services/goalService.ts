@@ -1,24 +1,23 @@
-import axios, { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig, AxiosHeaders } from "axios";
-import authService from "../../src/services/authService"; // Correct import
+import axios, { AxiosResponse, InternalAxiosRequestConfig, AxiosHeaders } from "axios";
+import authService from "../../src/services/authService";
 
 // Define types for the goal data
 export interface Goal {
   id: string;
   title: string;
   description: string;
-  status: string; // e.g., "in-progress", "completed"
-  dueDate?: string; // Optional ISO date string
-  [key: string]: any; // Additional fields
+  status: string;
+  dueDate?: string;
+  [key: string]: any;
 }
 
 export interface GoalAnalytics {
   totalGoals: number;
   completedGoals: number;
   inProgressGoals: number;
-  [key: string]: any; // Additional analytics fields
+  [key: string]: any;
 }
 
-// Create an axios instance for goals API
 const apiClient = axios.create({
   baseURL: "https://accountabilitybuddys.com/api/goals",
   headers: {
@@ -26,16 +25,16 @@ const apiClient = axios.create({
   },
 });
 
-// Axios interceptor to add the Authorization header to every request
+// Add Authorization header using interceptor
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const authHeader = authService.getAuthHeader(); // Use authService to get the token
+    const authHeader = authService.getAuthHeader();
     if (authHeader) {
       if (!config.headers) {
-        config.headers = new AxiosHeaders(); // Ensure headers is an AxiosHeaders instance
+        config.headers = new AxiosHeaders();
       }
       Object.entries(authHeader).forEach(([key, value]) => {
-        config.headers.set(key, value as string); // Use AxiosHeaders.set to add headers
+        config.headers.set(key, value as string);
       });
     }
     return config;
@@ -43,121 +42,84 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Utility function to handle retries with exponential backoff
-const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
-  let attempt = 0;
-  while (attempt < retries) {
-    try {
-      return await fn();
-    } catch (error: any) {
-      if (attempt < retries - 1 && error.response?.status >= 500) {
-        const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-        await new Promise((resolve) => setTimeout(resolve, delay)); // Wait before retrying
-        attempt++;
-      } else {
-        console.error("Request failed:", error); // Log error for debugging
-        throw new Error(
-          error.response?.data?.message || "An error occurred. Please try again."
-        );
-      }
-    }
-  }
-  throw new Error("Failed after multiple retries."); // Explicit return for completion
-};
-
-// Goal service methods
-
 /**
  * Create a new goal.
- * @param goalData - The data for the new goal.
- * @returns The created goal.
  */
-export const createGoal = async (goalData: Partial<Goal>): Promise<Goal> => {
+export const createGoal = async (goalData: Partial<Goal>): Promise<Goal | undefined> => {
   try {
     const response: AxiosResponse<Goal> = await apiClient.post("/", goalData);
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating goal:", error);
-    throw new Error(error.response?.data?.message || "Failed to create goal.");
+    return undefined; // Explicitly return undefined in case of error
   }
 };
 
 /**
  * Get all user goals.
- * @returns An array of goals.
  */
-export const getUserGoals = async (): Promise<Goal[]> => {
+export const getUserGoals = async (): Promise<Goal[] | undefined> => {
   try {
     const response: AxiosResponse<Goal[]> = await apiClient.get("/");
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching user goals:", error);
-    throw new Error(error.response?.data?.message || "Failed to fetch user goals.");
+    return undefined; // Explicitly return undefined in case of error
   }
 };
 
 /**
  * Update a goal.
- * @param goalId - The ID of the goal to update.
- * @param goalData - The updated goal data.
- * @returns The updated goal.
  */
-export const updateGoal = async (goalId: string, goalData: Partial<Goal>): Promise<Goal> => {
+export const updateGoal = async (goalId: string, goalData: Partial<Goal>): Promise<Goal | undefined> => {
   try {
     const response: AxiosResponse<Goal> = await apiClient.put(`/${goalId}`, goalData);
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating goal:", error);
-    throw new Error(error.response?.data?.message || "Failed to update goal.");
+    return undefined; // Explicitly return undefined in case of error
   }
 };
 
 /**
  * Delete a goal.
- * @param goalId - The ID of the goal to delete.
  */
-export const deleteGoal = async (goalId: string): Promise<void> => {
+export const deleteGoal = async (goalId: string): Promise<boolean> => {
   try {
     await apiClient.delete(`/${goalId}`);
-  } catch (error: any) {
+    return true;
+  } catch (error) {
     console.error("Error deleting goal:", error);
-    throw new Error(error.response?.data?.message || "Failed to delete goal.");
+    return false; // Return false if deletion fails
   }
 };
 
 /**
  * Get details of a specific goal.
- * @param goalId - The ID of the goal.
- * @returns The goal details.
  */
-export const getGoalDetails = async (goalId: string): Promise<Goal> => {
+export const getGoalDetails = async (goalId: string): Promise<Goal | undefined> => {
   try {
     const response: AxiosResponse<Goal> = await apiClient.get(`/${goalId}`);
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching goal details:", error);
-    throw new Error(error.response?.data?.message || "Failed to fetch goal details.");
+    return undefined; // Explicitly return undefined in case of error
   }
 };
 
 /**
  * Fetch goal analytics.
- * @param filters - Optional filters for analytics.
- * @returns The goal analytics data.
  */
-export const getGoalAnalytics = async (filters?: Record<string, any>): Promise<GoalAnalytics> => {
+export const getGoalAnalytics = async (filters?: Record<string, any>): Promise<GoalAnalytics | undefined> => {
   try {
-    const response: AxiosResponse<GoalAnalytics> = await axiosRetry(() =>
-      apiClient.get("/analytics", { params: filters })
-    );
+    const response: AxiosResponse<GoalAnalytics> = await apiClient.get("/analytics", { params: filters });
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching goal analytics:", error);
-    throw new Error(error.response?.data?.message || "Failed to fetch goal analytics.");
+    return undefined; // Explicitly return undefined in case of error
   }
 };
 
-// Export all functions as a single object
 const GoalService = {
   createGoal,
   getUserGoals,

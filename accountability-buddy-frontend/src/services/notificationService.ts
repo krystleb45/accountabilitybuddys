@@ -1,5 +1,7 @@
-import axios, { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import authService from "./authService"; // Helper to get the Authorization header
+import { AxiosHeaders } from "axios"; // Import the AxiosHeaders type
+
 
 // Define types for notifications
 export interface Notification {
@@ -14,25 +16,23 @@ export interface Notification {
 // Create an axios instance for notifications API
 const apiClient = axios.create({
   baseURL: "https://accountabilitybuddys.com/api/notifications",
-  headers: new axios.AxiosHeaders({
+  headers: {
     "Content-Type": "application/json",
-  }),
+  },
 });
 
 // Axios interceptor to automatically add the Authorization header to every request
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const authHeader = authService.getAuthHeader(); // Get the token from the helper
+    const authHeader = authService.getAuthHeader();
 
-    // Ensure headers object exists and is of the correct type
     if (!config.headers) {
-      config.headers = new axios.AxiosHeaders();
+      config.headers = new AxiosHeaders(); // Create a new instance of AxiosHeaders
     }
 
-    // Merge the authorization headers
-    for (const [key, value] of Object.entries(authHeader)) {
-      config.headers.set(key, value);
-    }
+    Object.entries(authHeader).forEach(([key, value]) => {
+      config.headers.set(key, value as string); // Use the set method of AxiosHeaders
+    });
 
     return config;
   },
@@ -48,20 +48,20 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
     } catch (error: any) {
       if (attempt < retries - 1 && error.response?.status >= 500) {
         const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-        await new Promise((resolve) => setTimeout(resolve, delay)); // Wait before retrying
+        await new Promise((resolve) => setTimeout(resolve, delay));
         attempt++;
       } else {
-        console.error("Request failed:", error); // Log error for debugging
+        console.error("Request failed:", error);
         throw new Error(
           error.response?.data?.message || "An error occurred. Please try again."
         );
       }
     }
   }
-  throw new Error("Failed after multiple retries."); // Ensure all paths return or throw
+  throw new Error("Failed after multiple retries.");
 };
 
-// Get all notifications for the current user
+// Fetch all notifications for the current user
 export const getUserNotifications = async (): Promise<Notification[]> => {
   try {
     const response: AxiosResponse<Notification[]> = await axiosRetry(() =>
@@ -76,6 +76,10 @@ export const getUserNotifications = async (): Promise<Notification[]> => {
 
 // Mark a notification as read
 export const markNotificationAsRead = async (notificationId: string): Promise<void> => {
+  if (!notificationId) {
+    throw new Error("Notification ID is required.");
+  }
+
   try {
     await axiosRetry(() => apiClient.post(`/read/${notificationId}`));
   } catch (error: any) {
@@ -96,6 +100,10 @@ export const markAllNotificationsAsRead = async (): Promise<void> => {
 
 // Delete a notification
 export const deleteNotification = async (notificationId: string): Promise<void> => {
+  if (!notificationId) {
+    throw new Error("Notification ID is required.");
+  }
+
   try {
     await axiosRetry(() => apiClient.delete(`/delete/${notificationId}`));
   } catch (error: any) {
@@ -104,9 +112,20 @@ export const deleteNotification = async (notificationId: string): Promise<void> 
   }
 };
 
+// Delete all notifications
+export const deleteAllNotifications = async (): Promise<void> => {
+  try {
+    await axiosRetry(() => apiClient.delete("/delete-all"));
+  } catch (error: any) {
+    console.error("Error deleting all notifications:", error);
+    throw new Error(error.response?.data?.message || "Failed to delete all notifications.");
+  }
+};
+
 export default {
   getUserNotifications,
   markNotificationAsRead,
   markAllNotificationsAsRead,
   deleteNotification,
+  deleteAllNotifications,
 };

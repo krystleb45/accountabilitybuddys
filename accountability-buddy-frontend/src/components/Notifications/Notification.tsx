@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from "react";
 import "./Notification.css";
 
-interface NotificationProps {
+type NotificationProps = {
   message: string;
-  type?: "info" | "success" | "error" | "warning";
+  type?: string; // Update the type here
   duration?: number;
+  onDismiss?: () => void;
 }
 
 const Notification: React.FC<NotificationProps> = ({
   message,
   type = "info",
   duration = 5000,
+  onDismiss,
 }) => {
   const [visible, setVisible] = useState<boolean>(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(false), duration);
+    const timer = setTimeout(() => {
+      setVisible(false);
+      if (onDismiss) onDismiss();
+    }, duration);
+
     return () => clearTimeout(timer);
-  }, [duration]);
+  }, [duration, onDismiss]);
 
   if (!visible) return null;
 
@@ -27,7 +33,19 @@ const Notification: React.FC<NotificationProps> = ({
       role="alert"
       aria-live="assertive"
     >
-      {message}
+      <p>{message}</p>
+      {onDismiss && (
+        <button
+          className="notification-close"
+          onClick={() => {
+            setVisible(false);
+            onDismiss();
+          }}
+          aria-label="Close notification"
+        >
+          &times;
+        </button>
+      )}
     </div>
   );
 };

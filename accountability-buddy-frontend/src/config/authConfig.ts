@@ -1,30 +1,37 @@
-// Auth Configuration
+// Enhanced Auth Configuration
 const authConfig = {
-  tokenKey: "authToken", // Updated key for better clarity
-  refreshTokenKey: "refreshToken", // Added key for storing refresh tokens
-  tokenExpiryKey: "tokenExpiry", // Added key to store token expiry time
+  tokenKey: "authToken", // Key for storing access tokens
+  refreshTokenKey: "refreshToken", // Key for storing refresh tokens
+  tokenExpiryKey: "tokenExpiry", // Key for storing token expiry time
   loginRedirect: "/dashboard",
   logoutRedirect: "/login",
 
-  // Function to get stored tokens from localStorage
-  getToken: () => localStorage.getItem(authConfig.tokenKey),
-  setToken: (token) => localStorage.setItem(authConfig.tokenKey, token),
-  removeToken: () => localStorage.removeItem(authConfig.tokenKey),
+  // Methods to handle Access Token
+  getToken: (): string | null => localStorage.getItem(authConfig.tokenKey),
+  setToken: (token: string): void => localStorage.setItem(authConfig.tokenKey, token),
+  removeToken: (): void => localStorage.removeItem(authConfig.tokenKey),
 
-  // Refresh Token Methods
-  getRefreshToken: () => localStorage.getItem(authConfig.refreshTokenKey),
-  setRefreshToken: (token) =>
-    localStorage.setItem(authConfig.refreshTokenKey, token),
-  removeRefreshToken: () => localStorage.removeItem(authConfig.refreshTokenKey),
+  // Methods to handle Refresh Token
+  getRefreshToken: (): string | null => localStorage.getItem(authConfig.refreshTokenKey),
+  setRefreshToken: (token: string): void => localStorage.setItem(authConfig.refreshTokenKey, token),
+  removeRefreshToken: (): void => localStorage.removeItem(authConfig.refreshTokenKey),
 
   // Token Expiry Handling
-  getTokenExpiry: () =>
-    parseInt(localStorage.getItem(authConfig.tokenExpiryKey), 10),
-  setTokenExpiry: (expiry) =>
-    localStorage.setItem(authConfig.tokenExpiryKey, expiry.toString()),
-  isTokenExpired: () => {
+  getTokenExpiry: (): number | null => {
+    const expiry = localStorage.getItem(authConfig.tokenExpiryKey);
+    return expiry ? parseInt(expiry, 10) : null;
+  },
+  setTokenExpiry: (expiry: number): void => localStorage.setItem(authConfig.tokenExpiryKey, expiry.toString()),
+  isTokenExpired: (): boolean => {
     const expiryTime = authConfig.getTokenExpiry();
-    return expiryTime && Date.now() >= expiryTime;
+    return expiryTime !== null && Date.now() >= expiryTime;
+  },
+
+  // Clear all Auth Data
+  clearAuthData: (): void => {
+    authConfig.removeToken();
+    authConfig.removeRefreshToken();
+    localStorage.removeItem(authConfig.tokenExpiryKey);
   },
 
   // OAuth Providers Configuration
@@ -32,15 +39,21 @@ const authConfig = {
     google: {
       clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID || "",
       redirectUri: process.env.REACT_APP_GOOGLE_REDIRECT_URI || "",
-      scope: "profile email", // Added scope for OAuth
-      responseType: "token", // Added response type for OAuth flow
+      scope: "profile email", // Scope for OAuth
+      responseType: "token", // Response type for OAuth flow
     },
     facebook: {
       clientId: process.env.REACT_APP_FACEBOOK_CLIENT_ID || "",
       redirectUri: process.env.REACT_APP_FACEBOOK_REDIRECT_URI || "",
-      scope: "public_profile email",
-      responseType: "token",
+      scope: "public_profile email", // Scope for OAuth
+      responseType: "token", // Response type for OAuth flow
     },
+  },
+
+  // Utility: Check if Auth Provider is Configured
+  isAuthProviderConfigured: (provider: keyof typeof authConfig.authProviders): boolean => {
+    const config = authConfig.authProviders[provider];
+    return Boolean(config.clientId && config.redirectUri);
   },
 };
 

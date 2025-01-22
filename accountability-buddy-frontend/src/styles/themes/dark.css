@@ -1,66 +1,112 @@
 /* src/styles/dark.css */
 
-/* General body styles for dark mode */
+/* General Body Styles for Dark Mode */
 body {
-    background-color: #121212; /* Dark background */
-    color: #e0e0e0; /* Light text color for contrast */
+  background-color: #121212; /* Dark background */
+  color: #e0e0e0; /* Light text color for contrast */
+  font-family: 'Nunito Sans', Arial, sans-serif; /* Modern font */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for theme changes */
+}
+
+/* Link Styles */
+a {
+  color: #bb86fc; /* Light purple for links */
+  text-decoration: none; /* Remove underline for cleaner look */
+}
+
+a:hover {
+  color: #3700b3; /* Darker purple on hover */
+  text-decoration: underline; /* Underline on hover for better accessibility */
+}
+
+/* Button Styles */
+.button {
+  background-color: #1f1f1f; /* Dark button background */
+  color: #e0e0e0; /* Light text color */
+  border: 1px solid #bb86fc; /* Light purple border */
+  border-radius: var(--border-radius-medium, 8px); /* Use variable for consistency */
+  padding: var(--spacing-medium, 8px) var(--spacing-large, 16px); /* Use spacing variables */
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #bb86fc; /* Light purple on hover */
+  color: #121212; /* Dark text for better contrast */
+}
+
+/* Card Styles */
+.card {
+  background-color: #1e1e1e; /* Dark card background */
+  border: 1px solid #333; /* Slightly lighter border */
+  color: #e0e0e0; /* Light text color */
+  border-radius: var(--border-radius-medium, 8px); /* Consistent border radius */
+  padding: var(--spacing-large, 16px); /* Use spacing variables */
+  box-shadow: var(--box-shadow-light, 0 1px 3px rgba(0, 0, 0, 0.1)); /* Subtle shadow */
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: var(--box-shadow-medium, 0 2px 5px rgba(0, 0, 0, 0.2)); /* Enhanced shadow on hover */
+}
+
+/* Modal Styles */
+.modal {
+  background-color: #1e1e1e; /* Dark modal background */
+  color: #e0e0e0; /* Light text color */
+  border-radius: var(--border-radius-medium, 8px); /* Rounded corners for modals */
+  padding: var(--spacing-large, 16px); /* Consistent padding */
+  box-shadow: var(--box-shadow-medium, 0 2px 5px rgba(0, 0, 0, 0.2)); /* Subtle shadow */
+}
+
+/* Input Fields */
+input, textarea {
+  background-color: #333; /* Dark input background */
+  color: #e0e0e0; /* Light text color */
+  border: 1px solid #555; /* Lighter border */
+  border-radius: var(--border-radius-small, 4px); /* Rounded corners */
+  padding: var(--spacing-medium, 8px); /* Consistent padding */
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+input:focus, textarea:focus {
+  border-color: #bb86fc; /* Light purple border on focus */
+  background-color: #222; /* Slightly darker background on focus */
+  outline: none; /* Remove default outline */
+}
+
+input::placeholder, textarea::placeholder {
+  color: #aaa; /* Subtle placeholder text color */
+}
+
+/* Footer Styles */
+footer {
+  background-color: #1f1f1f; /* Dark footer background */
+  color: #e0e0e0; /* Light text color */
+  padding: var(--spacing-large, 16px); /* Consistent padding */
+  text-align: center; /* Centered text */
+}
+
+/* Utility Classes */
+.text-muted {
+  color: #777; /* Muted text color */
+}
+
+.bg-dark {
+  background-color: #121212; /* Utility for dark background */
+}
+
+.bg-light {
+  background-color: #1f1f1f; /* Utility for slightly lighter background */
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px; /* Smaller font size for mobile */
   }
-  
-  /* Link styles */
-  a {
-    color: #bb86fc; /* Light purple color for links */
+
+  h1, h2, h3, h4, h5, h6 {
+    font-size: 90%; /* Reduce heading sizes for mobile */
   }
-  
-  a:hover {
-    color: #3700b3; /* Darker purple on hover */
-  }
-  
-  /* Button styles */
-  .button {
-    background-color: #1f1f1f; /* Dark button background */
-    color: #e0e0e0; /* Light text color */
-    border: 1px solid #bb86fc; /* Light purple border */
-  }
-  
-  .button:hover {
-    background-color: #bb86fc; /* Change to light purple on hover */
-    color: #121212; /* Dark text on hover */
-  }
-  
-  /* Card styles */
-  .card {
-    background-color: #1e1e1e; /* Dark card background */
-    border: 1px solid #333; /* Slightly lighter border */
-    color: #e0e0e0; /* Light text color */
-  }
-  
-  /* Modal styles */
-  .modal {
-    background-color: #1e1e1e; /* Dark modal background */
-    color: #e0e0e0; /* Light text color */
-  }
-  
-  /* Input fields */
-  input, textarea {
-    background-color: #333; /* Dark input background */
-    color: #e0e0e0; /* Light text color */
-    border: 1px solid #555; /* Lighter border */
-  }
-  
-  input::placeholder, textarea::placeholder {
-    color: #aaa; /* Placeholder text color */
-  }
-  
-  /* Footer styles */
-  footer {
-    background-color: #1f1f1f; /* Dark footer background */
-    color: #e0e0e0; /* Light text color */
-  }
-  
-  /* Media queries for responsiveness (if necessary) */
-  @media (max-width: 768px) {
-    body {
-      font-size: 14px; /* Adjust font size for smaller screens */
-    }
-  }
-  
+}

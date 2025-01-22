@@ -1,5 +1,8 @@
 // Import Jest DOM matchers for extended assertions
 import '@testing-library/jest-dom';
+// src/types/tests/setupTests.tsx
+import './matchers/customMatchers';
+
 
 // Enable Fetch Mock for API requests
 import fetchMock from 'jest-fetch-mock';

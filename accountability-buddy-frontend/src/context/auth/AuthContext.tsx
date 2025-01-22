@@ -1,14 +1,18 @@
+// AuthContext.tsx
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import axios from "../config/axiosConfig";
+import axios from "src/config/axiosConfig";
+import { User } from "@/types/User.types"; // Import your User type
 
 // Define the shape of the AuthContext
-interface AuthContextType {
-  authToken: string | null; // Add authToken if you use it
-  isAuthenticated: boolean;  // Define isAuthenticated
-  user: any;                // Replace 'any' with your specific user type if available
-  loading: boolean;         // Loading state
+export interface AuthContextType { // Explicitly export the interface
+  authToken: string | null; // Authentication token
+  isAuthenticated: boolean; // User authentication state
+  user: User | null; // Replace 'any' with your User type
+  loading: boolean; // Loading state
   login: (token: string) => void; // Login function
-  logout: () => void;       // Logout function
+  logout: () => void; // Logout function
+  refreshUser: () => void; // Refresh user data function
 }
 
 // Create AuthContext with the appropriate type
@@ -31,32 +35,38 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [authToken, setAuthToken] = useState<string | null>(localStorage.getItem("authToken"));
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!authToken);
-  const [user, setUser] = useState<any>(null); // User data state
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
+  // Fetch user data when authToken or isAuthenticated changes
   useEffect(() => {
     if (isAuthenticated && authToken) {
-      // Fetch user info logic
-      axios
-        .get("/user", { headers: { Authorization: `Bearer ${authToken}` } })
-        .then((response) => {
-          setUser(response.data);
-          setLoading(false); // Stop loading once user data is fetched
-        })
-        .catch(() => {
-          setIsAuthenticated(false);
-          setLoading(false); // Stop loading if error occurs
-        });
+      fetchUserData();
     } else {
-      setLoading(false); // If not authenticated, stop loading
+      setLoading(false); // Stop loading if not authenticated
     }
   }, [isAuthenticated, authToken]);
+
+  const fetchUserData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("/user", {
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+      setUser(response.data);
+    } catch (error) {
+      console.error("Failed to fetch user data:", error);
+      setIsAuthenticated(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const login = (token: string) => {
     localStorage.setItem("authToken", token);
     setAuthToken(token);
     setIsAuthenticated(true);
-    setLoading(true); // Optionally set loading true when logging in
+    fetchUserData();
   };
 
   const logout = () => {
@@ -66,8 +76,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(null);
   };
 
+  const refreshUser = () => {
+    if (authToken) fetchUserData();
+  };
+
   return (
-    <AuthContext.Provider value={{ authToken, isAuthenticated, user, loading, login, logout }}>
+    <AuthContext.Provider
+      value={{ authToken, isAuthenticated, user, loading, login, logout, refreshUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

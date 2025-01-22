@@ -18,7 +18,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictNullChecks": true,
-    "types": ["jest", "@testing-library/jest-dom", "cypress"],
+    "types": ["jest", "@testing-library/jest-dom", "cypress", "node"],
     "baseUrl": ".", // Sets the base URL for module resolution
     "paths": {
       "@/*": ["src/*"],

@@ -12,16 +12,20 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
     <header className="header" role="banner" aria-label="Main navigation">
       <div className="logo">
         <Link to="/" aria-label="Home">
-          <img src="/logo.png" alt="Accountability Buddy Logo" />
+          <img
+            src="/logo.png"
+            alt="Accountability Buddy Logo"
+            className="logo-image"
+          />
         </Link>
       </div>
 
-      <nav className="nav">
+      <nav className="nav" aria-label="Primary Navigation">
         <ul className="nav-list">
           <li>
             <NavLink
               to="/"
-              className={({ isActive }) => (isActive ? "active" : "")} // Aligning with `react-router-dom` expectations
+              className={({ isActive }) => (isActive ? "active" : "")}
               aria-label="Home"
             >
               Home
@@ -30,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
           <li>
             <NavLink
               to="/goals"
-              className={({ isActive }) => (isActive ? "active" : "")} // Aligning with `react-router-dom` expectations
+              className={({ isActive }) => (isActive ? "active" : "")}
               aria-label="Goals"
             >
               Goals
@@ -39,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
           <li>
             <NavLink
               to="/collaborations"
-              className={({ isActive }) => (isActive ? "active" : "")} // Aligning with `react-router-dom` expectations
+              className={({ isActive }) => (isActive ? "active" : "")}
               aria-label="Collaborations"
             >
               Collaborations
@@ -50,28 +54,43 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
               <li>
                 <NavLink
                   to="/profile"
-                  className={({ isActive }) => (isActive ? "active" : "")} // Aligning with `react-router-dom` expectations
+                  className={({ isActive }) => (isActive ? "active" : "")}
                   aria-label="Profile"
                 >
                   Profile
                 </NavLink>
               </li>
               <li>
-                <button onClick={onLogout} aria-label="Log out" className="logout-button">
+                <button
+                  onClick={onLogout}
+                  aria-label="Log out"
+                  className="logout-button"
+                >
                   Logout
                 </button>
               </li>
             </>
           ) : (
-            <li>
-              <NavLink
-                to="/login"
-                className={({ isActive }) => (isActive ? "active" : "")} // Aligning with `react-router-dom` expectations
-                aria-label="Login"
-              >
-                Login
-              </NavLink>
-            </li>
+            <>
+              <li>
+                <NavLink
+                  to="/signup"
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                  aria-label="Sign up"
+                >
+                  Sign Up
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                  aria-label="Login"
+                >
+                  Login
+                </NavLink>
+              </li>
+            </>
           )}
         </ul>
       </nav>

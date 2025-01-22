@@ -9,12 +9,24 @@ const resources = {
     translation: {
       welcome: "Welcome",
       login: "Login",
+      logout: "Logout",
+      dashboard: "Dashboard",
     },
   },
   es: {
     translation: {
       welcome: "Bienvenido",
       login: "Iniciar sesión",
+      logout: "Cerrar sesión",
+      dashboard: "Tablero",
+    },
+  },
+  fr: {
+    translation: {
+      welcome: "Bienvenue",
+      login: "Connexion",
+      logout: "Déconnexion",
+      dashboard: "Tableau de bord",
     },
   },
 };
@@ -30,27 +42,33 @@ i18n
     lng: localStorage.getItem("language") || "en", // Uses saved language or defaults to English
     debug: process.env.NODE_ENV === "development", // Debug mode enabled in development
     detection: {
-      order: ["localStorage", "navigator", "htmlTag"], // Detection order
-      caches: ["localStorage"], // Saves detected language in localStorage
+      order: ["localStorage", "querystring", "cookie", "navigator", "htmlTag"], // Enhanced detection order
+      caches: ["localStorage", "cookie"], // Saves detected language in localStorage and cookies
     },
     interpolation: {
       escapeValue: false, // React already escapes values to prevent XSS
     },
     backend: {
       loadPath: "/locales/{{lng}}/{{ns}}.json", // Path to load translation files
+      addPath: "/locales/add/{{lng}}/{{ns}}", // Path to post new translations (optional)
+      allowMultiLoading: true,
     },
     react: {
-      useSuspense: false, // Prevents suspense errors during initial load
+      useSuspense: true, // Enable suspense for lazy loading translations
     },
   });
 
 // Function to change language
-export const changeLanguage = (lng) => {
+export const changeLanguage = (lng: string): void => {
   i18n.changeLanguage(lng);
   localStorage.setItem("language", lng);
 };
 
+// Utility to get the current language
+export const getCurrentLanguage = (): string => i18n.language || "en";
+
 // Example usage:
 // changeLanguage('es'); // Switches to Spanish
+// console.log(getCurrentLanguage()); // Logs the current language
 
 export default i18n;

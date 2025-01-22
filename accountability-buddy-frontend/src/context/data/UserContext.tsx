@@ -1,66 +1,56 @@
-import React, { createContext, useState, ReactNode, useContext, useEffect } from "react";
-import axios from "axios";
-import { User } from "../../types/User"; // Import centralized User type
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { getUserProfile } from "../../services/userService"; // Adjust the path to match your service file
+import { UserProfile } from "../../types/User.types";
 
-// Define the UserContextType interface
 interface UserContextType {
-  user: User | null;
-  refreshUserProfile: () => Promise<void>;
+  user: UserProfile | null;
   loading: boolean;
   error: string | null;
+  setUser: React.Dispatch<React.SetStateAction<UserProfile | null>>;
+  logout: () => void;
 }
 
-// Create the UserContext
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-// Custom Hook for consuming the UserContext
-export const useUser = (): UserContextType => {
-  const context = useContext(UserContext);
-
-  if (!context) {
-    throw new Error("useUser must be used within a UserProvider");
-  }
-
-  return context;
-};
-
-// Provider Component
-interface UserProviderProps {
-  children: ReactNode;
-}
-
-export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Function to fetch and refresh user profile
-  const refreshUserProfile = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await axios.get<User>("/api/user/profile"); // Replace with your actual API endpoint
-      setUser(response.data);
-    } catch (err) {
-      console.error("Failed to fetch user profile:", err);
-      setError("Failed to fetch user profile.");
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Initial user profile fetch
   useEffect(() => {
-    refreshUserProfile();
+    const fetchUser = async () => {
+      try {
+        setLoading(true);
+        const userData = await getUserProfile(); // Fetch user data from the service
+        setUser(userData as UserProfile);
+        setError(null);
+      } catch (err) {
+        setError("Failed to fetch user profile.");
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
   }, []);
 
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("authToken"); // Clear auth token (adjust to your app's needs)
+  };
+
   return (
-    <UserContext.Provider value={{ user, refreshUserProfile, loading, error }}>
+    <UserContext.Provider value={{ user, loading, error, setUser, logout }}>
       {children}
     </UserContext.Provider>
   );
 };
 
-export default UserContext;
+export const useUser = (): UserContextType => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
+};

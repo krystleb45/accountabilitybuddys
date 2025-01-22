@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { getGoalAnalytics } from "../services/goalService";
+import { getGoalAnalytics } from "src/services/goalService";
 import { Line } from "react-chartjs-2";
-import LoadingSpinner from "./LoadingSpinner";
-import "./GoalAnalytics.css"; // Optional CSS for styling
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
+import "./GoalAnalytics.module.css";
 
 interface AnalyticsData {
   labels: string[];
-  datasets: { label: string; data: number[]; backgroundColor?: string }[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor?: string;
+    borderColor?: string;
+    fill?: boolean;
+  }[];
 }
 
 const GoalAnalytics: React.FC = () => {
@@ -34,24 +40,31 @@ const GoalAnalytics: React.FC = () => {
     fetchAnalytics();
   }, [dateRange]);
 
-  // Data for charts
+  // Default data for charts
   const goalsChartData = analytics || {
     labels: [],
     datasets: [
       {
         label: "Goals Completed",
         data: [],
+        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(75,192,192,1)",
+        fill: true,
       },
     ],
   };
 
+  const handleDateRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setDateRange(e.target.value);
+  };
+
   return (
-    <div className="goal-analytics">
-      <h2>Goal Analytics</h2>
+    <div className="goal-analytics" role="region" aria-labelledby="analytics-header">
+      <h2 id="analytics-header">Goal Analytics</h2>
       {loading ? (
         <LoadingSpinner />
       ) : error ? (
-        <p className="error">{error}</p>
+        <p className="error" role="alert">{error}</p>
       ) : (
         <>
           <div className="date-range-selector">
@@ -59,7 +72,8 @@ const GoalAnalytics: React.FC = () => {
             <select
               id="dateRange"
               value={dateRange}
-              onChange={(e) => setDateRange(e.target.value)}
+              onChange={handleDateRangeChange}
+              aria-label="Select date range for analytics"
             >
               <option value="all">All Time</option>
               <option value="lastMonth">Last Month</option>
@@ -67,7 +81,18 @@ const GoalAnalytics: React.FC = () => {
             </select>
           </div>
           <div className="chart-container">
-            <Line data={goalsChartData} />
+            <Line
+              data={goalsChartData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    display: true,
+                    position: "top",
+                  },
+                },
+              }}
+            />
           </div>
         </>
       )}

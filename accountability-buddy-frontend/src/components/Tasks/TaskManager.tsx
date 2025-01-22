@@ -17,27 +17,33 @@ const TaskManager: React.FC = () => {
 
     const newTaskObject: Task = {
       id: Date.now().toString(),
-      title: newTask,
+      title: newTask.trim(),
       isCompleted: false,
     };
 
-    setTasks([...tasks, newTaskObject]);
+    setTasks((prevTasks) => [...prevTasks, newTaskObject]);
     setNewTask("");
   };
 
   const completeTask = (id: string) => {
-    setTasks(tasks.map((task) =>
-      task.id === id ? { ...task, isCompleted: !task.isCompleted } : task
-    ));
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, isCompleted: !task.isCompleted } : task
+      )
+    );
   };
 
   const deleteTask = (id: string) => {
-    setTasks(tasks.filter((task) => task.id !== id));
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+  };
+
+  const clearCompletedTasks = () => {
+    setTasks((prevTasks) => prevTasks.filter((task) => !task.isCompleted));
   };
 
   return (
     <div className="task-manager">
-      <h2>Task Manager</h2>
+      <h2 className="task-manager-title">Task Manager</h2>
       <div className="task-input">
         <input
           type="text"
@@ -46,11 +52,20 @@ const TaskManager: React.FC = () => {
           placeholder="Add a new task"
           aria-label="New task input"
         />
-        <button onClick={addTask} aria-label="Add task">
+        <button onClick={addTask} aria-label="Add task" disabled={!newTask.trim()}>
           Add Task
         </button>
       </div>
       <TaskList tasks={tasks} onComplete={completeTask} onDelete={deleteTask} />
+      {tasks.some((task) => task.isCompleted) && (
+        <button
+          className="clear-completed-button"
+          onClick={clearCompletedTasks}
+          aria-label="Clear completed tasks"
+        >
+          Clear Completed Tasks
+        </button>
+      )}
     </div>
   );
 };

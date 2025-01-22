@@ -1,41 +1,42 @@
 import React from 'react';
+import './button.css'; // Import styles
 
-import './button.css';
-
+// Define the ButtonProps interface for typing
 export interface ButtonProps {
-  /** Is this the principal call to action on the page? */
+  /** Determines if this is the primary call-to-action button */
   primary?: boolean;
-  /** What background color to use */
+  /** Background color of the button */
   backgroundColor?: string;
-  /** How large should the button be? */
+  /** Size of the button: small, medium, or large */
   size?: 'small' | 'medium' | 'large';
-  /** Button contents */
+  /** Text displayed on the button */
   label: string;
-  /** Optional click handler */
+  /** Callback function triggered when the button is clicked */
   onClick?: () => void;
 }
 
-/** Primary UI component for user interaction */
-export const Button = ({
+/** 
+ * Button Component
+ * A reusable button component with primary and secondary styles, customizable size, and colors.
+ */
+export const Button: React.FC<ButtonProps> = ({
   primary = false,
   size = 'medium',
   backgroundColor,
   label,
   ...props
-}: ButtonProps) => {
+}) => {
+  // Determine the button's mode based on the primary prop
   const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
+
   return (
     <button
       type="button"
       className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
+      style={{ backgroundColor }} // Inline style for dynamic background color
       {...props}
     >
       {label}
-      <style jsx>{`
-        button {
-          background-color: ${backgroundColor};
-        }
-      `}</style>
     </button>
   );
 };

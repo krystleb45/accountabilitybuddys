@@ -1,8 +1,5 @@
 const nextJest = require("next/jest");
 
-// Debugging: Add a log to confirm Jest config is being loaded
-//console.log('Jest config loaded');
-
 // Create a Next.js-specific Jest configuration
 const createJestConfig = nextJest({
   dir: "./", // The root directory of your Next.js project
@@ -23,7 +20,7 @@ const customJestConfig = {
   testEnvironment: "jest-environment-jsdom",
 
   // Files to set up the testing environment
-  setupFilesAfterEnv: ["<rootDir>/src/tests/setupTests.tsx"], // Updated path to setupTests.tsx
+  setupFilesAfterEnv: ["<rootDir>/src/tests/setupTests.ts"], // Adjusted for consistency
 
   // Aliases to support module imports
   moduleNameMapper: {
@@ -32,7 +29,7 @@ const customJestConfig = {
     "^@services/(.*)$": "<rootDir>/src/services/$1",
     "^@utils/(.*)$": "<rootDir>/src/utils/$1",
     "^@/(.*)$": "<rootDir>/src/$1",
-    '^.+\\.module\\.css$': 'identity-obj-proxy',
+    "^.+\\.module\\.css$": "identity-obj-proxy",
   },
 
   // Enable test coverage collection
@@ -48,7 +45,7 @@ const customJestConfig = {
   // Optional: Add snapshot serializers for libraries like Emotion
   snapshotSerializers: ["@emotion/jest/serializer"],
 
-  // Custom Jest reporters (optional)
+  // Custom Jest reporters
   reporters: [
     "default",
     [
@@ -60,7 +57,7 @@ const customJestConfig = {
     ],
   ],
 
-  // Thresholds for test coverage (optional)
+  // Thresholds for test coverage
   coverageThreshold: {
     global: {
       branches: 80,
@@ -70,11 +67,20 @@ const customJestConfig = {
     },
   },
 
-  // Watch ignore patterns (optional)
-  watchPathIgnorePatterns: ["<rootDir>/node_modules/"],
+  // Watch ignore patterns
+  watchPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/coverage/"],
 
-  // Add extensions for TypeScript module resolution (optional)
+  // Add extensions for TypeScript module resolution
   moduleDirectories: ["node_modules", "<rootDir>/src"],
+
+  // Enhanced logging for debugging Jest configurations
+  verbose: true,
+
+  // Handle static assets for testing
+  moduleNameMapper: {
+    "\\.(css|less|sass|scss)$": "identity-obj-proxy", // Mock CSS imports
+    "\\.(gif|ttf|eot|svg|png)$": "<rootDir>/__mocks__/fileMock.js", // Mock static files
+  },
 };
 
 module.exports = createJestConfig(customJestConfig);

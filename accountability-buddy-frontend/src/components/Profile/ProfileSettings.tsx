@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./ProfileSettings.css"; // Adjust if using CSS Modules: import styles from "./ProfileSettings.module.css";
+import "./ProfileSettings.module.css"; // Adjusted to use CSS Modules
 
 interface User {
   name: string;
@@ -29,7 +29,8 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate }) => 
 
   // Validate password strength (basic)
   const isPasswordStrong = (password: string): boolean => {
-    return password.length >= 8;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
   };
 
   // Handle form submission
@@ -44,7 +45,9 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate }) => 
     }
 
     if (formData.password && !isPasswordStrong(formData.password)) {
-      setError("Password must be at least 8 characters long.");
+      setError(
+        "Password must be at least 8 characters long, include at least one letter, one number, and one special character."
+      );
       return;
     }
 
@@ -67,7 +70,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate }) => 
     >
       <h2 id="profile-settings-header">Profile Settings</h2>
       <form onSubmit={handleSubmit} noValidate>
-        <div>
+        <div className="form-group">
           <label htmlFor="name">Name</label>
           <input
             type="text"
@@ -79,7 +82,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate }) => 
             aria-label="Name"
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="email">Email</label>
           <input
             type="email"
@@ -91,7 +94,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate }) => 
             aria-label="Email"
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="password">Password</label>
           <input
             type="password"
@@ -102,9 +105,11 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate }) => 
             aria-describedby="passwordHelp"
             aria-label="Password"
           />
-          <small id="passwordHelp">Leave blank to keep your current password</small>
+          <small id="passwordHelp">
+            Leave blank to keep your current password
+          </small>
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input
             type="password"

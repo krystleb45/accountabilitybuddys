@@ -1,3 +1,4 @@
+/* Main page container */
 .storybook-page {
   margin: 0 auto;
   padding: 48px 20px;
@@ -6,8 +7,12 @@
   font-size: 14px;
   line-height: 24px;
   font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #f9f9f9; /* Subtle background for better readability */
+  border-radius: 8px; /* Rounded corners for a modern look */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
 }
 
+/* Heading styles */
 .storybook-page h2 {
   display: inline-block;
   vertical-align: top;
@@ -15,16 +20,26 @@
   font-weight: 700;
   font-size: 32px;
   line-height: 1;
+  color: #555ab9; /* Themed color for headings */
 }
 
+/* Paragraph styles */
 .storybook-page p {
   margin: 1em 0;
+  color: #4a4a4a; /* Slightly softer text color */
 }
 
+/* Link styles */
 .storybook-page a {
-  color: inherit;
+  color: #1ea7fd; /* Themed link color */
+  text-decoration: none;
 }
 
+.storybook-page a:hover {
+  text-decoration: underline;
+}
+
+/* List styles */
 .storybook-page ul {
   margin: 1em 0;
   padding-left: 30px;
@@ -34,6 +49,7 @@
   margin-bottom: 8px;
 }
 
+/* Tip badge styles */
 .storybook-page .tip {
   display: inline-block;
   vertical-align: top;
@@ -47,6 +63,7 @@
   line-height: 12px;
 }
 
+/* Tip wrapper styles */
 .storybook-page .tip-wrapper {
   margin-top: 40px;
   margin-bottom: 40px;
@@ -54,6 +71,7 @@
   line-height: 20px;
 }
 
+/* Tip wrapper SVG styles */
 .storybook-page .tip-wrapper svg {
   display: inline-block;
   vertical-align: top;
@@ -64,5 +82,21 @@
 }
 
 .storybook-page .tip-wrapper svg path {
-  fill: #1ea7fd;
+  fill: #1ea7fd; /* Themed color for the icon */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .storybook-page {
+    padding: 32px 15px;
+  }
+
+  .storybook-page h2 {
+    font-size: 28px;
+  }
+
+  .storybook-page .tip-wrapper {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
 }
