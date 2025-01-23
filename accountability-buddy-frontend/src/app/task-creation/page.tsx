@@ -15,14 +15,17 @@ const TaskCreationPage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Handle input changes
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  ): void => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
+  // Validate form data
   const validateForm = (): boolean => {
     if (!formData.title || !formData.description || !formData.dueDate) {
       setError('All fields are required.');
@@ -35,7 +38,8 @@ const TaskCreationPage: React.FC = () => {
     return true;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setError('');
     setSuccessMessage('');
@@ -57,7 +61,7 @@ const TaskCreationPage: React.FC = () => {
       } else {
         setError('Failed to create task. Please try again.');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -71,58 +75,108 @@ const TaskCreationPage: React.FC = () => {
           Create a New Task
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Title Input */}
+          <label htmlFor="title" className="block text-gray-700 font-medium">
+            Task Title
+          </label>
           <input
+            id="title"
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
-            placeholder="Task Title"
+            placeholder="Enter task title"
             className="w-full p-3 border rounded-lg"
             required
+            aria-label="Task Title"
           />
+
+          {/* Description Input */}
+          <label
+            htmlFor="description"
+            className="block text-gray-700 font-medium"
+          >
+            Task Description
+          </label>
           <textarea
+            id="description"
             name="description"
             value={formData.description}
             onChange={handleChange}
-            placeholder="Task Description"
+            placeholder="Enter task description"
             rows={4}
             className="w-full p-3 border rounded-lg"
             required
+            aria-label="Task Description"
           />
+
+          {/* Priority Dropdown */}
+          <label htmlFor="priority" className="block text-gray-700 font-medium">
+            Priority
+          </label>
           <select
+            id="priority"
             name="priority"
             value={formData.priority}
             onChange={handleChange}
             className="w-full p-3 border rounded-lg"
+            aria-label="Task Priority"
           >
             <option value="Low">Low</option>
             <option value="Medium">Medium</option>
             <option value="High">High</option>
           </select>
+
+          {/* Due Date Input */}
+          <label htmlFor="dueDate" className="block text-gray-700 font-medium">
+            Due Date
+          </label>
           <input
+            id="dueDate"
             type="date"
             name="dueDate"
             value={formData.dueDate}
             onChange={handleChange}
             className="w-full p-3 border rounded-lg"
             required
+            aria-label="Due Date"
           />
+
+          {/* Status Dropdown */}
+          <label htmlFor="status" className="block text-gray-700 font-medium">
+            Status
+          </label>
           <select
+            id="status"
             name="status"
             value={formData.status}
             onChange={handleChange}
             className="w-full p-3 border rounded-lg"
+            aria-label="Task Status"
           >
             <option value="Pending">Pending</option>
             <option value="In Progress">In Progress</option>
             <option value="Completed">Completed</option>
           </select>
-          {error && <p className="text-red-600">{error}</p>}
-          {successMessage && <p className="text-green-600">{successMessage}</p>}
+
+          {/* Error and Success Messages */}
+          {error && (
+            <p className="text-red-600" role="alert">
+              {error}
+            </p>
+          )}
+          {successMessage && (
+            <p className="text-green-600" role="status">
+              {successMessage}
+            </p>
+          )}
+
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
             disabled={loading}
+            aria-label="Create Task"
           >
             {loading ? 'Creating...' : 'Create Task'}
           </button>

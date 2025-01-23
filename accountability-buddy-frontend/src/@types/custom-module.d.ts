@@ -13,7 +13,7 @@ declare module 'custom-module' {
     id: string;
     name: string;
     createdAt: Date;
-    metadata?: Record<string, any>; // Optional metadata as key-value pairs
+    metadata?: Record<string, unknown>; // Optional metadata as key-value pairs
   }
 
   /**
@@ -32,7 +32,7 @@ declare module 'custom-module' {
    * @returns A promise that resolves to a CustomModuleResponse
    */
   export function performAction(
-    data: Record<string, any>,
+    data: Record<string, unknown>,
     options?: CustomModuleOptions
   ): Promise<CustomModuleResponse>;
 
@@ -47,5 +47,5 @@ declare module 'custom-module' {
    * Asynchronous function to fetch module settings.
    * @returns A promise that resolves to a settings object
    */
-  export function fetchSettings(): Promise<Record<string, any>>;
+  export function fetchSettings(): Promise<Record<string, unknown>>;
 }

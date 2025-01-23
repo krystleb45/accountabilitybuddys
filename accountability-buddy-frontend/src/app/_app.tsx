@@ -2,13 +2,18 @@ import '../globals.css';
 import { AppProps } from 'next/app';
 import { AuthProvider } from '../context/auth/AuthContext'; // Assuming AuthContext exists
 import Head from 'next/head';
-import React, { Component, ReactNode, ErrorInfo } from 'react';
+import React, {
+  Component,
+  ReactNode,
+  ErrorInfo,
+  useEffect,
+  useState,
+} from 'react';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
 
 /** ErrorBoundary Component */
 type ErrorBoundaryProps = {
-  children: ReactNode; // Explicitly define the `children` prop
+  children: ReactNode;
 };
 
 type ErrorBoundaryState = {
@@ -29,7 +34,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     console.error('ErrorBoundary caught an error:', error, info);
   }
 
-  render() {
+  render(): ReactNode {
     if (this.state.hasError) {
       return (
         <div className="flex items-center justify-center h-screen">
@@ -44,13 +49,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 }
 
 /** Loading Spinner Component */
-const LoadingSpinner = () => {
-  const [loading, setLoading] = useState(false);
+const LoadingSpinner: React.FC = (): JSX.Element | null => {
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
-    const handleStart = () => setLoading(true);
-    const handleStop = () => setLoading(false);
+    const handleStart = (): void => setLoading(true);
+    const handleStop = (): void => setLoading(false);
 
     router.events.on('routeChangeStart', handleStart);
     router.events.on('routeChangeComplete', handleStop);
@@ -69,7 +74,10 @@ const LoadingSpinner = () => {
 };
 
 /** Custom App Component */
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp: React.FC<AppProps> = ({
+  Component,
+  pageProps,
+}: AppProps): JSX.Element => {
   return (
     <>
       <Head>
@@ -89,6 +97,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       </ErrorBoundary>
     </>
   );
-}
+};
 
 export default MyApp;

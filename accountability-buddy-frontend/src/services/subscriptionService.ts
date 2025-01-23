@@ -6,7 +6,7 @@ export interface SubscriptionStatus {
   status: string; // e.g., "active", "inactive", "canceled"
   planId: string; // ID of the current subscription plan
   expirationDate?: string; // Optional field for subscription expiration
-  [key: string]: any; // Additional fields if needed
+  [key: string]: unknown; // Additional fields if needed
 }
 
 export interface SubscriptionSession {
@@ -43,7 +43,7 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
   while (attempt < retries) {
     try {
       return await fn();
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (attempt < retries - 1 && error.response?.status >= 500) {
         const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
         await new Promise((resolve) => setTimeout(resolve, delay));
@@ -68,7 +68,7 @@ export const getSubscriptionStatus = async (): Promise<SubscriptionStatus> => {
     );
     console.log('Fetched subscription status:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching subscription status:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to fetch subscription status.'
@@ -85,7 +85,7 @@ export const upgradeSubscription = async (planId: string): Promise<void> => {
   try {
     await axiosRetry(() => apiClient.post('/upgrade', { planId }));
     console.log(`Subscription upgraded to plan: ${planId}`);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error upgrading subscription:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to upgrade subscription.'
@@ -102,7 +102,7 @@ export const downgradeSubscription = async (planId: string): Promise<void> => {
   try {
     await axiosRetry(() => apiClient.post('/downgrade', { planId }));
     console.log(`Subscription downgraded to plan: ${planId}`);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error downgrading subscription:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to downgrade subscription.'
@@ -115,7 +115,7 @@ export const cancelSubscription = async (): Promise<void> => {
   try {
     await axiosRetry(() => apiClient.post('/cancel'));
     console.log('Subscription canceled successfully.');
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error canceling subscription:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to cancel subscription.'
@@ -132,7 +132,7 @@ export const createSubscriptionSession =
       );
       console.log('Subscription session created:', response.data);
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating subscription session:', error);
       throw new Error(
         error.response?.data?.message ||

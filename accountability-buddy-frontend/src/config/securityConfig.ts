@@ -10,7 +10,7 @@ interface SecurityHeaders {
 
 interface SecurityConfig {
   headers: SecurityHeaders;
-  applyHeaders: (response: any) => void;
+  applyHeaders: (response: unknown) => void;
   logConfig: () => void;
 }
 
@@ -39,7 +39,7 @@ const securityConfig: SecurityConfig = {
   },
 
   // Function to apply headers to HTTP responses
-  applyHeaders: function (response: any): void {
+  applyHeaders: function (response: unknown): void {
     for (const [key, value] of Object.entries(this.headers)) {
       response.setHeader(
         key.replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`),

@@ -6,7 +6,7 @@ const NotFoundPage: React.FC = () => {
   return (
     <div className="not-found-page">
       <h1>404</h1>
-      <p>Oops! The page you're looking for doesn't exist.</p>
+      <p>Oops! The page you&apos;re looking for doesn&apos;t exist.</p>
       <Link to="/" className="back-home-link">
         Go Back to Home
       </Link>

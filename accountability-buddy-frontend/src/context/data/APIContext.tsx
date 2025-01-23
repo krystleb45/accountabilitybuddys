@@ -62,7 +62,7 @@ export const APIProvider: React.FC<APIProviderProps> = ({ children }) => {
           signal: controller.signal,
         });
         return response.data;
-      } catch (error: any) {
+      } catch (error: unknown) {
         if (axios.isCancel(error)) {
           console.log('Request canceled');
         } else {

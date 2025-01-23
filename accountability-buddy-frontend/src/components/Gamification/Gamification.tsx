@@ -29,7 +29,7 @@ const Gamification: React.FC<GamificationProps> = ({ user }) => {
       return;
     }
 
-    const getUserProgress = async () => {
+    const getUserProgress = async (): Promise<void> => {
       setLoading(true);
       setError('');
 

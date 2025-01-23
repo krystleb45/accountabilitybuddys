@@ -8,7 +8,7 @@ const LogoutPage: React.FC = () => {
 
   useEffect(() => {
     // Perform logout
-    const performLogout = () => {
+    const performLogout = (): void => {
       sessionStorage.clear();
       localStorage.clear();
       router.replace('/login'); // Prevent navigating back

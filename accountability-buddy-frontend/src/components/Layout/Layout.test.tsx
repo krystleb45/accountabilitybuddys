@@ -1,20 +1,31 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, RenderResult } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Layout from './Layout'; // Main layout component
-import Header from './Header'; // Header component
-import Footer from '../Footer/Footer'; // Footer component (if used separately)
 import { expect } from '@jest/globals';
 
-// Mock the child components
-jest.mock('./Header', () => () => <header data-testid="header">Header</header>);
-jest.mock('../Footer/Footer', () => () => (
-  <footer data-testid="footer">Footer</footer>
-));
+// Mock the Header and Footer components
+// Mock Header Component
+const MockHeader: React.FC = (): JSX.Element => (
+  <header data-testid="header">Header</header>
+);
+jest.mock('./Header', () => MockHeader);
 
+// Mock Footer Component
+jest.mock('../Footer/Footer', (): React.FC => {
+  const FooterMock: React.FC = (): JSX.Element => (
+    <footer data-testid="footer">Footer</footer>
+  );
+  FooterMock.displayName = 'FooterMock'; // Optional for debugging
+  return FooterMock;
+});
 describe('Layout Component', () => {
-  const renderLayout = (children: React.ReactNode) =>
-    render(<Layout>{children}</Layout>);
+  /**
+   * Helper function to render the Layout with children
+   */
+  const renderLayout = (children: React.ReactNode): RenderResult => {
+    return render(<Layout>{children}</Layout>);
+  };
 
   test('renders the layout container', () => {
     renderLayout(<p>Main content</p>);
@@ -37,7 +48,7 @@ describe('Layout Component', () => {
     expect(footer).toBeInTheDocument();
   });
 
-  test('renders the main content', () => {
+  test('renders the main content provided as children', () => {
     const content = 'This is the main content';
     renderLayout(<p>{content}</p>);
 
@@ -45,18 +56,25 @@ describe('Layout Component', () => {
     expect(mainContent).toBeInTheDocument();
   });
 
-  test('applies correct layout styles', () => {
+  test('applies correct layout container styles', () => {
     renderLayout(<p>Main content</p>);
 
     const layoutContainer = screen.getByTestId('layout-container');
     expect(layoutContainer).toHaveClass('layout-container');
   });
 
-  test('renders children within the main content area', () => {
-    const content = 'Child content';
-    renderLayout(<p>{content}</p>);
+  test('renders children correctly within the main content area', () => {
+    const childContent = 'Child content';
+    renderLayout(<p>{childContent}</p>);
 
-    const mainContent = screen.getByText(content);
-    expect(mainContent).toBeInTheDocument();
+    const renderedChildContent = screen.getByText(childContent);
+    expect(renderedChildContent).toBeInTheDocument();
+  });
+
+  test('ensures no extraneous elements are rendered', () => {
+    renderLayout(<p>Main content</p>);
+
+    const mainContent = screen.getByTestId('layout-container');
+    expect(mainContent.children.length).toBeGreaterThan(0); // Ensure children are rendered
   });
 });

@@ -8,7 +8,7 @@ const NotificationItem = ({
   notification,
 }: {
   notification: { message: string; date: string; read: boolean };
-}) => (
+}): JSX.Element => (
   <div
     className={`p-4 rounded-lg shadow-md mb-2 transition-colors ${
       notification.read ? 'bg-gray-200' : 'bg-white'

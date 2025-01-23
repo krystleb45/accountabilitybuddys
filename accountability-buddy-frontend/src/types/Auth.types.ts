@@ -57,7 +57,7 @@ export interface RegistrationData {
   password: string;
 
   /** Additional fields for registration. */
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -77,7 +77,7 @@ export interface AuthenticatedUser {
   role: string;
 
   /** Additional user-related fields. */
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**

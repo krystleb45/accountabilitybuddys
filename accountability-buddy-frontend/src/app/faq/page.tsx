@@ -23,7 +23,8 @@ const FaqPage: React.FC = () => {
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  const toggleFaq = (index: number) => {
+  // Explicit return type added
+  const toggleFaq = (index: number): void => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 

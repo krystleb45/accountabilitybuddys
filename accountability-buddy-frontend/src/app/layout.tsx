@@ -1,11 +1,11 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import React from 'react';
 import Link from 'next/link';
 
 // Define props for the Layout component
 interface LayoutProps {
-  children: React.ReactNode | React.ReactNode[]; // Accept array or single ReactNode
+  children: React.ReactNode; // Simplified to accept only `ReactNode`
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {

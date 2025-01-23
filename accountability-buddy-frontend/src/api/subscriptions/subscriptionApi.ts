@@ -11,7 +11,6 @@ interface SubscriptionPlan {
   price: number;
   currency: string;
   description: string;
-  // Add more fields as needed based on your API
 }
 
 // Define the structure of a Subscription Status
@@ -19,32 +18,43 @@ interface SubscriptionStatus {
   isActive: boolean;
   currentPlan: string;
   renewalDate: string;
-  // Add more fields as needed
 }
 
-// Helper function to handle API errors
-const handleError = (error: any): never => {
-  if (error.response && error.response.status === 401) {
-    throw new Error('Invalid credentials. Please try again.');
-  }
-  throw new Error(
-    error.response?.data?.message ||
-      'An error occurred. Please try again later.'
+// Define the structure of an API error response
+interface ApiErrorResponse {
+  message: string;
+}
+
+// Type guard for Axios errors
+const isAxiosError = (
+  error: unknown
+): error is { response: { data: ApiErrorResponse } } => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as { response?: unknown }).response === 'object'
   );
 };
 
+// Helper function to handle API errors
+const handleError = (error: unknown): never => {
+  if (isAxiosError(error) && error.response?.data?.message) {
+    throw new Error(error.response.data.message);
+  }
+  throw new Error('An unknown error occurred.');
+};
+
 // Fetch available subscription plans
-export const fetchSubscriptionPlans = async (): Promise<
-  SubscriptionPlan[] | undefined
-> => {
+export const fetchSubscriptionPlans = async (): Promise<SubscriptionPlan[]> => {
   try {
     const response = await axios.get<SubscriptionPlan[]>(`${API_URL}/plans`, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined;
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
@@ -52,7 +62,7 @@ export const fetchSubscriptionPlans = async (): Promise<
 export const createSubscriptionSession = async (
   planId: string,
   provider: string = 'stripe'
-): Promise<{ sessionUrl: string } | undefined> => {
+): Promise<{ sessionUrl: string }> => {
   try {
     const response = await axios.post<{ sessionUrl: string }>(
       `${API_URL}/subscribe`,
@@ -61,32 +71,28 @@ export const createSubscriptionSession = async (
         headers: getAuthHeader(),
       }
     );
-    return response.data; // Typically returns the session URL for Stripe checkout
-  } catch (error: any) {
+    return response.data;
+  } catch (error: unknown) {
     handleError(error);
-    return undefined;
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Fetch the user's current subscription status
-export const getSubscriptionStatus = async (): Promise<
-  SubscriptionStatus | undefined
-> => {
+export const getSubscriptionStatus = async (): Promise<SubscriptionStatus> => {
   try {
     const response = await axios.get<SubscriptionStatus>(`${API_URL}/status`, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined;
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Cancel the user's active subscription
-export const cancelSubscription = async (): Promise<
-  { message: string } | undefined
-> => {
+export const cancelSubscription = async (): Promise<{ message: string }> => {
   try {
     const response = await axios.post<{ message: string }>(
       `${API_URL}/cancel`,
@@ -96,16 +102,16 @@ export const cancelSubscription = async (): Promise<
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined;
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Change the user's subscription plan
 export const changeSubscriptionPlan = async (
   newPlanId: string
-): Promise<{ message: string } | undefined> => {
+): Promise<{ message: string }> => {
   try {
     const response = await axios.post<{ message: string }>(
       `${API_URL}/change-plan`,
@@ -115,8 +121,8 @@ export const changeSubscriptionPlan = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined;
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };

@@ -10,7 +10,7 @@ export interface Task {
   dueDate?: string; // ISO date string
   status: 'pending' | 'in-progress' | 'completed';
   priority?: 'low' | 'medium' | 'high'; // Optional field for task priority
-  [key: string]: any; // Additional fields
+  [key: string]: unknown; // Additional fields
 }
 
 // Define the type for task creation or updates
@@ -54,7 +54,7 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
   while (attempt < retries) {
     try {
       return await fn();
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (attempt < retries - 1 && error.response?.status >= 500) {
         const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
         await new Promise((resolve) => setTimeout(resolve, delay));
@@ -89,7 +89,7 @@ export const createTask = async (taskData: TaskInput): Promise<Task> => {
     );
     console.log('Task created successfully:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating task:', error);
     throw new Error(error.response?.data?.message || 'Failed to create task.');
   }
@@ -106,7 +106,7 @@ export const getUserTasks = async (): Promise<Task[]> => {
     );
     console.log('User tasks fetched successfully:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching user tasks:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to fetch user tasks.'
@@ -134,7 +134,7 @@ export const updateTask = async (
     );
     console.log(`Task ${taskId} updated successfully:`, response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating task:', error);
     throw new Error(error.response?.data?.message || 'Failed to update task.');
   }
@@ -152,7 +152,7 @@ export const deleteTask = async (taskId: string): Promise<void> => {
   try {
     await axiosRetry(() => apiClient.delete(`/delete/${taskId}`));
     console.log(`Task ${taskId} deleted successfully.`);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting task:', error);
     throw new Error(error.response?.data?.message || 'Failed to delete task.');
   }
@@ -174,7 +174,7 @@ export const getTaskDetails = async (taskId: string): Promise<Task> => {
     );
     console.log(`Task details fetched for ID ${taskId}:`, response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching task details:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to fetch task details.'

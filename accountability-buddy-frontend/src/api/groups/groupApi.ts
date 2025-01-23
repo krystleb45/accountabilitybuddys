@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getAuthHeader } from 'src/services/authService'; // Helper for getting the auth header with token
+import { getAuthHeader } from 'src/services/authService';
 
 const API_URL =
   process.env.REACT_APP_API_URL || 'https://api.example.com/users';
@@ -10,7 +10,6 @@ interface Group {
   name: string;
   description: string;
   members: Member[];
-  // Add more fields as needed based on your API
 }
 
 // Define the shape of a Member
@@ -18,67 +17,76 @@ interface Member {
   id: string;
   name: string;
   email: string;
-  // Add more fields as needed
 }
 
+// Type guard to check if error is an Axios error
+const isAxiosError = (
+  error: unknown
+): error is { response: { status: number; data: { message: string } } } => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as { response?: unknown }).response === 'object'
+  );
+};
+
 // Helper function to handle API errors
-const handleError = (error: any): never => {
-  if (error.response && error.response.status === 401) {
+const handleError = (error: unknown): never => {
+  if (isAxiosError(error) && error.response?.status === 401) {
     throw new Error('Invalid credentials. Please try again.');
   }
   throw new Error(
-    error.response?.data?.message ||
-      'An error occurred. Please try again later.'
+    isAxiosError(error)
+      ? error.response?.data?.message ||
+        'An error occurred. Please try again later.'
+      : 'An unknown error occurred.'
   );
 };
 
 // Fetch all groups
-export const fetchGroups = async (): Promise<Group[] | undefined> => {
+export const fetchGroups = async (): Promise<Group[]> => {
   try {
     const response = await axios.get<Group[]>(`${API_URL}`, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
   }
+  throw new Error('Failed to fetch groups.');
 };
 
 // Fetch a single group by ID
-export const fetchGroupById = async (
-  groupId: string
-): Promise<Group | undefined> => {
+export const fetchGroupById = async (groupId: string): Promise<Group> => {
   try {
     const response = await axios.get<Group>(`${API_URL}/${groupId}`, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
   }
+  throw new Error('Failed to fetch group details.');
 };
 
 // Create a new group
 export const createGroup = async (
   groupData: Partial<Group>
-): Promise<Group | undefined> => {
+): Promise<Group> => {
   try {
     const response = await axios.post<Group>(`${API_URL}/create`, groupData, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
   }
+  throw new Error('Failed to create the group.');
 };
 
 // Join a group
-export const joinGroup = async (
-  groupId: string
-): Promise<Group | undefined> => {
+export const joinGroup = async (groupId: string): Promise<Group> => {
   try {
     const response = await axios.put<Group>(
       `${API_URL}/${groupId}/join`,
@@ -88,16 +96,14 @@ export const joinGroup = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
   }
+  throw new Error('Failed to join the group.');
 };
 
 // Leave a group
-export const leaveGroup = async (
-  groupId: string
-): Promise<Group | undefined> => {
+export const leaveGroup = async (groupId: string): Promise<Group> => {
   try {
     const response = await axios.put<Group>(
       `${API_URL}/${groupId}/leave`,
@@ -107,16 +113,14 @@ export const leaveGroup = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
   }
+  throw new Error('Failed to leave the group.');
 };
 
 // Fetch group members
-export const fetchGroupMembers = async (
-  groupId: string
-): Promise<Member[] | undefined> => {
+export const fetchGroupMembers = async (groupId: string): Promise<Member[]> => {
   try {
     const response = await axios.get<Member[]>(
       `${API_URL}/${groupId}/members`,
@@ -125,8 +129,8 @@ export const fetchGroupMembers = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
   }
+  throw new Error('Failed to fetch group members.');
 };

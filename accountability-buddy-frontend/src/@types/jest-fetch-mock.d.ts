@@ -29,6 +29,7 @@ declare module 'jest-fetch-mock' {
      * @param body - The response body as a string.
      * @param options - Optional fetch options, such as headers or status.
      */
+
     mockResponse: (body: string, options?: RequestInit) => void;
 
     /**
@@ -36,6 +37,7 @@ declare module 'jest-fetch-mock' {
      * @param body - The response body as a string.
      * @param options - Optional fetch options, such as headers or status.
      */
+
     mockResponseOnce: (body: string, options?: RequestInit) => void;
 
     /**
@@ -60,7 +62,7 @@ declare module 'jest-fetch-mock' {
      * @param implementation - A custom function to handle fetch calls.
      */
     mockImplementation: (
-      implementation: (...args: any[]) => Promise<Response>
+      implementation: (...args: unknown[]) => Promise<Response>
     ) => void;
 
     /**
@@ -68,7 +70,7 @@ declare module 'jest-fetch-mock' {
      * @param implementation - A custom function to handle a single fetch call.
      */
     mockImplementationOnce: (
-      implementation: (...args: any[]) => Promise<Response>
+      implementation: (...args: unknown[]) => Promise<Response>
     ) => void;
   };
 

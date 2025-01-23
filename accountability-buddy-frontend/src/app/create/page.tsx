@@ -7,7 +7,7 @@ const CreatePage: React.FC = () => {
   const [description, setDescription] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     // Simulate form submission (replace with actual API call)
     setSuccess(true);

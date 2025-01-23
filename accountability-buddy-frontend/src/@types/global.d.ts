@@ -30,7 +30,7 @@ declare global {
      * Add any custom global properties below.
      * Example: A global analytics function
      */
-    customAnalytics?: (...args: any[]) => void;
+    customAnalytics?: (...args: unknown[]) => void;
   }
 
   /**

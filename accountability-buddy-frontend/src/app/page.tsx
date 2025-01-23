@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
   return (
     <div className="flex flex-col items-center min-h-screen p-8 sm:p-20 gap-16 font-sans bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Header Section */}

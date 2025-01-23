@@ -43,7 +43,7 @@ export interface AppError {
   severity: 'info' | 'warning' | 'error';
 
   /** Any additional metadata related to the error (optional). */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**

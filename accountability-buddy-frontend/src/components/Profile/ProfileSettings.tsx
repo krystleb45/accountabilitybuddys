@@ -25,7 +25,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
   const [success, setSuccess] = useState<string | null>(null);
 
   // Handle form field changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -38,7 +38,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     setError(null);
     setSuccess(null);

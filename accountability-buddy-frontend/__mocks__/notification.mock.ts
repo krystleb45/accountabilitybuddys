@@ -5,7 +5,7 @@
 type NotificationOptions = {
   body?: string;
   icon?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 type MockNotificationInstance = {
@@ -68,6 +68,10 @@ const notificationMock = {
 };
 
 // Define global Notification object
-(global as any).Notification = notificationMock;
+interface GlobalWithNotification {
+  Notification: typeof notificationMock;
+}
+
+(global as unknown as GlobalWithNotification).Notification = notificationMock;
 
 export default notificationMock;

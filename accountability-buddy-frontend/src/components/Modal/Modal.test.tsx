@@ -1,5 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  RenderResult,
+} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Modal from './Modal';
 import { expect } from '@jest/globals';
@@ -7,8 +12,8 @@ import { expect } from '@jest/globals';
 describe('Modal Component', () => {
   const onCloseMock = jest.fn();
 
-  const renderModal = (isVisible: boolean) => {
-    render(
+  const renderModal = (isVisible: boolean): RenderResult => {
+    return render(
       <Modal
         title="Test Modal"
         content={<p>Test Content</p>}

@@ -1,19 +1,19 @@
 // Import Jest DOM matchers for extended assertions
 import '@testing-library/jest-dom';
-// src/types/tests/setupTests.tsx
+// Import custom matchers for Jest
 import './matchers/customMatchers';
 
 // Enable Fetch Mock for API requests
 import fetchMock from 'jest-fetch-mock';
 fetchMock.enableMocks();
 
-//console.log("setupTests.tsx is loaded");
-
 // Polyfill: MutationObserver
-global.MutationObserver = class {
-  constructor(callback: MutationObserverCallback) {}
-  disconnect() {}
-  observe(element: Element, initObject?: MutationObserverInit) {}
+global.MutationObserver = class MutationObserver {
+  constructor(_callback: MutationObserverCallback) {
+    // No implementation needed for mock
+  }
+  disconnect(): void {}
+  observe(_element: Element, _initObject?: MutationObserverInit): void {}
   takeRecords(): MutationRecord[] {
     return [];
   }
@@ -26,27 +26,28 @@ global.IntersectionObserver = class IntersectionObserver {
   thresholds: ReadonlyArray<number> = [];
 
   constructor(
-    callback: IntersectionObserverCallback,
-    options?: IntersectionObserverInit
-  ) {}
+    _callback: IntersectionObserverCallback,
+    _options?: IntersectionObserverInit
+  ) {
+    // No implementation needed for mock
+  }
 
-  disconnect() {}
-
-  observe(element: Element) {}
-
-  unobserve(element: Element) {}
-
+  disconnect(): void {}
+  observe(_element: Element): void {}
+  unobserve(_element: Element): void {}
   takeRecords(): IntersectionObserverEntry[] {
     return [];
   }
 };
 
 // Polyfill: ResizeObserver
-global.ResizeObserver = class {
-  constructor(callback: ResizeObserverCallback) {}
-  disconnect() {}
-  observe(element: Element) {}
-  unobserve(element: Element) {}
+global.ResizeObserver = class ResizeObserver {
+  constructor(_callback: ResizeObserverCallback) {
+    // No implementation needed for mock
+  }
+  disconnect(): void {}
+  observe(_element: Element): void {}
+  unobserve(_element: Element): void {}
 };
 
 // Global setup for fetch mocks

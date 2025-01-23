@@ -1,6 +1,6 @@
 // __mocks__/eventEmitter.mock.ts
 
-type Listener = (...args: any[]) => void;
+type Listener = (...args: unknown[]) => void;
 
 class MockEventEmitter {
   private events: Record<string, Listener[]>;
@@ -13,6 +13,7 @@ class MockEventEmitter {
    * Registers a listener for the specified event.
    * @param event - The name of the event to listen for.
    * @param listener - The callback to execute when the event is emitted.
+   * @returns {void}
    */
   on(event: string, listener: Listener): void {
     if (!this.events[event]) {
@@ -26,9 +27,10 @@ class MockEventEmitter {
    * Registers a one-time listener for the specified event.
    * @param event - The name of the event to listen for.
    * @param listener - The callback to execute when the event is emitted.
+   * @returns {void}
    */
   once(event: string, listener: Listener): void {
-    const oneTimeListener = (...args: any[]) => {
+    const oneTimeListener = (...args: unknown[]): void => {
       listener(...args);
       this.off(event, oneTimeListener);
     };
@@ -42,6 +44,7 @@ class MockEventEmitter {
    * Removes a specific listener for the specified event.
    * @param event - The name of the event.
    * @param listener - The listener to remove.
+   * @returns {void}
    */
   off(event: string, listener: Listener): void {
     if (!this.events[event]) return;
@@ -54,8 +57,9 @@ class MockEventEmitter {
    * Emits an event, invoking all registered listeners for the event.
    * @param event - The name of the event to emit.
    * @param args - The arguments to pass to the listeners.
+   * @returns {void}
    */
-  emit(event: string, ...args: any[]): void {
+  emit(event: string, ...args: unknown[]): void {
     if (!this.events[event]) return;
 
     console.log(`[EventEmitter Mock] Event emitted: ${event}`, ...args);
@@ -65,6 +69,7 @@ class MockEventEmitter {
   /**
    * Removes all listeners for a specific event or all events.
    * @param event - The name of the event to clear listeners for. Clears all events if omitted.
+   * @returns {void}
    */
   removeAllListeners(event?: string): void {
     if (event) {
@@ -81,7 +86,7 @@ class MockEventEmitter {
   /**
    * Retrieves all listeners for a specific event.
    * @param event - The name of the event.
-   * @returns An array of listeners for the event.
+   * @returns {Listener[]} - An array of listeners for the event.
    */
   listeners(event: string): Listener[] {
     return this.events[event] || [];

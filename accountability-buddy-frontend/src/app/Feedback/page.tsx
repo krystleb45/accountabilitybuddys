@@ -3,11 +3,12 @@
 import React, { useState } from 'react';
 
 const FeedbackPage: React.FC = () => {
-  const [name, setName] = useState('');
-  const [feedback, setFeedback] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [name, setName] = useState<string>('');
+  const [feedback, setFeedback] = useState<string>('');
+  const [submitted, setSubmitted] = useState<boolean>(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Explicitly define the return type for the function
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     // Simulate API submission (replace with actual API logic)
     setSubmitted(true);
@@ -42,7 +43,9 @@ const FeedbackPage: React.FC = () => {
             type="text"
             id="name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+              setName(e.target.value)
+            }
             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
             required
           />
@@ -57,7 +60,9 @@ const FeedbackPage: React.FC = () => {
           <textarea
             id="feedback"
             value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>): void =>
+              setFeedback(e.target.value)
+            }
             rows={5}
             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
             required

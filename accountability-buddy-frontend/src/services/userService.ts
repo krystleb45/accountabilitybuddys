@@ -19,7 +19,7 @@ export interface UpdateProfileData {
   email?: string;
   password?: string;
   avatarUrl?: string; // Optional field for profile picture updates
-  [key: string]: any; // Additional fields for profile updates
+  [key: string]: unknown; // Additional fields for profile updates
 }
 
 export type UserAction = 'block' | 'unblock';
@@ -56,7 +56,7 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
   while (attempt < retries) {
     try {
       return await fn();
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (attempt < retries - 1 && error.response?.status >= 500) {
         const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
         await new Promise((resolve) => setTimeout(resolve, delay));
@@ -94,7 +94,7 @@ export const getUserProfile = async (): Promise<UserProfile> => {
 
     console.log('User profile fetched successfully:', userData);
     return userData;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching user profile:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to fetch user profile.'
@@ -120,7 +120,7 @@ export const updateUserProfile = async (
     );
     console.log('User profile updated successfully:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating user profile:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to update profile.'
@@ -135,7 +135,7 @@ export const deleteUserAccount = async (): Promise<void> => {
   try {
     await axiosRetry(() => apiClient.delete('/account'));
     console.log('User account deleted successfully.');
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting user account:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to delete user account.'
@@ -154,7 +154,7 @@ export const fetchAllUsers = async (): Promise<UserProfile[]> => {
     );
     console.log('All users fetched successfully:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching all users:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to fetch all users.'
@@ -182,7 +182,7 @@ export const toggleUserStatus = async (
   try {
     await axiosRetry(() => apiClient.post(`/${userId}/${action}`));
     console.log(`User ${action}ed successfully: ${userId}`);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`Error ${action}ing user:`, error);
     throw new Error(
       error.response?.data?.message || `Failed to ${action} user.`

@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import ApiService from 'src/services/apiService'; // Import the default ApiService
 import './PartnerNotifications.css'; // Optional: import CSS for styling
 
-// Extend the Notification type to include 'isRead'
+// Define Notification type
 interface Notification {
   id: string;
   message: string;
   isRead: boolean;
 }
 
+// Main Component
 const PartnerNotifications: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -16,25 +17,26 @@ const PartnerNotifications: React.FC = () => {
 
   // Fetch notifications on component mount
   useEffect(() => {
-    const fetchNotifications = async () => {
+    const fetchNotifications = async (): Promise<void> => {
       setLoading(true);
       setError('');
 
       try {
         const apiNotifications = await ApiService.getPartnerNotifications();
 
-        // Map to ensure all notifications have 'isRead' property
+        // Map API notifications to include 'isRead' property
         const formattedNotifications: Notification[] = apiNotifications.map(
-          (notification) => ({
+          (notification: { id: string; message: string; read?: boolean }) => ({
             id: notification.id,
             message: notification.message,
-            isRead: notification.read || false, // Use 'read' from API or default to false
+            isRead: notification.read || false, // Default 'isRead' to false
           })
         );
 
         setNotifications(formattedNotifications);
-      } catch (err) {
-        setError('Failed to load notifications');
+      } catch (err: unknown) {
+        console.error('Error fetching notifications:', err);
+        setError('Failed to load notifications. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -43,7 +45,8 @@ const PartnerNotifications: React.FC = () => {
     fetchNotifications();
   }, []);
 
-  const handleMarkAsRead = async (id: string) => {
+  // Mark notification as read
+  const handleMarkAsRead = async (id: string): Promise<void> => {
     try {
       await ApiService.markNotificationAsRead(id);
       setNotifications((prevNotifications) =>
@@ -53,19 +56,20 @@ const PartnerNotifications: React.FC = () => {
             : notification
         )
       );
-    } catch (error) {
-      console.error('Failed to mark notification as read', error);
+    } catch (err) {
+      console.error('Error marking notification as read:', err);
     }
   };
 
-  const handleDelete = async (id: string) => {
+  // Delete a notification
+  const handleDelete = async (id: string): Promise<void> => {
     try {
       await ApiService.deleteNotification(id);
       setNotifications((prevNotifications) =>
         prevNotifications.filter((notification) => notification.id !== id)
       );
-    } catch (error) {
-      console.error('Failed to delete notification', error);
+    } catch (err) {
+      console.error('Error deleting notification:', err);
     }
   };
 
@@ -76,20 +80,26 @@ const PartnerNotifications: React.FC = () => {
         <p>Loading...</p>
       ) : error ? (
         <p className="error">{error}</p>
+      ) : notifications.length === 0 ? (
+        <p>No notifications available.</p>
       ) : (
-        <ul>
+        <ul className="notification-list">
           {notifications.map((notification) => (
             <li
               key={notification.id}
-              className={notification.isRead ? 'read' : 'unread'}
+              className={`notification-item ${notification.isRead ? 'read' : 'unread'}`}
             >
               <p>{notification.message}</p>
-              <button onClick={() => handleMarkAsRead(notification.id)}>
-                Mark as Read
-              </button>
-              <button onClick={() => handleDelete(notification.id)}>
-                Delete
-              </button>
+              <div className="actions">
+                {!notification.isRead && (
+                  <button onClick={() => handleMarkAsRead(notification.id)}>
+                    Mark as Read
+                  </button>
+                )}
+                <button onClick={() => handleDelete(notification.id)}>
+                  Delete
+                </button>
+              </div>
             </li>
           ))}
         </ul>

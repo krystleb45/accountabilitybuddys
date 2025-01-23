@@ -1,12 +1,12 @@
-const {
+import {
   override,
   addBabelPreset,
   addBabelPlugin,
   addWebpackAlias,
-} = require('customize-cra');
-const path = require('path');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+} from 'customize-cra';
+import path from 'path';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 module.exports = override(
   // Add Babel presets for ES6+, React, and TypeScript
@@ -31,6 +31,9 @@ module.exports = override(
 
   // Custom Webpack configuration
   (config) => {
+    // Ensure `plugins` is initialized
+    config.plugins = config.plugins || [];
+
     // Enable Webpack Bundle Analyzer for bundle visualization
     if (process.env.ANALYZE === 'true') {
       config.plugins.push(

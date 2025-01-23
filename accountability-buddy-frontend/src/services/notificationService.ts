@@ -9,7 +9,7 @@ export interface Notification {
   message: string;
   isRead: boolean;
   timestamp: string; // ISO string for timestamp
-  [key: string]: any; // Additional fields
+  [key: string]: unknown; // Additional fields
 }
 
 // Create an axios instance for notifications API
@@ -44,7 +44,7 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
   while (attempt < retries) {
     try {
       return await fn();
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (attempt < retries - 1 && error.response?.status >= 500) {
         const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
         await new Promise((resolve) => setTimeout(resolve, delay));
@@ -68,7 +68,7 @@ export const getUserNotifications = async (): Promise<Notification[]> => {
       apiClient.get('/user')
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching notifications:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to fetch notifications.'
@@ -86,7 +86,7 @@ export const markNotificationAsRead = async (
 
   try {
     await axiosRetry(() => apiClient.post(`/read/${notificationId}`));
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error marking notification as read:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to mark notification as read.'
@@ -98,7 +98,7 @@ export const markNotificationAsRead = async (
 export const markAllNotificationsAsRead = async (): Promise<void> => {
   try {
     await axiosRetry(() => apiClient.post('/read-all'));
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error marking all notifications as read:', error);
     throw new Error(
       error.response?.data?.message ||
@@ -117,7 +117,7 @@ export const deleteNotification = async (
 
   try {
     await axiosRetry(() => apiClient.delete(`/delete/${notificationId}`));
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting notification:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to delete notification.'
@@ -129,7 +129,7 @@ export const deleteNotification = async (
 export const deleteAllNotifications = async (): Promise<void> => {
   try {
     await axiosRetry(() => apiClient.delete('/delete-all'));
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting all notifications:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to delete all notifications.'

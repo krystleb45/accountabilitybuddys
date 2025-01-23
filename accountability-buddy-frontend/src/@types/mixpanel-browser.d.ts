@@ -17,13 +17,13 @@ declare module 'mixpanel-browser' {
      * @param event - The name of the event to track.
      * @param properties - Optional properties associated with the event.
      */
-    track(event: string, properties?: Record<string, any>): void;
+    track(event: string, properties?: Record<string, unknown>): void;
 
     /**
      * Sets super properties that are included with all events.
      * @param properties - The super properties to set.
      */
-    register(properties: Record<string, any>): void;
+    register(properties: Record<string, unknown>): void;
 
     /**
      * Sets a unique identifier for the user (distinct ID).
@@ -48,7 +48,7 @@ declare module 'mixpanel-browser' {
      * @param properties - The properties to set on the user's profile.
      */
     people: {
-      set(properties: Record<string, any>): void;
+      set(properties: Record<string, unknown>): void;
       increment(property: string, by?: number): void;
     };
 

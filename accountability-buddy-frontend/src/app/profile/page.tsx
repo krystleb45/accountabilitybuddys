@@ -16,7 +16,7 @@ const ProfilePage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string>('');
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchProfile = async (): Promise<void> => {
       setLoading(true);
       setError('');
       try {
@@ -43,7 +43,7 @@ const ProfilePage: React.FC = () => {
     fetchProfile();
   }, []);
 
-  const handleUpdate = async (e: React.FormEvent) => {
+  const handleUpdate = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setLoading(true);
     setError('');

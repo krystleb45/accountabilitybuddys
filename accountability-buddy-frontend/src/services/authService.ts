@@ -13,14 +13,14 @@ export interface RegisterData {
   name: string;
   email: string;
   password: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface UserInfo {
   id: string;
   name: string;
   email: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // Define the structure of the decoded JWT payload

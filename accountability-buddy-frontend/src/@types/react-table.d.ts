@@ -17,7 +17,7 @@ import {
 // Define a generic interface for your table data
 export interface TableData {
   id: string | number;
-  [key: string]: any; // Allow additional dynamic fields
+  [key: string]: unknown; // Allow additional dynamic fields
 }
 
 // Extend react-table with custom types for columns and rows
@@ -59,10 +59,6 @@ declare module 'react-table' {
     isSelected?: boolean;
   }
 
-  export interface TableColumn<D extends Record<string, unknown> = TableData>
-    extends UseTableColumnProps<D> {
-    /**
-     * Add custom properties for columns
-     */
-  }
+  export type TableColumn<D extends Record<string, unknown> = TableData> =
+    UseTableColumnProps<D>;
 }

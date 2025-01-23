@@ -23,7 +23,7 @@ const FeedbackService = {
     try {
       const response = await axios.post('/feedback', { feedback, userId });
       return response.data; // Return the server response data
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error submitting feedback:', error);
       throw new Error(
         error.response?.data?.message ||
@@ -44,7 +44,7 @@ const FeedbackService = {
     try {
       const response = await axios.get('/feedback/feed');
       return response.data; // Return the feedback data
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching feedback feed:', error);
       throw new Error(
         error.response?.data?.message ||
@@ -70,7 +70,7 @@ const FeedbackService = {
     try {
       const response = await axios.delete(`/feedback/${feedbackId}`);
       return response.data; // Return the server response data
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error deleting feedback:', error);
       throw new Error(
         error.response?.data?.message ||

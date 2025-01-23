@@ -1,26 +1,37 @@
 'use client';
 
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, ReactElement } from 'react';
 import AuthContext from '../../context/auth/AuthContext';
 import RecentActivities from '../../components/Activities/RecentActivities';
-import GroupRecommendations from '../../components/Recommendations/GroupRecommendations';
+import GroupRecommendations, {
+  GroupRecommendation,
+} from '../../components/Recommendations/GroupRecommendations';
+
 import GoalProgress from '../../components/Gamification/GoalProgress';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import axios from 'axios';
 
-const HomePage: React.FC = () => {
+// Define the structure of the user profile response
+interface UserProfileResponse {
+  success: boolean;
+  user: {
+    username: string;
+  };
+}
+
+const HomePage: React.FC = (): ReactElement => {
   const { authToken } = useContext(AuthContext) || {};
   const [username, setUsername] = useState<string>('User');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
 
   // Sample state data for GoalProgress
-  const [goalTitle, setGoalTitle] = useState<string>('Complete Project');
-  const [currentProgress, setCurrentProgress] = useState<number>(50);
-  const [targetProgress, setTargetProgress] = useState<number>(100);
+  const [goalTitle] = useState<string>('Complete Project');
+  const [currentProgress] = useState<number>(50);
+  const [targetProgress] = useState<number>(100);
 
   // Sample state for GroupRecommendations
-  const [recommendations] = useState([
+  const [recommendations] = useState<GroupRecommendation[]>([
     {
       id: '1',
       name: 'Project Enthusiasts',
@@ -35,21 +46,32 @@ const HomePage: React.FC = () => {
     },
   ]);
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
+  // Fetch user profile data
+  useEffect((): void => {
+    const fetchUserProfile = async (): Promise<void> => {
       setLoading(true);
       setError('');
       try {
-        const response = await axios.get('/api/user/profile', {
-          headers: { Authorization: `Bearer ${authToken}` },
-        });
-        if (response.data?.success) {
+        const response = await axios.get<UserProfileResponse>(
+          '/api/user/profile',
+          {
+            headers: { Authorization: `Bearer ${authToken}` },
+          }
+        );
+        if (response.data.success) {
           setUsername(response.data.user.username || 'User');
         } else {
           setError('Failed to fetch user data.');
         }
-      } catch (err) {
-        setError('An error occurred while loading your profile.');
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          setError(
+            err.response?.data?.message ||
+              'An error occurred while loading your profile.'
+          );
+        } else {
+          setError('An unexpected error occurred.');
+        }
       } finally {
         setLoading(false);
       }
@@ -58,14 +80,16 @@ const HomePage: React.FC = () => {
     if (authToken) fetchUserProfile();
   }, [authToken]);
 
-  const handleEditGoal = () => {
+  // Handlers
+  const handleEditGoal = (): void => {
     console.log('Edit goal clicked');
   };
 
-  const handleJoinGroup = (groupId: string) => {
+  const handleJoinGroup = (groupId: string): void => {
     console.log(`Joining group with ID: ${groupId}`);
   };
 
+  // Component Rendering
   return (
     <div className="min-h-screen p-6 bg-gradient-to-br from-gray-50 to-blue-100">
       <header className="text-center mb-6">

@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { getAuthHeader } from '../auth/authApi'; // Ensure that the authorization token is included in requests
+import { getAuthHeader } from '../auth/authApi';
 
 const API_URL = '/api/collaboration-goals';
 
-// Define the shape of the goal data
 interface CollaborationGoal {
   status: string;
   dueDate: Date;
@@ -12,18 +11,42 @@ interface CollaborationGoal {
   title: string;
   description: string;
   progress: number;
-  // Add more fields as needed
 }
 
-// Define the shape of the API response for a list of goals with pagination
 interface GoalsResponse {
   goals: CollaborationGoal[];
   totalPages: number;
   currentPage: number;
-  // Add more fields if needed
 }
 
-// Function to create a new collaboration goal
+// Helper to identify Axios errors
+const isAxiosError = (
+  error: unknown
+): error is { response: { status: number; data: { message: string } } } => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as { response?: unknown }).response === 'object' &&
+    'data' in (error as { response: { data?: unknown } }).response
+  );
+};
+
+// Error handler with proper type narrowing
+const handleApiError = (error: unknown): never => {
+  if (isAxiosError(error)) {
+    throw new Error(
+      error.response.data.message ||
+        'An error occurred. Please try again later.'
+    );
+  }
+  if (error instanceof Error) {
+    throw new Error(error.message);
+  }
+  throw new Error('An unknown error occurred');
+};
+
+// Create a new collaboration goal
 export const createCollaborationGoal = async (
   goalData: Partial<CollaborationGoal>
 ): Promise<CollaborationGoal> => {
@@ -31,20 +54,16 @@ export const createCollaborationGoal = async (
     const response = await axios.post<CollaborationGoal>(
       `${API_URL}/create`,
       goalData,
-      {
-        headers: getAuthHeader(), // Include Authorization header with JWT token
-      }
+      { headers: getAuthHeader() }
     );
-    return response.data; // Return the created goal
-  } catch (error: any) {
-    console.error('Error creating collaboration goal:', error);
-    throw new Error(
-      error.response?.data?.message || 'Failed to create collaboration goal.'
-    );
+    return response.data;
+  } catch (error: unknown) {
+    handleApiError(error);
+    return Promise.reject();
   }
 };
 
-// Function to update progress of a collaboration goal
+// Update progress of a goal
 export const updateCollaborationGoalProgress = async (
   goalId: string,
   progress: number
@@ -53,75 +72,60 @@ export const updateCollaborationGoalProgress = async (
     const response = await axios.put<CollaborationGoal>(
       `${API_URL}/${goalId}/update-progress`,
       { progress },
-      {
-        headers: getAuthHeader(), // Include Authorization header with JWT token
-      }
+      { headers: getAuthHeader() }
     );
-    return response.data; // Return the updated goal
-  } catch (error: any) {
-    console.error('Error updating collaboration goal progress:', error);
-    throw new Error(
-      error.response?.data?.message ||
-        'Failed to update collaboration goal progress.'
-    );
+    return response.data;
+  } catch (error: unknown) {
+    handleApiError(error);
+    return Promise.reject();
   }
 };
 
-// Function to fetch all collaboration goals for the authenticated user (with pagination)
+// Fetch all collaboration goals
 export const getUserCollaborationGoals = async (
   page = 1,
   limit = 10
 ): Promise<GoalsResponse> => {
   try {
     const response = await axios.get<GoalsResponse>(`${API_URL}/my-goals`, {
-      headers: getAuthHeader(), // Include Authorization header with JWT token
-      params: { page, limit }, // Pagination parameters
+      headers: getAuthHeader(),
+      params: { page, limit },
     });
-    return response.data; // Return the list of goals and pagination info
-  } catch (error: any) {
-    console.error('Error fetching user collaboration goals:', error);
-    throw new Error(
-      error.response?.data?.message || 'Failed to fetch collaboration goals.'
-    );
+    return response.data;
+  } catch (error: unknown) {
+    handleApiError(error);
+    return Promise.reject();
   }
 };
 
-// Function to fetch a single collaboration goal by its ID
+// Fetch a collaboration goal by ID
 export const getCollaborationGoalById = async (
   goalId: string
 ): Promise<CollaborationGoal> => {
   try {
     const response = await axios.get<CollaborationGoal>(
       `${API_URL}/${goalId}`,
-      {
-        headers: getAuthHeader(), // Include Authorization header with JWT token
-      }
+      { headers: getAuthHeader() }
     );
-    return response.data; // Return the goal details
-  } catch (error: any) {
-    console.error('Error fetching collaboration goal:', error);
-    throw new Error(
-      error.response?.data?.message || 'Failed to fetch collaboration goal.'
-    );
+    return response.data;
+  } catch (error: unknown) {
+    handleApiError(error);
+    return Promise.reject();
   }
 };
 
-// Function to delete a collaboration goal
+// Delete a collaboration goal
 export const deleteCollaborationGoal = async (
   goalId: string
 ): Promise<{ message: string }> => {
   try {
     const response = await axios.delete<{ message: string }>(
       `${API_URL}/${goalId}`,
-      {
-        headers: getAuthHeader(), // Include Authorization header with JWT token
-      }
+      { headers: getAuthHeader() }
     );
-    return response.data; // Return success message
-  } catch (error: any) {
-    console.error('Error deleting collaboration goal:', error);
-    throw new Error(
-      error.response?.data?.message || 'Failed to delete collaboration goal.'
-    );
+    return response.data;
+  } catch (error: unknown) {
+    handleApiError(error);
+    return Promise.reject();
   }
 };

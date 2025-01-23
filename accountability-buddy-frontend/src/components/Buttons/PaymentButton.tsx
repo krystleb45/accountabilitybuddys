@@ -16,7 +16,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handlePayment = async () => {
+  const handlePayment = async (): Promise<void> => {
     setLoading(true);
     setError(null);
 

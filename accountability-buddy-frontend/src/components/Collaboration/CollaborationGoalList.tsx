@@ -6,6 +6,7 @@ import {
 import {
   CollaborationGoal,
   CollaborationGoalListProps,
+  CollaborationUser,
 } from './Collaboration.types';
 import styles from './CollaborationGoalList.module.css';
 
@@ -20,12 +21,14 @@ const CollaborationGoalList: React.FC<CollaborationGoalListProps> = ({
   const [totalPages, setTotalPages] = useState<number>(1);
 
   useEffect(() => {
+    // If initial goals are provided, stop loading
     if (initialGoals.length > 0) {
+      setGoals(initialGoals);
       setLoading(false);
       return;
     }
 
-    const fetchGoals = async () => {
+    const fetchGoals = async (): Promise<void> => {
       setLoading(true);
       setError(null);
 
@@ -33,20 +36,29 @@ const CollaborationGoalList: React.FC<CollaborationGoalListProps> = ({
         const response = await getUserCollaborationGoals(page);
 
         const formattedGoals: CollaborationGoal[] = response.goals.map(
-          (goal) => ({
+          (goal: {
+            id: string;
+            title: string;
+            description: string;
+            assignedUsers: CollaborationUser[];
+            dueDate: Date;
+            status: string;
+            progress?: number;
+          }) => ({
             ...goal,
-            progress: goal.progress ?? 0,
+            progress: goal.progress ?? 0, // Ensure progress is always a number
             status: ['pending', 'in-progress', 'completed'].includes(
               goal.status
             )
               ? (goal.status as 'pending' | 'in-progress' | 'completed')
-              : 'pending',
+              : 'pending', // Default to 'pending' if status is invalid
           })
         );
 
         setGoals(formattedGoals);
         setTotalPages(response.totalPages);
       } catch (err) {
+        console.error('Error fetching collaboration goals:', err);
         setError('Failed to fetch collaboration goals. Please try again.');
       } finally {
         setLoading(false);
@@ -56,21 +68,26 @@ const CollaborationGoalList: React.FC<CollaborationGoalListProps> = ({
     fetchGoals();
   }, [page, initialGoals]);
 
-  const handleProgressUpdate = async (goalId: string, newProgress: number) => {
+  const handleProgressUpdate = async (
+    goalId: string,
+    newProgress: number
+  ): Promise<void> => {
     try {
       await updateCollaborationGoalProgress(goalId, newProgress);
 
+      // Update the progress of the specific goal in the list
       setGoals((prevGoals) =>
         prevGoals.map((goal) =>
           goal.id === goalId ? { ...goal, progress: newProgress } : goal
         )
       );
-    } catch (error) {
-      console.error('Failed to update goal progress:', error);
+    } catch (err) {
+      console.error('Error updating goal progress:', err);
+      alert('Failed to update goal progress. Please try again.');
     }
   };
 
-  const handlePageChange = (newPage: number) => {
+  const handlePageChange = (newPage: number): void => {
     setPage(newPage);
   };
 
@@ -96,9 +113,10 @@ const CollaborationGoalList: React.FC<CollaborationGoalListProps> = ({
                 Progress: {goal.progress}%
               </p>
               <button
-                onClick={() =>
-                  handleProgressUpdate(goal.id, goal.progress + 10)
-                }
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering the parent click event
+                  handleProgressUpdate(goal.id, goal.progress + 10);
+                }}
                 className={styles['progress-button']}
               >
                 Update Progress
@@ -107,6 +125,7 @@ const CollaborationGoalList: React.FC<CollaborationGoalListProps> = ({
           ))}
         </ul>
       )}
+      {/* Pagination */}
       <div className={styles.pagination}>
         {Array.from({ length: totalPages }, (_, index) => (
           <button

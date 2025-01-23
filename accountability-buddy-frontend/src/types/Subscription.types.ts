@@ -73,7 +73,7 @@ export interface SubscriptionPreferences {
   emailNotifications?: string[];
 
   /** Metadata for storing additional preferences or data. */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**

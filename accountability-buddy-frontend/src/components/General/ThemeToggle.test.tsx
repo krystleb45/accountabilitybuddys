@@ -1,5 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  RenderResult,
+} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ThemeToggle from './ThemeToggle';
 import { expect } from '@jest/globals';
@@ -7,7 +12,7 @@ import { expect } from '@jest/globals';
 describe('ThemeToggle Component', () => {
   const mockOnToggle = jest.fn();
 
-  const renderComponent = (isDarkMode: boolean) =>
+  const renderComponent = (isDarkMode: boolean): RenderResult =>
     render(<ThemeToggle isDarkMode={isDarkMode} onToggle={mockOnToggle} />);
 
   test('renders the toggle button', () => {

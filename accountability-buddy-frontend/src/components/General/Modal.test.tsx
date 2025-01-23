@@ -9,9 +9,9 @@ describe('Modal Component', () => {
 
   const renderModal = (
     isOpen: boolean,
-    title?: string,
+    title: string = '',
     children?: React.ReactNode
-  ) => {
+  ): void => {
     render(
       <Modal
         isOpen={isOpen}

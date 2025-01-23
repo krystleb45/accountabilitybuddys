@@ -1,5 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  RenderResult,
+} from '@testing-library/react';
 import CollaborationGoalList from './CollaborationGoalList';
 import {
   CollaborationGoal,
@@ -29,16 +34,18 @@ describe('CollaborationGoalList Component', () => {
     },
   ];
 
-  const renderComponent = (props: Partial<CollaborationGoalListProps> = {}) => {
-    const mergedProps: CollaborationGoalListProps = {
+  const renderComponent = (
+    props: Partial<CollaborationGoalListProps> = {}
+  ): RenderResult => {
+    const defaultProps: CollaborationGoalListProps = {
       goals: mockGoals,
       onGoalClick: jest.fn(),
       ...props,
     };
-    return render(<CollaborationGoalList {...mergedProps} />);
+    return render(<CollaborationGoalList {...defaultProps} />);
   };
 
-  it('renders a list of goals', () => {
+  it('renders a list of goals', (): void => {
     renderComponent();
 
     expect(screen.getByText('Goal 1')).toBeInTheDocument();

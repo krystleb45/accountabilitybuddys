@@ -1,24 +1,24 @@
 'use client'; // Mark as Client Component
 
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
 
 // Search Result Item component
-const SearchResultItem = ({ result }: { result: string }) => (
+const SearchResultItem: React.FC<{ result: string }> = ({ result }) => (
   <div className="p-4 bg-white rounded-lg shadow-md mb-2">
     <p className="text-gray-800">{result}</p>
   </div>
 );
 
 const SearchPage: React.FC = () => {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState<string>('');
   const [results, setResults] = useState<string[]>([]);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: FormEvent): void => {
     e.preventDefault();
     setSubmitted(true);
 
-    // Placeholder for results based on query
+    // Placeholder for search results based on query
     const mockResults = [
       'Search result 1',
       'Search result 2',
@@ -27,7 +27,11 @@ const SearchPage: React.FC = () => {
     ];
 
     setResults(
-      query ? mockResults.filter((result) => result.includes(query)) : []
+      query
+        ? mockResults.filter((result) =>
+            result.toLowerCase().includes(query.toLowerCase())
+          )
+        : []
     );
   };
 
@@ -49,7 +53,8 @@ const SearchPage: React.FC = () => {
         />
         <button
           type="submit"
-          className="ml-2 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="ml-2 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          aria-label="Submit search"
         >
           Search
         </button>
@@ -57,17 +62,21 @@ const SearchPage: React.FC = () => {
 
       <main className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold mb-4 text-gray-800">Results</h2>
-        {submitted ? (
-          results.length > 0 ? (
-            results.map((result, index) => (
-              <SearchResultItem key={index} result={result} />
-            ))
+        <div aria-live="polite">
+          {submitted ? (
+            results.length > 0 ? (
+              results.map((result, index) => (
+                <SearchResultItem key={index} result={result} />
+              ))
+            ) : (
+              <p className="text-gray-500">
+                No results found for &quot;{query}&quot;.
+              </p>
+            )
           ) : (
-            <p className="text-gray-500">No results found for "{query}".</p>
-          )
-        ) : (
-          <p className="text-gray-500">Enter a query to search.</p>
-        )}
+            <p className="text-gray-500">Enter a query to search.</p>
+          )}
+        </div>
       </main>
     </div>
   );

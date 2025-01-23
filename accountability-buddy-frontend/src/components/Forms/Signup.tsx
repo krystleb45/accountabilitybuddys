@@ -18,12 +18,14 @@ const Signup: React.FC = () => {
   const [success, setSuccess] = useState<string>('');
 
   // Handle input change
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   // Handle form submission
-  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignup = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -54,6 +56,7 @@ const Signup: React.FC = () => {
       setSuccess('Sign-up successful! Welcome aboard.');
       setFormData({ email: '', password: '' }); // Reset form
     } catch (err) {
+      console.error('Sign-up failed:', err);
       setError('Sign-up failed. Please try again.');
     } finally {
       setLoading(false);

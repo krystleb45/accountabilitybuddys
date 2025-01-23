@@ -22,7 +22,7 @@ const Modal: React.FC<ModalProps> = ({
 
   // Close modal on 'Escape' key press
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === 'Escape' && isVisible) {
         onClose();
       }

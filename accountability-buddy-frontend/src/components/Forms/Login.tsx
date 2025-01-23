@@ -10,7 +10,7 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleLogin = async () => {
+  const handleLogin: () => Promise<void> = async () => {
     setError(''); // Clear previous errors
     setLoading(true); // Start loading
 
@@ -27,11 +27,27 @@ const Login: React.FC = () => {
     }
 
     try {
-      const token = 'exampleAuthToken'; // Replace with actual token from your API response
+      // Simulate API call to authenticate
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/auth/login`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Invalid credentials.');
+      }
+
+      const { token } = await response.json(); // Extract token from response
       login(token); // Call the login function from AuthContext
-    } catch (error: any) {
+    } catch (err: unknown) {
       setError(
-        'Failed to log in. Please check your credentials and try again.'
+        err instanceof Error
+          ? err.message
+          : 'Failed to log in. Please try again.'
       );
     } finally {
       setLoading(false); // Stop loading

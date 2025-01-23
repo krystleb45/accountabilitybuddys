@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import './Recommendations.module.css'; // Scoped styling for recommendations
 
 interface BookRecommendationsProps {
-  [x: string]: any;
+  [x: string]: unknown;
   recommendations?: BookRecommendation[];
 }
 
@@ -37,7 +37,7 @@ const BookRecommendations: React.FC<BookRecommendationsProps> = ({
 
         const data: BookRecommendationsProps[] = await response.json();
         setBooks(data);
-      } catch (err: any) {
+      } catch (err: unknown) {
         setError(
           err.message ||
             'An error occurred while fetching book recommendations.'

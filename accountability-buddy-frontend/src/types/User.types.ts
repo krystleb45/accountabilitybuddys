@@ -27,7 +27,7 @@ export interface UserProfile {
   isActive?: boolean;
 
   /** Metadata for additional custom fields (optional). */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -61,7 +61,7 @@ export interface SubscriptionPlan {
   billingCycle?: 'monthly' | 'yearly';
 
   /** Additional metadata or custom fields for the subscription plan. */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -84,5 +84,5 @@ export interface UserSubscription {
   paymentMethod?: string;
 
   /** Metadata for additional custom fields (optional). */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }

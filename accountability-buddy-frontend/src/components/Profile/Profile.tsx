@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useAuth } from 'src/context/auth/AuthContext';
-import './Profile.module.css';
+import styles from './Profile.module.css'; // Adjusted for module CSS usage
 import { validateEmail, formatUserName } from 'src/utils/utility-functions';
 
 interface ProfileData {
@@ -15,7 +15,7 @@ interface UpdatedProfileData {
   email: string;
 }
 
-const Profile: React.FC = () => {
+const Profile: React.FC = (): JSX.Element => {
   const { authToken, logout } = useAuth();
   const [profile, setProfile] = useState<ProfileData>({
     username: '',
@@ -33,8 +33,14 @@ const Profile: React.FC = () => {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
+  // Fetch user profile on mount
+  useEffect((): void => {
+    if (!authToken) {
+      setLoading(false); // Skip fetch if not authenticated
+      return;
+    }
+
+    const fetchProfile = async (): Promise<void> => {
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/users/profile`,
@@ -47,35 +53,37 @@ const Profile: React.FC = () => {
           username: response.data.username,
           email: response.data.email,
         });
-      } catch (err: any) {
-        setError('Failed to load profile. Please try again.');
-        if (err.response && err.response.status === 401) {
-          logout();
+      } catch (err: unknown) {
+        const axiosError = err as AxiosError;
+        if (axiosError.response?.status === 401) {
+          logout(); // Logout on unauthorized access
+        } else {
+          setError('Failed to load profile. Please try again.');
         }
       } finally {
         setLoading(false);
       }
     };
 
-    if (authToken) {
-      fetchProfile();
-    } else {
-      setLoading(false);
-    }
+    fetchProfile();
   }, [authToken, logout]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle form input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setUpdatedProfile({ ...updatedProfile, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setProfilePicture(e.target.files[0]);
-      setPreview(URL.createObjectURL(e.target.files[0]));
+  // Handle profile picture file changes
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setProfilePicture(file);
+      setPreview(URL.createObjectURL(file));
     }
   };
 
-  const handleSave = async () => {
+  // Save profile changes
+  const handleSave = async (): Promise<void> => {
     setSaving(true);
     setError('');
     setSuccessMessage('');
@@ -90,6 +98,7 @@ const Profile: React.FC = () => {
       const formData = new FormData();
       formData.append('username', formatUserName(updatedProfile.username));
       formData.append('email', updatedProfile.email);
+
       if (profilePicture) {
         formData.append('profilePicture', profilePicture);
       }
@@ -102,33 +111,39 @@ const Profile: React.FC = () => {
         }
       );
 
-      setSuccessMessage('Profile updated successfully!');
       setProfile({ ...profile, ...updatedProfile });
-    } catch (err: any) {
-      setError('Failed to update profile. Please try again.');
+      setSuccessMessage('Profile updated successfully!');
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        // Safely access the message from AxiosError
+        setError(err.response?.data?.message || 'Failed to update profile.');
+      } else {
+        // Fallback error message for unknown error types
+        setError('An unknown error occurred. Please try again.');
+      }
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div className="profile">
+    <div className={styles.profile}>
       <h2>Profile</h2>
       {loading ? (
         <p>Loading...</p>
       ) : (
         <>
           {error && (
-            <p className="error" role="alert">
+            <p className={styles.error} role="alert">
               {error}
             </p>
           )}
           {successMessage && (
-            <p className="success" role="alert">
+            <p className={styles.success} role="alert">
               {successMessage}
             </p>
           )}
-          <div className="form-group">
+          <div className={styles['form-group']}>
             <label htmlFor="username">Username</label>
             <input
               type="text"
@@ -136,9 +151,10 @@ const Profile: React.FC = () => {
               name="username"
               value={updatedProfile.username}
               onChange={handleInputChange}
+              className={styles.input}
             />
           </div>
-          <div className="form-group">
+          <div className={styles['form-group']}>
             <label htmlFor="email">Email</label>
             <input
               type="email"
@@ -146,27 +162,30 @@ const Profile: React.FC = () => {
               name="email"
               value={updatedProfile.email}
               onChange={handleInputChange}
+              className={styles.input}
             />
           </div>
-          <div className="form-group">
+          <div className={styles['form-group']}>
             <label htmlFor="profilePicture">Profile Picture</label>
             <input
               type="file"
               id="profilePicture"
+              accept="image/*"
               onChange={handleFileChange}
+              className={styles.input}
             />
             {preview && (
               <img
                 src={preview}
                 alt="Profile Preview"
-                className="profile-preview"
+                className={styles['profile-preview']}
               />
             )}
           </div>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="save-button"
+            className={styles['save-button']}
           >
             {saving ? 'Saving...' : 'Save Changes'}
           </button>

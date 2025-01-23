@@ -27,7 +27,7 @@ export const formatCurrency = (
  * @param delay - The delay in milliseconds.
  * @returns A debounced version of the function.
  */
-export const debounce = <T extends (...args: any[]) => any>(
+export const debounce = <T extends (...args: unknown[]) => unknown>(
   func: T,
   delay: number
 ): ((...args: Parameters<T>) => void) => {

@@ -9,11 +9,11 @@ export interface Activity {
   participants?: number;
   createdAt?: string;
   updatedAt?: string;
-  [key: string]: any; // Allow additional fields for flexibility
+  [key: string]: unknown; // Allow additional fields for flexibility
 }
 
 // Utility function to handle API errors
-const handleApiError = (error: any): never => {
+const handleApiError = (error: unknown): never => {
   console.error('API Error:', error);
   throw new Error(
     error.response?.data?.message ||

@@ -12,21 +12,22 @@ const RegisterPage: React.FC = () => {
     confirmPassword: '',
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setSuccessMessage('');
 
     const { name, email, password, confirmPassword } = formData;
+
     if (!name || !email || !password || !confirmPassword) {
       setError('All fields are required.');
       setLoading(false);
@@ -45,6 +46,7 @@ const RegisterPage: React.FC = () => {
         email,
         password,
       });
+
       if (response.status === 201) {
         setSuccessMessage('Registration successful! Redirecting to login...');
         setTimeout(() => {
@@ -53,8 +55,14 @@ const RegisterPage: React.FC = () => {
       } else {
         setError('Registration failed. Please try again.');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response?.data) {
+        setError(
+          err.response.data.message || 'Registration failed. Please try again.'
+        );
+      } else {
+        setError('An unknown error occurred.');
+      }
     } finally {
       setLoading(false);
     }

@@ -3,11 +3,13 @@ const sessionStorageMock = (function () {
 
   return {
     getItem(key: PropertyKey) {
-      return store.hasOwnProperty(key) ? store[key] : null;
+      return Object.prototype.hasOwnProperty.call(store, key)
+        ? store[key]
+        : null;
     },
     setItem(
       key: string | number,
-      value: { toString: () => any } | null | undefined
+      value: { toString: () => unknown } | null | undefined
     ) {
       if (value === undefined || value === null) {
         throw new Error('sessionStorage cannot store undefined or null values');

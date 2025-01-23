@@ -45,10 +45,10 @@ export const truncateText = (text: string, maxLength: number): string => {
  * @param value - The value to match.
  * @returns A filtered array of objects.
  */
-export const filterDashboardData = <T extends Record<string, any>>(
+export const filterDashboardData = <T extends Record<string, unknown>>(
   data: T[],
   key: keyof T,
-  value: any
+  value: unknown
 ): T[] => {
   return data.filter((item) => item[key] === value);
 };
@@ -61,7 +61,7 @@ export const filterDashboardData = <T extends Record<string, any>>(
  * @param ascending - Whether to sort in ascending order (default: true).
  * @returns A sorted array of objects.
  */
-export const sortDashboardData = <T extends Record<string, any>>(
+export const sortDashboardData = <T extends Record<string, unknown>>(
   data: T[],
   key: keyof T,
   ascending: boolean = true

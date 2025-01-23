@@ -1,5 +1,3 @@
-import { ReactNode } from 'react';
-
 /**
  * Represents a goal in the collaboration system.
  */
@@ -27,8 +25,8 @@ export interface CollaborationUser {
  * Props for the CollaborationGoalList component.
  */
 export interface CollaborationGoalListProps {
-  goals: CollaborationGoal[];
-  onGoalClick: (goalId: string) => void;
+  goals: CollaborationGoal[]; // List of collaboration goals
+  onGoalClick: (goalId: string) => void; // Click handler for a goal
 }
 
 /**

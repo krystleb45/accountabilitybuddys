@@ -8,7 +8,7 @@ export interface Group {
   members?: number;
   createdAt?: string;
   updatedAt?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface GroupService {

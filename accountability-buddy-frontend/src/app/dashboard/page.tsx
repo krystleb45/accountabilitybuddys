@@ -34,7 +34,7 @@ const DashboardPage: React.FC = () => {
             Recent Activities
           </h2>
           <p className="text-gray-600 mb-4">
-            See what you've accomplished recently.
+            See what you&apos;ve accomplished recently.
           </p>
           <button className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
             View Activities

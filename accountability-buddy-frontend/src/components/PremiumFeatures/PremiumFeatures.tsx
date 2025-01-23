@@ -9,13 +9,13 @@ const PremiumFeatures: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   // Handle user clicking the upgrade button
-  const handleUpgradeClick = () => {
+  const handleUpgradeClick = (): void => {
     setShowPayment(true);
     trackEvent({ category: 'Button Click', action: 'Clicked Upgrade Button' }); // Track upgrade click
   };
 
   // Handle successful payment
-  const handlePaymentSuccess = () => {
+  const handlePaymentSuccess = (): void => {
     setIsPremium(true); // Mark user as premium
     trackConversion('Upgrade', 'User upgraded to Premium'); // Track conversion
     alert('Congratulations! You have upgraded to Premium.');
@@ -23,7 +23,7 @@ const PremiumFeatures: React.FC = () => {
   };
 
   // Handle failed payment
-  const handlePaymentFailure = () => {
+  const handlePaymentFailure = (): void => {
     alert('Payment failed. Please try again.');
     setLoading(false); // Reset loading state
   };
@@ -46,10 +46,11 @@ const PremiumFeatures: React.FC = () => {
           </button>
           {showPayment && (
             <StripeCheckout
-                onSuccess={handlePaymentSuccess}
-                onError={handlePaymentFailure} // Handle errors
-                setLoading={setLoading} // Pass the setLoading state
-                clientSecret={''}            />
+              onSuccess={handlePaymentSuccess}
+              onError={handlePaymentFailure} // Handle errors
+              setLoading={setLoading} // Pass the setLoading state
+              clientSecret={''}
+            />
           )}
         </>
       )}

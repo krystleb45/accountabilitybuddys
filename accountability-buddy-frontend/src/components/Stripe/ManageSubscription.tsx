@@ -22,7 +22,7 @@ const ManageSubscription: React.FC = () => {
         const details = await fetchSubscriptionDetails(); // Fetch current subscription details
         setSubscription(details as SubscriptionDetails); // Type casting
         setError(null);
-      } catch (err: any) {
+      } catch (err: unknown) {
         setError('Failed to load subscription details. Please try again.');
       } finally {
         setLoading(false);
@@ -38,7 +38,7 @@ const ManageSubscription: React.FC = () => {
       await updateSubscription({ planId }); // Update subscription plan
       const updatedDetails = await fetchSubscriptionDetails();
       setSubscription(updatedDetails as SubscriptionDetails); // Cast updatedDetails to the correct type
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Failed to update subscription. Please try again.');
     } finally {
       setUpdating(false);
@@ -50,7 +50,7 @@ const ManageSubscription: React.FC = () => {
       setUpdating(true);
       await cancelSubscription(); // Cancel subscription
       setSubscription(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Failed to cancel subscription. Please try again.');
     } finally {
       setUpdating(false);

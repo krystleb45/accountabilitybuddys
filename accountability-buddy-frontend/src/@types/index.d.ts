@@ -4,10 +4,10 @@
  */
 
 // Import and re-export custom module declarations
-/// <reference path="./custom-module.d.ts" />
+import './custom-module.d.ts';
 
 // Import global environment variable types
-/// <reference path="./environment.d.ts" />
+import './environment.d.ts';
 
 // Declare global interfaces, types, and variables
 
@@ -45,7 +45,7 @@ declare global {
    * Declare a custom global variable (example: Google Analytics tracking).
    */
   interface Window {
-    gtag?: (...args: any[]) => void;
+    gtag?: (...args: unknown[]) => void;
   }
 }
 

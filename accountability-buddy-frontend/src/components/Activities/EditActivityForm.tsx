@@ -32,7 +32,7 @@ const EditActivityForm: React.FC<EditActivityFormProps> = ({
     setStatus(activity.status);
   }, [activity]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
 
     // Form validation

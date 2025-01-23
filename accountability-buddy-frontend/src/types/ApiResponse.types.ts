@@ -14,7 +14,7 @@ export interface ApiResponse<T> {
   message: string;
 
   /** Optional metadata for additional information about the response (e.g., pagination). */
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
 
   /** Optional error details for failed requests. */
   error?: {

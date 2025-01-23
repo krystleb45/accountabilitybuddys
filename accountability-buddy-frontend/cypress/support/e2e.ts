@@ -16,14 +16,14 @@ import './commands/custom-commands';
 // Global setup for end-to-end tests
 Cypress.on('window:before:load', (win) => {
   // Example: Mocking browser APIs or properties before the window loads
-  cy.stub(win.console, 'log').callsFake((msg) => {
+  cy.stub(win.console, 'log').callsFake((_msg) => {
     // Customize console log behavior if required
     // Uncomment to debug logs: console.log('Cypress intercepted:', msg);
   });
 });
 
 // Handle uncaught exceptions
-Cypress.on('uncaught:exception', (err, runnable) => {
+Cypress.on('uncaught:exception', (_err, _runnable) => {
   // Prevent failing tests on uncaught exceptions (use cautiously)
   // Example: Ignore specific known errors
   // if (err.message.includes('ResizeObserver loop limit exceeded')) {

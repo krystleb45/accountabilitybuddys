@@ -7,21 +7,21 @@ export interface ProfileSettings {
   email: string;
   avatarUrl?: string;
   bio?: string; // Optional user bio
-  [key: string]: any; // Additional fields
+  [key: string]: unknown; // Additional fields
 }
 
 export interface NotificationPreferences {
   emailNotifications: boolean;
   pushNotifications: boolean;
   smsNotifications?: boolean; // Optional field for SMS notifications
-  [key: string]: any; // Additional fields
+  [key: string]: unknown; // Additional fields
 }
 
 export interface PrivacySettings {
   showProfile: boolean;
   shareActivity: boolean;
   allowFriendRequests?: boolean; // Optional privacy setting
-  [key: string]: any; // Additional fields
+  [key: string]: unknown; // Additional fields
 }
 
 // Create an axios instance for settings API
@@ -55,7 +55,7 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
   while (attempt < retries) {
     try {
       return await fn();
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (attempt < retries - 1 && error.response?.status >= 500) {
         const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
         await new Promise((resolve) => setTimeout(resolve, delay));
@@ -86,7 +86,7 @@ export const updateProfileSettings = async (
     );
     console.log('Profile settings updated successfully:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating profile settings:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to update profile settings.'
@@ -111,7 +111,7 @@ export const updateNotificationPreferences = async (
       response.data
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating notification preferences:', error);
     throw new Error(
       error.response?.data?.message ||
@@ -134,7 +134,7 @@ export const updatePrivacySettings = async (
     );
     console.log('Privacy settings updated successfully:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating privacy settings:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to update privacy settings.'
@@ -156,7 +156,7 @@ export const getSettings = async (): Promise<{
     }> = await axiosRetry(() => apiClient.get('/'));
     console.log('Settings fetched successfully:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching settings:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to fetch settings.'

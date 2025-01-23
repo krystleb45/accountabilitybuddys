@@ -3,7 +3,7 @@
 import React from 'react';
 
 const NotFoundPage: React.FC = () => {
-  const handleRedirect = () => {
+  const handleRedirect = (): void => {
     if (typeof window !== 'undefined') {
       window.location.href = '/'; // Redirect to the homepage
     }

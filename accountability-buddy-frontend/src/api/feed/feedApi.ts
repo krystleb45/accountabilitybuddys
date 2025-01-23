@@ -24,11 +24,14 @@ interface Comment {
 }
 
 // Helper function to handle API errors
-const handleError = (error: any): never => {
-  const message =
-    error.response?.data?.message ||
-    'An error occurred. Please try again later.';
-  throw new Error(message);
+const handleError = (error: unknown): never => {
+  if (axios.isAxiosError(error) && error.response?.data?.message) {
+    throw new Error(error.response.data.message);
+  } else if (error instanceof Error) {
+    throw new Error(error.message);
+  } else {
+    throw new Error('An unknown error occurred. Please try again later.');
+  }
 };
 
 // Get all feed posts
@@ -38,9 +41,9 @@ export const getFeedPosts = async (): Promise<FeedPost[] | undefined> => {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    return undefined; // Ensures TypeScript sees this function always has a return
   }
 };
 
@@ -53,9 +56,9 @@ export const createFeedPost = async (
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    return undefined;
   }
 };
 
@@ -72,9 +75,9 @@ export const likeFeedPost = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    return undefined;
   }
 };
 
@@ -91,9 +94,9 @@ export const unlikeFeedPost = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    return undefined;
   }
 };
 
@@ -111,8 +114,8 @@ export const commentOnFeedPost = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    return undefined;
   }
 };

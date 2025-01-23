@@ -12,14 +12,14 @@ export interface Goal {
   description: string;
   status: string;
   dueDate?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface GoalAnalytics {
   totalGoals: number;
   completedGoals: number;
   inProgressGoals: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const apiClient = axios.create({

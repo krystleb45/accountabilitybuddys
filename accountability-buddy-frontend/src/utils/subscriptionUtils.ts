@@ -13,7 +13,7 @@ export const fetchSubscriptionDetails =
         '/api/subscription/details'
       ); // Adjust API endpoint
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching subscription details:', error);
       throw new Error(
         'Failed to fetch subscription details. Please try again.'
@@ -28,7 +28,7 @@ export const fetchBillingHistory = async (): Promise<BillingHistoryItem[]> => {
       '/api/subscription/billing-history'
     ); // Adjust API endpoint
     return response.data.billingHistory;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching billing history:', error);
     throw new Error('Failed to fetch billing history. Please try again.');
   }
@@ -40,7 +40,7 @@ export const updateSubscription = async (
 ): Promise<void> => {
   try {
     await axios.post('/api/subscription/update', payload); // Adjust API endpoint
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating subscription:', error);
     throw new Error('Failed to update subscription. Please try again.');
   }
@@ -50,7 +50,7 @@ export const updateSubscription = async (
 export const cancelSubscription = async (): Promise<void> => {
   try {
     await axios.post('/api/subscription/cancel'); // Adjust API endpoint
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error canceling subscription:', error);
     throw new Error('Failed to cancel subscription. Please try again.');
   }

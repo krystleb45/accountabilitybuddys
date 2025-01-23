@@ -1,28 +1,28 @@
-const { defineConfig } = require('cypress');
+import { defineConfig } from 'cypress';
 
-module.exports = defineConfig({
+export default defineConfig({
   e2e: {
     baseUrl: process.env.CYPRESS_BASE_URL || 'http://localhost:3000', // Use env variable or default
-    setupNodeEvents(on, config) {
-      // Handle test failures to capture screenshots
-      on('after:spec', (spec, results) => {
-        if (results && results.stats.failures > 0) {
-          console.error(`Test failed in spec: ${spec.relative}`);
+    setupNodeEvents(on, _config) {
+      on(
+        'after:spec',
+        (spec: Cypress.Spec, results: CypressCommandLine.RunResult | null) => {
+          if (results && results.stats.failures > 0) {
+            console.error(`Test failed in spec: ${spec.relative}`);
+          }
         }
-      });
-
-      // Add additional event listeners or plugins here if needed
+      );
     },
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}', // Match standard E2E test folder structure
-    supportFile: 'cypress/support/e2e.js', // Path to the support file
+    supportFile: 'cypress/support/e2e.ts', // Updated support file to TypeScript
     video: process.env.CI === 'true', // Enable video recording only in CI
-    screenshotsFolder: 'cypress/screenshots/[spec.name]', // Organized screenshots
-    videosFolder: 'cypress/videos', // Folder for videos
-    viewportWidth: 1280, // Default viewport width
-    viewportHeight: 720, // Default viewport height
+    screenshotsFolder: 'cypress/screenshots',
+    videosFolder: 'cypress/videos',
+    viewportWidth: 1280,
+    viewportHeight: 720,
     retries: {
-      runMode: 2, // Retries for failed tests in CI
-      openMode: 0, // No retries in interactive mode
+      runMode: 2,
+      openMode: 0,
     },
     env: {
       apiUrl: process.env.API_URL || 'http://localhost:3000/api', // Example API URL
@@ -32,7 +32,13 @@ module.exports = defineConfig({
   component: {
     specPattern: 'cypress/component/**/*.{js,jsx,ts,tsx}', // Component test folder
     devServer: {
-      framework: process.env.COMPONENT_FRAMEWORK || 'next', // Dynamically set framework
+      framework:
+        (process.env.COMPONENT_FRAMEWORK as
+          | 'react'
+          | 'vue'
+          | 'next'
+          | 'svelte'
+          | 'angular') || 'next', // Ensure it's one of the allowed types or default to 'next'
       bundler: 'webpack',
     },
   },

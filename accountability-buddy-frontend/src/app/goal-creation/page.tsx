@@ -24,12 +24,12 @@ const GoalCreationPage: React.FC = () => {
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
-  ) => {
+  ): void => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
 
     // Basic validation
@@ -146,8 +146,9 @@ const GoalCreationPage: React.FC = () => {
               Goal Created Successfully!
             </h3>
             <p>
-              Your new goal "<span className="font-bold">{form.title}</span>"
-              has been created.
+              Your new goal &quot;
+              <span className="font-bold">{form.title}</span>&quot; has been
+              created.
             </p>
           </div>
         )}

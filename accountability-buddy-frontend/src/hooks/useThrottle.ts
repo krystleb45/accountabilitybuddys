@@ -11,7 +11,7 @@ import { useEffect, useRef, useCallback } from 'react';
  * @param delay - The time interval (in milliseconds) for throttling.
  * @returns A throttled version of the provided function.
  */
-const useThrottle = <T extends (...args: any[]) => void>(
+const useThrottle = <T extends (...args: unknown[]) => void>(
   callback: T,
   delay: number
 ): ((...args: Parameters<T>) => void) => {

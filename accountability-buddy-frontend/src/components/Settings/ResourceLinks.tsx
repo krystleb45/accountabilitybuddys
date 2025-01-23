@@ -20,7 +20,7 @@ const ResourceLinks: React.FC = () => {
         }
         const data: Resource[] = await response.json();
         setResources(data);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching resources:', err);
         setError(err.message || 'Failed to fetch resources.');
       }

@@ -18,6 +18,9 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictNullChecks": true,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
     "types": ["jest", "@testing-library/jest-dom", "cypress", "node"],
     "baseUrl": ".",
     "paths": {
@@ -38,7 +41,7 @@
     ".next/types/**/*.ts",
     "cypress/**/*.ts",
     "src/**/*.test.{ts,tsx}",
-    "src/**/*.module.css" // Include CSS Modules
+    "src/**/*.module.css"
   ],
   "exclude": [
     "node_modules",

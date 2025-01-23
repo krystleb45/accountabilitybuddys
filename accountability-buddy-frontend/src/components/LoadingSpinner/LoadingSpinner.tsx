@@ -33,7 +33,8 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           borderColor: `${color} transparent transparent transparent`,
         }}
       />
-      <span className="sr-only">Loading...</span> {/* Accessible loading text */}
+      <span className="sr-only">Loading...</span>{' '}
+      {/* Accessible loading text */}
     </div>
   );
 };

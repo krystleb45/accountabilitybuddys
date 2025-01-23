@@ -11,7 +11,7 @@ export interface ActivityDetails {
   createdAt?: string;
   updatedAt?: string;
   participants?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const handleError = (functionName: string, error: unknown): void => {

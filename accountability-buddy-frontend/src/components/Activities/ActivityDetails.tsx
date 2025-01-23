@@ -25,7 +25,7 @@ const ActivityDetails: React.FC<ActivityDetailsProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadActivityDetails = async () => {
+    const loadActivityDetails = async (): Promise<void> => {
       try {
         setLoading(true);
         const fetchedActivity = await fetchActivity(activityId);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -8,7 +8,7 @@ const ForgotPassword: React.FC = () => {
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -26,11 +26,16 @@ const ForgotPassword: React.FC = () => {
       } else {
         setError(response.data.message || 'Failed to send reset link.');
       }
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-          'An error occurred. Please try again later.'
-      );
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const axiosError = err as AxiosError<{ message: string }>;
+        setError(
+          axiosError.response?.data?.message ||
+            'An error occurred. Please try again later.'
+        );
+      } else {
+        setError('An unexpected error occurred. Please try again later.');
+      }
     }
   };
 
@@ -45,10 +50,20 @@ const ForgotPassword: React.FC = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
+          className="email-input"
+          required
         />
 
-        {error && <p className="error-message">{error}</p>}
-        {success && <p className="success-message">{success}</p>}
+        {error && (
+          <p className="error-message" role="alert">
+            {error}
+          </p>
+        )}
+        {success && (
+          <p className="success-message" role="status">
+            {success}
+          </p>
+        )}
 
         <button type="submit" className="submit-button">
           Send Reset Link

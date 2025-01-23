@@ -6,11 +6,11 @@ declare module 'axios-mock-adapter' {
       axiosInstance: AxiosInstance,
       options?: { delayResponse?: number }
     );
-    onGet(url: string, config?: any): this;
-    onPost(url: string, config?: any): this;
-    onPut(url: string, config?: any): this;
-    onDelete(url: string, config?: any): this;
-    reply(status: number, data?: any, headers?: any): this;
+    onGet(url: string, config?: unknown): this;
+    onPost(url: string, config?: unknown): this;
+    onPut(url: string, config?: unknown): this;
+    onDelete(url: string, config?: unknown): this;
+    reply(status: number, data?: unknown, headers?: unknown): this;
     reset(): void;
     restore(): void;
   }

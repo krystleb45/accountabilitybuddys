@@ -19,7 +19,7 @@ const AddActivityForm: React.FC<AddActivityFormProps> = ({
   const [status, setStatus] = useState<string>('pending');
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
 
     // Form validation

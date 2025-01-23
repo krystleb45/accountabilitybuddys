@@ -32,7 +32,7 @@ export const useSubscription = () => {
         '/api/subscription/details'
       );
       setSubscription(response.data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Failed to fetch subscription details. Please try again.');
       console.error('Error fetching subscription details:', err);
     } finally {
@@ -50,7 +50,7 @@ export const useSubscription = () => {
         billingHistory: BillingHistoryItem[];
       }>('/api/subscription/billing-history');
       setBillingHistory(response.data.billingHistory);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Failed to fetch billing history. Please try again.');
       console.error('Error fetching billing history:', err);
     } finally {
@@ -67,7 +67,7 @@ export const useSubscription = () => {
       try {
         await axios.post('/api/subscription/update', payload);
         await fetchSubscriptionDetails(); // Refresh subscription details after update
-      } catch (err: any) {
+      } catch (err: unknown) {
         setError('Failed to update subscription. Please try again.');
         console.error('Error updating subscription:', err);
       } finally {
@@ -85,7 +85,7 @@ export const useSubscription = () => {
     try {
       await axios.post('/api/subscription/cancel');
       setSubscription(null); // Clear subscription details after cancellation
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Failed to cancel subscription. Please try again.');
       console.error('Error canceling subscription:', err);
     } finally {

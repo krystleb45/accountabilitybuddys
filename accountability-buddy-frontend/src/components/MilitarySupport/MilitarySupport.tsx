@@ -25,6 +25,7 @@ const MilitarySupport: React.FC = () => {
         </h2>
         <ChatBox
           onSendMessage={function (message: string): void {
+            console.log(`Received message: ${message}`);
             throw new Error('Function not implemented.');
           }}
         />

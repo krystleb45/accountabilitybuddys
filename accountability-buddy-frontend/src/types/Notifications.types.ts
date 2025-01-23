@@ -24,7 +24,7 @@ export interface Notification {
   actionUrl?: string;
 
   /** Metadata for additional details (optional). */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**

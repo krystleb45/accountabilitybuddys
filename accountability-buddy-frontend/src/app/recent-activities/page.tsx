@@ -4,11 +4,9 @@ import React, { useState } from 'react';
 import Link from 'next/link'; // Import Link from Next.js
 
 // Activity Item Component
-const ActivityItem = ({
-  activity,
-}: {
+const ActivityItem: React.FC<{
   activity: { description: string; date: string; type: string };
-}) => (
+}> = ({ activity }) => (
   <div className="p-4 bg-white rounded-lg shadow-md mb-2">
     <div className="flex justify-between items-center">
       <p className="text-gray-800">{activity.description}</p>

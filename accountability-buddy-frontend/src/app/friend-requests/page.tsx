@@ -8,11 +8,11 @@ const FriendRequestsPage: React.FC = () => {
     { id: 2, name: 'Jane Smith' },
   ];
 
-  const handleAccept = (id: number) => {
+  const handleAccept = (id: number): void => {
     console.log(`Accepted request from user ${id}`);
   };
 
-  const handleReject = (id: number) => {
+  const handleReject = (id: number): void => {
     console.log(`Rejected request from user ${id}`);
   };
 

@@ -1,25 +1,34 @@
 import React from 'react';
 import { useTheme } from 'src/context/ui/ThemeContext'; // Use the custom hook for ThemeContext
 import './ThemeToggle.css';
-import { ThemeToggleProps } from '.';
+
+// Define the props for the ThemeToggle component
+export interface ThemeToggleProps {
+  isDarkMode: boolean;
+  onToggle: () => void;
+}
 
 const ThemeToggle: React.FC<ThemeToggleProps> = ({ isDarkMode, onToggle }) => {
   const { theme, toggleTheme } = useTheme();
-  interface ThemeToggleProps {
-    isDarkMode: boolean;
-    onToggle: () => void;
-  }
+
+  // Use the theme value here
+  console.log(theme);
+
+  const handleToggle = (): void => {
+    onToggle();
+    toggleTheme();
+  };
+
   return (
     <div className="theme-toggle" data-testid="theme-toggle">
       <button
-        onClick={toggleTheme}
+        onClick={handleToggle}
         aria-label="Toggle theme"
-        aria-pressed={theme === 'dark'} // Accessibility: indicates the current state
-        role="button" // Role for accessibility
-        className={`theme-toggle-button ${theme === 'dark' ? 'dark' : 'light'}`}
+        aria-pressed={isDarkMode} // Use isDarkMode to determine the current state
+        className={`theme-toggle-button ${isDarkMode ? 'dark' : 'light'}`}
         data-testid="theme-toggle-button"
       >
-        {theme === 'dark' ? (
+        {isDarkMode ? (
           <span
             data-testid="dark-mode-icon"
             className="theme-icon"
@@ -36,7 +45,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ isDarkMode, onToggle }) => {
             ☀️
           </span>
         )}
-        {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
+        {isDarkMode ? 'Dark Mode' : 'Light Mode'}
       </button>
     </div>
   );

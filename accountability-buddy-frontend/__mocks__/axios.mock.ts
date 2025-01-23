@@ -53,7 +53,7 @@ const mockAxios = {
    * @param {Error} error - The error to return.
    * @returns {Promise<never>} - A rejected promise with the error.
    */
-  mockError: function (error) {
+  mockError: function (error: Error): Promise<never> {
     console.error(`[Axios Mock] Simulated error:`, error);
     return Promise.reject(error);
   },
@@ -63,12 +63,13 @@ const mockAxios = {
    * @param {object} response - The custom response to return.
    * @returns {Promise<object>} - A resolved promise with the response.
    */
-  mockResponse: function (response) {
+  mockResponse: function (response: object): Promise<object> {
     console.log(`[Axios Mock] Simulated response:`, response);
     return Promise.resolve(response);
   },
 
   // Example: Add a one-time GET implementation for testing failures
+
   addMockImplementationOnce: function () {
     this.get.mockImplementationOnce(() => {
       console.error(`[Axios Mock] One-time GET request failure`);

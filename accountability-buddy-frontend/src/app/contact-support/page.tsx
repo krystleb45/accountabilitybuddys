@@ -8,7 +8,7 @@ const ContactSupportPage: React.FC = () => {
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     // Simulate form submission (replace with actual API call)
     setSuccess(true);

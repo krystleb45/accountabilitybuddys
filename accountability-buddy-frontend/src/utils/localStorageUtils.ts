@@ -20,7 +20,7 @@ const logError = (error: unknown): void => {
  * @param key - The key under which to store the value.
  * @param value - The value to store. Will be serialized as JSON.
  */
-export const saveToLocalStorage = (key: string, value: any): void => {
+export const saveToLocalStorage = (key: string, value: unknown): void => {
   try {
     const serializedValue = JSON.stringify(value);
     localStorage.setItem(key, serializedValue);
@@ -36,7 +36,7 @@ export const saveToLocalStorage = (key: string, value: any): void => {
  * @param key - The key to retrieve the value from.
  * @returns The parsed value from local storage, or null if not found.
  */
-export const getFromLocalStorage = <T = any>(key: string): T | null => {
+export const getFromLocalStorage = <T = unknown>(key: string): T | null => {
   try {
     const item = localStorage.getItem(key);
     return item ? (JSON.parse(item) as T) : null;
@@ -91,11 +91,11 @@ export const existsInLocalStorage = (key: string): boolean => {
  * @param key - The key of the item to update.
  * @param newValue - The new value to merge with the existing value.
  */
-export const updateLocalStorage = (key: string, newValue: any): void => {
+export const updateLocalStorage = (key: string, newValue: unknown): void => {
   try {
-    const existingValue = getFromLocalStorage<any>(key);
+    const existingValue = getFromLocalStorage<unknown>(key);
     const updatedValue = existingValue
-      ? { ...existingValue, ...newValue }
+      ? { ...existingValue, ...(typeof newValue === 'object' ? newValue : {}) }
       : newValue;
     saveToLocalStorage(key, updatedValue);
   } catch (error) {

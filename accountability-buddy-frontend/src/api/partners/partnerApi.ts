@@ -1,34 +1,45 @@
 import axios from 'axios';
-import { getAuthHeader } from 'src/services/authService'; // Helper to get the Authorization header
+import { getAuthHeader } from 'src/services/authService';
 
 const API_URL =
-  process.env.REACT_APP_API_URL || 'https://api.example.com/users';
+  process.env.REACT_APP_API_URL || 'https://api.example.com/partners';
 
-// Define the structure of a Partner
 interface Partner {
   id: string;
   name: string;
   email: string;
-  // Add more fields as needed based on your API
+  // Add other relevant fields as necessary
 }
 
-// Define the structure of a Milestone
 interface Milestone {
   title: string;
   description: string;
   dateCompleted: string;
-  // Add more fields as needed
+  // Add other relevant fields as necessary
 }
 
-// Helper function to handle API errors
-const handleError = (error: any): never => {
-  if (error.response && error.response.status === 401) {
-    throw new Error('Invalid credentials. Please try again.');
-  }
-  throw new Error(
-    error.response?.data?.message ||
-      'An error occurred. Please try again later.'
+interface ApiErrorResponse {
+  message: string;
+}
+
+// Type guard for Axios errors
+const isAxiosError = (
+  error: unknown
+): error is { response: { data: ApiErrorResponse } } => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as { response?: unknown }).response === 'object'
   );
+};
+
+// Helper to handle errors
+const handleError = (error: unknown): never => {
+  if (isAxiosError(error) && error.response?.data?.message) {
+    throw new Error(error.response.data.message);
+  }
+  throw new Error('An unknown error occurred.');
 };
 
 // Notify a partner about a milestone completion
@@ -36,83 +47,73 @@ export const notifyPartner = async (
   partnerId: string,
   goalId: string,
   milestone: Milestone
-): Promise<{ message: string } | undefined> => {
+): Promise<{ message: string }> => {
   try {
     const response = await axios.post<{ message: string }>(
       `${API_URL}/notify`,
-      {
-        partnerId,
-        goalId,
-        milestone,
-      },
-      {
-        headers: getAuthHeader(),
-      }
+      { partnerId, goalId, milestone },
+      { headers: getAuthHeader() }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Get a list of all partners
-export const fetchPartners = async (): Promise<Partner[] | undefined> => {
+export const fetchPartners = async (): Promise<Partner[]> => {
   try {
     const response = await axios.get<Partner[]>(`${API_URL}`, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Fetch specific partner information by ID
-export const fetchPartnerById = async (
-  partnerId: string
-): Promise<Partner | undefined> => {
+export const fetchPartnerById = async (partnerId: string): Promise<Partner> => {
   try {
     const response = await axios.get<Partner>(`${API_URL}/${partnerId}`, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Remove a partner from the user's list
 export const removePartner = async (
   partnerId: string
-): Promise<{ message: string } | undefined> => {
+): Promise<{ message: string }> => {
   try {
     const response = await axios.delete<{ message: string }>(
       `${API_URL}/${partnerId}`,
-      {
-        headers: getAuthHeader(),
-      }
+      { headers: getAuthHeader() }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
-// Add a new partner (for future partner management features)
+// Add a new partner
 export const addPartner = async (
   partnerData: Partial<Partner>
-): Promise<Partner | undefined> => {
+): Promise<Partner> => {
   try {
     const response = await axios.post<Partner>(`${API_URL}`, partnerData, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };

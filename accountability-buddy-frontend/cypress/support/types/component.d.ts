@@ -2,7 +2,7 @@
 /// <reference types="cypress/react18" />
 
 declare namespace Cypress {
-  interface Chainable<Subject = any> {
+  interface Chainable<Subject = unknown> {
     /**
      * Mount a React component for testing.
      * @param component - The React component to mount.
@@ -44,7 +44,7 @@ declare namespace Cypress {
     mockComponentProp(
       component: React.ReactNode,
       prop: string,
-      value: any
+      value: unknown
     ): Chainable<Subject>;
 
     /**
@@ -77,7 +77,7 @@ declare namespace Cypress {
     /**
      * Props to pass to the component.
      */
-    props?: Record<string, any>;
+    props?: Record<string, unknown>;
 
     /**
      * Whether to wrap the component with a router for testing navigation.

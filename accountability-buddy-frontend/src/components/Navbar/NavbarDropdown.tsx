@@ -13,13 +13,13 @@ const NavbarDropdown: React.FC<NavbarDropdownProps> = ({ title, items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
+  const toggleDropdown = (): void => setIsOpen((prev) => !prev);
 
-  const closeDropdown = () => setIsOpen(false);
+  const closeDropdown = (): void => setIsOpen(false);
 
   // Close dropdown when clicking outside of it
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent): void => {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)

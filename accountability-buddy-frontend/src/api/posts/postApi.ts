@@ -14,7 +14,6 @@ interface Post {
   updatedAt: string;
   likes: number;
   comments: Comment[];
-  // Add more fields as needed based on your API
 }
 
 // Define the structure of a Comment
@@ -23,60 +22,69 @@ interface Comment {
   content: string;
   author: string;
   createdAt: string;
-  // Add more fields as needed
 }
 
-// Helper function to handle API errors
-const handleError = (error: any): never => {
-  if (error.response && error.response.status === 401) {
-    throw new Error('Invalid credentials. Please try again.');
-  }
-  throw new Error(
-    error.response?.data?.message ||
-      'An error occurred. Please try again later.'
+// Define the structure of an API error response
+interface ApiErrorResponse {
+  message: string;
+}
+
+// Type guard for Axios errors
+const isAxiosError = (
+  error: unknown
+): error is { response: { data: ApiErrorResponse } } => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as { response?: unknown }).response === 'object'
   );
 };
 
+// Helper function to handle API errors
+const handleError = (error: unknown): never => {
+  if (isAxiosError(error) && error.response?.data?.message) {
+    throw new Error(error.response.data.message);
+  }
+  throw new Error('An unknown error occurred.');
+};
+
 // Fetch all posts (e.g., for the user’s feed)
-export const fetchPosts = async (): Promise<Post[] | undefined> => {
+export const fetchPosts = async (): Promise<Post[]> => {
   try {
     const response = await axios.get<Post[]>(`${API_URL}`, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined;
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Fetch a specific post by ID
-export const fetchPostById = async (
-  postId: string
-): Promise<Post | undefined> => {
+export const fetchPostById = async (postId: string): Promise<Post> => {
   try {
     const response = await axios.get<Post>(`${API_URL}/${postId}`, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined;
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Create a new post
-export const createPost = async (
-  postData: Partial<Post>
-): Promise<Post | undefined> => {
+export const createPost = async (postData: Partial<Post>): Promise<Post> => {
   try {
     const response = await axios.post<Post>(`${API_URL}`, postData, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined;
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
@@ -84,22 +92,22 @@ export const createPost = async (
 export const updatePost = async (
   postId: string,
   postData: Partial<Post>
-): Promise<Post | undefined> => {
+): Promise<Post> => {
   try {
     const response = await axios.put<Post>(`${API_URL}/${postId}`, postData, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined;
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Delete a post
 export const deletePost = async (
   postId: string
-): Promise<{ message: string } | undefined> => {
+): Promise<{ message: string }> => {
   try {
     const response = await axios.delete<{ message: string }>(
       `${API_URL}/${postId}`,
@@ -108,14 +116,14 @@ export const deletePost = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined;
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Like a post
-export const likePost = async (postId: string): Promise<Post | undefined> => {
+export const likePost = async (postId: string): Promise<Post> => {
   try {
     const response = await axios.post<Post>(
       `${API_URL}/${postId}/like`,
@@ -125,9 +133,9 @@ export const likePost = async (postId: string): Promise<Post | undefined> => {
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined;
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
@@ -135,7 +143,7 @@ export const likePost = async (postId: string): Promise<Post | undefined> => {
 export const commentOnPost = async (
   postId: string,
   commentData: { content: string }
-): Promise<Comment | undefined> => {
+): Promise<Comment> => {
   try {
     const response = await axios.post<Comment>(
       `${API_URL}/${postId}/comment`,
@@ -145,8 +153,8 @@ export const commentOnPost = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined;
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };

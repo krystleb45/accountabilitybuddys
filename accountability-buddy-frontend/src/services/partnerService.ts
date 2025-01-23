@@ -11,7 +11,7 @@ export interface Partner {
   name: string;
   email: string;
   joinedAt?: string; // Optional date when the partner joined
-  [key: string]: any; // Additional partner fields
+  [key: string]: unknown; // Additional partner fields
 }
 
 export interface Milestone {
@@ -19,7 +19,7 @@ export interface Milestone {
   description: string;
   date: string; // ISO date string
   status?: string; // Optional status (e.g., "completed", "pending")
-  [key: string]: any; // Additional milestone fields
+  [key: string]: unknown; // Additional milestone fields
 }
 
 // Create an axios instance for partners API
@@ -54,7 +54,7 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
   while (attempt < retries) {
     try {
       return await fn();
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (attempt < retries - 1 && error.response?.status >= 500) {
         const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
         await new Promise((resolve) => setTimeout(resolve, delay));
@@ -86,7 +86,7 @@ export const notifyPartner = async (
       apiClient.post('/notify', { partnerId, goal, milestone })
     );
     console.log(`Partner ${partnerId} notified about milestone.`);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error notifying partner:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to notify partner.'
@@ -101,7 +101,7 @@ export const fetchPartners = async (): Promise<Partner[]> => {
       apiClient.get('/list')
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching partners:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to fetch partners.'
@@ -118,7 +118,7 @@ export const sendPartnerRequest = async (partnerId: string): Promise<void> => {
   try {
     await axiosRetry(() => apiClient.post('/request', { partnerId }));
     console.log(`Partner request sent to ${partnerId}.`);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error sending partner request:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to send partner request.'
@@ -137,7 +137,7 @@ export const acceptPartnerRequest = async (
   try {
     await axiosRetry(() => apiClient.post(`/accept/${requestId}`));
     console.log(`Partner request ${requestId} accepted.`);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error accepting partner request:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to accept partner request.'
@@ -156,7 +156,7 @@ export const declinePartnerRequest = async (
   try {
     await axiosRetry(() => apiClient.post(`/decline/${requestId}`));
     console.log(`Partner request ${requestId} declined.`);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error declining partner request:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to decline partner request.'

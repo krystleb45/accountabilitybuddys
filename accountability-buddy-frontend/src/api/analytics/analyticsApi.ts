@@ -7,13 +7,32 @@ const API_URL = 'https://accountabilitybuddys.com/api/analytics';
 interface CustomAnalyticsFilters {
   startDate: string;
   endDate: string;
-  [key: string]: any; // Additional filter properties can be added as needed
+  [key: string]: unknown; // Additional filter properties can be added as needed
 }
 
 // Interface for goal and milestone analytics response
 interface AnalyticsResponse {
-  data: any; // Replace 'any' with the actual shape of your analytics data if known
+  data: unknown; // Replace 'unknown' with the actual shape of your analytics data if known
 }
+
+// Utility function to check if the error is an Axios error
+// Utility function to check if the error is an Axios error
+const isAxiosError = (
+  error: unknown
+): error is {
+  response: {
+    status: number;
+    data: { message: string };
+  };
+} => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as { response?: unknown }).response === 'object' &&
+    'data' in (error as { response: { data?: unknown } }).response
+  );
+};
 
 // Utility function to handle retries with exponential backoff
 const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
@@ -21,8 +40,12 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
   while (attempt < retries) {
     try {
       return await fn();
-    } catch (error: any) {
-      if (attempt < retries - 1 && error.response?.status >= 500) {
+    } catch (error: unknown) {
+      if (
+        attempt < retries - 1 &&
+        isAxiosError(error) &&
+        error.response?.status >= 500
+      ) {
         const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
         await new Promise((resolve) => setTimeout(resolve, delay)); // Wait before retrying
         attempt++;
@@ -43,12 +66,19 @@ export const getGoalAnalytics = async (): Promise<AnalyticsResponse> => {
       })
     );
     return response.data;
-  } catch (error: any) {
-    console.error('Error fetching goal analytics:', error);
-    throw new Error(
-      error.response?.data?.message ||
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      console.error(
+        'Error fetching goal analytics:',
+        error.response.data.message
+      );
+      throw new Error(error.response.data.message);
+    } else {
+      console.error('Unknown error fetching goal analytics:', error);
+      throw new Error(
         'Failed to fetch goal analytics. Please try again later.'
-    );
+      );
+    }
   }
 };
 
@@ -61,12 +91,19 @@ export const getMilestoneAnalytics = async (): Promise<AnalyticsResponse> => {
       })
     );
     return response.data;
-  } catch (error: any) {
-    console.error('Error fetching milestone analytics:', error);
-    throw new Error(
-      error.response?.data?.message ||
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      console.error(
+        'Error fetching milestone analytics:',
+        error.response.data.message
+      );
+      throw new Error(error.response.data.message);
+    } else {
+      console.error('Unknown error fetching milestone analytics:', error);
+      throw new Error(
         'Failed to fetch milestone analytics. Please try again later.'
-    );
+      );
+    }
   }
 };
 
@@ -81,11 +118,18 @@ export const getCustomAnalytics = async (
       })
     );
     return response.data;
-  } catch (error: any) {
-    console.error('Error fetching custom analytics:', error);
-    throw new Error(
-      error.response?.data?.message ||
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      console.error(
+        'Error fetching custom analytics:',
+        error.response.data.message
+      );
+      throw new Error(error.response.data.message);
+    } else {
+      console.error('Unknown error fetching custom analytics:', error);
+      throw new Error(
         'Failed to fetch custom analytics. Please try again later.'
-    );
+      );
+    }
   }
 };

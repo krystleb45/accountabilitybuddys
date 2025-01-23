@@ -24,18 +24,22 @@ const Register: React.FC = () => {
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>(''); // For additional feedback
 
   // Handle input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   // Handle form submission
-  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccessMessage('');
 
     const { name, email, password, confirmPassword } = formData;
 
@@ -66,13 +70,19 @@ const Register: React.FC = () => {
 
     try {
       await axios.post(`${API_URL}/auth/register`, { name, email, password });
-      router.push('/login'); // Redirect to the login page on successful registration
-    } catch (err: any) {
-      console.error('Registration error:', err);
-      setError(
-        err.response?.data?.message ||
-          'Registration failed. Please try again later.'
-      );
+      setSuccessMessage('Registration successful! Redirecting to login...');
+      setTimeout(() => {
+        router.push('/login'); // Redirect to the login page on successful registration
+      }, 3000); // Wait for 3 seconds before redirecting
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.message ||
+            'Registration failed. Please try again later.'
+        );
+      } else {
+        setError('An unexpected error occurred. Please try again later.');
+      }
     } finally {
       setLoading(false);
     }
@@ -82,6 +92,9 @@ const Register: React.FC = () => {
     <div className={styles['form-container']}>
       <h2 className={styles['form-title']}>Register</h2>
       {error && <p className={styles['error-message']}>{error}</p>}
+      {successMessage && (
+        <p className={styles['success-message']}>{successMessage}</p>
+      )}
       <form onSubmit={handleRegister} className={styles['form']}>
         <label htmlFor="name" className={styles['label']}>
           Name

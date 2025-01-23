@@ -7,7 +7,7 @@ import { expect } from '@jest/globals';
 describe('NewsletterSignup Component', () => {
   const mockOnSubmit = jest.fn();
 
-  const renderComponent = () =>
+  const renderComponent: () => void = () =>
     render(<NewsletterSignup onSubmit={mockOnSubmit} />);
 
   test('renders the newsletter signup form', () => {

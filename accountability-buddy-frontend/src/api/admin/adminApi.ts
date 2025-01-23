@@ -7,7 +7,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
  * Fetch all users (Admin only).
  * @returns A list of users.
  */
-export const getAllUsers = async () => {
+export const getAllUsers = async (): Promise<unknown> => {
   try {
     const response = await axios.get(`${API_URL}/admin/users`, {
       headers: getAuthHeaders(),
@@ -24,7 +24,10 @@ export const getAllUsers = async () => {
  * @param role - The new role for the user.
  * @returns The updated user.
  */
-export const updateUserRole = async (userId: string, role: string) => {
+export const updateUserRole = async (
+  userId: string,
+  role: string
+): Promise<unknown> => {
   try {
     const response = await axios.put(
       `${API_URL}/admin/users/${userId}/role`,
@@ -42,7 +45,7 @@ export const updateUserRole = async (userId: string, role: string) => {
  * @param userId - The ID of the user to delete.
  * @returns A success message.
  */
-export const deleteUser = async (userId: string) => {
+export const deleteUser = async (userId: string): Promise<unknown> => {
   try {
     const response = await axios.delete(`${API_URL}/admin/users/${userId}`, {
       headers: getAuthHeaders(),
@@ -57,7 +60,7 @@ export const deleteUser = async (userId: string) => {
  * Fetch application statistics (Admin only).
  * @returns Statistics about the application.
  */
-export const getApplicationStats = async () => {
+export const getApplicationStats = async (): Promise<unknown> => {
   try {
     const response = await axios.get(`${API_URL}/admin/stats`, {
       headers: getAuthHeaders(),
@@ -71,7 +74,7 @@ export const getApplicationStats = async () => {
 /**
  * Helper: Get authentication headers.
  */
-const getAuthHeaders = () => {
+const getAuthHeaders = (): { Authorization: string } => {
   const token = localStorage.getItem('authToken');
   if (!token) throw new Error('Unauthorized');
   return {
@@ -80,9 +83,32 @@ const getAuthHeaders = () => {
 };
 
 /**
+ * Helper: Check if an error is an Axios error.
+ */
+const isAxiosError = (
+  error: unknown
+): error is { response: { data: { message: string } } } => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as { response?: unknown }).response === 'object' &&
+    'data' in (error as { response: { data?: unknown } }).response
+  );
+};
+
+/**
  * Helper: Handle API errors.
  */
-const handleApiError = (error: any) => {
-  console.error('API Error:', error.response || error.message);
-  throw error.response?.data || { message: 'An unknown error occurred' };
+const handleApiError = (error: unknown): void => {
+  if (isAxiosError(error)) {
+    console.error('API Error:', error.response.data.message);
+    throw new Error(error.response.data.message);
+  } else if (error instanceof Error) {
+    console.error('Error:', error.message);
+    throw new Error(error.message);
+  } else {
+    console.error('Unknown error:', error);
+    throw new Error('An unknown error occurred');
+  }
 };

@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
 
   // Fetch user info if a token is present
   useEffect(() => {
-    const fetchUserInfo = async () => {
+    const fetchUserInfo = async (): Promise<void> => {
       const token = getToken(); // Use named import for getToken
       if (token) {
         try {
@@ -35,7 +35,7 @@ const Navbar: React.FC = () => {
     fetchUserInfo();
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout: () => void = () => {
     clearToken(); // Use clearToken to remove the token from storage
     setUser(null);
     navigate('/login');

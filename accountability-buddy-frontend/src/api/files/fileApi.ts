@@ -7,7 +7,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
  * Upload a file to the server.
  * @param file - The file to upload.
  * @param onUploadProgress - Optional callback for tracking upload progress.
- * @returns The server's response data.
+ * @returns The server's response data or throws an error.
  */
 export const uploadFile = async (
   file: File,
@@ -22,12 +22,13 @@ export const uploadFile = async (
         'Content-Type': 'multipart/form-data',
         ...getAuthHeaders(),
       },
-      onUploadProgress, // Now using the correct AxiosProgressEvent type
+      onUploadProgress,
     });
 
     return response.data;
-  } catch (error) {
-    return handleApiError(error);
+  } catch (error: unknown) {
+    // Throw the error to handle it explicitly where the function is used
+    throw handleApiError(error);
   }
 };
 
@@ -45,13 +46,29 @@ const getAuthHeaders = (): { Authorization: string } => {
 
 /**
  * Helper: Handle API errors.
- * @param error - The error object from Axios.
- * @returns A consistent error response.
+ * @param error - The error object from Axios or unknown.
+ * @returns A consistent error response object or throws an error.
  */
-const handleApiError = (error: any): { success: boolean; message: string } => {
-  console.error('API Error:', error.response || error.message);
-  return {
-    success: false,
-    message: error.response?.data?.message || 'An unknown error occurred',
-  };
+const handleApiError = (
+  error: unknown
+): { success: boolean; message: string } => {
+  if (axios.isAxiosError(error) && error.response?.data?.message) {
+    console.error('API Error:', error.response.data.message);
+    return {
+      success: false,
+      message: error.response.data.message,
+    };
+  } else if (error instanceof Error) {
+    console.error('API Error:', error.message);
+    return {
+      success: false,
+      message: error.message,
+    };
+  } else {
+    console.error('Unknown API Error:', error);
+    return {
+      success: false,
+      message: 'An unknown error occurred',
+    };
+  }
 };

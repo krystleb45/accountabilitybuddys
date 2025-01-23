@@ -17,7 +17,7 @@ const BillingHistory: React.FC = () => {
         const history = await fetchBillingHistory(); // Fetch data from backend
         setBillingHistory(history);
         setError(null);
-      } catch (err: any) {
+      } catch (err: unknown) {
         setError('Failed to fetch billing history. Please try again.');
       } finally {
         setLoading(false);

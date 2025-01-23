@@ -21,7 +21,9 @@ const SubscriptionsPage: React.FC = () => {
     <div className="min-h-screen p-6 bg-gradient-to-br from-yellow-50 to-orange-100">
       <header className="text-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Subscriptions</h1>
-        <p className="text-gray-600">Choose the plan that's right for you.</p>
+        <p className="text-gray-600">
+          Choose the plan that&apos;s right for you.
+        </p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">

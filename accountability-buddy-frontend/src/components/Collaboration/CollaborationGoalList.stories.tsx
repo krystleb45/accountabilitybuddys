@@ -1,10 +1,7 @@
 import React from 'react';
 import { Meta, StoryFn } from '@storybook/react';
 import CollaborationGoalList from './CollaborationGoalList';
-import {
-  CollaborationGoalListProps,
-  CollaborationGoal,
-} from './Collaboration.types';
+import { CollaborationGoal } from './Collaboration.types';
 
 export default {
   title: 'Components/CollaborationGoalList',

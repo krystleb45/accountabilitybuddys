@@ -9,7 +9,7 @@ const WelcomePage: React.FC = () => {
       <div className="bg-white p-10 rounded-lg shadow-lg text-center max-w-lg w-full">
         <h1 className="text-4xl font-bold text-gray-800 mb-6">Welcome!</h1>
         <p className="text-lg text-gray-600 mb-8">
-          We're excited to have you on board...
+          We&apos;re excited to have you on board...
         </p>
         <div className="flex flex-col gap-4">
           <Link href="/register">

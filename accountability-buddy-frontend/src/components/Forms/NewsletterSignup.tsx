@@ -4,21 +4,23 @@ import styles from './Forms.module.css'; // Import CSS module for styling
 import { validateEmail } from './FormsUtils'; // Use the reusable email validation utility
 
 interface NewsletterSignupProps {
-  onSubmit?: (data: { email: string; consent: boolean }) => void; // Optional callback for testing
+  onSubmit?: (data: { email: string; consent: boolean }) => void; // Optional callback for testing or external handling
 }
 
 const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
-  const [email, setEmail] = useState<string>('');
-  const [consent, setConsent] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [email, setEmail] = useState<string>(''); // State for email input
+  const [consent, setConsent] = useState<boolean>(false); // State for consent checkbox
+  const [loading, setLoading] = useState<boolean>(false); // Loading state
+  const [successMessage, setSuccessMessage] = useState<string>(''); // Success message
+  const [errorMessage, setErrorMessage] = useState<string>(''); // Error message
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
-    setLoading(true);
-    setSuccessMessage('');
-    setErrorMessage('');
+    setLoading(true); // Start loading
+    setSuccessMessage(''); // Clear previous success message
+    setErrorMessage(''); // Clear previous error message
 
     // Validate email
     if (!validateEmail(email)) {
@@ -34,7 +36,7 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
       return;
     }
 
-    // Mock onSubmit callback for testing
+    // If a custom onSubmit callback is provided, use it (e.g., for testing)
     if (onSubmit) {
       onSubmit({ email, consent });
       setEmail('');
@@ -43,27 +45,34 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
       return;
     }
 
-    // Perform API request
+    // Perform API request to subscribe to the newsletter
     try {
       const response = await axios.post(
-        'https://accountabilitybuddys.com/api/newsletter/subscribe',
+        `${process.env.NEXT_PUBLIC_API_URL || 'https://accountabilitybuddys.com/api'}/newsletter/subscribe`,
         { email }
       );
+
       if (response.status === 200) {
         setSuccessMessage('Thank you for subscribing to our newsletter!');
-        setEmail('');
-        setConsent(false);
+        setEmail(''); // Reset email input
+        setConsent(false); // Reset consent checkbox
       } else {
         throw new Error('Subscription failed.');
       }
-    } catch (err: any) {
-      console.error('Failed to subscribe:', err);
-      setErrorMessage(
-        err.response?.data?.message ||
-          'Failed to subscribe. Please try again later.'
-      );
+    } catch (err: unknown) {
+      // Handle errors gracefully
+      if (axios.isAxiosError(err)) {
+        setErrorMessage(
+          err.response?.data?.message ||
+            'Failed to subscribe. Please try again later.'
+        );
+      } else {
+        setErrorMessage(
+          'An unexpected error occurred. Please try again later.'
+        );
+      }
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading
     }
   };
 

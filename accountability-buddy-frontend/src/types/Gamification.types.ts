@@ -73,7 +73,7 @@ export interface LeaderboardEntry {
   avatarUrl?: string;
 
   /** Additional metadata about the user (optional). */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**

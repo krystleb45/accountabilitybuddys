@@ -35,7 +35,7 @@ export const useStripe = () => {
         '/api/stripe/subscription-details'
       );
       setSubscription(response.data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Failed to fetch subscription details. Please try again.');
       console.error('Error fetching subscription details:', err);
     } finally {
@@ -53,7 +53,7 @@ export const useStripe = () => {
         billingHistory: BillingHistoryItem[];
       }>('/api/stripe/billing-history');
       setBillingHistory(response.data.billingHistory);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Failed to fetch billing history. Please try again.');
       console.error('Error fetching billing history:', err);
     } finally {
@@ -70,7 +70,7 @@ export const useStripe = () => {
       try {
         await axios.post('/api/stripe/update-subscription', payload);
         await fetchSubscriptionDetails(); // Refresh subscription details after update
-      } catch (err: any) {
+      } catch (err: unknown) {
         setError('Failed to update subscription. Please try again.');
         console.error('Error updating subscription:', err);
       } finally {
@@ -88,7 +88,7 @@ export const useStripe = () => {
     try {
       await axios.post('/api/stripe/cancel-subscription');
       setSubscription(null); // Clear subscription details after cancellation
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Failed to cancel subscription. Please try again.');
       console.error('Error canceling subscription:', err);
     } finally {

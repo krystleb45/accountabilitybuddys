@@ -4,27 +4,32 @@ import { useParams, useNavigate } from 'react-router-dom';
 import styles from './Forms.module.css'; // Import CSS module for styling
 
 const ResetPassword: React.FC = () => {
-  const { token } = useParams<{ token: string }>();
-  const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [message, setMessage] = useState<string>('');
-  const [error, setError] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const { token } = useParams<{ token: string }>(); // Retrieve reset token from URL
+  const [password, setPassword] = useState<string>(''); // State for new password
+  const [confirmPassword, setConfirmPassword] = useState<string>(''); // State for confirming password
+  const [message, setMessage] = useState<string>(''); // Success message
+  const [error, setError] = useState<string>(''); // Error message
+  const [loading, setLoading] = useState<boolean>(false); // Loading indicator
+  const navigate = useNavigate(); // Navigation hook
 
+  // Validate the password for minimum requirements
   const validatePassword = (password: string): boolean => {
-    const minLength = 8; // Password must be at least 8 characters
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
+    const minLength = 8; // At least 8 characters
+    const hasUpperCase = /[A-Z]/.test(password); // At least one uppercase letter
+    const hasNumber = /[0-9]/.test(password); // At least one number
     return password.length >= minLength && hasUpperCase && hasNumber;
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  // Handle form submission
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');
-    setError('');
+    setMessage(''); // Clear any previous success messages
+    setError(''); // Clear any previous error messages
 
+    // Validate password requirements
     if (!validatePassword(password)) {
       setError(
         'Password must be at least 8 characters long, include a number, and an uppercase letter.'
@@ -33,6 +38,7 @@ const ResetPassword: React.FC = () => {
       return;
     }
 
+    // Check if passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       setLoading(false);
@@ -40,25 +46,36 @@ const ResetPassword: React.FC = () => {
     }
 
     try {
+      // Send reset password request to the API
       await axios.post(`/api/auth/reset-password/${token}`, { password });
       setMessage('Password reset successfully! Redirecting to login...');
-      setTimeout(() => navigate('/login'), 3000);
-    } catch (err: any) {
+      setTimeout(() => navigate('/login'), 3000); // Redirect to login after 3 seconds
+    } catch (err: unknown) {
       console.error('Error resetting password:', err);
       setError(
-        err.response?.data?.message ||
-          'Failed to reset password. Please try again.'
+        axios.isAxiosError(err)
+          ? err.response?.data?.message ||
+              'Failed to reset password. Please try again.'
+          : 'An unexpected error occurred. Please try again.'
       );
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop the loading indicator
     }
   };
 
   return (
     <div className={styles['form-container']}>
       <h2 className={styles['form-title']}>Reset Password</h2>
-      {message && <p className={styles['success-message']}>{message}</p>}
-      {error && <p className={styles['error-message']}>{error}</p>}
+      {message && (
+        <p className={styles['success-message']} role="status">
+          {message}
+        </p>
+      )}
+      {error && (
+        <p className={styles['error-message']} role="alert">
+          {error}
+        </p>
+      )}
       <form onSubmit={handleSubmit} className={styles['form']}>
         <label htmlFor="password" className={styles['label']}>
           New Password
@@ -72,6 +89,7 @@ const ResetPassword: React.FC = () => {
           className={styles['input']}
           aria-label="New Password"
           required
+          minLength={8}
         />
         <label htmlFor="confirmPassword" className={styles['label']}>
           Confirm New Password
@@ -90,6 +108,7 @@ const ResetPassword: React.FC = () => {
           type="submit"
           disabled={loading}
           className={styles['submit-button']}
+          aria-busy={loading}
         >
           {loading ? 'Resetting...' : 'Reset Password'}
         </button>

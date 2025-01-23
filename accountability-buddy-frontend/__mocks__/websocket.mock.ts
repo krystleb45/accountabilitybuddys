@@ -3,7 +3,7 @@
  */
 
 type WebSocketEvent = {
-  data?: any;
+  data?: unknown;
 };
 
 class MockWebSocket {
@@ -28,7 +28,7 @@ class MockWebSocket {
    * Simulates sending data through the WebSocket.
    * @param data - The data to send.
    */
-  send(data: any): void {
+  send(data: unknown): void {
     if (this.onmessage) {
       this.onmessage({ data });
     }
@@ -55,6 +55,6 @@ class MockWebSocket {
 }
 
 // Replace the global WebSocket with the mock
-(global as any).WebSocket = MockWebSocket;
+(global as unknown as { WebSocket: unknown }).WebSocket = MockWebSocket;
 
 export default MockWebSocket;

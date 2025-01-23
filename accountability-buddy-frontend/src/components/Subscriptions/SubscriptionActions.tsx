@@ -14,7 +14,7 @@ const SubscriptionActions: React.FC = () => {
     try {
       await updateSubscription({ planId });
       alert('Subscription upgraded successfully!');
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Failed to upgrade subscription. Please try again.');
       console.error('Upgrade error:', err);
     } finally {
@@ -33,7 +33,7 @@ const SubscriptionActions: React.FC = () => {
     try {
       await cancelSubscription();
       alert('Subscription canceled successfully.');
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Failed to cancel subscription. Please try again.');
       console.error('Cancel error:', err);
     } finally {

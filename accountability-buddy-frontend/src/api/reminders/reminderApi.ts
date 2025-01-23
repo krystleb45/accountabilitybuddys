@@ -11,45 +11,58 @@ interface Reminder {
   description: string;
   date: string;
   isEnabled: boolean;
-  // Add more fields as needed based on your API
 }
 
-// Helper function to handle API errors
-const handleError = (error: any): never => {
-  if (error.response && error.response.status === 401) {
-    throw new Error('Invalid credentials. Please try again.');
-  }
-  throw new Error(
-    error.response?.data?.message ||
-      'An error occurred. Please try again later.'
+// Define the structure of an API error response
+interface ApiErrorResponse {
+  message: string;
+}
+
+// Type guard for Axios errors
+const isAxiosError = (
+  error: unknown
+): error is { response: { data: ApiErrorResponse } } => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as { response?: unknown }).response === 'object'
   );
 };
 
+// Helper function to handle API errors
+const handleError = (error: unknown): never => {
+  if (isAxiosError(error) && error.response?.data?.message) {
+    throw new Error(error.response.data.message);
+  }
+  throw new Error('An unknown error occurred.');
+};
+
 // Fetch all reminders for the user
-export const fetchReminders = async (): Promise<Reminder[] | undefined> => {
+export const fetchReminders = async (): Promise<Reminder[]> => {
   try {
     const response = await axios.get<Reminder[]>(`${API_URL}`, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Create a new reminder
 export const createReminder = async (
   reminderData: Partial<Reminder>
-): Promise<Reminder | undefined> => {
+): Promise<Reminder> => {
   try {
     const response = await axios.post<Reminder>(`${API_URL}`, reminderData, {
       headers: getAuthHeader(),
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
@@ -57,7 +70,7 @@ export const createReminder = async (
 export const updateReminder = async (
   reminderId: string,
   reminderData: Partial<Reminder>
-): Promise<Reminder | undefined> => {
+): Promise<Reminder> => {
   try {
     const response = await axios.put<Reminder>(
       `${API_URL}/${reminderId}`,
@@ -67,16 +80,16 @@ export const updateReminder = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Disable a reminder
 export const disableReminder = async (
   reminderId: string
-): Promise<Reminder | undefined> => {
+): Promise<Reminder> => {
   try {
     const response = await axios.put<Reminder>(
       `${API_URL}/${reminderId}/disable`,
@@ -86,16 +99,16 @@ export const disableReminder = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };
 
 // Delete a reminder
 export const deleteReminder = async (
   reminderId: string
-): Promise<{ message: string } | undefined> => {
+): Promise<{ message: string }> => {
   try {
     const response = await axios.delete<{ message: string }>(
       `${API_URL}/${reminderId}`,
@@ -104,8 +117,8 @@ export const deleteReminder = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleError(error);
-    return undefined; // Explicitly return undefined to satisfy TypeScript
+    throw new Error('Unreachable: This line ensures TypeScript compliance');
   }
 };

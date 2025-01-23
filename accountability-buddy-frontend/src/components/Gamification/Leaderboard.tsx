@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import GamificationService, { LeaderboardEntry } from '../../services/gamificationService'; // Use default export for fetchLeaderboard
+import GamificationService, {
+  LeaderboardEntry,
+} from '../../services/gamificationService'; // Use default export for fetchLeaderboard
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'; // Import a reusable loading spinner component
 import './Leaderboard.css';
 
@@ -14,14 +16,13 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ userId }) => {
   const [error, setError] = useState<string>(''); // State for error message
 
   // Fetch leaderboard data
-  const loadLeaderboard = async () => {
+  const loadLeaderboard = async (): Promise<void> => {
     setLoading(true);
     setError('');
 
     try {
-      const data: LeaderboardEntry[] | undefined = await GamificationService.fetchLeaderboard(
-        userId
-      ); // Fetch leaderboard data
+      const data: LeaderboardEntry[] | undefined =
+        await GamificationService.fetchLeaderboard(userId); // Fetch leaderboard data
       setLeaderboard(data || []); // Ensure fallback to an empty array if data is undefined
     } catch (err) {
       console.error('Error fetching leaderboard:', err);
@@ -36,7 +37,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ userId }) => {
   }, [userId]);
 
   // Handle retry for loading data
-  const handleRetry = () => {
+  const handleRetry = (): void => {
     loadLeaderboard();
   };
 

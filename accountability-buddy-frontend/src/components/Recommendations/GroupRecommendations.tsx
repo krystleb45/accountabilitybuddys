@@ -9,7 +9,8 @@ import {
 import './Recommendations.module.css';
 
 // Define the interface for a group recommendation
-interface GroupRecommendation {
+// accountability-buddy-frontend/src/components/Recommendations/GroupRecommendations.tsx
+export interface GroupRecommendation {
   id: string;
   name: string;
   description: string;

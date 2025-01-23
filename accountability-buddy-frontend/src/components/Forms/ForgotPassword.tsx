@@ -14,7 +14,9 @@ const ForgotPassword: React.FC = () => {
     return re.test(String(email).toLowerCase());
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     setLoading(true); // Start loading
     setMessage(''); // Clear previous message
@@ -36,13 +38,17 @@ const ForgotPassword: React.FC = () => {
         res.data.message ||
           'Password reset instructions have been sent to your email.'
       );
-    } catch (err: any) {
-      setError(
-        err.response?.data?.error ||
-          'Failed to send password reset instructions. Please try again.'
-      );
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.error ||
+            'Failed to send password reset instructions. Please try again.'
+        );
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false); // Stop loading regardless of success or failure
     }
   };
 

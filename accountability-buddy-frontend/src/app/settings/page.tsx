@@ -8,7 +8,7 @@ const SettingsPage: React.FC = () => {
   const [theme, setTheme] = useState('light');
   const [notifications, setNotifications] = useState(true);
 
-  const handleSave = () => {
+  const handleSave = (): void => {
     console.log('Settings Saved:', { username, email, theme, notifications });
     alert('Settings saved successfully!');
   };

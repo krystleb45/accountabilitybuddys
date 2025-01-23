@@ -35,7 +35,7 @@ const GoalAnalytics: React.FC = () => {
         } else {
           throw new Error('Invalid analytics data received.');
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching analytics:', err);
         setError(
           err?.message || 'Failed to load analytics data. Please try again.'

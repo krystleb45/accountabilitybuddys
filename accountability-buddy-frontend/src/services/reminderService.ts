@@ -8,7 +8,7 @@ export interface Reminder {
   description: string;
   date: string; // ISO date string
   isCompleted?: boolean; // Optional field to track completion status
-  [key: string]: any; // Additional fields
+  [key: string]: unknown; // Additional fields
 }
 
 // Create an axios instance for reminders API
@@ -44,7 +44,7 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
   while (attempt < retries) {
     try {
       return await fn();
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (attempt < retries - 1 && error.response?.status >= 500) {
         const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
         await new Promise((resolve) => setTimeout(resolve, delay));
@@ -75,7 +75,7 @@ export const setReminder = async (
     );
     console.log('Reminder created successfully:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error setting reminder:', error);
     throw new Error(error.response?.data?.message || 'Failed to set reminder.');
   }
@@ -96,7 +96,7 @@ export const updateReminder = async (
     );
     console.log('Reminder updated successfully:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating reminder:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to update reminder.'
@@ -112,7 +112,7 @@ export const fetchReminders = async (): Promise<Reminder[]> => {
     );
     console.log('Reminders fetched successfully:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching reminders:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to fetch reminders.'
@@ -129,7 +129,7 @@ export const deleteReminder = async (reminderId: string): Promise<void> => {
   try {
     await axiosRetry(() => apiClient.delete(`/delete/${reminderId}`));
     console.log(`Reminder with ID ${reminderId} deleted successfully.`);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting reminder:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to delete reminder.'
@@ -146,7 +146,7 @@ export const completeReminder = async (reminderId: string): Promise<void> => {
   try {
     await axiosRetry(() => apiClient.post(`/complete/${reminderId}`));
     console.log(`Reminder with ID ${reminderId} marked as completed.`);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error completing reminder:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to complete reminder.'

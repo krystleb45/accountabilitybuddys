@@ -9,7 +9,7 @@ export interface SupportData {
   subject: string;
   message: string;
   priority?: string; // Optional priority field (e.g., "low", "medium", "high")
-  [key: string]: any; // Additional fields
+  [key: string]: unknown; // Additional fields
 }
 
 export interface SupportTicket {
@@ -18,7 +18,7 @@ export interface SupportTicket {
   createdAt: string;
   updatedAt?: string;
   priority?: string; // Optional priority field
-  [key: string]: any; // Additional fields
+  [key: string]: unknown; // Additional fields
 }
 
 export interface TicketDetails extends SupportTicket {
@@ -57,7 +57,7 @@ const axiosRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
   while (attempt < retries) {
     try {
       return await fn();
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (attempt < retries - 1 && error.response?.status >= 500) {
         const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
         await new Promise((resolve) => setTimeout(resolve, delay));
@@ -92,7 +92,7 @@ export const contactSupport = async (
   try {
     await axiosRetry(() => apiClient.post('/contact', supportData));
     console.log('Support contacted successfully.');
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error contacting support:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to contact support.'
@@ -108,7 +108,7 @@ export const getSupportTickets = async (): Promise<SupportTicket[]> => {
     );
     console.log('Support tickets fetched successfully:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching support tickets:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to fetch support tickets.'
@@ -130,7 +130,7 @@ export const getTicketDetails = async (
     );
     console.log(`Details fetched for ticket ID: ${ticketId}`, response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching ticket details:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to fetch ticket details.'
@@ -150,7 +150,7 @@ export const updateSupportTicket = async (
   try {
     await axiosRetry(() => apiClient.put(`/tickets/${ticketId}`, updateData));
     console.log(`Support ticket ${ticketId} updated successfully.`);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating support ticket:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to update support ticket.'

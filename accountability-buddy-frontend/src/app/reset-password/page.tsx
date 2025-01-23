@@ -1,22 +1,25 @@
 'use client'; // Mark as Client Component
 
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import Link from 'next/link'; // Import Link from Next.js
 
 const ResetPasswordPage: React.FC = () => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    password: string;
+    confirmPassword: string;
+  }>({
     password: '',
     confirmPassword: '',
   });
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
 
     // Basic validation
@@ -116,13 +119,8 @@ const ResetPasswordPage: React.FC = () => {
 
         {/* Back to Login Link */}
         <div className="mt-6 text-center">
-          <Link href="/login">
-            <a
-              className="text-blue-600 hover:underline"
-              aria-label="Back to Login"
-            >
-              Back to Login
-            </a>
+          <Link href="/login" aria-label="Back to Login">
+            <span className="text-blue-600 hover:underline">Back to Login</span>
           </Link>
         </div>
       </div>

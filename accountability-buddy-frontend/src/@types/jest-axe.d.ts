@@ -45,6 +45,7 @@ declare module 'jest-axe' {
      * @param results - The AxeResults object from an `axe` test.
      * @returns Jest matcher result indicating pass/fail.
      */
+
     function toHaveNoViolations(results: AxeResults): jest.CustomMatcherResult;
   }
 
