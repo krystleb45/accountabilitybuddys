@@ -3,7 +3,7 @@ import {
   fetchSubscriptionDetails,
   updateSubscription,
   cancelSubscription,
-} from 'src/utils/stripeHelpers'; // Utility functions
+} from 'src/utils/subscriptionUtils'; // Utility functions
 import { SubscriptionDetails } from './types'; // Type definitions
 import styles from './Stripe.module.css'; // CSS module for styling
 
@@ -20,7 +20,7 @@ const ManageSubscription: React.FC = () => {
       try {
         setLoading(true);
         const details = await fetchSubscriptionDetails(); // Fetch current subscription details
-        setSubscription(details);
+        setSubscription(details as SubscriptionDetails); // Type casting
         setError(null);
       } catch (err: any) {
         setError('Failed to load subscription details. Please try again.');
@@ -37,7 +37,7 @@ const ManageSubscription: React.FC = () => {
       setUpdating(true);
       await updateSubscription({ planId }); // Update subscription plan
       const updatedDetails = await fetchSubscriptionDetails();
-      setSubscription(updatedDetails);
+      setSubscription(updatedDetails as SubscriptionDetails); // Cast updatedDetails to the correct type
     } catch (err: any) {
       setError('Failed to update subscription. Please try again.');
     } finally {
@@ -82,7 +82,9 @@ const ManageSubscription: React.FC = () => {
           </p>
           <p>
             <strong>Next Billing Date:</strong>{' '}
-            {new Date(subscription.nextBillingDate).toLocaleDateString()}
+            {subscription.nextBillingDate
+              ? new Date(subscription.nextBillingDate).toLocaleDateString()
+              : 'Not available'}
           </p>
           <div className={styles.actions}>
             <button

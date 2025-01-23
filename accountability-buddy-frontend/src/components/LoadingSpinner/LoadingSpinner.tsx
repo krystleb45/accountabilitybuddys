@@ -1,5 +1,5 @@
 import React from 'react';
-import './LoadingSpinner.css'; // Ensure this path is correct or adjust as needed
+import styles from './LoadingSpinner.module.css'; // Correct CSS module import
 
 interface LoadingSpinnerProps {
   size?: number; // Spinner size in pixels
@@ -18,14 +18,14 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   return (
     <div
-      className={overlay ? 'spinner-overlay' : ''}
+      className={overlay ? styles['spinner-overlay'] : ''}
       role="status"
       aria-live="polite"
       aria-busy="true"
       data-testid="loading-spinner"
     >
       <div
-        className="loading-spinner"
+        className={styles['loading-spinner']}
         style={{
           width: `${size}px`,
           height: `${size}px`,
@@ -33,8 +33,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           borderColor: `${color} transparent transparent transparent`,
         }}
       />
-      <span className="sr-only">Loading...</span>{' '}
-      {/* Accessible loading text */}
+      <span className="sr-only">Loading...</span> {/* Accessible loading text */}
     </div>
   );
 };

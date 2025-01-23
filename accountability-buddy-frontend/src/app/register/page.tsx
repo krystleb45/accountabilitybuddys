@@ -1,12 +1,10 @@
 'use client'; // Mark as Client Component
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 import axios from 'axios';
-import Link from 'next/link'; // Import Link from Next.js
+import Link from 'next/link';
 
 const RegisterPage: React.FC = () => {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,6 +13,7 @@ const RegisterPage: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -25,6 +24,7 @@ const RegisterPage: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccessMessage('');
 
     const { name, email, password, confirmPassword } = formData;
     if (!name || !email || !password || !confirmPassword) {
@@ -46,12 +46,15 @@ const RegisterPage: React.FC = () => {
         password,
       });
       if (response.status === 201) {
-        router.push('/login');
+        setSuccessMessage('Registration successful! Redirecting to login...');
+        setTimeout(() => {
+          window.location.href = '/login'; // Redirect to login
+        }, 2000);
       } else {
-        setError('Registration failed.');
+        setError('Registration failed. Please try again.');
       }
-    } catch (err) {
-      setError('Registration failed. Please try again.');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -104,6 +107,7 @@ const RegisterPage: React.FC = () => {
           />
 
           {error && <p className="text-red-600">{error}</p>}
+          {successMessage && <p className="text-green-600">{successMessage}</p>}
 
           <button
             type="submit"
@@ -117,8 +121,8 @@ const RegisterPage: React.FC = () => {
         <div className="mt-6 text-center">
           <p>
             Already have an account?{' '}
-            <Link href="/login">
-              <a className="text-blue-600 hover:underline">Login here</a>
+            <Link href="/login" className="text-blue-600 hover:underline">
+              Login here
             </Link>
           </p>
         </div>

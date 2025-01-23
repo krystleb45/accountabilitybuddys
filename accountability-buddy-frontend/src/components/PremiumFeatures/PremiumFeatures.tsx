@@ -46,10 +46,10 @@ const PremiumFeatures: React.FC = () => {
           </button>
           {showPayment && (
             <StripeCheckout
-              onSuccess={handlePaymentSuccess}
-              onError={handlePaymentFailure} // Handle errors
-              setLoading={setLoading} // Pass the setLoading state
-            />
+                onSuccess={handlePaymentSuccess}
+                onError={handlePaymentFailure} // Handle errors
+                setLoading={setLoading} // Pass the setLoading state
+                clientSecret={''}            />
           )}
         </>
       )}

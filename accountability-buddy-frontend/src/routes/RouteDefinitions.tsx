@@ -16,7 +16,7 @@ export interface RouteDefinition {
 
 export const ROUTE_DEFINITIONS: RouteDefinition[] = [
   {
-    path: ROUTES.HOME,
+    path: ROUTES.HOME.path,
     element: <Home />,
     isPrivate: false,
     metadata: {
@@ -26,7 +26,7 @@ export const ROUTE_DEFINITIONS: RouteDefinition[] = [
     },
   },
   {
-    path: ROUTES.PROFILE,
+    path: ROUTES.PROFILE.path,
     element: <Profile />,
     isPrivate: true,
     metadata: {
@@ -35,7 +35,7 @@ export const ROUTE_DEFINITIONS: RouteDefinition[] = [
     },
   },
   {
-    path: ROUTES.LOGIN,
+    path: ROUTES.LOGIN.path,
     element: <Login />,
     isPrivate: false,
     metadata: {
@@ -44,7 +44,7 @@ export const ROUTE_DEFINITIONS: RouteDefinition[] = [
     },
   },
   {
-    path: ROUTES.SETTINGS,
+    path: ROUTES.SETTINGS.path,
     element: <Settings />,
     isPrivate: true,
     metadata: {

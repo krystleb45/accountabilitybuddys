@@ -2,7 +2,7 @@
 # Node.js dependencies
 # ==========================
 node_modules/
-**/node_modules/ # Ignore node_modules in all subdirectories
+**/node_modules/
 
 # ==========================
 # Logs
@@ -12,6 +12,7 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
 # ==========================
 # Compiled output
@@ -61,12 +62,32 @@ coverage/
 # ==========================
 .eslintcache
 .stylelintcache
+/prettier.cache
 
 # ==========================
 # Dependency cache for other tools
 # ==========================
-/.parcel-cache/
-/.pnpm-store/
+.parcel-cache/
+.pnpm-store/
+.cache/
+
+# ==========================
+# Storybook files
+# ==========================
+.storybook/
+storybook-static/
+
+# ==========================
+# Cypress
+# ==========================
+cypress/screenshots/
+cypress/videos/
+
+# ==========================
+# Next.js files
+# ==========================
+.next/
+out/
 
 # ==========================
 # Specific project folders
@@ -74,6 +95,15 @@ coverage/
 frontend/node_modules/
 frontend/dist/
 frontend/build/
+frontend/.next/
 backend/node_modules/
 backend/dist/
 backend/coverage/
+
+# ==========================
+# Miscellaneous
+# ==========================
+*.swp # Swap files for Vim
+*.bak # Backup files
+*.orig # Merge conflict files
+*.log.* # Rotated log files

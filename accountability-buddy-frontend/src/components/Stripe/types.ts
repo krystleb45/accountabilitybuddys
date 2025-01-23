@@ -7,12 +7,12 @@ export interface BillingHistoryItem {
 }
 // Represents subscription details for a user
 export interface SubscriptionDetails {
-  id: string; // Subscription ID
-  planName: string; // Name of the subscription plan
-  status: 'active' | 'canceled' | 'past_due' | 'incomplete' | 'trialing'; // Subscription status
-  nextBillingDate: string; // ISO date string for the next billing date
-  createdAt: string; // ISO date string for subscription creation
-  canceledAt?: string; // ISO date string if the subscription is canceled
+  id: string;
+  planName: string;
+  status: 'active' | 'canceled' | 'past_due' | 'incomplete' | 'trialing';
+  nextBillingDate: string;
+  createdAt: string;
+  canceledAt?: string;
 }
 
 // Represents a single item in the user's billing history

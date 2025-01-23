@@ -8,7 +8,7 @@ export { default as SubscriptionActions } from './SubscriptionActions';
 export * from 'src/hooks/useSubscription';
 
 // Exporting utilities
-export * from 'src/utils/subscriptionHelpers';
+export * from 'src/utils/subscriptionUtils';
 
 // Exporting types
 export * from './types';

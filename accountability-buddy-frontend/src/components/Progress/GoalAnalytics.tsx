@@ -28,7 +28,13 @@ const GoalAnalytics: React.FC = () => {
 
       try {
         const response = await getGoalAnalytics({ dateRange });
-        setAnalytics(response.data);
+
+        // Check if response and response.data exist before accessing them
+        if (response && response.data) {
+          setAnalytics(response.data);
+        } else {
+          throw new Error('Invalid analytics data received.');
+        }
       } catch (err: any) {
         console.error('Error fetching analytics:', err);
         setError(

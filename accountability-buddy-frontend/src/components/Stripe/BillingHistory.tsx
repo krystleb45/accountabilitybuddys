@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchBillingHistory } from 'src/utils/stripeHelpers'; // Utility function to fetch billing history
+import { fetchBillingHistory } from 'src/utils/subscriptionUtils'; // Utility function to fetch billing history
 import { BillingHistoryItem } from './types'; // Type definitions
 import styles from './Stripe.module.css'; // CSS module for styling
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation'; // Updated import for navigation
 
 const LogoutPage: React.FC = () => {
   const router = useRouter();

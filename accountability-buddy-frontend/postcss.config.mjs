@@ -7,5 +7,4 @@ export default {
       cssnano: {}, // Optional: Minify CSS in production
     }),
   },
-  map: process.env.NODE_ENV === 'development', // Optional: Enable source maps in development
 };

@@ -1,8 +1,12 @@
-module.exports = {
+const nextConfig = {
   reactStrictMode: true, // Enables React strict mode for better debugging
   swcMinify: true, // Uses SWC for faster builds and smaller bundle sizes
   compiler: {
-    styledComponents: true, // Enables styled-components support
+    styledComponents: {
+      ssr: true, // Enable server-side rendering for styled-components
+      displayName: true, // Use display names in development
+      preprocess: false, // Disable preprocessing to avoid potential issues
+    },
   },
   images: {
     domains: ['example.com', 'another-domain.com'], // Replace with your image domains
@@ -22,3 +26,5 @@ module.exports = {
     return config;
   },
 };
+
+module.exports = nextConfig;

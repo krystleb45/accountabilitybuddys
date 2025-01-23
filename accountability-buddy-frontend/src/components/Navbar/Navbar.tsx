@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import authService from 'src/services/authService';
+import authService, { getToken, clearToken } from 'src/services/authService'; // Import clearToken as a named import
 import NavbarDropdown from './NavbarDropdown';
 import NavbarItems from './NavbarItem';
 import { FaHome, FaUser, FaCog } from 'react-icons/fa';
@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
   // Fetch user info if a token is present
   useEffect(() => {
     const fetchUserInfo = async () => {
-      const token = authService.getToken();
+      const token = getToken(); // Use named import for getToken
       if (token) {
         try {
           const userInfo = await authService.getUserInfo();
@@ -36,7 +36,7 @@ const Navbar: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
-    authService.removeToken();
+    clearToken(); // Use clearToken to remove the token from storage
     setUser(null);
     navigate('/login');
   };

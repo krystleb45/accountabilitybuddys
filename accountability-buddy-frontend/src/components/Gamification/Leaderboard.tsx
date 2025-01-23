@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {
-  fetchLeaderboard,
-  LeaderboardEntry,
-} from '../../services/gamificationService'; // Import LeaderboardEntry type
+import GamificationService, { LeaderboardEntry } from '../../services/gamificationService'; // Use default export for fetchLeaderboard
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'; // Import a reusable loading spinner component
 import './Leaderboard.css';
 
 // Define props interface
 interface LeaderboardProps {
   userId: string;
-  entries: {
-    rank: number;
-    name: string;
-    score: number;
-    isCurrentUser: boolean;
-  }[];
 }
 
 const Leaderboard: React.FC<LeaderboardProps> = ({ userId }) => {
@@ -28,8 +19,10 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ userId }) => {
     setError('');
 
     try {
-      const data: LeaderboardEntry[] = await fetchLeaderboard(userId); // Fetch leaderboard data
-      setLeaderboard(data);
+      const data: LeaderboardEntry[] | undefined = await GamificationService.fetchLeaderboard(
+        userId
+      ); // Fetch leaderboard data
+      setLeaderboard(data || []); // Ensure fallback to an empty array if data is undefined
     } catch (err) {
       console.error('Error fetching leaderboard:', err);
       setError('Failed to load the leaderboard. Please try again later.');

@@ -9,39 +9,6 @@ import { AxiosHeaders } from 'axios';
 const API_URL = process.env.API_URL || 'https://accountabilitybuddys.com/api';
 
 // Define types for API responses
-export interface DashboardData {
-  widgets: any[];
-  statistics: any[];
-}
-
-export interface UserData {
-  id: string;
-  name: string;
-  email: string;
-}
-
-export interface Task {
-  id: string;
-  title: string;
-  description: string;
-  completed: boolean;
-}
-
-export interface FeedPost {
-  id: string;
-  content: string;
-  author: string;
-  likes: number;
-  comments: Comment[];
-}
-
-export interface Comment {
-  id: string;
-  postId: string;
-  text: string;
-  author: string;
-}
-
 export interface Notification {
   id: string;
   message: string;
@@ -82,72 +49,19 @@ apiClient.interceptors.request.use(
 
 const ApiService = {
   /**
-   * Fetch dashboard data.
+   * Fetch partner notifications.
    *
-   * @returns {Promise<DashboardData>} - The dashboard data.
+   * @returns {Promise<Notification[]>} - A list of partner notifications.
    */
-  getDashboardData: async (): Promise<DashboardData> => {
+  getPartnerNotifications: async (): Promise<Notification[]> => {
     try {
-      const response: AxiosResponse<DashboardData> =
-        await apiClient.get('/dashboard');
-      return response.data;
-    } catch (error) {
-      handleApiError(error);
-      return {} as DashboardData; // Return an empty DashboardData object
-    }
-  },
-
-  /**
-   * Fetch tasks.
-   *
-   * @returns {Promise<Task[]>} - A list of tasks.
-   */
-  getTasks: async (): Promise<Task[]> => {
-    try {
-      const response: AxiosResponse<Task[]> = await apiClient.get('/tasks');
-      return response.data;
-    } catch (error) {
-      handleApiError(error);
-      return [] as Task[];
-    }
-  },
-
-  /**
-   * Update a specific task.
-   *
-   * @param {string} taskId - The ID of the task to update.
-   * @param {Partial<Task>} taskData - The updated task data.
-   * @returns {Promise<Task>} - The updated task.
-   */
-  updateTask: async (
-    taskId: string,
-    taskData: Partial<Task>
-  ): Promise<Task> => {
-    try {
-      const response: AxiosResponse<Task> = await apiClient.put(
-        `/tasks/${taskId}`,
-        taskData
+      const response: AxiosResponse<Notification[]> = await apiClient.get(
+        '/partner-notifications'
       );
       return response.data;
     } catch (error) {
       handleApiError(error);
-      throw error; // Add this line to re-throw the error
-    }
-  },
-
-  /**
-   * Fetch notifications.
-   *
-   * @returns {Promise<Notification[]>} - A list of notifications.
-   */
-  getNotifications: async (): Promise<Notification[]> => {
-    try {
-      const response: AxiosResponse<Notification[]> =
-        await apiClient.get('/notifications');
-      return response.data;
-    } catch (error) {
-      handleApiError(error);
-      return []; // Return an empty array if an error occurs
+      return [];
     }
   },
 
@@ -166,17 +80,16 @@ const ApiService = {
   },
 
   /**
-   * Fetch feed posts.
+   * Delete a notification.
    *
-   * @returns {Promise<FeedPost[]>} - A list of feed posts.
+   * @param {string} notificationId - The ID of the notification to delete.
+   * @returns {Promise<void>} - Resolves if successful.
    */
-  getFeedPosts: async (): Promise<FeedPost[]> => {
+  deleteNotification: async (notificationId: string): Promise<void> => {
     try {
-      const response: AxiosResponse<FeedPost[]> = await apiClient.get('/feed');
-      return response.data;
+      await apiClient.delete(`/notifications/${notificationId}`);
     } catch (error) {
       handleApiError(error);
-      throw error; // Re-throw the error
     }
   },
 };

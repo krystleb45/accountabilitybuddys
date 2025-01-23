@@ -1,10 +1,13 @@
 'use client'; // Ensure it's a Client Component
 
 import React from 'react';
-import { useRouter } from 'next/router';
 
 const ErrorPage: React.FC = () => {
-  const router = useRouter();
+  const handleRedirect = () => {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/'; // Redirect to the homepage
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-red-50 p-8">
@@ -15,7 +18,7 @@ const ErrorPage: React.FC = () => {
         Please try again or go back to the homepage.
       </p>
       <button
-        onClick={() => router.push('/')}
+        onClick={handleRedirect}
         className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-all"
         aria-label="Go to Homepage"
       >

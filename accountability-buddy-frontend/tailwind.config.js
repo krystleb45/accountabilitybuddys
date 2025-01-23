@@ -1,10 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './app/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
-    './pages/**/*.{js,ts,jsx,tsx}',
-    './layouts/**/*.{js,ts,jsx,tsx}',
+    './app/**/*.{js,ts,jsx,tsx}', // App directory
+    './components/**/*.{js,ts,jsx,tsx}', // Components directory
+    './pages/**/*.{js,ts,jsx,tsx}', // Pages directory
+    './layouts/**/*.{js,ts,jsx,tsx}', // Layouts directory
+    './src/**/*.{js,ts,jsx,tsx}', // Catch-all for src directory
   ],
   theme: {
     extend: {
@@ -28,6 +29,6 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require('@tailwindcss/aspect-ratio'),
-    require('@tailwindcss/line-clamp'),
+    // Removed require('@tailwindcss/line-clamp') as it is included by default in TailwindCSS v3.3+
   ],
 };

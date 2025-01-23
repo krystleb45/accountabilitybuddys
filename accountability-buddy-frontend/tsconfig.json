@@ -10,7 +10,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "allowSyntheticDefaultImports": true,
     "noEmit": true,
     "isolatedModules": true,
@@ -19,11 +19,16 @@
     "noImplicitAny": false,
     "strictNullChecks": true,
     "types": ["jest", "@testing-library/jest-dom", "cypress", "node"],
-    "baseUrl": ".", // Sets the base URL for module resolution
+    "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
       "cypress/*": ["cypress/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
@@ -32,11 +37,12 @@
     "src/**/*",
     ".next/types/**/*.ts",
     "cypress/**/*.ts",
-    "src/**/*.test.{ts,tsx}" // Ensure Jest test files are included
+    "src/**/*.test.{ts,tsx}",
+    "src/**/*.module.css" // Include CSS Modules
   ],
   "exclude": [
     "node_modules",
-    "cypress/**/*.js", // Exclude compiled JS in Cypress folder
+    "cypress/**/*.js",
     "src/**/__mocks__/*",
     "src/**/config/*.js"
   ]

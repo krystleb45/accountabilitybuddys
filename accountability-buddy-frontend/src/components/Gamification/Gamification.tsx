@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import BadgeSystem from '../BadgeSystem/BadgeSystem';
 import ProgressTracker from '../Progress/ProgressTracker';
-import Leaderboard from '../Leaderboard/Leaderboard';
+import Leaderboard from './Leaderboard';
 import Notification from '../Notifications/Notification';
-import { fetchUserProgress } from '../../services/gamificationService';
+import GamificationService from '../../services/gamificationService'; // Use default export for service
 import { UserProgress } from '../../types/Gamification.types'; // Import the correct type
 import './Gamification.css';
 
@@ -34,12 +34,15 @@ const Gamification: React.FC<GamificationProps> = ({ user }) => {
       setError('');
 
       try {
-        const userProgress: UserProgress = await fetchUserProgress(user.id);
+        const userProgress: UserProgress | undefined =
+          await GamificationService.fetchUserProgress(user.id);
 
-        // Ensure `progress` and `newBadge` exist on the response
-        setProgress(userProgress.points || 0); // Use `points` instead of `progress`
-        if (userProgress.newBadge) {
-          setNewBadge(userProgress.newBadge.name);
+        if (userProgress) {
+          // Update progress and newBadge if they exist in the response
+          setProgress(userProgress.points || 0); // Use `points` as the progress value
+          if (userProgress.newBadge) {
+            setNewBadge(userProgress.newBadge.name);
+          }
         }
       } catch (err) {
         console.error('Failed to fetch user progress:', err);

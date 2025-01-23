@@ -53,11 +53,14 @@ export const getToken = (): string | null => {
   return localStorage.getItem('token') || sessionStorage.getItem('token');
 };
 
-// Utility: Clear token from storage
+// Utility: Clear token from storage (aliased as removeToken)
 export const clearToken = (): void => {
   localStorage.removeItem('token');
   sessionStorage.removeItem('token');
 };
+
+// Alias for backward compatibility or clarity
+export const removeToken = clearToken;
 
 // Utility: Get Authorization header
 export const getAuthHeader = (): Record<string, string> => {
@@ -168,6 +171,3 @@ const AuthService = {
 };
 
 export default AuthService;
-export function logout(logout: any) {
-  throw new Error('Function not implemented.');
-}

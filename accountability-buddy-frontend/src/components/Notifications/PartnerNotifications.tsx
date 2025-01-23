@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  getPartnerNotifications,
-  markNotificationAsRead,
-  deleteNotification,
-} from 'src/services/apiService'; // Replace with your actual API service
+import ApiService from 'src/services/apiService'; // Import the default ApiService
 import './PartnerNotifications.css'; // Optional: import CSS for styling
 
 // Extend the Notification type to include 'isRead'
@@ -25,11 +21,11 @@ const PartnerNotifications: React.FC = () => {
       setError('');
 
       try {
-        const apiNotifications = await getPartnerNotifications();
+        const apiNotifications = await ApiService.getPartnerNotifications();
 
         // Map to ensure all notifications have 'isRead' property
         const formattedNotifications: Notification[] = apiNotifications.map(
-          (notification: any) => ({
+          (notification) => ({
             id: notification.id,
             message: notification.message,
             isRead: notification.read || false, // Use 'read' from API or default to false
@@ -49,7 +45,7 @@ const PartnerNotifications: React.FC = () => {
 
   const handleMarkAsRead = async (id: string) => {
     try {
-      await markNotificationAsRead(id);
+      await ApiService.markNotificationAsRead(id);
       setNotifications((prevNotifications) =>
         prevNotifications.map((notification) =>
           notification.id === id
@@ -64,7 +60,7 @@ const PartnerNotifications: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteNotification(id);
+      await ApiService.deleteNotification(id);
       setNotifications((prevNotifications) =>
         prevNotifications.filter((notification) => notification.id !== id)
       );
